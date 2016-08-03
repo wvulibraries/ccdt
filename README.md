@@ -7,7 +7,7 @@ This is [Recokefeller](https://en.wikipedia.org/wiki/Jay_Rockefeller) Constituen
 1. [Luck](http://i.giphy.com/9m9wvjeu3K5c4.gif)
 
 ## To-do
-- [ ] Create a virtual environment with Vagrant
+- [x] Create a virtual environment with Vagrant
 - [ ] Create scripts to load and process the flat files and store data into MySQL
 - [ ] Create public interface for users to search through the files and user records
 - [ ] Create an admin interface to manage the archival system
