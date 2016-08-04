@@ -9,4 +9,5 @@ templates::display("header");
 
 <h2><a href="{local var="baseDirectory"}">{local var="currentDisplayObjectTitle"}</a></h2>
 
+
 <?php templates::display('footer'); ?>

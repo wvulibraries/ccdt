@@ -104,3 +104,7 @@ ln -s $GITDIR/engineAPI/public_html/engineIncludes/ $SERVERURL/$DOCUMENTROOT/eng
 chkconfig mysqld on
 mysql -u root < /tmp/git/engineAPI/sql/vagrantSetup.sql
 mysql -u root EngineAPI < /tmp/git/engineAPI/sql/EngineAPI.sql
+
+## Create a simple MySQL base database
+mysql -u root < /vagrant/sqlFiles/setup.sql
+mysql -u root alerts < /vagrant/sqlFiles/base.sql

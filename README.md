@@ -12,6 +12,8 @@ This is [Recokefeller](https://en.wikipedia.org/wiki/Jay_Rockefeller) Constituen
 - [ ] Create public interface for users to search through the files and user records
 - [ ] Create an admin interface to manage the archival system
 
-
 ## Author
 1. [Ajay Kavuri](http://pseudoaj.com)
+
+## Refernces
+1. [explode vs strtok](http://stackoverflow.com/questions/2528168/whats-the-use-of-function-strtokin-php-how-is-better-than-other-string-functi)
