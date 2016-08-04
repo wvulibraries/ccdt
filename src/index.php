@@ -1,10 +1,12 @@
 <?php
-  require_once '/home/www.libraries.wvu.edu/phpincludes/engine/engineAPI/4.0/engine.php';
-  $engine = EngineAPI::singleton();
-  errorHandle::errorReporting(errorHandle::E_ALL);
+/*
+* Load the engine header and base template
+* Contains variables, access control,
+*/
+require_once "headerFiles/engineHeader.php";
+templates::display("header");
+?>
 
-  // Set localVars and engineVars variables
-  $localvars  = localvars::getInstance();
-  $enginevars = enginevars::getInstance();
+<h2><a href="{local var="baseDirectory"}">{local var="currentDisplayObjectTitle"}</a></h2>
 
-  print "----Engine loaded----";
+<?php templates::display('footer'); ?>

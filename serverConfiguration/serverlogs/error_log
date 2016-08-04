@@ -1,10 +1,48 @@
-[Wed Aug 03 18:41:11 2016] [notice] suEXEC mechanism enabled (wrapper: /usr/sbin/suexec)
-[Wed Aug 03 18:41:11 2016] [notice] Digest: generating secret for digest authentication ...
-[Wed Aug 03 18:41:11 2016] [notice] Digest: done
-[Wed Aug 03 18:41:11 2016] [notice] Apache/2.2.15 (Unix) DAV/2 mod_auth_kerb/5.4 mod_ssl/2.2.15 OpenSSL/1.0.1e-fips mod_wsgi/3.2 Python/2.6.6 mod_perl/2.0.4 Perl/v5.10.1 configured -- resuming normal operations
-[Wed Aug 03 18:41:27 2016] [error] [client 192.168.56.1] Directory index forbidden by Options directive: /home/www.libraries.wvu.edu/public_html/
-[Wed Aug 03 18:41:33 2016] [error] [client 192.168.56.1] Directory index forbidden by Options directive: /home/www.libraries.wvu.edu/public_html/
-[Wed Aug 03 18:41:34 2016] [error] [client 192.168.56.1] Directory index forbidden by Options directive: /home/www.libraries.wvu.edu/public_html/
-[Wed Aug 03 18:41:35 2016] [error] [client 192.168.56.1] Directory index forbidden by Options directive: /home/www.libraries.wvu.edu/public_html/
-[Wed Aug 03 18:41:52 2016] [error] [client 192.168.56.1] PHP Parse error:  syntax error, unexpected $end, expecting ',' or ';' in /vagrant/src/index.php on line 4
-[Wed Aug 03 18:42:54 2016] [error] [client 192.168.56.1] File does not exist: /home/www.libraries.wvu.edu/public_html/rockefeller-css/admin
+[Thu Aug 04 16:05:01 2016] [error] [client 192.168.56.1] Undefined property: breadCrumbs::$variables at 215:/tmp/git/engineAPI/engine/engineAPI/latest/modules/config/config.php, referer: http://192.168.56.6/rockefeller-css/
+[Thu Aug 04 16:05:01 2016] [error] [client 192.168.56.1] array_key_exists() expects parameter 2 to be array, null given at 215:/tmp/git/engineAPI/engine/engineAPI/latest/modules/config/config.php, referer: http://192.168.56.6/rockefeller-css/
+[Thu Aug 04 16:05:01 2016] [error] [client 192.168.56.1] Undefined property: breadCrumbs::$variables at 215:/tmp/git/engineAPI/engine/engineAPI/latest/modules/config/config.php, referer: http://192.168.56.6/rockefeller-css/
+[Thu Aug 04 16:05:01 2016] [error] [client 192.168.56.1] array_key_exists() expects parameter 2 to be array, null given at 215:/tmp/git/engineAPI/engine/engineAPI/latest/modules/config/config.php, referer: http://192.168.56.6/rockefeller-css/
+[Thu Aug 04 16:05:01 2016] [error] [client 192.168.56.1] File does not exist: /home/www.libraries.wvu.edu/public_html/images, referer: http://192.168.56.6/rockefeller-css/
+[Thu Aug 04 16:05:01 2016] [error] [client 192.168.56.1] File does not exist: /home/www.libraries.wvu.edu/public_html/images, referer: http://192.168.56.6/rockefeller-css/
+[Thu Aug 04 16:05:54 2016] [error] [client 192.168.56.1] Undefined property: breadCrumbs::$variables at 215:/tmp/git/engineAPI/engine/engineAPI/latest/modules/config/config.php, referer: http://192.168.56.6/rockefeller-css/
+[Thu Aug 04 16:05:54 2016] [error] [client 192.168.56.1] array_key_exists() expects parameter 2 to be array, null given at 215:/tmp/git/engineAPI/engine/engineAPI/latest/modules/config/config.php, referer: http://192.168.56.6/rockefeller-css/
+[Thu Aug 04 16:05:54 2016] [error] [client 192.168.56.1] Undefined property: breadCrumbs::$variables at 215:/tmp/git/engineAPI/engine/engineAPI/latest/modules/config/config.php, referer: http://192.168.56.6/rockefeller-css/
+[Thu Aug 04 16:05:54 2016] [error] [client 192.168.56.1] array_key_exists() expects parameter 2 to be array, null given at 215:/tmp/git/engineAPI/engine/engineAPI/latest/modules/config/config.php, referer: http://192.168.56.6/rockefeller-css/
+[Thu Aug 04 16:05:54 2016] [error] [client 192.168.56.1] File does not exist: /home/www.libraries.wvu.edu/public_html/images, referer: http://192.168.56.6/rockefeller-css/
+[Thu Aug 04 16:05:54 2016] [error] [client 192.168.56.1] File does not exist: /home/www.libraries.wvu.edu/public_html/images, referer: http://192.168.56.6/rockefeller-css/
+[Thu Aug 04 16:09:25 2016] [error] [client 192.168.56.1] Undefined property: breadCrumbs::$variables at 215:/tmp/git/engineAPI/engine/engineAPI/latest/modules/config/config.php, referer: http://192.168.56.6/rockefeller-css/
+[Thu Aug 04 16:09:25 2016] [error] [client 192.168.56.1] array_key_exists() expects parameter 2 to be array, null given at 215:/tmp/git/engineAPI/engine/engineAPI/latest/modules/config/config.php, referer: http://192.168.56.6/rockefeller-css/
+[Thu Aug 04 16:09:25 2016] [error] [client 192.168.56.1] Undefined property: breadCrumbs::$variables at 215:/tmp/git/engineAPI/engine/engineAPI/latest/modules/config/config.php, referer: http://192.168.56.6/rockefeller-css/
+[Thu Aug 04 16:09:25 2016] [error] [client 192.168.56.1] array_key_exists() expects parameter 2 to be array, null given at 215:/tmp/git/engineAPI/engine/engineAPI/latest/modules/config/config.php, referer: http://192.168.56.6/rockefeller-css/
+[Thu Aug 04 16:09:25 2016] [error] [client 192.168.56.1] File does not exist: /home/www.libraries.wvu.edu/public_html/images, referer: http://192.168.56.6/rockefeller-css/
+[Thu Aug 04 16:09:25 2016] [error] [client 192.168.56.1] File does not exist: /home/www.libraries.wvu.edu/public_html/images, referer: http://192.168.56.6/rockefeller-css/
+[Thu Aug 04 16:09:42 2016] [error] [client 192.168.56.1] Undefined property: breadCrumbs::$variables at 215:/tmp/git/engineAPI/engine/engineAPI/latest/modules/config/config.php, referer: http://192.168.56.6/rockefeller-css/
+[Thu Aug 04 16:09:42 2016] [error] [client 192.168.56.1] array_key_exists() expects parameter 2 to be array, null given at 215:/tmp/git/engineAPI/engine/engineAPI/latest/modules/config/config.php, referer: http://192.168.56.6/rockefeller-css/
+[Thu Aug 04 16:09:42 2016] [error] [client 192.168.56.1] Undefined property: breadCrumbs::$variables at 215:/tmp/git/engineAPI/engine/engineAPI/latest/modules/config/config.php, referer: http://192.168.56.6/rockefeller-css/
+[Thu Aug 04 16:09:42 2016] [error] [client 192.168.56.1] array_key_exists() expects parameter 2 to be array, null given at 215:/tmp/git/engineAPI/engine/engineAPI/latest/modules/config/config.php, referer: http://192.168.56.6/rockefeller-css/
+[Thu Aug 04 16:09:42 2016] [error] [client 192.168.56.1] File does not exist: /home/www.libraries.wvu.edu/public_html/images, referer: http://192.168.56.6/rockefeller-css/
+[Thu Aug 04 16:09:43 2016] [error] [client 192.168.56.1] File does not exist: /home/www.libraries.wvu.edu/public_html/images, referer: http://192.168.56.6/rockefeller-css/
+[Thu Aug 04 16:09:45 2016] [error] [client 192.168.56.1] Undefined property: breadCrumbs::$variables at 215:/tmp/git/engineAPI/engine/engineAPI/latest/modules/config/config.php, referer: http://192.168.56.6/rockefeller-css/
+[Thu Aug 04 16:09:45 2016] [error] [client 192.168.56.1] array_key_exists() expects parameter 2 to be array, null given at 215:/tmp/git/engineAPI/engine/engineAPI/latest/modules/config/config.php, referer: http://192.168.56.6/rockefeller-css/
+[Thu Aug 04 16:09:45 2016] [error] [client 192.168.56.1] Undefined property: breadCrumbs::$variables at 215:/tmp/git/engineAPI/engine/engineAPI/latest/modules/config/config.php, referer: http://192.168.56.6/rockefeller-css/
+[Thu Aug 04 16:09:45 2016] [error] [client 192.168.56.1] array_key_exists() expects parameter 2 to be array, null given at 215:/tmp/git/engineAPI/engine/engineAPI/latest/modules/config/config.php, referer: http://192.168.56.6/rockefeller-css/
+[Thu Aug 04 16:09:45 2016] [error] [client 192.168.56.1] File does not exist: /home/www.libraries.wvu.edu/public_html/images, referer: http://192.168.56.6/rockefeller-css/
+[Thu Aug 04 16:09:45 2016] [error] [client 192.168.56.1] File does not exist: /home/www.libraries.wvu.edu/public_html/images, referer: http://192.168.56.6/rockefeller-css/
+[Thu Aug 04 16:09:46 2016] [error] [client 192.168.56.1] Undefined property: breadCrumbs::$variables at 215:/tmp/git/engineAPI/engine/engineAPI/latest/modules/config/config.php, referer: http://192.168.56.6/rockefeller-css/
+[Thu Aug 04 16:09:46 2016] [error] [client 192.168.56.1] array_key_exists() expects parameter 2 to be array, null given at 215:/tmp/git/engineAPI/engine/engineAPI/latest/modules/config/config.php, referer: http://192.168.56.6/rockefeller-css/
+[Thu Aug 04 16:09:46 2016] [error] [client 192.168.56.1] Undefined property: breadCrumbs::$variables at 215:/tmp/git/engineAPI/engine/engineAPI/latest/modules/config/config.php, referer: http://192.168.56.6/rockefeller-css/
+[Thu Aug 04 16:09:46 2016] [error] [client 192.168.56.1] array_key_exists() expects parameter 2 to be array, null given at 215:/tmp/git/engineAPI/engine/engineAPI/latest/modules/config/config.php, referer: http://192.168.56.6/rockefeller-css/
+[Thu Aug 04 16:09:46 2016] [error] [client 192.168.56.1] File does not exist: /home/www.libraries.wvu.edu/public_html/images, referer: http://192.168.56.6/rockefeller-css/
+[Thu Aug 04 16:09:46 2016] [error] [client 192.168.56.1] File does not exist: /home/www.libraries.wvu.edu/public_html/images, referer: http://192.168.56.6/rockefeller-css/
+[Thu Aug 04 16:09:52 2016] [error] [client 192.168.56.1] Undefined property: breadCrumbs::$variables at 215:/tmp/git/engineAPI/engine/engineAPI/latest/modules/config/config.php, referer: http://192.168.56.6/rockefeller-css/
+[Thu Aug 04 16:09:52 2016] [error] [client 192.168.56.1] array_key_exists() expects parameter 2 to be array, null given at 215:/tmp/git/engineAPI/engine/engineAPI/latest/modules/config/config.php, referer: http://192.168.56.6/rockefeller-css/
+[Thu Aug 04 16:09:52 2016] [error] [client 192.168.56.1] Undefined property: breadCrumbs::$variables at 215:/tmp/git/engineAPI/engine/engineAPI/latest/modules/config/config.php, referer: http://192.168.56.6/rockefeller-css/
+[Thu Aug 04 16:09:52 2016] [error] [client 192.168.56.1] array_key_exists() expects parameter 2 to be array, null given at 215:/tmp/git/engineAPI/engine/engineAPI/latest/modules/config/config.php, referer: http://192.168.56.6/rockefeller-css/
+[Thu Aug 04 16:09:52 2016] [error] [client 192.168.56.1] File does not exist: /home/www.libraries.wvu.edu/public_html/images, referer: http://192.168.56.6/rockefeller-css/
+[Thu Aug 04 16:09:52 2016] [error] [client 192.168.56.1] File does not exist: /home/www.libraries.wvu.edu/public_html/images, referer: http://192.168.56.6/rockefeller-css/
+[Thu Aug 04 16:10:07 2016] [error] [client 192.168.56.1] Undefined property: breadCrumbs::$variables at 215:/tmp/git/engineAPI/engine/engineAPI/latest/modules/config/config.php, referer: http://192.168.56.6/rockefeller-css/
+[Thu Aug 04 16:10:07 2016] [error] [client 192.168.56.1] array_key_exists() expects parameter 2 to be array, null given at 215:/tmp/git/engineAPI/engine/engineAPI/latest/modules/config/config.php, referer: http://192.168.56.6/rockefeller-css/
+[Thu Aug 04 16:10:07 2016] [error] [client 192.168.56.1] Undefined property: breadCrumbs::$variables at 215:/tmp/git/engineAPI/engine/engineAPI/latest/modules/config/config.php, referer: http://192.168.56.6/rockefeller-css/
+[Thu Aug 04 16:10:07 2016] [error] [client 192.168.56.1] array_key_exists() expects parameter 2 to be array, null given at 215:/tmp/git/engineAPI/engine/engineAPI/latest/modules/config/config.php, referer: http://192.168.56.6/rockefeller-css/
+[Thu Aug 04 16:10:07 2016] [error] [client 192.168.56.1] File does not exist: /home/www.libraries.wvu.edu/public_html/images, referer: http://192.168.56.6/rockefeller-css/
+[Thu Aug 04 16:10:07 2016] [error] [client 192.168.56.1] File does not exist: /home/www.libraries.wvu.edu/public_html/images, referer: http://192.168.56.6/rockefeller-css/
