@@ -2,6 +2,7 @@
 > Not this CSS:
 
 ![CSS](http://i.giphy.com/nArBQosm5nXdm.gif)
+
 This is [Recokefeller](https://en.wikipedia.org/wiki/Jay_Rockefeller) Constituent Services System (CSS) archival repository. The repository hosts the project to load and process flat files into MySQL. Also, the repository presents a searchable interface for processed information.
 
 ## Requirements
