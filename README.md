@@ -14,8 +14,8 @@ This is [Recokefeller](https://en.wikipedia.org/wiki/Jay_Rockefeller) Constituen
 
 ## Installation
 Although effort has been made to automate most of the tasks, some functionality is intentionally kept manual. If you want to own this project for your own flat file then simply do the following:
-1. Change the `$folder` and `$fileName` in [LoadFlatFiles.php](LoadFlatFiles/LoadFlatFiles.php)
-1. Change the schema of your database in [base.sql](sqlFile/base.sql) and [setup.sql](sqlFile/setup.sql) depending on your data(Will allow you to customize your database schema)
+  1. Change the `$folder` and `$fileName` in [LoadFlatFiles.php](LoadFlatFiles/LoadFlatFiles.php)
+  1. Change the schema of your database in [base.sql](sqlFiles/base.sql) and [setup.sql](sqlFiles/setup.sql) depending on your data(Will allow you to customize your database schema)
 
 ## Author
 1. [Ajay Kavuri](http://pseudoaj.com)
