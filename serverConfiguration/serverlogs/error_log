@@ -112,3 +112,31 @@
 [Thu Aug 04 17:46:47 2016] [error] [client 192.168.56.1] array_key_exists() expects parameter 2 to be array, null given at 215:/tmp/git/engineAPI/engine/engineAPI/latest/modules/config/config.php, referer: http://192.168.56.6/rockefeller-css/
 [Thu Aug 04 17:46:47 2016] [error] [client 192.168.56.1] File does not exist: /home/www.libraries.wvu.edu/public_html/images, referer: http://192.168.56.6/rockefeller-css/
 [Thu Aug 04 17:46:47 2016] [error] [client 192.168.56.1] File does not exist: /home/www.libraries.wvu.edu/public_html/images, referer: http://192.168.56.6/rockefeller-css/
+[Fri Aug 05 13:35:19 2016] [notice] suEXEC mechanism enabled (wrapper: /usr/sbin/suexec)
+[Fri Aug 05 13:35:19 2016] [notice] Digest: generating secret for digest authentication ...
+[Fri Aug 05 13:35:19 2016] [notice] Digest: done
+[Fri Aug 05 13:35:19 2016] [notice] Apache/2.2.15 (Unix) DAV/2 mod_auth_kerb/5.4 mod_ssl/2.2.15 OpenSSL/1.0.1e-fips mod_wsgi/3.2 Python/2.6.6 mod_perl/2.0.4 Perl/v5.10.1 configured -- resuming normal operations
+[Fri Aug 05 13:45:34 2016] [notice] suEXEC mechanism enabled (wrapper: /usr/sbin/suexec)
+[Fri Aug 05 13:45:34 2016] [notice] Digest: generating secret for digest authentication ...
+[Fri Aug 05 13:45:34 2016] [notice] Digest: done
+[Fri Aug 05 13:45:34 2016] [notice] Apache/2.2.15 (Unix) DAV/2 mod_auth_kerb/5.4 mod_ssl/2.2.15 OpenSSL/1.0.1e-fips mod_wsgi/3.2 Python/2.6.6 mod_perl/2.0.4 Perl/v5.10.1 configured -- resuming normal operations
+[Fri Aug 05 13:54:08 2016] [notice] suEXEC mechanism enabled (wrapper: /usr/sbin/suexec)
+[Fri Aug 05 13:54:08 2016] [notice] Digest: generating secret for digest authentication ...
+[Fri Aug 05 13:54:08 2016] [notice] Digest: done
+[Fri Aug 05 13:54:08 2016] [notice] Apache/2.2.15 (Unix) DAV/2 mod_auth_kerb/5.4 mod_ssl/2.2.15 OpenSSL/1.0.1e-fips mod_wsgi/3.2 Python/2.6.6 mod_perl/2.0.4 Perl/v5.10.1 configured -- resuming normal operations
+[Fri Aug 05 14:41:47 2016] [notice] suEXEC mechanism enabled (wrapper: /usr/sbin/suexec)
+[Fri Aug 05 14:41:47 2016] [notice] Digest: generating secret for digest authentication ...
+[Fri Aug 05 14:41:47 2016] [notice] Digest: done
+[Fri Aug 05 14:41:47 2016] [notice] Apache/2.2.15 (Unix) DAV/2 mod_auth_kerb/5.4 mod_ssl/2.2.15 OpenSSL/1.0.1e-fips mod_wsgi/3.2 Python/2.6.6 mod_perl/2.0.4 Perl/v5.10.1 configured -- resuming normal operations
+[Fri Aug 05 16:25:39 2016] [notice] suEXEC mechanism enabled (wrapper: /usr/sbin/suexec)
+[Fri Aug 05 16:25:39 2016] [notice] Digest: generating secret for digest authentication ...
+[Fri Aug 05 16:25:39 2016] [notice] Digest: done
+[Fri Aug 05 16:25:39 2016] [notice] Apache/2.2.15 (Unix) DAV/2 mod_auth_kerb/5.4 mod_ssl/2.2.15 OpenSSL/1.0.1e-fips mod_wsgi/3.2 Python/2.6.6 mod_perl/2.0.4 Perl/v5.10.1 configured -- resuming normal operations
+[Fri Aug 05 18:16:52 2016] [notice] suEXEC mechanism enabled (wrapper: /usr/sbin/suexec)
+[Fri Aug 05 18:16:52 2016] [notice] Digest: generating secret for digest authentication ...
+[Fri Aug 05 18:16:52 2016] [notice] Digest: done
+[Fri Aug 05 18:16:52 2016] [notice] Apache/2.2.15 (Unix) DAV/2 mod_auth_kerb/5.4 mod_ssl/2.2.15 OpenSSL/1.0.1e-fips mod_wsgi/3.2 Python/2.6.6 mod_perl/2.0.4 Perl/v5.10.1 configured -- resuming normal operations
+[Fri Aug 05 18:54:37 2016] [notice] suEXEC mechanism enabled (wrapper: /usr/sbin/suexec)
+[Fri Aug 05 18:54:37 2016] [notice] Digest: generating secret for digest authentication ...
+[Fri Aug 05 18:54:37 2016] [notice] Digest: done
+[Fri Aug 05 18:54:37 2016] [notice] Apache/2.2.15 (Unix) DAV/2 mod_auth_kerb/5.4 mod_ssl/2.2.15 OpenSSL/1.0.1e-fips mod_wsgi/3.2 Python/2.6.6 mod_perl/2.0.4 Perl/v5.10.1 configured -- resuming normal operations

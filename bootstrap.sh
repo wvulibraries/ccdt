@@ -107,4 +107,4 @@ mysql -u root EngineAPI < /tmp/git/engineAPI/sql/EngineAPI.sql
 
 ## Create a simple MySQL base database
 mysql -u root < /vagrant/sqlFiles/setup.sql
-mysql -u root alerts < /vagrant/sqlFiles/base.sql
+mysql -u root rockefellercss < /vagrant/sqlFiles/base.sql

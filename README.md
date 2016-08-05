@@ -12,8 +12,14 @@ This is [Recokefeller](https://en.wikipedia.org/wiki/Jay_Rockefeller) Constituen
 - [ ] Create public interface for users to search through the files and user records
 - [ ] Create an admin interface to manage the archival system
 
+## Installation
+Although effort has been made to automate most of the tasks, some functionality is intentionally kept manual. If you want to own this project for your own flat file then simply do the following:
+1. Change the `$folder` and `$fileName` in [LoadFlatFiles.php](LoadFlatFiles/LoadFlatFiles.php)
+1. Change the schema of your database in [base.sql](sqlFile/base.sql) and [setup.sql](sqlFile/setup.sql) depending on your data(Will allow you to customize your database schema)
+
 ## Author
 1. [Ajay Kavuri](http://pseudoaj.com)
 
 ## Refernces
 1. [explode vs strtok](http://stackoverflow.com/questions/2528168/whats-the-use-of-function-strtokin-php-how-is-better-than-other-string-functi)
+1. [PDO](http://markonphp.com/insert-pdo-prepared-statement/)
