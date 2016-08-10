@@ -2,7 +2,7 @@ use `rockefellercss`;
 
 DROP TABLE IF EXISTS `correspondence`;
 CREATE TABLE `correspondence` (
-  `ID` smallint(5) unsigned NOT NULL AUTO_INCREMENT,
+  `ID` int(30) unsigned NOT NULL AUTO_INCREMENT,
   `prefix` varchar(30) DEFAULT NULL,
   `first` varchar(50) DEFAULT NULL,
   `middle` varchar(50) DEFAULT NULL,
@@ -36,5 +36,18 @@ CREATE TABLE `correspondence` (
   `out_document_name` varchar(100) DEFAULT NULL,
   `out_fillin` varchar(100) DEFAULT NULL,
   `publicAccess` tinyint(3) unsigned NOT NULL DEFAULT 1,
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=latin1;
+
+
+DROP TABLE IF EXISTS `formLetters`;
+CREATE TABLE `formLetters` (
+  `ID` int(30) unsigned NOT NULL AUTO_INCREMENT,
+  `letterID` varchar(50) NOT NULL,
+  `descr` TEXT DEFAULT NULL,
+  `docName` varchar(50) DEFAULT NULL,
+  `creatnDate` varchar(50) DEFAULT NULL,
+  `topics` TEXT DEFAULT NULL,
+  `fillInFields` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=latin1;

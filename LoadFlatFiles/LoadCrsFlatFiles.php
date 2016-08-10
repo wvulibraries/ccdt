@@ -24,7 +24,7 @@ class LoadFlatFiles{
     //Some variables
     $filePath=$this->fileLoc.$this->fileName;
     $lineNumber=1;
-    $lineNumMax=100;
+    $lineNumMax=1000;
 
     print "----Reading flat file: ".$filePath."----\n";
     $fileHandle=fopen($filePath,"r") or die("----Couldn't read the file----\n");
