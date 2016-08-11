@@ -17,8 +17,9 @@ This is [Recokefeller](https://en.wikipedia.org/wiki/Jay_Rockefeller) Constituen
 
 ## Installation
 Although effort has been made to automate most of the tasks, some functionality is intentionally kept manual. If you want to own this project for your own flat file then simply do the following:
-  1. Change the `$folder` and `$fileName` in [LoadFlatFiles.php](LoadFlatFiles/LoadFlatFiles.php)
+  1. Change the `$folder` and `$fileName` in [LoadFlatFiles.php](LoadCrsFlatFiles/LoadCrsFlatFiles.php)
   1. Change the schema of your database in [base.sql](sqlFiles/base.sql) and [setup.sql](sqlFiles/setup.sql) depending on your data(Will allow you to customize your database schema)
+  1. Update the columns(at multiple locations) in insrtToDb at [LoadFlatFiles.php](LoadCrsFlatFiles/LoadCrsFlatFiles.php)
 
 ## Author
 1. [Ajay Kavuri](http://pseudoaj.com)
@@ -26,3 +27,4 @@ Although effort has been made to automate most of the tasks, some functionality 
 ## Refernces
 1. [explode vs strtok](http://stackoverflow.com/questions/2528168/whats-the-use-of-function-strtokin-php-how-is-better-than-other-string-functi)
 1. [PDO](http://markonphp.com/insert-pdo-prepared-statement/)
+1. [Preventing injection with PDO](http://stackoverflow.com/questions/4364686/how-do-i-sanitize-input-with-pdo)
