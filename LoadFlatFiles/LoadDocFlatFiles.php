@@ -24,7 +24,7 @@ class LoadFlatFiles{
     //Some variables
     $filePath=$this->fileLoc.$this->fileName;
     $lineNumber=1;
-    $lineNumMax=20000;
+    $lineNumMax=2000;
 
     print "----Reading flat file: ".$filePath."----\n";
     $fileHandle=fopen($filePath,"r") or die("----Couldn't read the file----\n");
@@ -37,10 +37,12 @@ class LoadFlatFiles{
         $tkns=$this->tokString($thisLine);
         //Pass it to the database
         $this->insrtToDb($tkns);
+        /*
         //Impose a limit on number of lines to process
         if($lineNumber>=$lineNumMax){
           break;
         }
+        */
         $lineNumber++;
       }
       //Close the handler for efficiency

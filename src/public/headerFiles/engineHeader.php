@@ -10,10 +10,10 @@
 	// These are specific to EngineAPI and pulling the appropriate files
 	//recurseInsert("acl.php","php");
 	recurseInsert("headerFiles/includes/engine/vars.php","php"); // sets vars
-	recurseInsert('includes/engine/engineIncludes.php',"php");
+	recurseInsert('headerFiles/includes/engine/engineIncludes.php',"php");
 
 	formBuilder::ajaxHandler();
 
-	recurseInsert("headerIncludes.php","php");
+	recurseInsert("headerFiles/headerIncludes.php","php");
 	templates::load("library2014-dev");
 ?>
