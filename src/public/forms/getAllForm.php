@@ -36,6 +36,7 @@
   float:right;
   margin: 0px;
   width: 10%;
+  font-size: 100%;
 }
 
 ul.pagination {
@@ -76,7 +77,7 @@ $localvars  = localvars::getInstance();
 //Create the instance for the db connection name
 $db = db::get($localvars->get('dbConnectionName'));
 
-//Some variables
+// Number of records to display
 $rLimit=25;
 
 //Pagination stuff
@@ -94,6 +95,7 @@ else{
   $thisRow = $numQResult->fetch();
   $totRecrds= intval($thisRow['totRecrds']);
 }
+// Test to see for the pagination identifier
 if(isset($_REQUEST['pg'])){
   $curPage = intval($_REQUEST['pg'])+1;
   $offSt=$rLimit*$curPage;
@@ -128,17 +130,18 @@ else{
   $output='<div class="cardCont">';
   while($row = $sqlResult->fetch()){
     $thisRow = sprintf(
-    '<a href="%s?">
+    '<a href="%s?cid=%s">
     <div class="card">
       <div class="container">
-        <h3 class="recId"><b>%s</b></h3>
+        <h1 class="recId"><b>%s</b></h1>
         <p><b>Name: </b>%s %s %s %s</p>
         <p><b>Organization: </b>%s</p>
         <p><b>Address: </b>%s<br/>%s, %s, %s<br/>%s<br/>%s</p>
       </div>
     </div>
     </a>',
-    htmlentities($_SERVER['PHP_SELF']),
+    htmlSanitize("card.php"),
+    htmlSanitize($row['ID']),
     htmlSanitize($row['ID']),
     htmlSanitize($row['prefix']),
     htmlSanitize($row['first']),
@@ -155,35 +158,6 @@ else{
     $output .= $thisRow;
 }
 $output.='</div>';
-  /*
-  $output = "<table border='1'>
-                  <tr>
-                      <th>
-                          <p>ID</p>
-                      </th>
-                      <th>
-                          <p>Prefix</p>
-                      </th>
-                      <th>
-                          <p>first</p>
-                      </th>
-                  </tr>";
-  while($row = $sqlResult->fetch()){
-    $thisRow = sprintf(
-        '<tr>
-            <td>%s</td>
-            <td>%s</td>
-            <td>%s</td>
-        </tr>',
-        htmlSanitize($row['ID']),
-        htmlSanitize($row['prefix']),
-        htmlSanitize($row['first'])
-
-    );
-    $output .= $thisRow;
-  }
-  $output .= "</table>";
-  */
 }
 
 //Set pagination

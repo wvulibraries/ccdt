@@ -1,0 +1,69 @@
+.cardCont {
+    width: 100%;
+    overflow: auto;
+}
+
+.card {
+  background-color: rgba(240,240,240,1);
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    transition: 0.1s;
+    width: 90%;
+    border-radius: 5px;
+    padding: 5px 10px;
+    margin: 10px;
+    display: block;
+    float: left;
+    position: relative;
+}
+
+.card:hover {
+    box-shadow: 0 15px 20px 0 rgba(0,0,0,0.2);
+}
+
+.right {
+  float:right;
+}
+
+.left {
+  float:left;
+}
+
+.container {
+    padding: 2px 16px;
+}
+.recId {
+  float:right;
+  margin: 0px;
+  width: 10%;
+  font-size: 100%;
+}
+
+ul.pagination {
+    display: inline-block;
+    padding: 0;
+    margin: 0;
+}
+
+ul.pagination li {display: inline;}
+
+ul.pagination li a {
+    color: black;
+    float: left;
+    padding: 8px 16px;
+    text-decoration: none;
+    transition: background-color .3s;
+    border: 1px solid #ddd;
+    font-size: 22px;
+}
+
+ul.pagination li a.active {
+    background-color: #003366;
+    color: white;
+    border: 1px solid #003366;
+}
+
+ul.pagination li a:hover:not(.active) {background-color: #ddd;}
+
+.pgDiv{
+  text-align: center;
+}

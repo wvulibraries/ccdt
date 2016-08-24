@@ -70,7 +70,6 @@ class LoadFlatFiles{
         $db=null;
         echo "----Success----";
         }
-
     }
     catch(Exception $thisEx){
       trigger_error($thisEx->getMessage());

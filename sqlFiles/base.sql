@@ -37,7 +37,7 @@ CREATE TABLE `correspondence` (
   `out_fillin` varchar(100) DEFAULT NULL,
   `publicAccess` tinyint(3) unsigned NOT NULL DEFAULT 1,
   PRIMARY KEY (`ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 
 DROP TABLE IF EXISTS `formLetters`;
@@ -50,4 +50,12 @@ CREATE TABLE `formLetters` (
   `topics` TEXT DEFAULT NULL,
   `fillInFields` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+DROP TABLE IF EXISTS `publicAccess`;
+CREATE TABLE `publicAccess` (
+  `ID` int(30) unsigned NOT NULL AUTO_INCREMENT,
+  `fName` varchar(50) NOT NULL,
+  `publicAccess` tinyint(3) unsigned NOT NULL DEFAULT 1,
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
