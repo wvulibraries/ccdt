@@ -4,6 +4,9 @@
 //Get the localvars
 $localvars  = localvars::getInstance();
 
+//Some other variables
+$thisRow = '';
+
 //Create the instance for the db connection name
 $db = db::get($localvars->get('dbConnectionName'));
 
@@ -22,13 +25,12 @@ if($curCard<0){
 }
 
 //Execute the query
-$sql = "SELECT * FROM `correspondence` WHERE `id`=$curCard";
+$sql = "SELECT * FROM `correspondence` WHERE `id`=$curCard AND `publicAccess`=1";
 $sqlResult = $db->query($sql);
 
 //Check for any errors
 if ($sqlResult->error()) {
     throw new Exception("ERROR SQL" . $sqlResult->errorMsg());
-
 }
 
 //Check if there are any rows
@@ -39,14 +41,29 @@ else{
   while($row = $sqlResult->fetch()){
     $thisRow.='<table>';
     foreach ($row as $key => $value) {
-      $thisRow .= sprintf(
-      '<tr>
-      <td>%s</td>
-      <td>%s</td>
-      </tr>',
-      htmlSanitize("$key"),
-      htmlSanitize("$value")
-    );
+      //Check for the flag
+      $prmsnQuery = "SELECT `publicAccess` FROM `publicAccess` WHERE `fName`='$key'";
+      $prmsnQueryRslt = $db->query($prmsnQuery);
+      //check for errors
+      if ($prmsnQueryRslt->error()) {
+          throw new Exception("ERROR SQL" . $prmsnQueryRslt->errorMsg());
+      }
+      //Fetch the results
+      while($pQueryRow = $prmsnQueryRslt->fetch()){
+        foreach ($pQueryRow as $pQkey => $pQValue) {
+          // Show the results only when you have permissions
+          if(strcmp($pQValue[0],"1")==0){
+            $thisRow .= sprintf(
+            '<tr>
+            <td>%s</td>
+            <td>%s</td>
+            </tr>',
+            htmlSanitize("$key"),
+            htmlSanitize("$value")
+          );
+          }
+        }
+      }
     }
     $thisRow.='</table>';
 }

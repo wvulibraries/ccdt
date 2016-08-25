@@ -113,13 +113,12 @@ if($curPage<0){
 
 
 //Execute the query
-$sql = "SELECT * FROM `correspondence` LIMIT $offSt,$rLimit";
+$sql = "SELECT * FROM `correspondence` WHERE `publicAccess`=1 LIMIT $offSt,$rLimit";
 $sqlResult = $db->query($sql);
 
 //Check for any errors
 if ($sqlResult->error()) {
     throw new Exception("ERROR SQL" . $sqlResult->errorMsg());
-
 }
 
 //Check if there are any rows
@@ -133,7 +132,7 @@ else{
     '<a href="%s?cid=%s">
     <div class="card">
       <div class="container">
-        <h1 class="recId"><b>%s</b></h1>
+        <h3 class="recId"><b>%s</b></h3>
         <p><b>Name: </b>%s %s %s %s</p>
         <p><b>Organization: </b>%s</p>
         <p><b>Address: </b>%s<br/>%s, %s, %s<br/>%s<br/>%s</p>
