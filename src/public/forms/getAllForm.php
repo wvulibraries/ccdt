@@ -73,6 +73,7 @@ ul.pagination li a:hover:not(.active) {background-color: #ddd;}
 <?php
 //Get the localvars
 $localvars  = localvars::getInstance();
+$pagination = '';
 
 //Create the instance for the db connection name
 $db = db::get($localvars->get('dbConnectionName'));
@@ -113,6 +114,8 @@ if($curPage<0){
 
 
 //Execute the query
+$offSt=htmlSanitize($offSt);
+$rLimit=htmlSanitize($rLimit);
 $sql = "SELECT * FROM `correspondence` WHERE `publicAccess`=1 LIMIT $offSt,$rLimit";
 $sqlResult = $db->query($sql);
 
@@ -173,9 +176,9 @@ if($curPage==0){
   </div>
   ',
   htmlSanitize($curPage+1),
-  htmlSanitize($_PHP_SELF),
+  htmlSanitize($_SERVER["PHP_SELF"]),
   htmlSanitize($curPage),
-  htmlSanitize($_PHP_SELF),
+  htmlSanitize($_SERVER["PHP_SELF"]),
   htmlSanitize(($totRecrds/$rLimit)-2)
   );
 }
@@ -192,13 +195,13 @@ else if($curPage>0){
   </ul>
   </div>
   ',
-  htmlSanitize($_PHP_SELF),
-  htmlSanitize($_PHP_SELF),
+  htmlSanitize($_SERVER["PHP_SELF"]),
+  htmlSanitize($_SERVER["PHP_SELF"]),
   htmlSanitize($curPage-2),
   htmlSanitize($curPage+1),
-  htmlSanitize($_PHP_SELF),
+  htmlSanitize($_SERVER["PHP_SELF"]),
   htmlSanitize($curPage),
-  htmlSanitize($_PHP_SELF),
+  htmlSanitize($_SERVER["PHP_SELF"]),
   htmlSanitize(($totRecrds/$rLimit)-2)
 
   );

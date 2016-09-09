@@ -25,6 +25,7 @@ if($curCard<0){
 }
 
 //Execute the query
+$curCard=htmlSanitize($curCard);
 $sql = "SELECT * FROM `correspondence` WHERE `id`=$curCard AND `publicAccess`=1";
 $sqlResult = $db->query($sql);
 
@@ -42,6 +43,7 @@ else{
     $thisRow.='<table>';
     foreach ($row as $key => $value) {
       //Check for the flag
+      $key=htmlSanitize($key);
       $prmsnQuery = "SELECT `publicAccess` FROM `publicAccess` WHERE `fName`='$key'";
       $prmsnQueryRslt = $db->query($prmsnQuery);
       //check for errors
@@ -53,14 +55,41 @@ else{
         foreach ($pQueryRow as $pQkey => $pQValue) {
           // Show the results only when you have permissions
           if(strcmp($pQValue[0],"1")==0){
-            $thisRow .= sprintf(
-            '<tr>
-            <td>%s</td>
-            <td>%s</td>
-            </tr>',
-            htmlSanitize("$key"),
-            htmlSanitize("$value")
-          );
+            if((strcmp($key,"out_document_name")==0)||(strcmp($key,"in_document_name")==0)){
+
+              //Method 1 to build path
+              //$pTkns=explode('\\',strval($value));
+              //$fPath=$pTkns[1].'/'.$pTkns[1];
+
+              //Method 2 to build path
+              $pTkns=explode('\\',strval($value));
+              $fChar=array_shift($pTkns);
+              $pTkns = array_diff($pTkns,array('BlobExport'));
+              $fPath = implode("/",$pTkns);
+              #print $fPath;
+              #$fPath='documents/indivletters/9996092.txt';
+
+              $thisRow .= sprintf(
+              '<tr>
+              <td>%s</td>
+              <td><a href="%s">%s</a></td>
+              </tr>',
+              htmlSanitize("$key"),
+              htmlSanitize("$fPath"),
+              htmlSanitize("$value")
+            );
+
+            }
+            else{
+              $thisRow .= sprintf(
+              '<tr>
+              <td>%s</td>
+              <td>%s</td>
+              </tr>',
+              htmlSanitize("$key"),
+              htmlSanitize("$value")
+            );
+            }
           }
         }
       }
