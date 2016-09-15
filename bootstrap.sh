@@ -4,7 +4,7 @@
 #description     :This script will install LAMP stack and Composer on centos 7.2
 #author		       :Ajay Krishna Teja Kavuri
 #date            :20161014
-#version         :0.1
+#version         :0.2
 #==============================================================================
 
 #Formal update for no reason
@@ -42,6 +42,12 @@ echo -e "----Started Apache----\n\n"
 sudo systemctl start mysqld
 sudo systemctl enable mysqld
 echo -e "----Started MySQL----\n\n"
+
+# Install composer
+yum -y install nodejs
+yum -y install npm
+npm install --global gulp-cli
+echo -e "----Installed Node and Gulp----\n\n"
 
 # Install composer
 curl -sS https://getcomposer.org/installer | php

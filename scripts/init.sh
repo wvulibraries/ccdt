@@ -19,11 +19,16 @@ composer global require "laravel/installer"
 # Set the path variable
 export PATH=~/.config/composer/vendor/bin:$PATH
 
-#create a sample laravel project
-laravel new css
+# Create a sample laravel project
+#laravel new css
+composer create-project --prefer-dist laravel/laravel css "5.2.*"
 
-#Move into Apache
+# Move into Apache
 sudo mv /home/vagrant/css /var/www/html
+
+# Install node dependencies and install d3 gulp
+cd /var/www/html/css
+npm install
 
 # Set the configurations
 chmod 775 /var/www/html/css/storage
