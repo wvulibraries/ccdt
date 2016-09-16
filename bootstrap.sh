@@ -43,10 +43,11 @@ sudo systemctl start mysqld
 sudo systemctl enable mysqld
 echo -e "----Started MySQL----\n\n"
 
-# Install composer
+# Install Node, gulp and libnotify
 yum -y install nodejs
 yum -y install npm
 npm install --global gulp-cli
+yum -y install libnotify
 echo -e "----Installed Node and Gulp----\n\n"
 
 # Install composer
