@@ -1,18 +1,67 @@
 @import "node_modules/bootstrap-sass/assets/stylesheets/bootstrap";
 
-.gradient {
-  @include gradient-horizontal-three-colors($start-color: #00b3ee, $mid-color: #7a43b6, $color-stop: 50%, $end-color: #c3325f);
+.heading-font {
+  font-family: 'Muli', 'Helvetica', 'Arial', 'sans-serif';
+  font-weight: 200;
+  letter-spacing: 1px;
 }
 
-.body{
+.body-font {
+  font-family: 'Muli', 'Helvetica', 'Arial', 'sans-serif';
+}
+
+.alt-font {
+  font-family: 'Muli', 'Helvetica', 'Arial', 'sans-serif';
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+html,
+body{
   height: 100%;
   width: 100%;
+}
+
+body {
+  font-family: 'Muli', 'Helvetica', 'Arial', 'sans-serif';
+}
+
+a {
+  -webkit-transition: all 0.35s;
+  -moz-transition: all 0.35s;
+  transition: all 0.35s;
+  color: $link-color;
+}
+
+a:hover,
+a:focus {
+  color: $link-hover-color;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: 'Muli', 'Helvetica', 'Arial', 'sans-serif';
+  font-weight: 200;
+  letter-spacing: 1px;
+}
+
+p {
+  font-size: 18px;
+  line-height: 1.5;
+  margin-bottom: 20px;
 }
 
 .full-container{
 
   // Make a row
   @include make-row;
+  min-height: 100vh;
+  height: 100%;
+  width: 100%;
 
   .quote-div{
     @include make-xs-column(12);
