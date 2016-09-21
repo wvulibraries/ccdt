@@ -4,23 +4,15 @@
   @include gradient-horizontal-three-colors($start-color: #00b3ee, $mid-color: #7a43b6, $color-stop: 50%, $end-color: #c3325f);
 }
 
+.body{
+  height: 100%;
+  width: 100%;
+}
+
 .full-container{
 
-  position: relative;
-  width: 100%;
-  min-height: auto;
-  overflow-y: hidden;
-  background: url("https://images.unsplash.com/reserve/oIpwxeeSPy1cnwYpqJ1w_Dufer%20Collateral%20test.jpg?ixlib=rb-0.3.5&q=80&fm=jpg&crop=entropy&cs=tinysrgb&s=2f682168e7b0af70811c914882b0750b"), #7b4397;
-  /* fallback for old browsers */
-  background: url("https://images.unsplash.com/reserve/oIpwxeeSPy1cnwYpqJ1w_Dufer%20Collateral%20test.jpg?ixlib=rb-0.3.5&q=80&fm=jpg&crop=entropy&cs=tinysrgb&s=2f682168e7b0af70811c914882b0750b"), -webkit-linear-gradient(to left, #7b4397, #dc2430);
-  /* Chrome 10-25, Safari 5.1-6 */
-  background: url("https://images.unsplash.com/reserve/oIpwxeeSPy1cnwYpqJ1w_Dufer%20Collateral%20test.jpg?ixlib=rb-0.3.5&q=80&fm=jpg&crop=entropy&cs=tinysrgb&s=2f682168e7b0af70811c914882b0750b"), linear-gradient(to left, #7b4397, #dc2430);
-  /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-  color: white;
-
-
+  // Make a row
   @include make-row;
-  // @include gradient-horizontal-three-colors($start-color: #00b3ee, $mid-color: #7a43b6, $color-stop: 50%, $end-color: #c3325f);
 
   .quote-div{
     @include make-xs-column(12);
