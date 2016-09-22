@@ -1,7 +1,7 @@
 @import "node_modules/bootstrap-sass/assets/stylesheets/bootstrap";
 
 .heading-font {
-  font-family: 'Muli', 'Helvetica', 'Arial', 'sans-serif';
+  font-family: 'Source Sans Pro', sans-serif;
   font-weight: 200;
   letter-spacing: 1px;
 }
@@ -44,7 +44,7 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: 'Muli', 'Helvetica', 'Arial', 'sans-serif';
+  font-family: 'Source Sans Pro', sans-serif;
   font-weight: 200;
   letter-spacing: 1px;
 }
@@ -53,6 +53,44 @@ p {
   font-size: 18px;
   line-height: 1.5;
   margin-bottom: 20px;
+}
+
+.navbar-default{
+  background-color: #FFF;
+}
+
+.navbar-default .navbar-brand,
+.navbar-default .navbar-brand:hover,
+.navbar-default .navbar-brand:focus {
+    color: $brand-primary;
+}
+
+.navbar-default .navbar-nav > li > a {
+    color: $brand-primary;
+}
+
+.navbar-default .navbar-nav > .active > a,
+.navbar-default .navbar-nav > .active > a:hover,
+.navbar-default .navbar-nav > .active > a:focus {
+    color: $brand-primary;
+}
+
+.navbar-default .navbar-text {
+    color: $brand-primary;
+}
+
+.navbar-default .navbar-brand{
+  font-size: 36px;
+}
+
+.jumbotron{
+  @include clearfix;
+  color: $brand-primary;
+
+}
+
+.css-sidebar{
+  border-right: 1px solid #EEE;
 }
 
 .full-container{
@@ -74,4 +112,38 @@ p {
     @include make-sm-column(12);
     @include make-md-column(6);
   }
+}
+
+.contentwrap{
+  margin-bottom: 50px;
+}
+
+$blue: #002855;
+$gold: #EAAA00;
+$border: 2px solid #e1e1e1;
+$grayText: #aaa;
+$footer-background: #eee;
+
+footer{
+  width: 100%;
+  float: left;
+  left: 0;
+  background: $footer-background;
+  padding: 10px;
+  //border-top: $border;
+
+  .builtBy {
+    color: $grayText;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    width:16%;
+    min-width:250px;
+    float:right;
+    text-align:right;
+  }
+
+  .built, .by { font-weight: 300; }
+  .wvu { color: $blue; }
+  .libs { color: $gold; margin-left:-6px; }
 }

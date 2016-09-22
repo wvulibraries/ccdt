@@ -12,5 +12,9 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('pages/welcome');
+});
+
+Route::get('/admin', function(){
+    return view('pages/admin/dashboard');
 });
