@@ -1,5 +1,12 @@
 @import "node_modules/bootstrap-sass/assets/stylesheets/bootstrap";
 
+$blue: #002855;
+$gold: #EAAA00;
+$border: 2px solid #e1e1e1;
+$grayText: #aaa;
+$footer-background: #EEE;
+
+
 .heading-font {
   font-family: 'Source Sans Pro', sans-serif;
   font-weight: 200;
@@ -57,6 +64,8 @@ p {
 
 .navbar-default{
   background-color: #FFF;
+  //background-color: $footer-background;
+  border-top: 7px solid $brand-primary;
 }
 
 .navbar-default .navbar-brand,
@@ -117,12 +126,6 @@ p {
 .contentwrap{
   margin-bottom: 50px;
 }
-
-$blue: #002855;
-$gold: #EAAA00;
-$border: 2px solid #e1e1e1;
-$grayText: #aaa;
-$footer-background: #eee;
 
 footer{
   width: 100%;

@@ -11,10 +11,14 @@
 |
 */
 
+// Route to the home page
 Route::get('/', function () {
     return view('pages/welcome');
 });
 
-Route::get('/admin', function(){
-    return view('pages/admin/dashboard');
+Route::get('/admin', 'AdminController@index')->name('admin');
+
+Route::group(['prefix'=>'admin'],function(){
+  Route::get('dashboard', 'AdminController@dashboard')->name('dashboard');
+  Route::get('importData', 'AdminController@importData')->name('import');
 });

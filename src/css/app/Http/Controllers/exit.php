@@ -7,29 +7,16 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
-class AdminController extends Controller
+class exit extends Controller
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(){
-      return view('pages/admin/dashboard');
-    }
-
-    /**
-    * Function for the import data view
-    */
-    public function importData(){
-      return view('pages/admin/import-data');
-    }
-
-    /**
-    * Function for the import data view
-    */
-    public function dashboard(){
-      return view('pages/admin/dashboard');
+    public function index()
+    {
+        //
     }
 
     /**

@@ -5775,7 +5775,8 @@ p {
   margin-bottom: 20px; }
 
 .navbar-default {
-  background-color: #FFF; }
+  background-color: #FFF;
+  border-top: 7px solid #0052A5; }
 
 .navbar-default .navbar-brand,
 .navbar-default .navbar-brand:hover,
@@ -5872,7 +5873,7 @@ footer {
   width: 100%;
   float: left;
   left: 0;
-  background: #eee;
+  background: #EEE;
   padding: 10px; }
   footer .builtBy {
     color: #aaa;
