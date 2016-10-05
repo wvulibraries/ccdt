@@ -16,4 +16,4 @@ sudo ln -s /vagrant/serverConfiguration/httpd.conf /etc/httpd/conf
 sudo systemctl restart httpd
 
 # Set up MYSQL Stuff
-# mysql -u root < /vagrant/sqlFiles/setup.sql
+mysql -u root < /vagrant/sqlFiles/setup.sql
