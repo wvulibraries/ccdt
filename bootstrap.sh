@@ -44,8 +44,7 @@ sudo systemctl enable mysqld
 echo -e "----Started MySQL----\n\n"
 
 # Install Node, gulp and libnotify
-yum -y install nodejs
-yum -y install npm
+yum -y install nodejs npm --enablerepo=epel
 npm install --global gulp-cli
 yum -y install libnotify
 echo -e "----Installed Node and Gulp----\n\n"

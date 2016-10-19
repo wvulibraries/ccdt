@@ -99,7 +99,7 @@ p {
 }
 
 .css-sidebar{
-  border-right: 1px solid #EEE;
+  border-right: 2px solid #EEE;
 }
 
 .full-container{
@@ -125,6 +125,10 @@ p {
 
 .contentwrap{
   margin-bottom: 50px;
+}
+
+.topBorder{
+  border-top: 7px solid $brand-primary;
 }
 
 footer{

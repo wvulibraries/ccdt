@@ -16,9 +16,14 @@ Route::get('/', function () {
     return view('pages/welcome');
 });
 
-Route::get('/admin', 'AdminController@index')->name('admin');
+// Route to the admin page
+Route::get('/admin', 'AdminController@adminHome')->name('admin');
 
+// Routes inside the admin page
 Route::group(['prefix'=>'admin'],function(){
   Route::get('dashboard', 'AdminController@dashboard')->name('dashboard');
   Route::get('importData', 'AdminController@importData')->name('import');
+  Route::get('accessControl', 'AdminController@accessControl')->name('accessControl');
+  Route::get('auditRecords', 'AdminController@auditRecords')->name('auditRecords');
+  Route::post('importData/collection','AdminController@createCollection');
 });

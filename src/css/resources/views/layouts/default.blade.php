@@ -4,18 +4,24 @@
     @include('includes.meta')
   </head>
   <body>
+
     <!-- Nav Bar-->
-    <div class="row">
+    <div class="container-fluid">
       @include('includes.navbar')
     </div>
 
+    <!-- Alerts -->
+    <div class="container-fluid">
+      @include('includes.alerts')
+    </div>
+
     <!-- Content -->
-    <div class="row contentwrap">
+    <div class="container contentwrap">
       @yield('content')
     </div>
 
     <!-- Footer -->
-    <div class="row">
+    <div class="container-fluid">
       @include('includes.footer')
     </div>
   </body>

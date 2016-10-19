@@ -1,7 +1,7 @@
 @extends('layouts.sidemenu')
 
 @section('content')
-  <div class="row">
+  <div class="container-fluid">
     {{Request::url()}}
   </div>
 @stop

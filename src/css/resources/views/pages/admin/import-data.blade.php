@@ -1,12 +1,45 @@
 @extends('layouts.sidemenu')
 
 @section('content')
-<div class="row">
-  <div class="container">
-    <h2>Import the database</h2>
-    <p>
-      Pipelines capable of producing computer graphics films and games typically generate, store, and transmit great quantities of 3D data, which we call "scene description".  Each of many cooperating applications in the pipeline  (modeling, shading, animation, lighting, fx, rendering) typically has its own special form of scene description tailored to the specific needs and workflows of the application, and neither readable nor editable by any other application.   Universal Scene Description (USD) is the first publicly available software that addresses the need to robustly and scalably interchange and augment arbitrary 3D scenes that may be composed from many elemental assets.
-    </p>
+<div class="container-fluid">
+  <div class="text-center">
+    <h2 class="text-center">Import Data</h2>
+    <p>This wizard will help you to import the data to collection.</p>
   </div>
+  <hr>
+  <h3>Step 1: Create/Select Collection</h3>
+
+  <form method="POST" action="importData/collection" class="form-inline">
+    <input type="hidden" name="_token" value="{{csrf_token()}}"/>
+    <div class="form-group" role="form">
+      <label for="collectionName">Create a new collection:</label>
+      <input type="text" class="form-control" name="collectionName" id="collectionName">
+    </div>
+    <div class="form-group">
+      <button type="submit" class="btn btn-default">Create</button>
+    </div>
+  </form>
+
+  <div class="text-center">
+    <h3>--or--</h3>
+  </div>
+
+  <form role="form">
+    <div class="form-group" role="form">
+      <div class="list-group">
+        <label for="collectionRadio">Select a collection</label>
+        <div class="radio list-group-item" id="collectionRadio">
+          <label><input type="radio" name="collectionName"> Collection 1</label>
+        </div>
+        <div class="radio list-group-item">
+          <label><input type="radio" name="collectionName"> Collection 2</label>
+        </div>
+      </div>
+    </div>
+    <div class="form-group pull-right">
+      <button type="submit" class="btn btn-primary">Next</button>
+    </div>
+  </form>
+
 </div>
 @stop
