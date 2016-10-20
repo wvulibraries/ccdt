@@ -15,7 +15,7 @@ cd /home/vagrant
 
 # Create a sample laravel project
 # laravel new css
-composer create-project --prefer-dist laravel/laravel css "5.1.*"
+composer create-project --prefer-dist laravel/laravel css
 
 # Install node dependencies and install d3 gulp
 cd ./css

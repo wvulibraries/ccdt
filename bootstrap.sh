@@ -49,6 +49,10 @@ npm install --global gulp-cli
 yum -y install libnotify
 echo -e "----Installed Node and Gulp----\n\n"
 
+# Install git
+yum -y install git
+echo -e "----Installed Git----\n\n"
+
 # Install composer
 curl -sS https://getcomposer.org/installer | php
 sudo chmod +x composer.phar
