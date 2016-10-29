@@ -24,7 +24,7 @@ Although effort has been made to automate most of the tasks, some functionality 
 ## Author
 1. [Ajay Kavuri](http://pseudoaj.com)
 
-## Refernces
+## References
 1. [explode vs strtok](http://stackoverflow.com/questions/2528168/whats-the-use-of-function-strtokin-php-how-is-better-than-other-string-functi)
 1. [PDO](http://markonphp.com/insert-pdo-prepared-statement/)
 1. [Preventing injection with PDO](http://stackoverflow.com/questions/4364686/how-do-i-sanitize-input-with-pdo)
