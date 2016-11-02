@@ -8,25 +8,25 @@
 #==============================================================================
 
 # Remove if something already exists
-rm -rf /var/www/html/css
+rm -rf /var/www/html/project-css
 
 # Change the directory
 cd /home/vagrant
 
 # Create a sample laravel project
-# laravel new css
-composer create-project --prefer-dist laravel/laravel css
+# laravel new project-css
+composer create-project --prefer-dist laravel/laravel project-css
 
 # Install node dependencies and install d3 gulp
-cd ./css
+cd ./project-css
 npm install
 
 # Move into Apache
-sudo mv /home/vagrant/css /var/www/html
+sudo mv /home/vagrant/project-css /var/www/html
 
 # Set the configurations
-chmod 775 /var/www/html/css/storage
-sudo chown -R apache:apache /var/www/html/css
+chmod 775 /var/www/html/project-css/storage
+sudo chown -R apache:apache /var/www/html/project-css
 sudo chmod 755 /var/www
 sudo rm -R /etc/httpd/conf/httpd.conf
 sudo ln -s /vagrant/serverConfiguration/httpd.conf /etc/httpd/conf

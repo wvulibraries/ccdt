@@ -1,7 +1,7 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
-PROJECT_NAME = "CSS"
+PROJECT_NAME = "ProjectCSS"
 API_VERSION  = "2"
 
 Vagrant.configure(API_VERSION) do |config|

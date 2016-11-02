@@ -8,8 +8,8 @@
 #==============================================================================
 
 # Set the configurations
-chmod 775 /var/www/html/css/storage
-sudo chown -R apache:apache /var/www/html/css
+chmod 775 /var/www/html/project-css/storage
+sudo chown -R apache:apache /var/www/html/project-css
 sudo chmod 755 /var/www
 sudo rm -R /etc/httpd/conf/httpd.conf
 sudo ln -s /vagrant/serverConfiguration/httpd.conf /etc/httpd/conf
