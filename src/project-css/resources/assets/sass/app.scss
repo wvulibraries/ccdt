@@ -1,9 +1,160 @@
-
-// Fonts
-@import url(https://fonts.googleapis.com/css?family=Raleway:300,400,600);
-
 // Variables
 @import "variables";
 
 // Bootstrap
 @import "node_modules/bootstrap-sass/assets/stylesheets/bootstrap";
+
+$blue: #002855;
+$gold: #EAAA00;
+$border: 2px solid #e1e1e1;
+$grayText: #aaa;
+$footer-background: #EEE;
+
+
+.heading-font {
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 200;
+  letter-spacing: 1px;
+}
+
+.body-font {
+  font-family: 'Muli', 'Helvetica', 'Arial', 'sans-serif';
+}
+
+.alt-font {
+  font-family: 'Muli', 'Helvetica', 'Arial', 'sans-serif';
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+html,
+body{
+  height: 100%;
+  width: 100%;
+}
+
+body {
+  font-family: 'Muli', 'Helvetica', 'Arial', 'sans-serif';
+}
+
+a {
+  -webkit-transition: all 0.35s;
+  -moz-transition: all 0.35s;
+  transition: all 0.35s;
+  color: $link-color;
+}
+
+a:hover,
+a:focus {
+  color: $link-hover-color;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 200;
+  letter-spacing: 1px;
+}
+
+p {
+  font-size: 18px;
+  line-height: 1.5;
+  margin-bottom: 20px;
+}
+
+.navbar-default{
+  background-color: #FFF;
+  //background-color: $footer-background;
+  border-top: 7px solid $brand-primary;
+}
+
+.navbar-default .navbar-brand,
+.navbar-default .navbar-brand:hover,
+.navbar-default .navbar-brand:focus {
+    color: $brand-primary;
+}
+
+.navbar-default .navbar-nav > li > a {
+    color: $brand-primary;
+}
+
+.navbar-default .navbar-nav > .active > a,
+.navbar-default .navbar-nav > .active > a:hover,
+.navbar-default .navbar-nav > .active > a:focus {
+    color: $brand-primary;
+}
+
+.navbar-default .navbar-text {
+    color: $brand-primary;
+}
+
+.navbar-default .navbar-brand{
+  font-size: 36px;
+}
+
+.jumbotron{
+  @include clearfix;
+  color: $brand-primary;
+
+}
+
+.css-sidebar{
+  border-right: 2px solid #EEE;
+}
+
+.full-container{
+
+  // Make a row
+  @include make-row;
+  min-height: 100vh;
+  height: 100%;
+  width: 100%;
+
+  .quote-div{
+    @include make-xs-column(12);
+    @include make-sm-column(12);
+    @include make-md-column(6);
+  }
+
+  .analytics-div{
+    @include make-xs-column(12);
+    @include make-sm-column(12);
+    @include make-md-column(6);
+  }
+}
+
+.contentwrap{
+  margin-bottom: 50px;
+}
+
+.topBorder{
+  border-top: 7px solid $brand-primary;
+}
+
+footer{
+  width: 100%;
+  float: left;
+  left: 0;
+  background: $footer-background;
+  padding: 10px;
+  //border-top: $border;
+
+  .builtBy {
+    color: $grayText;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    width:16%;
+    min-width:250px;
+    float:right;
+    text-align:right;
+  }
+
+  .built, .by { font-weight: 300; }
+  .wvu { color: $blue; }
+  .libs { color: $gold; margin-left:-6px; }
+}
