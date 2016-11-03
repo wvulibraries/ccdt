@@ -99,7 +99,7 @@ p {
 .jumbotron{
   @include clearfix;
   color: $brand-primary;
-
+  background-color: $footer-background;
 }
 
 .css-sidebar{

@@ -1,7 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <!-- Html Meta -->
     @include('includes.meta')
+
+    <!-- Scripts for the end head -->
+    @include('includes.headscripts')
   </head>
   <body>
     <!-- Nav Bar-->
@@ -15,7 +19,7 @@
     </div>
 
     <!-- Content -->
-    <div class="container contentwrap">
+    <div>
       @yield('content')
     </div>
 
@@ -25,6 +29,6 @@
     </div>
 
     <!-- Scripts -->
-    @include('includes.scripts')
+    @include('includes.endscripts')
   </body>
 </html>

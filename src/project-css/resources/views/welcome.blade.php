@@ -1,8 +1,7 @@
 @extends('layouts.default')
 
-<!-- header -->
+<!-- Content -->
 @section('content')
-  <div class="row">
+    <!-- header -->
     @include('includes.header')
-  </div>
 @stop
