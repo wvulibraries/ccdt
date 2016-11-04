@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Auth;
 
 class HomeController extends Controller
 {
@@ -23,6 +24,14 @@ class HomeController extends Controller
      */
     public function index()
     {
+      // Check if the user is admin
+      // Page for a normal user
+      if(!(Auth::user()->isAdmin)){
         return view('user/index');
+      }
+      // Page for a admin user
+      else{
+        return view('user/index');
+      }
     }
 }

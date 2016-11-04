@@ -2,15 +2,16 @@
 
 
 @section('content')
+<!-- Search engine -->
 <div class="container search">
     <div class="row">
-        <div class="col-md-12">
+        <div class="col-xs-12 col-sm-12 col-md-12">
           <form class="form-horizontal" role="form" method="POST" action="{{ url('/login') }}">
               {{ csrf_field() }}
 
               <div class="form-group{{ $errors->has('search') ? ' has-error' : '' }}">
-                  <div class="col-md-10">
-                      <input id="search" type="search" class="form-control" name="search" value="{{ old('search') }}" required autofocus>
+                  <div class="col-md-10 col-sm-10 col-xs-8">
+                      <input id="search" type="search" class="form-control searchBar" name="search" value="{{ old('search') }}" required autofocus>
 
                       @if ($errors->has('search'))
                           <span class="help-block">
@@ -19,8 +20,8 @@
                       @endif
                   </div>
 
-                  <div class="col-md-2">
-                      <button type="submit" class="btn btn-primary">
+                  <div class="col-md-2 col-sm-2 col-xs-4">
+                      <button type="submit searchButton" class="btn btn-primary">
                           Search
                       </button>
                   </div>
@@ -29,4 +30,15 @@
         </div>
     </div>
 </div>
+
+<!-- Records -->
+<hr/>
+
+<!-- Records -->
+<div class="container">
+    <div class="row">
+      Records
+    </div>
+</div>
+
 @endsection
