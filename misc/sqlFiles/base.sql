@@ -1,4 +1,4 @@
-use `rockefellercss`;
+use `css`;
 
 DROP TABLE IF EXISTS `correspondence`;
 CREATE TABLE `correspondence` (

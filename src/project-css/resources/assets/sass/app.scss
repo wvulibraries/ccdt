@@ -158,3 +158,39 @@ footer{
   .wvu { color: $blue; }
   .libs { color: $gold; margin-left:-6px; }
 }
+
+.headingWrapper {
+    background-color: #EEE;
+    margin-top: -20px;
+    margin-bottom: -20px;
+    padding: 20px;
+}
+
+.cardsWrapper {
+    padding: 20px;
+}
+
+.dashCard {
+    border-radius: 0px;
+    text-align: center;
+}
+
+.dashCard .icon{
+  color: $brand-primary;
+  display: block;
+  font-size: 72px;
+  line-height: 72px;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.dashCard var{
+  display: block;
+  font-size: 48px;
+  line-height: 48px;
+}
+
+.dashCard label{
+  font-size: 24px;
+  display: block;
+}

@@ -20,4 +20,4 @@ mysql -u root < /vagrant/sqlFiles/setup.sql
 
 # Run the migration
 cd /var/www/html/project-css/
-php artisan migrate
+php artisan migrate --seed

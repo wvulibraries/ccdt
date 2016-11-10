@@ -31,7 +31,7 @@ class HomeController extends Controller
       }
       // Page for a admin user
       else{
-        return view('user/index');
+        return view('admin/index');
       }
     }
 }

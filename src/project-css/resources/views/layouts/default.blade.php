@@ -19,7 +19,7 @@
     </div>
 
     <!-- Content -->
-    <div>
+    <div class="contentWrapper">
       @yield('content')
     </div>
 
