@@ -26,4 +26,9 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    // Function to check for the adminship
+    public function isAdmin(){
+      return true;
+    }
 }
