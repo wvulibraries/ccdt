@@ -20,7 +20,7 @@
     <div class="col-xs-12 col-sm-6 col-md-3">
       <div class="well dashCard">
         <div class="dashCardHeading">
-          <label>User(s)</label>
+          <span class="glyphicon glyphicon-user visible-xs visible-sm smallIcon"></span><label>User(s)</label>
         </div>
         <div class="icon hidden-xs hidden-sm">
           <i class="glyphicon glyphicon-user"></i>
@@ -34,7 +34,7 @@
     <div class="col-xs-12 col-sm-6 col-md-3">
       <div class="well dashCard">
         <div class="dashCardHeading">
-          <label>Collection(s)</label>
+          <span class="glyphicon glyphicon-book visible-xs visible-sm smallIcon"></span><label>Collection(s)</label>
         </div>
         <div class="icon hidden-xs hidden-sm">
           <i class="glyphicon glyphicon-book"></i>
@@ -51,7 +51,7 @@
     <div class="col-xs-12 col-sm-6 col-md-3">
       <div class="well dashCard">
         <div class="dashCardHeading">
-          <label>Table(s)</label>
+          <span class="glyphicon glyphicon-duplicate visible-xs visible-sm smallIcon"></span><label>Table(s)</label>
         </div>
         <div class="icon hidden-xs hidden-sm">
           <i class="glyphicon glyphicon-duplicate"></i>
@@ -65,7 +65,7 @@
     <div class="col-xs-12 col-sm-6 col-md-3">
       <div class="well dashCard">
         <div class="dashCardHeading">
-          <label>Admin(s)</label>
+          <span class="glyphicon glyphicon-cog visible-xs visible-sm smallIcon"></span><label>Admin(s)</label>
         </div>
         <div class="icon hidden-xs hidden-sm">
           <i class="glyphicon glyphicon-cog"></i>

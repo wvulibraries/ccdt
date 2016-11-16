@@ -5970,4 +5970,14 @@ footer {
   font-size: 24px;
   border-bottom: 1px solid #000000; }
 
+.searchBarWrapper {
+  margin-top: -20px;
+  padding: 20px;
+  margin-bottom: -20px;
+  background-color: #EEE; }
+
+.smallIcon {
+  float: left;
+  color: #337ab7; }
+
 /*# sourceMappingURL=app.css.map */

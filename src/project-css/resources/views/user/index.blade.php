@@ -3,7 +3,8 @@
 
 @section('content')
 <!-- Search engine -->
-<div class="container search">
+<div class="searchBarWrapper">
+  <div class="container">
     <div class="row">
         <div class="col-xs-12 col-sm-12 col-md-12">
           <form class="form-horizontal" role="form" method="POST" action="{{ url('/login') }}">
@@ -28,7 +29,8 @@
               </div>
           </form>
         </div>
-    </div>
+    </div>    
+  </div>
 </div>
 
 <!-- Records -->

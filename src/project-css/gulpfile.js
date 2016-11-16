@@ -22,5 +22,5 @@ elixir(mix => {
     mix.copy('node_modules/bootstrap-sass/assets/fonts/bootstrap/','public/fonts/bootstrap');
 
     //Run phpunit
-    mix.phpUnit();
+    //mix.phpUnit();
 });

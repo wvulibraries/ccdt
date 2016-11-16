@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Auth;
 
 class User extends Authenticatable
 {
@@ -29,6 +30,15 @@ class User extends Authenticatable
 
     // Function to check for the adminship
     public function isAdmin(){
-      return true;
+      // Check if the user is logged in
+      if(Auth::check()){
+        // Check if the user is admin
+        if(Auth::user()->isAdmin){
+          return true;
+        }
+      }
+
+      // Return false if not
+      return false;
     }
 }
