@@ -32,11 +32,14 @@ Auth::routes();
 | Controller for the home page
 |--------------------------------------------------------------------------
 */
-Route::get('/home', 'HomeController@index');
+Route::get('home', 'HomeController@index');
 
 /*
 |--------------------------------------------------------------------------
 | Controller for the admin page
 |--------------------------------------------------------------------------
 */
-Route::get('/collection', 'CollectionController@index')->middleware('admin');
+Route::get('collection', 'CollectionController@index');
+Route::group(['prefix' => 'collection'], function(){
+  Route::post('create', 'CollectionController@create');
+});

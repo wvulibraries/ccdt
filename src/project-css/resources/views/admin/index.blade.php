@@ -1,6 +1,6 @@
 @extends('layouts.default')
 
-
+<!-- Heading -->
 @section('content')
 <div class="headingWrapper">
   <!-- Heading -->
@@ -31,23 +31,22 @@
         </div>
       </div>
     </div>
-    <div class="col-xs-12 col-sm-6 col-md-3">
-      <div class="well dashCard">
-        <div class="dashCardHeading">
-          <span class="glyphicon glyphicon-book visible-xs visible-sm smallIcon"></span><label>Collection(s)</label>
-        </div>
-        <div class="icon hidden-xs hidden-sm">
-          <i class="glyphicon glyphicon-book"></i>
-        </div>
-        <div class="desc hidden-xs">
-          <var>1</var>
-          <label class="text-muted">Collection(s)</label>
-        </div>
-        <div class="cardButton">
-          <a href="{{ url('/collection') }}" class="btn btn-lg btn-primary">Create Collection</a>
+    <a href="{{ url('/collection') }}">
+      <div class="col-xs-12 col-sm-6 col-md-3">
+        <div class="well dashCard">
+          <div class="dashCardHeading">
+            <span class="glyphicon glyphicon-book visible-xs visible-sm smallIcon"></span><label>Collection(s)</label>
+          </div>
+          <div class="icon hidden-xs hidden-sm">
+            <i class="glyphicon glyphicon-book"></i>
+          </div>
+          <div class="desc hidden-xs">
+            <var>1</var>
+            <label class="text-muted">Collection(s)</label>
+          </div>
         </div>
       </div>
-    </div>
+    </a>
     <div class="col-xs-12 col-sm-6 col-md-3">
       <div class="well dashCard">
         <div class="dashCardHeading">
