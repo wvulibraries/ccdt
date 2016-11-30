@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+// Import the Collection model
+use App\Collection;
+
 class CollectionController extends Controller
 {
   /**
@@ -27,8 +30,9 @@ class CollectionController extends Controller
   * Show the collection index page
   */
   public function index(){
+    $collcntNms = Collection::all();
     // check if the user is admin
-    return view('admin/collection');
+    return view('admin/collection')->with('collcntNms',$collcntNms);
   }
 
   /**
@@ -37,9 +41,15 @@ class CollectionController extends Controller
   public function create(Request $request){
     // Validate the request before storing the data
     $this->validate($request,[
-      'clctnName' => 'required|unique:collections|max:30|min:6',
+      'clctnName' => 'required|unique:collections|max:30|min:6|alpha_num',
     ]);
+
+    // Create the collection name
+    $thisClctn = new Collection;
+    $thisClctn->clctnName = $request->clctnName;
+    $thisClctn->save();
+
     // Take the form object and insert using model
-    return back();
+    return redirect()->route('collectionIndex');
   }
 }

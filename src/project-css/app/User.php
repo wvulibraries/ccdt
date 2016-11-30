@@ -9,6 +9,7 @@ use Auth;
 class User extends Authenticatable
 {
     use Notifiable;
+    public static $snakeAttributes = false;
 
     /**
      * The attributes that are mass assignable.
@@ -28,17 +29,4 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
-    // Function to check for the adminship
-    public function isAdmin(){
-      // Check if the user is logged in
-      if(Auth::check()){
-        // Check if the user is admin
-        if(Auth::user()->isAdmin){
-          return true;
-        }
-      }
-
-      // Return false if not
-      return false;
-    }
 }

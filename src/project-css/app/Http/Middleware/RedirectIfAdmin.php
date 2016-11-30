@@ -19,7 +19,7 @@ class RedirectIfAdmin
       // Check if the user is logged in
       if(Auth::check()){
         // Check if the user is admin
-        if($request->user()->isAdmin()){
+        if($request->user()->isAdmin){
           return $next($request);
         }
       }

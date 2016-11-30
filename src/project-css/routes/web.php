@@ -39,7 +39,7 @@ Route::get('home', 'HomeController@index');
 | Controller for the admin page
 |--------------------------------------------------------------------------
 */
-Route::get('collection', 'CollectionController@index');
+Route::get('collection', 'CollectionController@index')->name('collectionIndex');
 Route::group(['prefix' => 'collection'], function(){
   Route::post('create', 'CollectionController@create');
 });
