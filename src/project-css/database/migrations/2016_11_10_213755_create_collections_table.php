@@ -16,6 +16,7 @@ class CreateCollectionsTable extends Migration
         Schema::create('collections', function (Blueprint $table) {
             $table->increments('id');
             $table->string('clctnName')->unique();
+            $table->boolean('isEnabled')->default(true);
             $table->boolean('hasAccess')->default(true);
             $table->timestamps();
         });

@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Collection;
+use App\User;
 use Auth;
 
 class HomeController extends Controller
@@ -31,7 +33,20 @@ class HomeController extends Controller
       }
       // Page for a admin user
       else{
-        return view('admin/index');
+        // Get the count of variables
+        $cllctCnt = Collection::all()->count();
+        $usrCnt = User::where('isAdmin',false)->count();
+        $admnCnt = User::where('isAdmin',true)->count();
+
+        // Compact them into array
+        $stats = array(
+          'cllctCnt' => $cllctCnt,
+          'usrCnt' => $usrCnt,
+          'admnCnt' => $admnCnt,
+        );
+
+        //Return the view
+        return view('admin/index')->with($stats);;
       }
     }
 }

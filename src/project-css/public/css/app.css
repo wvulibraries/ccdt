@@ -5765,19 +5765,6 @@ button.close {
   .hidden-print {
     display: none !important; } }
 
-.heading-font {
-  font-family: 'Source Sans Pro', sans-serif;
-  font-weight: 200;
-  letter-spacing: 1px; }
-
-.body-font {
-  font-family: 'Muli', 'Helvetica', 'Arial', 'sans-serif'; }
-
-.alt-font {
-  font-family: 'Muli', 'Helvetica', 'Arial', 'sans-serif';
-  text-transform: uppercase;
-  letter-spacing: 2px; }
-
 html,
 body {
   height: 100%;
@@ -5810,8 +5797,25 @@ p {
   line-height: 1.5;
   margin-bottom: 20px; }
 
+button .btn {
+  border-radius: 0px; }
+
+.heading-font {
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 200;
+  letter-spacing: 1px; }
+
+.body-font {
+  font-family: 'Muli', 'Helvetica', 'Arial', 'sans-serif'; }
+
+.alt-font {
+  font-family: 'Muli', 'Helvetica', 'Arial', 'sans-serif';
+  text-transform: uppercase;
+  letter-spacing: 2px; }
+
 .navbar-default {
   background-color: #FFF;
+  font-size: 16px;
   border-top: 7px solid #337ab7; }
 
 .navbar-default .navbar-brand,
@@ -5937,7 +5941,8 @@ footer {
   background-color: #EEE;
   margin-top: -20px;
   margin-bottom: -20px;
-  padding: 20px; }
+  padding: 20px;
+  min-height: 15vh; }
 
 .cardsWrapper {
   padding: 20px; }
@@ -5995,6 +6000,7 @@ footer {
 
 .colCard {
   text-align: center;
+  display: inline-block;
   font-size: 16px;
   width: 100%;
   min-height: 75px;
@@ -6018,5 +6024,26 @@ footer {
 
 .colHeadCard:hover {
   box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22); }
+
+.colCardOpts {
+  display: inline-block;
+  margin: 2px; }
+
+.dsbldColCard {
+  text-align: center;
+  opacity: 0.4;
+  display: inline-block;
+  font-size: 16px;
+  width: 100%;
+  min-height: 75px;
+  background-color: #EEE;
+  padding: 15px;
+  margin-bottom: 20px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+  -webkit-transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); }
+
+.modal-content {
+  border-radius: 0px; }
 
 /*# sourceMappingURL=app.css.map */

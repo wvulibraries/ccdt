@@ -26,7 +26,7 @@
           <i class="glyphicon glyphicon-user"></i>
         </div>
         <div class="desc hidden-xs">
-          <var>3</var>
+          <var>{{$usrCnt}}</var>
           <label class="text-muted">User(s)</label>
         </div>
       </div>
@@ -41,7 +41,7 @@
             <i class="glyphicon glyphicon-book"></i>
           </div>
           <div class="desc hidden-xs">
-            <var>1</var>
+            <var>{{$cllctCnt}}</var>
             <label class="text-muted">Collection(s)</label>
           </div>
         </div>
@@ -70,7 +70,7 @@
           <i class="glyphicon glyphicon-cog"></i>
         </div>
         <div class="desc hidden-xs">
-          <var>1</var>
+          <var>{{$admnCnt}}</var>
           <label class="text-muted">Admin(s)</label>
         </div>
       </div>
