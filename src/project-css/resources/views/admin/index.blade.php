@@ -47,20 +47,22 @@
         </div>
       </div>
     </a>
-    <div class="col-xs-12 col-sm-6 col-md-3">
-      <div class="well dashCard">
-        <div class="dashCardHeading">
-          <span class="glyphicon glyphicon-duplicate visible-xs visible-sm smallIcon"></span><label>Table(s)</label>
-        </div>
-        <div class="icon hidden-xs hidden-sm">
-          <i class="glyphicon glyphicon-duplicate"></i>
-        </div>
-        <div class="desc hidden-xs">
-          <var>1</var>
-          <label class="text-muted">Table(s)</label>
+    <a href="{{ url('table') }}">
+      <div class="col-xs-12 col-sm-6 col-md-3">
+        <div class="well dashCard">
+          <div class="dashCardHeading">
+            <span class="glyphicon glyphicon-duplicate visible-xs visible-sm smallIcon"></span><label>Table(s)</label>
+          </div>
+          <div class="icon hidden-xs hidden-sm">
+            <i class="glyphicon glyphicon-duplicate"></i>
+          </div>
+          <div class="desc hidden-xs">
+            <var>1</var>
+            <label class="text-muted">Table(s)</label>
+          </div>
         </div>
       </div>
-    </div>
+    </a>
     <div class="col-xs-12 col-sm-6 col-md-3">
       <div class="well dashCard">
         <div class="dashCardHeading">

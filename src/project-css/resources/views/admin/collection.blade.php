@@ -44,7 +44,7 @@
           <div class="col-xs-6 col-sm-8 col-md-8">
             <!-- Option 1 Add tables -->
             <div class="colCardOpts">
-              <a href="#">
+              <a href="{{url('table/create')}}">
                 <div class="icon hidden-xs hidden-sm">
                   <i class="glyphicon glyphicon-plus"></i>
                 </div>

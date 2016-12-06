@@ -36,7 +36,7 @@ Route::get('home', 'HomeController@index');
 
 /*
 |--------------------------------------------------------------------------
-| Controller for the admin page
+| Controller for the admin dashboard page
 |--------------------------------------------------------------------------
 */
 Route::get('collection', 'CollectionController@index')->name('collectionIndex');
@@ -47,4 +47,15 @@ Route::group(['prefix' => 'collection'], function(){
   Route::post('enable', 'CollectionController@enable');
   Route::post('restrict', 'CollectionController@restrict');
   Route::post('allow', 'CollectionController@allow');
+});
+
+/*
+|--------------------------------------------------------------------------
+| Controller for the tables homepage
+|--------------------------------------------------------------------------
+*/
+Route::get('table', 'TableController@index')->name('tableIndex');
+Route::group(['prefix' => 'table'], function(){
+  Route::get('create', 'TableController@wizard');
+  Route::post('create', 'TableController@import');
 });

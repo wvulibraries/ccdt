@@ -147,10 +147,4 @@ class CollectionController extends Controller
     return redirect()->route('collectionIndex');
   }
 
-  /**
-  * Restrict the access for the given collection
-  */
-  public function rstrctAccs(Request $request){
-    //
-  }
 }
