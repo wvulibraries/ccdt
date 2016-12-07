@@ -1,4 +1,8 @@
 # Create the DB
-CREATE DATABASE rockefellercss;
+CREATE DATABASE css;
+
 # Give Access to Vagrant Box
-GRANT ALL PRIVILEGES ON rockefellercss.* TO 'username'@'localhost';
+GRANT ALL PRIVILEGES ON *.* TO 'mountaineer'@'localhost';
+
+# Set the password
+SET PASSWORD for 'mountaineer'@'localhost' =PASSWORD('mountaineer');

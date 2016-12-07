@@ -1,3 +1,4 @@
 .vagrant
-serverConfiguration/serverlogs/
-PrivateFiles/
+privateFiles/
+serverConfiguration/
+testData/
