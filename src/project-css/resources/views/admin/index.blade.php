@@ -57,7 +57,7 @@
             <i class="glyphicon glyphicon-duplicate"></i>
           </div>
           <div class="desc hidden-xs">
-            <var>1</var>
+            <var>{{$tblCnt}}</var>
             <label class="text-muted">Table(s)</label>
           </div>
         </div>

@@ -14,8 +14,8 @@
 <!-- Separation -->
 <hr/>
 
-<!-- Create or select option -->
-<div class="collectionWrapper">
+<!-- Create -->
+<div class="tableWrapper">
   <div class="container">
 
     <!-- Head Table Card -->
@@ -30,46 +30,37 @@
       </div>
     </a>
 
-  </div>
-</div>
-
-<!-- Global models -->
-<!-- Create Table modal -->
-<div id="crteTabl" class="modal fade" role="dialog">
-  <div class="modal-dialog">
-
-    <!-- Modal content-->
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h3 class="modal-title">Create Table(s)</h3>
-      </div>
-
-      <div class="modal-body">
-        <form class="form-horizontal" role="form" method="POST" action="{{ url('collection/create') }}">
-            {{ csrf_field() }}
-
-            <div class="form-group{{ $errors->has('clctnName') ? ' has-error' : '' }}">
-                <label for="clctnName" class="col-md-3 control-label">Collection Name</label>
-
-                <div class="col-md-6">
-                    <input id="clctnName" type="text" class="form-control" name="clctnName" required autofocus>
-                </div>
-                <div class="col-md-3">
-                    <button type="submit" class="btn btn-primary">
-                        Create
-                    </button>
-                </div>
+    <!-- Show existing tables -->
+    @foreach($tbls as $tbl)
+      <!-- Check for the access -->
+      @if($tbl->hasAccess)
+      <!-- SHow thw tables -->
+        <div class="col-xs-12 col-sm-12 col-md-12">
+          <div class="colCard">
+            <!-- Display the collection name -->
+            <div class="col-xs-6 col-sm-4 col-md-4">
+              <p class="colCardName">{{$tbl->tblNme}}</p>
             </div>
-        </form>
-      </div>
-
-      <div class="modal-footer">
-        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
-      </div>
-    </div>
+            <!-- Options for the collection -->
+            <div class="col-xs-6 col-sm-8 col-md-8">
+              <!-- Option 1 Add tables -->
+              <div class="colCardOpts">
+                <a href="{{url('table/create')}}">
+                  <div class="icon hidden-xs hidden-sm">
+                    <i class="glyphicon glyphicon-plus"></i>
+                  </div>
+                  <p>Add Tables</p>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      @endif
+    @endforeach
 
   </div>
 </div>
+
+
 
 @endsection

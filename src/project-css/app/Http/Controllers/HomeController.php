@@ -3,8 +3,11 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+
+//Import models
 use App\Collection;
 use App\User;
+use App\Table;
 use Auth;
 
 class HomeController extends Controller
@@ -37,12 +40,14 @@ class HomeController extends Controller
         $cllctCnt = Collection::all()->count();
         $usrCnt = User::where('isAdmin',false)->count();
         $admnCnt = User::where('isAdmin',true)->count();
+        $tblCnt = Table::all()->count();
 
         // Compact them into array
         $stats = array(
           'cllctCnt' => $cllctCnt,
           'usrCnt' => $usrCnt,
           'admnCnt' => $admnCnt,
+          'tblCnt' => $tblCnt,
         );
 
         //Return the view
