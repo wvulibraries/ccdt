@@ -7,3 +7,21 @@
  [Presentation](http://bitly.com/wvusystemscss) | [Documentation](https://github.com/wvulibraries/rockefeller-css/wiki)
 ------------ | -------------
  [![Presentation](misc/docs/i2.png)](http://bitly.com/wvusystemscss) | [![Documentation](misc/docs/i1.png)](https://github.com/wvulibraries/rockefeller-css/wiki)
+
+## Development and Contributing
+
+**Ideas/Bugs/Questions**
+
+Feel free to share ideas/bugs/questions using [issues](https://github.com/wvulibraries/rockefeller-css/issues)
+
+**Author**
+
+[Ajay Kavui](http://pseudoaj.com) [@pseudoaj](https://github.com/pseudoaj)
+
+**Team**
+
+[WVU Libraries Systems Department](https://lib.wvu.edu/about/directory/departments/68/employees/)
+
+**Contributors**
+
+Following are the contributors for the project: [contributors](https://github.com/wvulibraries/rockefeller-css/graphs/contributors)
