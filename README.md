@@ -16,7 +16,7 @@ Feel free to share ideas/bugs/questions using [issues](https://github.com/wvulib
 
 **Author**
 
-[Ajay Kavui](http://pseudoaj.com) [@pseudoaj](https://github.com/pseudoaj)
+[Ajay Kavui](http://pseudoaj.com) ([@pseudoaj](https://github.com/pseudoaj))
 
 **Team**
 
