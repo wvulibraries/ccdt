@@ -1,0 +1,32 @@
+#title           :travis.yml
+#description     :This script will communicate with travis CI
+#author		       :Ajay Krishna Teja Kavuri
+#date            :20161209
+#version         :1.0
+#==============================================================================
+
+# Select the project language
+language: php
+#==============================================================================
+
+# Select the project language
+php:
+  - 7.0
+#==============================================================================
+
+# Commands to run before the install
+before_install:
+  # Change the project directory
+  - cd src/project-css
+#==============================================================================
+
+# Commands to run before the testing
+before_script:
+  # Set up the environment variables
+  - cp .env.travis .env
+#==============================================================================
+
+# Run the actual test
+script:
+  # trigger phpunit
+  - vendor/bin/phpunit
