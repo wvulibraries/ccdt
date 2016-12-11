@@ -62,6 +62,7 @@ class CollectionController extends Controller
     $thisClctn->save();
 
     // Take the form object and insert using model
+    // Used a named route for better redirection
     return redirect()->route('collectionIndex');
   }
 
