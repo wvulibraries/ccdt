@@ -29,11 +29,11 @@
                       <form class="form-horizontal" enctype="multipart/form-data" role="form" method="POST" action="{{ url('/table/create') }}">
                           {{ csrf_field() }}
                           <!-- Table name -->
-                          <div class="form-group{{ $errors->has('imprtTblNme') ? ' has-error' : '' }}">
-                              <label for="imprtTblNme" class="col-md-4 control-label">Table Name</label>
+                          <div class="form-group{{ $errors->has('imprtslctTblNme') ? ' has-error' : '' }}">
+                              <label for="imprtslctTblNme" class="col-md-4 control-label">Table Name</label>
 
                               <div class="col-md-6">
-                                  <input id="imprtTblNme" type="text" class="form-control" name="imprtTblNme" value="{{ old('imprtTblNme') }}" required autofocus>
+                                  <input id="imprtslctTblNme" type="text" class="form-control" name="imprtslctTblNme" value="{{ old('imprtslctTblNme') }}" required autofocus>
                               </div>
                           </div>
                           <!-- Select Collection Name -->
@@ -79,14 +79,28 @@
                         <form class="form-horizontal" enctype="multipart/form-data" role="form" method="POST" action="{{ url('/table/create') }}">
                             {{ csrf_field() }}
                             <!-- Table name -->
-                            <div class="form-group{{ $errors->has('tblNme') ? ' has-error' : '' }}">
-                                <label for="tblNme" class="col-md-4 control-label">Table Name</label>
+                            <div class="form-group{{ $errors->has('slctTblNme') ? ' has-error' : '' }}">
+                                <label for="slctTblNme" class="col-md-4 control-label">Table Name</label>
 
                                 <div class="col-md-6">
-                                    <input id="tblNme" type="text" class="form-control" name="tblNme" value="{{ old('tblNme') }}" required autofocus>
+                                    <input id="slctTblNme" type="text" class="form-control" name="slctTblNme" value="{{ old('slctTblNme') }}" required autofocus>
                                 </div>
                             </div>
-                            <!-- Select File -->
+                            <!-- Select Collection Name -->
+                            <div class="form-group{{ $errors->has('colID') ? ' has-error' : '' }}">
+                                <label for="colID" class="col-md-4 control-label">Select Collection</label>
+
+                                <div class="col-md-6">
+                                  <select id="colID" type="text" class="form-control" name="colID" value="{{ old('colID') }}" required autofocus>
+                                    @foreach($collcntNms as $collcntNm)
+                                      @if($collcntNm->isEnabled)
+                                        <option value="{{$collcntNm->id}}">{{$collcntNm->clctnName}}</option>
+                                      @endif
+                                    @endforeach
+                                  </select>
+                                </div>
+                            </div>
+                            <!-- Choose File -->
                             <div class="form-group{{ $errors->has('fltFile') ? ' has-error' : '' }}">
                                 <label for="fltFile" class="col-md-4 control-label">Import</label>
 
@@ -97,7 +111,7 @@
                             <div class="form-group">
                                 <div class="col-md-6 col-md-offset-6">
                                     <button type="submit" class="btn btn-primary">
-                                        Import
+                                        Select
                                     </button>
                                 </div>
                             </div>

@@ -36,8 +36,14 @@ class TableController extends Controller
     // Get the collection names
     $collcntNms = Collection::all();
 
+    // Check for the count
+    if($collcntNms->where('isEnabled','1')->count()>0){
+      // return the wizard page by passing the collections
+      return view('admin/wizard')->with('collcntNms',$collcntNms);
+    }
+
     // return the wizard page by passing the collections
-    return view('admin/wizard')->with('collcntNms',$collcntNms);
+    return view('admin/collection')->with('collcntNms',$collcntNms)->withErrors(['Please create active collection here first']);
   }
 
   /**
