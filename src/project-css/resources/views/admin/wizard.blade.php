@@ -29,11 +29,11 @@
                       <form class="form-horizontal" enctype="multipart/form-data" role="form" method="POST" action="{{ url('/table/create') }}">
                           {{ csrf_field() }}
                           <!-- Table name -->
-                          <div class="form-group{{ $errors->has('imprtslctTblNme') ? ' has-error' : '' }}">
-                              <label for="imprtslctTblNme" class="col-md-4 control-label">Table Name</label>
+                          <div class="form-group{{ $errors->has('imprtTblNme') ? ' has-error' : '' }}">
+                              <label for="imprtTblNme" class="col-md-4 control-label">Table Name</label>
 
                               <div class="col-md-6">
-                                  <input id="imprtslctTblNme" type="text" class="form-control" name="imprtslctTblNme" value="{{ old('imprtslctTblNme') }}" required autofocus>
+                                  <input id="imprtTblNme" type="text" class="form-control" name="imprtTblNme" value="{{ old('imprtTblNme') }}" required autofocus>
                               </div>
                           </div>
                           <!-- Select Collection Name -->
