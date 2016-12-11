@@ -33,6 +33,8 @@ before_script:
   - composer install --no-interaction
   # Set the key
   - php artisan key:generate
+  # Migrate the users
+  - php artisan migrate --seed
 #==============================================================================
 
 # Run the actual test
