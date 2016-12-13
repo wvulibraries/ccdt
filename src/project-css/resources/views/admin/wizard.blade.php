@@ -105,7 +105,13 @@
                                 <label for="fltFile" class="col-md-4 control-label">Import</label>
 
                                 <div class="col-md-6">
-                                    <input id="fltFile" type="file" class="form-control" name="fltFile" required autofocus>
+                                  <select id="fltFile" type="text" class="form-control" name="fltFile" value="{{ old('fltFile') }}" required autofocus>
+                                    @foreach($fltFleList as $fltFile)
+                                      @if($fltFile)
+                                        <option value="{{$fltFile}}">{{$fltFile}}</option>
+                                      @endif
+                                    @endforeach
+                                  </select>
                                 </div>
                             </div>
                             <div class="form-group">

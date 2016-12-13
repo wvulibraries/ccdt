@@ -3,7 +3,11 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-//Import the table and collection models
+
+// Import the storage class too
+use Illuminate\Support\Facades\Storage;
+
+// Import the table and collection models
 use App\Table;
 use App\Collection;
 
@@ -36,13 +40,31 @@ class TableController extends Controller
     // Get the collection names
     $collcntNms = Collection::all();
 
+    // Get the list of files in the directory
+    $fltFleList = Storage::allFiles('flatfiles');
+
+    // Format the file names by truncating the dir
+    foreach ($fltFleList as $key => $value) {
+      // check if directory string exists in the path
+      if(str_contains($value,'flatfiles/')){
+        // replace the string
+        $fltFleList[$key] = str_replace('flatfiles/','',$value);
+      }
+    }
+
+    // Compact everything into array
+    $wizrdData = array(
+      'collcntNms' => $collcntNms,
+      'fltFleList' => $fltFleList
+    );
+
     // Check for the count
     if($collcntNms->where('isEnabled','1')->count()>0){
       // return the wizard page by passing the collections
-      return view('admin/wizard')->with('collcntNms',$collcntNms);
+      return view('admin/wizard')->with($wizrdData);
     }
 
-    // return the wizard page by passing the collections
+    // return the wizard page by passing the collections and list of files
     return view('admin/collection')->with('collcntNms',$collcntNms)->withErrors(['Please create active collection here first']);
   }
 
@@ -87,10 +109,14 @@ class TableController extends Controller
     $thisTabl->save();
 
     // 3. Store the file on to Storage Directory if uploaded
-    //Get the file
+    // Get the file
     $thisFltFile = $request->fltFile;
+    // Get the file name
+    $thisFltFileNme = $thisFltFile->getClientOriginalName();
+    // Get the client extension
+    $thisFltFileExt = $thisFltFile->getClientOriginalExtension();
     //Store in the directory inside storage/app
-    $thisFltFile->store('flatfiles');
+    $thisFltFile->storeAs('flatfiles',"{$thisFltFileNme}.{$thisFltFileExt}");
 
     // 4. Show the users schema for further verification
     return redirect()->route('tableIndex');
