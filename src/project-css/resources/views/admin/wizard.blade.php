@@ -26,7 +26,7 @@
                 <div class="panel-heading"><a data-toggle="collapse" href="#imprtPnlBdy"><h3>Import from flat file</h3></a></div>
                 <div id="imprtPnlBdy" class="panel-collapse collapse">
                   <div class="panel-body">
-                      <form class="form-horizontal" enctype="multipart/form-data" role="form" method="POST" action="{{ url('/table/create') }}">
+                      <form class="form-horizontal" enctype="multipart/form-data" role="form" method="POST" action="{{ url('/table/create/import') }}">
                           {{ csrf_field() }}
                           <!-- Table name -->
                           <div class="form-group{{ $errors->has('imprtTblNme') ? ' has-error' : '' }}">
@@ -72,11 +72,11 @@
         </div>
         <!--Panel to create the table with flat file -->
           <div class="col-md-6">
-              <div class="panel panel-default formPanel">
+              <div class="panel panel-default formPanel{{count($fltFleList)>0 ? '' : ' dsbld' }}">
                   <div class="panel-heading"><a data-toggle="collapse" href="#slctPnlBdy"><h3>Select from directory</h3></a></div>
                   <div id="slctPnlBdy" class="panel-collapse collapse">
                     <div class="panel-body">
-                        <form class="form-horizontal" enctype="multipart/form-data" role="form" method="POST" action="{{ url('/table/create') }}">
+                        <form class="form-horizontal" enctype="multipart/form-data" role="form" method="POST" action="{{ url('/table/create/select') }}">
                             {{ csrf_field() }}
                             <!-- Table name -->
                             <div class="form-group{{ $errors->has('slctTblNme') ? ' has-error' : '' }}">

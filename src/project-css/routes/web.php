@@ -57,5 +57,6 @@ Route::group(['prefix' => 'collection'], function(){
 Route::get('table', 'TableController@index')->name('tableIndex');
 Route::group(['prefix' => 'table'], function(){
   Route::get('create', 'TableController@wizard');
-  Route::post('create', 'TableController@import');
+  Route::post('create/import', 'TableController@import');
+  Route::post('create/select', 'TableController@select');
 });
