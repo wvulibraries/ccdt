@@ -20,7 +20,10 @@ class TableController extends Controller
    */
   public function __construct()
   {
-      $this->middleware('admin');
+    // Protection to make sure this only accessible to admin
+    $this->middleware('admin');
+    // Storage directory
+    $this->strDir = 'flatfiles';
   }
 
   /**
@@ -41,14 +44,14 @@ class TableController extends Controller
     $collcntNms = Collection::all();
 
     // Get the list of files in the directory
-    $fltFleList = Storage::allFiles('flatfiles');
+    $fltFleList = Storage::allFiles($this->strDir);
 
     // Format the file names by truncating the dir
     foreach ($fltFleList as $key => $value) {
       // check if directory string exists in the path
-      if(str_contains($value,'flatfiles/')){
+      if(str_contains($value,$this->strDir.'/')){
         // replace the string
-        $fltFleList[$key] = str_replace('flatfiles/','',$value);
+        $fltFleList[$key] = str_replace($this->strDir.'/','',$value);
       }
     }
 
@@ -58,7 +61,7 @@ class TableController extends Controller
       'fltFleList' => $fltFleList
     );
 
-    // Check for the count
+    // Check for the countflatfiles
     if($collcntNms->where('isEnabled','1')->count()>0){
       // return the wizard page by passing the collections
       return view('admin/wizard')->with($wizrdData);
@@ -115,11 +118,77 @@ class TableController extends Controller
     $thisFltFileNme = $thisFltFile->getClientOriginalName();
     // Get the client extension
     $thisFltFileExt = $thisFltFile->getClientOriginalExtension();
-    //Store in the directory inside storage/app
-    $thisFltFile->storeAs('flatfiles',"{$thisFltFileNme}.{$thisFltFileExt}");
+    // check if the file exists
+    // Get the list of files in the directory
+    $fltFleList = Storage::allFiles($this->strDir);
+    // check the file name in the file list array
+    if(in_array($this->strDir.'/'.$thisFltFileNme,$fltFleList)){
+      return redirect()->route('tableIndex')->withErrors(['File already exists. Please select the file or rename and re-upload.']);
+    }
+    // Store in the directory inside storage/app
+    $thisFltFile->storeAs($this->strDir,$thisFltFileNme);
+
 
     // 4. Show the users schema for further verification
-    return redirect()->route('tableIndex');
+    $schema = $this->schema($this->strDir.'/'.$thisFltFileNme);
+    return view('table/schema')->with('schema',$schema);
+  }
 
+  /**
+  * Use the existing file to import the records:
+  * Algorithm:
+  * 1. Get the file name and validate file, if not validated remove it
+  * 2. Create the table with schema
+  * 3. Show the users with the schema
+  */
+  public function select(Request $request){
+    // 1. Get the file name and validate file, if not validated remove it
+    //Rules for validation
+    $rules = array(
+      'slctTblNme' => 'required|unique:tables,tblNme|max:30|min:6|alpha_num',
+      'colID' => 'required|Integer',
+      'fltFile' => 'required|string',
+    );
+
+    //Customize the error messages
+    $messages = array(
+      'slctTblNme.required' => 'Please enter a table name',
+      'slctTblNme.unique' => 'The table name has already been taken by current or disabled table',
+      'slctTblNme.max' => 'The table name cannot exceed 30 characters',
+      'slctTblNme.min' => 'The table name should be 6 characters or more',
+      'slctTblNme.alpha_num' => 'The table name can only have alphabets or numbers without spaces',
+      'colID.required' => 'Please select a collection',
+      'colID.Integer' => 'Please select an existing collection',
+      'fltFile.required' => 'Please select a valid flat file',
+      'fltFile.string' => 'Please select a valid flat file',
+    );
+
+    // Validate the request before storing the data
+    $this->validate($request,$rules,$messages);
+
+    // Get the absolute file path
+    $thsFltFile = $request->fltFile;
+    // validate the file
+    if(!Storage::has($this->strDir.'/'.$thsFltFile)){
+      // if the file doesn't exist
+      return redirect()->route('tableIndex')->withErrors(['The selected flat file does not exist']);
+    }
+
+    // 2. Create the table with schema
+    $thisTabl = new Table;
+    $thisTabl->tblNme = $request->slctTblNme;
+    $thisTabl->collection_id = $request->colID;
+    $thisTabl->save();
+
+    // 3. Show the users with the schema
+    $schema = $this->schema($this->strDir.'/'.$thsFltFile);
+    return view('table/schema')->with('schema',$schema);
+  }
+
+  /**
+  * Method to validate the file type and read the first line
+  */
+  public function schema($fltFleNme){
+    return $fltFleNme;
   }
 }

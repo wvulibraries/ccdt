@@ -5965,7 +5965,8 @@ footer {
 .dashCard var {
   display: block;
   font-size: 48px;
-  line-height: 48px; }
+  line-height: 48px;
+  font-style: normal; }
 
 .dashCard .desc label {
   font-size: 12px;
@@ -6045,5 +6046,9 @@ footer {
 
 .modal-content {
   border-radius: 0px; }
+
+.dsbld {
+  opacity: 0.4;
+  pointer-events: none; }
 
 /*# sourceMappingURL=app.css.map */
