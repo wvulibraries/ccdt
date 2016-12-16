@@ -76,7 +76,7 @@
                   <div class="panel-heading"><a data-toggle="collapse" href="#slctPnlBdy"><h3>Select from directory</h3></a></div>
                   <div id="slctPnlBdy" class="panel-collapse collapse">
                     <div class="panel-body">
-                        <form class="form-horizontal" enctype="multipart/form-data" role="form" method="POST" action="{{ url('/table/create/select') }}">
+                        <form class="form-horizontal" role="form" method="POST" action="{{ url('/table/create/select') }}">
                             {{ csrf_field() }}
                             <!-- Table name -->
                             <div class="form-group{{ $errors->has('slctTblNme') ? ' has-error' : '' }}">
