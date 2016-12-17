@@ -131,7 +131,8 @@ class TableController extends Controller
 
     // 4. Show the users schema for further verification
     $schema = $this->schema($this->strDir.'/'.$thisFltFileNme);
-    return view('table/schema')->with('schema',$schema);
+    return $schema;
+    #return view('table/schema')->with('schema',$schema);
   }
 
   /**
@@ -174,21 +175,54 @@ class TableController extends Controller
       return redirect()->route('tableIndex')->withErrors(['The selected flat file does not exist']);
     }
 
-    // 2. Create the table with schema
+    // 2. Check for file validity and Create the table with schema
+    $schema = $this->schema($this->strDir.'/'.$thsFltFile);
+    // If the file isn't valid return with an error
+    if(!$schema){
+      return redirect()->route('tableIndex')->withErrors(['The selected flat file must be of type: text/plain']);
+    }
+
+    // Save the table upon the schema
     $thisTabl = new Table;
     $thisTabl->tblNme = $request->slctTblNme;
     $thisTabl->collection_id = $request->colID;
     $thisTabl->save();
 
     // 3. Show the users with the schema
-    $schema = $this->schema($this->strDir.'/'.$thsFltFile);
-    return view('table/schema')->with('schema',$schema);
+    return $schema;
+    #return view('admin.schema')->with('schema',$schema);
   }
 
   /**
-  * Method to validate the file type and read the first line
+  * Method to validate the file type and read the first line only for schema
+  * Algorithm:
+  * 1. Get the flatfile instance
+  * 2. Validate the file type
+  * 3. Tokenize the current line
+  * 4. Validate the tokens and return
+  * 5. Return first line as array
   */
-  public function schema($fltFleNme){
-    return $fltFleNme;
+  public function schema($fltFlePth){
+    // 1. Get the flatfile instance
+    // Check if the file exists
+    if(!Storage::has($fltFlePth)){
+      // If the file doesn't exists return with error
+      return redirect()->route('tableIndex')->withErrors(['The selected flat file does not exist']);
+    }
+
+    // Create an instance for the file
+    $fltFleObj = new \SplFileObject(\storage_path()."/app/".$fltFlePth);
+
+    // Validate the file type before processing
+    // Create a finfo instance
+    $fleInf = new \finfo(FILEINFO_MIME_TYPE);
+    // Get the file type
+    $fleMime = $fleInf->file($fltFleObj->getRealPath());
+    if(!str_is($fleMime,"text/plain")){
+      // If the file isn't a text file return false
+      return false;
+    }
+
+    return $fltFlePth;
   }
 }
