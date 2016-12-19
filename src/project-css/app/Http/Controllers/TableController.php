@@ -105,13 +105,7 @@ class TableController extends Controller
     // Validate the request before storing the data
     $this->validate($request,$rules,$messages);
 
-    // 2. Create the table with schema
-    $thisTabl = new Table;
-    $thisTabl->tblNme = $request->imprtTblNme;
-    $thisTabl->collection_id = $request->colID;
-    $thisTabl->save();
-
-    // 3. Store the file on to Storage Directory if uploaded
+    // Validate the file before upload
     // Get the file
     $thisFltFile = $request->fltFile;
     // Get the file name
@@ -125,14 +119,28 @@ class TableController extends Controller
     if(in_array($this->strDir.'/'.$thisFltFileNme,$fltFleList)){
       return redirect()->route('tableIndex')->withErrors(['File already exists. Please select the file or rename and re-upload.']);
     }
+
+    // 3. Store the file on to Storage Directory if uploaded
     // Store in the directory inside storage/app
     $thisFltFile->storeAs($this->strDir,$thisFltFileNme);
 
 
     // 4. Show the users schema for further verification
     $schema = $this->schema($this->strDir.'/'.$thisFltFileNme);
-    return $schema;
-    #return view('table/schema')->with('schema',$schema);
+    // If the file isn't valid return with an error
+    if(!$schema){
+      Storage::delete($fltFleAbsPth);
+      return redirect()->route('tableIndex')->withErrors(['The selected flat file must be of type: text/plain','The selected flat file should not be empty','File is deleted for security reasons']);
+    }
+
+    // 2. Create the table with schema
+    $thisTabl = new Table;
+    $thisTabl->tblNme = $request->imprtTblNme;
+    $thisTabl->collection_id = $request->colID;
+    $thisTabl->save();
+
+    // Return the view with filename and schema
+    return view('admin.schema')->with('schema',$schema)->with('tblNme',$request->imprtTblNme);
   }
 
   /**
@@ -169,17 +177,19 @@ class TableController extends Controller
 
     // Get the absolute file path
     $thsFltFile = $request->fltFile;
+    $fltFleAbsPth = $this->strDir.'/'.$thsFltFile;
     // validate the file
-    if(!Storage::has($this->strDir.'/'.$thsFltFile)){
+    if(!Storage::has($fltFleAbsPth)){
       // if the file doesn't exist
       return redirect()->route('tableIndex')->withErrors(['The selected flat file does not exist']);
     }
 
     // 2. Check for file validity and Create the table with schema
-    $schema = $this->schema($this->strDir.'/'.$thsFltFile);
+    $schema = $this->schema($fltFleAbsPth);
     // If the file isn't valid return with an error
     if(!$schema){
-      return redirect()->route('tableIndex')->withErrors(['The selected flat file must be of type: text/plain']);
+      Storage::delete($fltFleAbsPth);
+      return redirect()->route('tableIndex')->withErrors(['The selected flat file must be of type: text/plain','The selected flat file should not be empty','File is deleted for security reasons']);
     }
 
     // Save the table upon the schema
@@ -189,8 +199,7 @@ class TableController extends Controller
     $thisTabl->save();
 
     // 3. Show the users with the schema
-    return $schema;
-    #return view('admin.schema')->with('schema',$schema);
+    return view('admin.schema')->with('schema',$schema);
   }
 
   /**
@@ -207,22 +216,92 @@ class TableController extends Controller
     // Check if the file exists
     if(!Storage::has($fltFlePth)){
       // If the file doesn't exists return with error
-      return redirect()->route('tableIndex')->withErrors(['The selected flat file does not exist']);
+      return false;
     }
-
     // Create an instance for the file
     $fltFleObj = new \SplFileObject(\storage_path()."/app/".$fltFlePth);
 
-    // Validate the file type before processing
+    // 2. Validate the file type
     // Create a finfo instance
     $fleInf = new \finfo(FILEINFO_MIME_TYPE);
     // Get the file type
     $fleMime = $fleInf->file($fltFleObj->getRealPath());
+    // Check the mimetype
     if(!str_is($fleMime,"text/plain")){
       // If the file isn't a text file return false
       return false;
     }
+    // Check if the file is empty
+    if(!$this->isEmpty($fltFleObj)>0){
+      return false;
+    }
 
-    return $fltFlePth;
+    // 3. Tokenize the current line
+    // Get the first line as the header
+    $fltFleObj->seek(0);
+    $hdr = $fltFleObj->fgets();
+    // Tokenize the line
+    $tkns = $this->tknze($hdr);
+    // Validate the tokens and filter them
+    $tkns = $this->fltrTkns($tkns);
+
+    // Returning tokens
+    return $tkns;
   }
+
+  /**
+  * Method to tokenize the string for multiple lines
+  */
+  public function tknze($line){
+    // Tokenize the line
+    // Define a pattern
+    $pattern = '/[;,\t]/';
+    // preg split
+    $tkns = preg_split($pattern,trim($line));
+
+    // Return the array
+    return $tkns;
+  }
+
+  /**
+  * Get the line numbers for a fileobject
+  */
+  public function isEmpty($fltFleObj){
+    // Variable to count the length
+    $len = 0;
+
+    // Loop till EOF
+    while(!$fltFleObj->eof()){
+      // Check if the file has atleast one line
+      if($len>=1){
+        // Break here so that it's not reading huge files
+        break;
+      }
+      // Increament variable
+      $len += 1;
+      // Seek the next item
+      $fltFleObj->next();
+    }
+
+    // Return the length
+    return $len;
+  }
+
+  /**
+  * Method to check if the given tkns are null
+  */
+  public function fltrTkns($tkns){
+    // Run through the files
+    foreach($tkns as $key => $tkn){
+      // Check if the token is null
+      if(empty(trim($tkn))){
+        // Replace the content with null
+        $tkns[$key] = "null";
+      }
+    }
+
+    // Return the filtered tokens
+    return $tkns;
+  }
+
 }

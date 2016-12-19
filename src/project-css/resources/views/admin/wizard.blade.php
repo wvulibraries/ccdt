@@ -7,6 +7,7 @@
   <div class="container adminHeading">
     <span class="text-center">
       <h2><a href="{{ url('table/create') }}">Create Table(s) Wizard</a></h2>
+      <p>Please upload the flat file using the import option or use select if you have already copied the file.</p>
     </span>
   </div>
 </div>
