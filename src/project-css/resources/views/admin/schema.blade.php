@@ -39,14 +39,40 @@
             <tr>
               <td><p>{{$key+1}}</p></td>
               <td>
+                <!-- Show the columns for edit -->
                 <div class="form-group{{ $errors->has('col-'.$key.'-name') ? ' has-error' : '' }}">
                   <input id="col-{{$key}}-name" type="text" class="form-control" name="col-{{$key}}-name" value="{{$col}}" required autofocus>
                 </div>
               </td>
-              <td><p>{{$col}}</p></td>
-              <td><p>{{$col}}</p></td>
+              <td>
+                <!-- Show the data type to choose from -->
+                <div class="form-group{{$errors->has('col-'.$key.'-data') ? ' has-error' : ''}}">
+                  <select id="col-{{$key}}-data" type="text" class="form-control" name="col-{{$key}}-data" required autofocus>
+                    <option value="string">String</option>
+                    <option value="integer">Integer</option>
+                  </select>
+                </div>
+              </td>
+              <td>
+                <!-- Show the data size to choose from -->
+                <div class="form-group{{$errors->has('col-'.$key.'-size') ? ' has-error' : ''}}">
+                  <select id="col-{{$key}}-size" type="text" class="form-control" name="col-{{$key}}-size" required autofocus>
+                    <option value="default">Default</option>
+                    <option value="medium">Medium</option>
+                    <option value="big">Big</option>
+                  </select>
+                </div>
+              </td>
             </tr>
           @endforeach
+          <tr>
+            <!-- Submit for the schema -->
+            <td colspan=4>
+              <button type="submit" class="btn btn-primary">
+                Submit
+              </button>
+            </td>
+          </tr>
         </tbody>
       </form>
     </table>

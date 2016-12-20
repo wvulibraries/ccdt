@@ -59,4 +59,5 @@ Route::group(['prefix' => 'table'], function(){
   Route::get('create', 'TableController@wizard');
   Route::post('create/import', 'TableController@import');
   Route::post('create/select', 'TableController@select');
+  Route::post('create/finalize', 'TableController@finalize');
 });
