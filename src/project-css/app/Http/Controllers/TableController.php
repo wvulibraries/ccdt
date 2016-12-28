@@ -304,8 +304,8 @@ class TableController extends Controller
     return $tkns;
   }
 
-  /** Method to read input from the schema and start actual data import
-  *
+  /**
+  * Method to read input from the schema and start actual data import
   */
   public function finalize($request){
 

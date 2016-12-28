@@ -10,15 +10,13 @@ use App\User;
 use App\Table;
 use Auth;
 
-class HomeController extends Controller
-{
+class HomeController extends Controller{
     /**
      * Create a new controller instance.
      *
      * @return void
      */
-    public function __construct()
-    {
+    public function __construct(){
         $this->middleware('auth');
     }
 
@@ -27,13 +25,23 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
+    public function index(){
       // Check if the user is admin
       // Page for a normal user
       if(!(Auth::user()->isAdmin)){
-        return view('user/index');
+        // Get the required variables
+        // Collections
+        $cllctns = Collection::all();
+
+        // Compact them into one array
+        $vwVars = array(
+          'cllctns' => $cllctns,
+        );
+
+        // Return the view
+        return view('user/index')->with($vwVars);
       }
+
       // Page for a admin user
       else{
         // Get the count of variables

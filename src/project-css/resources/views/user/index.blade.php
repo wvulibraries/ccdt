@@ -2,45 +2,41 @@
 
 
 @section('content')
-<!-- Search engine -->
-<div class="searchBarWrapper">
-  <div class="container">
-    <div class="row">
-        <div class="col-xs-12 col-sm-12 col-md-12">
-          <form class="form-horizontal" role="form" method="POST" action="{{ url('/login') }}">
-              {{ csrf_field() }}
-
-              <div class="form-group{{ $errors->has('search') ? ' has-error' : '' }}">
-                  <div class="col-md-10 col-sm-10 col-xs-8">
-                      <input id="search" type="search" class="form-control searchBar" name="search" value="{{ old('search') }}" required autofocus>
-
-                      @if ($errors->has('search'))
-                          <span class="help-block">
-                              <strong>{{ $errors->first('search') }}</strong>
-                          </span>
-                      @endif
-                  </div>
-
-                  <div class="col-md-2 col-sm-2 col-xs-4">
-                      <button type="submit searchButton" class="btn btn-primary">
-                          Search
-                      </button>
-                  </div>
-              </div>
-          </form>
-        </div>
-    </div>    
+<!-- Heading -->
+@section('content')
+<div class="headingWrapper">
+  <!-- Heading -->
+  <div class="container adminHeading">
+    <span class="text-center">
+      <h2><a href="{{ url('/home') }}">Dashboard</a></h2>
+      <p>Please kindly select the collection and table to view the records</p>
+    </span>
   </div>
 </div>
 
-<!-- Records -->
+<!-- Separation -->
 <hr/>
 
-<!-- Records -->
-<div class="container">
-    <div class="row">
-      Records
-    </div>
+<!-- Panels to show the current collections and tables within each collections -->
+<div class="container cllctnWrppr">
+  <!-- Show the panel of the collections -->
+  @foreach($cllctns as $curCllctn)
+    <!-- check if the collection is enabled -->
+    @if($curCllctn->isEnabled)
+      <div class="col-xs-12 col-sm-12 col-md-12">
+        <div class="panel panel-default formPanel">
+          <div class="panel-heading"><a data-toggle="collapse" href="#cllctn{{$curCllctn->id}}PnlBdy"><h3>{{$curCllctn->clctnName}}</h3></a></div>
+          <div id="cllctn{{$curCllctn->id}}PnlBdy" class="panel-collapse collapse">
+            <ul class="list-group">
+              @foreach($curCllctn->tables as $curTabl)
+                <li class="list-group-item tblList">{{$curTabl->tblNme}}</li>
+              @endforeach
+            </ul>
+          </div>
+        </div>
+      </div>
+    @endif
+  @endforeach
 </div>
 
 @endsection
