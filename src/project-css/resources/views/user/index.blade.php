@@ -16,16 +16,16 @@
 
 <!-- Separation -->
 <hr/>
-
 <!-- Panels to show the current collections and tables within each collections -->
 <div class="container cllctnWrppr">
   <!-- Show the panel of the collections -->
-  @foreach($cllctns as $curCllctn)
-    <!-- check if the collection is enabled -->
-    @if($curCllctn->isEnabled)
-      <div class="col-xs-12 col-sm-12 col-md-12">
+  <div class="col-xs-12 col-sm-12 col-md-12">
+    <div class="panel-group" id="ColTablList">
+      @foreach($cllctns as $curCllctn)
+        <!-- check if the collection is enabled -->
+        @if($curCllctn->isEnabled)
         <div class="panel panel-default formPanel">
-          <div class="panel-heading"><a data-toggle="collapse" href="#cllctn{{$curCllctn->id}}PnlBdy"><h3>{{$curCllctn->clctnName}}</h3></a></div>
+          <div class="panel-heading"><a data-toggle="collapse" href="#cllctn{{$curCllctn->id}}PnlBdy" data-parent="#ColTablList"><h3>{{$curCllctn->clctnName}}</h3></a></div>
           <div id="cllctn{{$curCllctn->id}}PnlBdy" class="panel-collapse collapse">
             <ul class="list-group">
               @foreach($curCllctn->tables as $curTabl)
@@ -34,9 +34,10 @@
             </ul>
           </div>
         </div>
-      </div>
-    @endif
-  @endforeach
+        @endif
+      @endforeach
+    </div>
+  </div>
 </div>
 
 @endsection
