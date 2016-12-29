@@ -21,21 +21,32 @@
   <!-- Show the panel of the collections -->
   <div class="col-xs-12 col-sm-12 col-md-12">
     <div class="panel-group" id="ColTablList">
-      @foreach($cllctns as $curCllctn)
-        <!-- check if the collection is enabled -->
-        @if($curCllctn->isEnabled)
-        <div class="panel panel-default formPanel">
-          <div class="panel-heading"><a data-toggle="collapse" href="#cllctn{{$curCllctn->id}}PnlBdy" data-parent="#ColTablList"><h3>{{$curCllctn->clctnName}}</h3></a></div>
-          <div id="cllctn{{$curCllctn->id}}PnlBdy" class="panel-collapse collapse">
-            <ul class="list-group">
-              @foreach($curCllctn->tables as $curTabl)
-                <li class="list-group-item tblList">{{$curTabl->tblNme}}</li>
-              @endforeach
-            </ul>
+      @if(count($cllctns)>0)
+        @foreach($cllctns as $curCllctn)
+          <!-- check if the collection is enabled -->
+          @if($curCllctn->isEnabled)
+          <div class="panel panel-default formPanel">
+            <div class="panel-heading"><a data-toggle="collapse" href="#cllctn{{$curCllctn->id}}PnlBdy" data-parent="#ColTablList"><h3>{{$curCllctn->clctnName}}</h3></a></div>
+            <div id="cllctn{{$curCllctn->id}}PnlBdy" class="panel-collapse collapse">
+              <ul class="list-group">
+                <!-- Check if there are any tables at all -->
+                @if(count($curCllctn->tables)>0)
+                  <!-- Show the tables if they exist -->
+                  @foreach($curCllctn->tables as $curTabl)
+                    <li class="list-group-item tblList">{{$curTabl->tblNme}}</li>
+                  @endforeach
+                @else
+                  <!-- Show No tables exist if they don't -->
+                  <li class="list-group-item tblList">No tables exist.</li>
+                @endif
+              </ul>
+            </div>
           </div>
-        </div>
-        @endif
-      @endforeach
+          @endif
+        @endforeach
+      @else
+        <p class="text-center">No collections exist.</p>
+      @endif
     </div>
   </div>
 </div>

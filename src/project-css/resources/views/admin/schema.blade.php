@@ -24,6 +24,8 @@
         <!-- CSRF Fields -->
         {{ csrf_field() }}
         <!-- Form group for the column name -->
+        <input id="kCnt" type="hidden" class="form-control" name="kCnt" value="{{count($schema)}}">
+        <input id="tblNme" type="hidden" class="form-control" name="tblNme" value="{{$tblNme}}">
         <!-- Heading for the table -->
         <thead>
           <tr>

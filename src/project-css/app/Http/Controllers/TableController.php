@@ -7,6 +7,10 @@ use Illuminate\Http\Request;
 // Import the storage class too
 use Illuminate\Support\Facades\Storage;
 
+// Import the supported facades for creating tables
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+
 // Import the table and collection models
 use App\Table;
 use App\Collection;
@@ -199,7 +203,7 @@ class TableController extends Controller
     $thisTabl->save();
 
     // 3. Show the users with the schema
-    return view('admin.schema')->with('schema',$schema);
+    return view('admin.schema')->with('schema',$schema)->with('tblNme',$request->slctTblNme);
   }
 
   /**
@@ -307,8 +311,72 @@ class TableController extends Controller
   /**
   * Method to read input from the schema and start actual data import
   */
-  public function finalize($request){
+  public function finalize(Request $request){
+    // 1. Get the number of columns and table name before creating the table
+    $kVal = intval($request->kCnt);
+    $tblNme = strval($request->tblNme);
 
+    // 2. Create the table
+    Schema::connection('mysql')->create($tblNme,function(Blueprint $table) use($kVal,$request){
+      // Default primary key
+      $table->increments('id');
+      // Add all the dynamic columns
+      for($i=0;$i<$kVal;$i++){
+        // Define current column name, type and size
+        $curColNme = strval($request->{'col-'.$i.'-name'});
+        $curColType = strval($request->{'col-'.$i.'-data'});
+        $curColSze = strval($request->{'col-'.$i.'-size'});
+
+        // Filter the data type and size and create the column
+        // Check for Strings
+        if(str_is($curColType,'string')){
+          // Check for the data type
+          // Default
+          if(str_is($curColSze,'default')){
+            // For String default is 30 characters
+            $table->string($curColNme,30);
+          }
+          // Medium
+          if(str_is($curColSze,'medium')){
+            // For String medium is 50 characters
+            $table->string($curColNme,50);
+          }
+          // Big
+          if(str_is($curColSze,'big')){
+            // For String big is 150 characters
+            $table->string($curColNme,150);
+          }
+        }
+
+        // Check for Integer
+        if(str_is($curColType,'integer')){
+          // Check for the data type
+          // Default
+          if(str_is($curColSze,'default')){
+            // For Integer default integer type
+            $table->integer($curColNme);
+          }
+          // Medium
+          if(str_is($curColSze,'medium')){
+            // For Integer medium is medium integer
+            $table->mediumInteger($curColNme);
+          }
+          // Big
+          if(str_is($curColSze,'big')){
+            // For Integer big is big integer
+            $table->bigInteger($curColNme);
+          }
+        }
+      }
+
+      // Time stamps
+      $table->timestamps();
+    });
+
+    // Check for the number of columns we actually added into database
+    
+
+    // Finally return the value
+    return $tblNme;
   }
-
 }
