@@ -26,6 +26,7 @@
         <!-- Form group for the column name -->
         <input id="kCnt" type="hidden" class="form-control" name="kCnt" value="{{count($schema)}}">
         <input id="tblNme" type="hidden" class="form-control" name="tblNme" value="{{$tblNme}}">
+        <input id="collctnId" type="hidden" class="form-control" name="collctnId" value="{{$collctnId}}">
         <!-- Heading for the table -->
         <thead>
           <tr>
@@ -70,9 +71,37 @@
           <tr>
             <!-- Submit for the schema -->
             <td colspan=4>
-              <button type="submit" class="btn btn-primary">
+              <button type="button" data-toggle="modal" data-target="#crteTbl" class="btn btn-primary">
                 Submit
               </button>
+
+              <!-- Create Table Modal -->
+              <div id="crteTbl" class="modal fade" role="dialog">
+                <div class="modal-dialog">
+
+                  <!-- Modal content-->
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <button type="button" class="close" data-dismiss="modal">&times;</button>
+                      <h3 class="modal-title">Confirm Schema</h3>
+                    </div>
+
+                    <div class="modal-body">
+                      <p class="text-info">
+                        Modifying schema in future is a tedious process.
+                        Please make sure you have reviewed the schema and data options.
+                      </p>
+                    </div>
+
+                    <div class="modal-footer">
+                      <button type="submit" class="btn btn-primary">Confirm</button>
+                      <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+
             </td>
           </tr>
         </tbody>

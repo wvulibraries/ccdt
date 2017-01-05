@@ -78,9 +78,8 @@ class TableController extends Controller
   /**
   * Importing the records into table follows:
   * 1. Input the table name in the meta Directory
-  * 2. Create the table record with schema
-  * 3. Store the file on to Storage Directory if uploaded
-  * 4. Show the users schema for further verification
+  * 2. Store the file on to Storage Directory if uploaded
+  * 3. Show the users schema for further verification
   */
   public function import(Request $request){
     // 1. Input the table name in the meta Directory
@@ -124,12 +123,12 @@ class TableController extends Controller
       return redirect()->route('tableIndex')->withErrors(['File already exists. Please select the file or rename and re-upload.']);
     }
 
-    // 3. Store the file on to Storage Directory if uploaded
+    // 2. Store the file on to Storage Directory if uploaded
     // Store in the directory inside storage/app
     $thisFltFile->storeAs($this->strDir,$thisFltFileNme);
 
 
-    // 4. Show the users schema for further verification
+    // 3. Show the users schema for further verification
     $schema = $this->schema($this->strDir.'/'.$thisFltFileNme);
     // If the file isn't valid return with an error
     if(!$schema){
@@ -137,14 +136,10 @@ class TableController extends Controller
       return redirect()->route('tableIndex')->withErrors(['The selected flat file must be of type: text/plain','The selected flat file should not be empty','File is deleted for security reasons']);
     }
 
-    // 2. Create the table with schema
-    $thisTabl = new Table;
-    $thisTabl->tblNme = $request->imprtTblNme;
-    $thisTabl->collection_id = $request->colID;
-    $thisTabl->save();
-
     // Return the view with filename and schema
-    return view('admin.schema')->with('schema',$schema)->with('tblNme',$request->imprtTblNme);
+    return view('admin.schema')->with('schema',$schema)
+                               ->with('tblNme',$request->imprtTblNme)
+                               ->with('collctnId',$request->colID);
   }
 
   /**
@@ -196,14 +191,23 @@ class TableController extends Controller
       return redirect()->route('tableIndex')->withErrors(['The selected flat file must be of type: text/plain','The selected flat file should not be empty','File is deleted for security reasons']);
     }
 
-    // Save the table upon the schema
-    $thisTabl = new Table;
-    $thisTabl->tblNme = $request->slctTblNme;
-    $thisTabl->collection_id = $request->colID;
-    $thisTabl->save();
-
     // 3. Show the users with the schema
-    return view('admin.schema')->with('schema',$schema)->with('tblNme',$request->slctTblNme);
+    return view('admin.schema')->with('schema',$schema)
+                               ->with('tblNme',$request->slctTblNme)
+                               ->with('collctnId',$request->colID);
+  }
+
+  /**
+  * Simple function to create the table within the collections
+  */
+  public function crteTblInCollctn($tblNme,$collctnId){
+    // declare a new table instance
+    $thisTabl = new Table;
+    // Assign the table name and collctn id
+    $thisTabl->tblNme = $tblNme;
+    $thisTabl->collection_id = $collctnId;
+    // Save the collection
+    $thisTabl->save();
   }
 
   /**
@@ -312,9 +316,28 @@ class TableController extends Controller
   * Method to read input from the schema and start actual data import
   */
   public function finalize(Request $request){
-    // 1. Get the number of columns and table name before creating the table
+    // 1. Get the number of columns, collctn id and table name before creating the table
     $kVal = intval($request->kCnt);
     $tblNme = strval($request->tblNme);
+    $collctnId = strval($request->collctnId);
+
+    // Before anything validate that all the data is strings
+    // Define array
+    $rules=array();
+    // Add rule for each entry in request
+    for($i=0;$i<$kVal;$i++){
+      // Rules for all names
+      $curNme = 'col-'.$i.'-name';
+      $rules[$curNme]='required|alpha_dash';
+      // Rules for all data type
+      $curDTyp = 'col-'.$i.'-data';
+      $rules[$curNme]='required|string';
+      // Rules for all data sizes
+      $curDataSz = 'col-'.$i.'-size';
+      $rules[$curDataSz]='required|string';
+    }
+    // Validate
+    $this->validate($request,$rules);
 
     // 2. Create the table
     Schema::connection('mysql')->create($tblNme,function(Blueprint $table) use($kVal,$request){
@@ -374,7 +397,10 @@ class TableController extends Controller
     });
 
     // Check for the number of columns we actually added into database
-    
+
+    // Finally create the table
+    // Save the table upon the schema
+    $this->crteTblInCollctn($tblNme,$collctnId);
 
     // Finally return the value
     return $tblNme;
