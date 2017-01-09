@@ -18,6 +18,16 @@ class RegFormTest extends TestCase
      * @return void
      */
     public function testPassword(){
+      // Go to login page and enter credentials
+      //credentials
+      $adminEmail = "admin@admin.com";
+      $adminPass = "testing";
+      // Type some valid values
+      $this->visit('/login')
+           ->type($adminEmail,'email')
+           ->type($adminPass,'password')
+           ->press('Login');
+
       // Test for the name field
       $this->visit('/register')
            ->type('Tyrion Lannister','name')

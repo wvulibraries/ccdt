@@ -19,7 +19,6 @@ class ViewTest extends TestCase
       // Check for the links
       $this->visit('/')->click('CSS')->seePageIs('/');
       $this->visit('/')->click('Login')->seePageIs('/login');
-      $this->visit('/')->click('Register')->seePageIs('/register');
     }
 
     /**
