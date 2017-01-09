@@ -50,11 +50,16 @@
           <div class="colCard">
             <!-- Display the collection name -->
             <div class="col-xs-6 col-sm-4 col-md-4">
-              <p class="colCardName">{{$key+1}}. {{$tbl->tblNme}} belongs to {{$tbl->collection->clctnName}}</p>
+              <p class="colCardName">{{$key+1}}. {{$tbl->tblNme}} belongs to {{$tbl->collection->clctnName}} Collection</p>
             </div>
             <!-- Options for the collection -->
             <div class="col-xs-6 col-sm-8 col-md-8">
-              <!-- Option 1 Load data  -->
+
+              <!-- Option 1 Show Records  -->
+              <div class="colCardOpts">
+                <p>{{DB::table($tbl->tblNme)->count()}} <br/> Records</p>
+              </div>
+              <!-- Option 2 Load data  -->
               <div class="colCardOpts">
                 <a href="#" data-toggle="modal" data-target="#rstrctAccsTbl{{$tbl->id}}">
                   <div class="icon hidden-xs hidden-sm">
@@ -63,6 +68,7 @@
                   <p>Disable</p>
                 </a>
               </div>
+
             </div>
           </div>
         </div>

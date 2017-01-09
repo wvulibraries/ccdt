@@ -547,7 +547,7 @@ class TableController extends Controller
       }
     }
 
-    return $prcssd;
+    return redirect()->route('tableIndex');
   }
 
   /**
