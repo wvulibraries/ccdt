@@ -28,6 +28,7 @@
         <div class="desc hidden-xs">
           <var>{{$usrCnt}}</var>
           <label class="text-muted">User(s)</label>
+          <li><a href="{{ url('/register') }}">Register</a></li>
         </div>
       </div>
     </div>

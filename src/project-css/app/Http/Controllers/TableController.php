@@ -28,6 +28,8 @@ class TableController extends Controller
     $this->middleware('admin');
     // Storage directory
     $this->strDir = 'flatfiles';
+    // offset for extra colmns
+    $this->extraClmns = 3;
   }
 
   /**
@@ -139,6 +141,7 @@ class TableController extends Controller
     // Return the view with filename and schema
     return view('admin.schema')->with('schema',$schema)
                                ->with('tblNme',$request->imprtTblNme)
+                               ->with('fltFile',$thisFltFileNme)
                                ->with('collctnId',$request->colID);
   }
 
@@ -194,6 +197,7 @@ class TableController extends Controller
     // 3. Show the users with the schema
     return view('admin.schema')->with('schema',$schema)
                                ->with('tblNme',$request->slctTblNme)
+                               ->with('fltFile',$request->fltFile)
                                ->with('collctnId',$request->colID);
   }
 
@@ -265,7 +269,7 @@ class TableController extends Controller
     // Define a pattern
     $pattern = '/[;,\t]/';
     // preg split
-    $tkns = preg_split($pattern,trim($line));
+    $tkns = preg_split($pattern,$line);
 
     // Return the array
     return $tkns;
@@ -275,6 +279,9 @@ class TableController extends Controller
   * Get the line numbers for a fileobject
   */
   public function isEmpty($fltFleObj){
+    // Before anytthing set to seek first line
+    $fltFleObj->seek(0);
+
     // Variable to count the length
     $len = 0;
 
@@ -302,10 +309,12 @@ class TableController extends Controller
     // Run through the files
     foreach($tkns as $key => $tkn){
       // Check if the token is null
-      if(empty(trim($tkn))){
-        // Replace the content with null
-        $tkns[$key] = "null";
-      }
+      // if(empty(trim($tkn))){
+      //   // Replace the content with null
+      //   $tkns[$key] = "null";
+      // }
+      // trim the token
+      $tkns[$key]=trim($tkn);
     }
 
     // Return the filtered tokens
@@ -319,6 +328,7 @@ class TableController extends Controller
     // 1. Get the number of columns, collctn id and table name before creating the table
     $kVal = intval($request->kCnt);
     $tblNme = strval($request->tblNme);
+    $fltFile = strval($request->fltFile);
     $collctnId = strval($request->collctnId);
 
     // Before anything validate that all the data is strings
@@ -357,17 +367,17 @@ class TableController extends Controller
           // Default
           if(str_is($curColSze,'default')){
             // For String default is 30 characters
-            $table->string($curColNme,30);
+            $table->string($curColNme,50)->default("Null");
           }
           // Medium
           if(str_is($curColSze,'medium')){
-            // For String medium is 50 characters
-            $table->string($curColNme,50);
+            // For String medium is 150 characters
+            $table->string($curColNme,150)->default("Null");
           }
           // Big
           if(str_is($curColSze,'big')){
-            // For String big is 150 characters
-            $table->string($curColNme,150);
+            // For String big is 500 characters
+            $table->string($curColNme,500)->default("Null");
           }
         }
 
@@ -377,17 +387,17 @@ class TableController extends Controller
           // Default
           if(str_is($curColSze,'default')){
             // For Integer default integer type
-            $table->integer($curColNme);
+            $table->integer($curColNme)->default(0);
           }
           // Medium
           if(str_is($curColSze,'medium')){
             // For Integer medium is medium integer
-            $table->mediumInteger($curColNme);
+            $table->mediumInteger($curColNme)->default(0);
           }
           // Big
           if(str_is($curColSze,'big')){
             // For Integer big is big integer
-            $table->bigInteger($curColNme);
+            $table->bigInteger($curColNme)->default(0);
           }
         }
       }
@@ -402,7 +412,154 @@ class TableController extends Controller
     // Save the table upon the schema
     $this->crteTblInCollctn($tblNme,$collctnId);
 
-    // Finally return the value
-    return $tblNme;
+
+    // Finally return the view to load data
+    return $this->load(True,$tblNme,$fltFile);
   }
+
+  /**
+  * Method responsible to load the data into the given table
+  **/
+  public function load($isFrwded=False,$tblNme="",$fltFle=""){
+    // Check if the request is formwarded
+    if($isFrwded){
+      // Forward the file and table name
+      $tblNms=Table::where('tblNme', $tblNme)->get();
+      $fltFleList=array($fltFle);
+    }
+    else{
+      // Get all the tables
+      $tblNms = Table::all();
+      // Get the list of files in the directory
+      $fltFleList = $this->getFiles($this->strDir);
+    }
+
+    // Compact them into one array
+    $ldData = array(
+      'tblNms' => $tblNms,
+      'fltFleList' => $fltFleList
+    );
+
+    // Simple return the value
+    return view('admin.load')->with($ldData);
+  }
+
+  /**
+  * Method to format the storage files
+  **/
+  public function getFiles($strDir){
+    // Get the list of files in the directory
+    $fltFleList = Storage::allFiles($strDir);
+
+    // Format the file names by truncating the dir
+    foreach ($fltFleList as $key => $value) {
+      // check if directory string exists in the path
+      if(str_contains($value,$this->strDir.'/')){
+        // replace the string
+        $fltFleList[$key] = str_replace($this->strDir.'/','',$value);
+      }
+    }
+
+    // return the list
+    return $fltFleList;
+  }
+
+  /**
+  * Simple method to get the column listing
+  **/
+  public function getColLst($tblNme){
+    // Returns the column names as an array
+    return Schema::getColumnListing($tblNme);
+  }
+
+  /**
+  * Worker employs following algorithm:
+  * validate the file name and table name
+  * get all the column names from table name
+  * 1. Read the file as spl object
+  * 2. For each line
+  *   1. Validate
+  *   2. Insert into database
+  **/
+  public function worker(Request $request){
+    // validate the file name and table name
+    //Rules for validation
+    $rules = array(
+      'fltFle' => 'required|string',
+      'tblNme' => 'required|string'
+    );
+
+    // Validate the request before storing the data
+    $this->validate($request,$rules);
+
+    // get all column names
+    $clmnLst = $this->getColLst($request->tblNme);
+
+    // remove the id and time stamps
+    $clmnLst = array_splice($clmnLst,1,count($clmnLst)-3);
+
+    // 1. Read the file as spl object
+    $fltFleNme = $request->fltFle;
+    $fltFleAbsPth = $this->strDir.'/'.$fltFleNme;
+
+    // Create an instance for the file
+    $curFltFleObj = new \SplFileObject(\storage_path()."/app/".$fltFleAbsPth);
+
+    //Check for an empty file
+    if($this->isEmpty($curFltFleObj)>0){
+      // Ignore the first line
+      $curFltFleObj->seek(1);
+
+      // Counter for processed
+      $prcssd = 0;
+
+      // For each line
+      while(!$curFltFleObj->eof()){
+        // Get the line
+        $curLine = $curFltFleObj->current();
+
+        // Tokenize the line
+        $tkns = $this->tknze($curLine);
+
+        // Validate the tokens and filter them
+        $tkns = $this->fltrTkns($tkns);
+
+        // Size of both colmn array and data should be same
+        // Count of tokens
+        $orgCount = count($clmnLst);
+
+        if(count($tkns)==$orgCount){
+          // Declae an array
+          $curArry = array();
+
+          // Compact them into one array
+          for($i=0;$i<$orgCount;$i++){
+            $curArry[strval($clmnLst[$i])]=$tkns[$i];
+          }
+
+          // Insert them into DB
+          \DB::table($request->tblNme)->insert($curArry);
+        }
+
+        // Update the counter
+        $prcssd+=1;
+        $curFltFleObj->next();
+      }
+    }
+
+    return $prcssd;
+  }
+
+  /**
+  * Disable the given table
+  */
+  public function restrict(Request $request){
+    // Create the collection name
+    $thisTbl = Table::findorFail($request->id);
+    $thisTbl->hasAccess = false;
+    $thisTbl->save();
+    return redirect()->route('tableIndex');
+  }
+
+
 }

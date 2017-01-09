@@ -62,4 +62,7 @@ Route::group(['prefix' => 'table'], function(){
   // Forward route in case for error
   Route::get('create/select','TableController@wizard');
   Route::post('create/finalize', 'TableController@finalize');
+  Route::get('load','TableController@load');
+  Route::post('load/worker','TableController@worker');
+  Route::post('restrict', 'TableController@restrict');
 });

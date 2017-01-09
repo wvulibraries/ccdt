@@ -27,6 +27,7 @@
         <input id="kCnt" type="hidden" class="form-control" name="kCnt" value="{{count($schema)}}">
         <input id="tblNme" type="hidden" class="form-control" name="tblNme" value="{{$tblNme}}">
         <input id="collctnId" type="hidden" class="form-control" name="collctnId" value="{{$collctnId}}">
+        <input id="fltFile" type="hidden" class="form-control" name="fltFile" value="{{$fltFile}}">
         <!-- Heading for the table -->
         <thead>
           <tr>
