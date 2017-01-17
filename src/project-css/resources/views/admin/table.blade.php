@@ -50,22 +50,17 @@
           <div class="colCard">
             <!-- Display the collection name -->
             <div class="col-xs-6 col-sm-4 col-md-4">
-              <p class="colCardName">{{$key+1}}. {{$tbl->tblNme}} belongs to {{$tbl->collection->clctnName}} Collection</p>
+              <p class="colCardName"><b>{{$key+1}}.</b> <b>{{$tbl->tblNme}}</b> belongs to <b>{{$tbl->collection->clctnName}}</b></p>
             </div>
             <!-- Options for the collection -->
             <div class="col-xs-6 col-sm-8 col-md-8">
-
-              <!-- Option 1 Show Records  -->
+              <!-- Option 1 Add tables -->
               <div class="colCardOpts">
-                <p>{{DB::table($tbl->tblNme)->count()}} <br/> Records</p>
-              </div>
-              <!-- Option 2 Load data  -->
-              <div class="colCardOpts">
-                <a href="#" data-toggle="modal" data-target="#rstrctAccsTbl{{$tbl->id}}">
+                <a href="#">
                   <div class="icon hidden-xs hidden-sm">
-                    <i class="glyphicon glyphicon-trash"></i>
+                    <i class="glyphicon glyphicon-cd"></i>
                   </div>
-                  <p>Disable</p>
+                  <p>{{DB::table($tbl->tblNme)->count()}} Records</p>
                 </a>
               </div>
 
@@ -74,48 +69,6 @@
         </div>
       @endif
     @endforeach
-
-    <!-- Modals -->
-    <!-- Restrict Access to Table -->
-    <div id="rstrctAccsTbl{{$tbl->id}}" class="modal fade" role="dialog">
-      <div class="modal-dialog">
-
-        <!-- Modal content-->
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal">&times;</button>
-            <h3 class="modal-title">Restrict Access to Table</h3>
-          </div>
-
-          <div class="modal-body">
-            <p>
-              Are you sure you want to restrict access to <b>{{$tbl->tblNme}}</b> table?
-            </p>
-            <form class="form-horizontal" role="form" method="POST" action="{{ url('table/restrict') }}">
-                {{ csrf_field() }}
-
-                <input id="id" name="id" type="hidden" value="{{$tbl->id}}" />
-
-                <div class="form-group{{ $errors->has('tblNme') ? ' has-error' : '' }}">
-                  <div class="modal-footer">
-                    <div class="col-md-offset-8 col-md-2">
-                          <button type="submit" class="btn btn-primary">
-                              Confirm
-                          </button>
-                        </div>
-                        <div class="col-md-2">
-                          <button type="button" class="btn btn-primary" data-dismiss="modal">
-                            Close
-                          </button>
-                      </div>
-                  </div>
-                </div>
-            </form>
-          </div>
-        </div>
-
-      </div>
-    </div>
 
   </div>
 </div>

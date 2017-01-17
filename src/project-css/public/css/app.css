@@ -6071,4 +6071,7 @@ footer {
 .well.dashCard.btn-circle:hover {
   box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22); }
 
+.colCard.admn {
+  border-left: 15px solid #337ab7; }
+
 /*# sourceMappingURL=app.css.map */

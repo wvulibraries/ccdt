@@ -7,6 +7,7 @@
   <div class="container adminHeading">
     <span class="text-center">
       <h2><a href="{{ url('collection') }}">Collection(s)</a></h2>
+      <p>Create, import and manage collections here.</p>
     </span>
   </div>
 </div>
@@ -213,7 +214,7 @@
         </div>
       </div>
 
-      <!-- Diable Collection -->
+      <!-- Disable Collection -->
       <div id="dsbleCllctn{{$collcntNm->id}}" class="modal fade" role="dialog">
         <div class="modal-dialog">
 

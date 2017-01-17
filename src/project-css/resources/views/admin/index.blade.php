@@ -7,6 +7,7 @@
   <div class="container adminHeading">
     <span class="text-center">
       <h2><a href="{{ url('/home') }}">Dashboard</a></h2>
+      <p>Your data. Your control.</p>
     </span>
   </div>
 </div>
@@ -17,21 +18,22 @@
 <!-- Dashboard cards -->
 <div class="container cardsWrapper">
   <div class="row">
-    <div class="col-xs-12 col-sm-6 col-md-3">
-      <div class="well dashCard">
-        <div class="dashCardHeading">
-          <span class="glyphicon glyphicon-user visible-xs visible-sm smallIcon"></span><label>User(s)</label>
-        </div>
-        <div class="icon hidden-xs hidden-sm">
-          <i class="glyphicon glyphicon-user"></i>
-        </div>
-        <div class="desc hidden-xs">
-          <var>{{$usrCnt}}</var>
-          <label class="text-muted">User(s)</label>
-          <li><a href="{{ url('/register') }}">Register</a></li>
+    <a href="{{ url('/users') }}">
+      <div class="col-xs-12 col-sm-6 col-md-3">
+        <div class="well dashCard">
+          <div class="dashCardHeading">
+            <span class="glyphicon glyphicon-user visible-xs visible-sm smallIcon"></span><label>User(s)</label>
+          </div>
+          <div class="icon hidden-xs hidden-sm">
+            <i class="glyphicon glyphicon-user"></i>
+          </div>
+          <div class="desc hidden-xs">
+            <var>{{$usrCnt}}</var>
+            <label class="text-muted">User(s)</label>
+          </div>
         </div>
       </div>
-    </div>
+    </a>
     <a href="{{ url('/collection') }}">
       <div class="col-xs-12 col-sm-6 col-md-3">
         <div class="well dashCard">

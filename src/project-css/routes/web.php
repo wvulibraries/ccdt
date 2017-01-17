@@ -66,3 +66,16 @@ Route::group(['prefix' => 'table'], function(){
   Route::post('load/worker','TableController@worker');
   Route::post('restrict', 'TableController@restrict');
 });
+
+/*
+|--------------------------------------------------------------------------
+| Controller for the users homepage
+|--------------------------------------------------------------------------
+*/
+Route::get('users', 'UserController@index')->name('userIndex');
+Route::group(['prefix' => 'user'], function(){
+  Route::post('restrict', 'UserController@restrict');
+  Route::post('allow', 'UserController@allow');
+  Route::post('promote', 'UserController@promote');
+  Route::post('demote', 'UserController@demote');
+});

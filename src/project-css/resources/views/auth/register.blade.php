@@ -1,11 +1,24 @@
 @extends('layouts.default')
 
 @section('content')
+<div class="headingWrapper">
+  <!-- Heading -->
+  <div class="container adminHeading">
+    <span class="text-center">
+      <h2><a href="{{ url('register') }}">Create User(s)</a></h2>
+      <p>Create new users here.</p>
+    </span>
+  </div>
+</div>
+
+<!-- Separation -->
+<hr/>
+
 <div class="container">
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
             <div class="panel panel-default formPanel">
-                <div class="panel-heading"><h2>Register</h2></div>
+                <div class="panel-heading"><h4>Register</h4></div>
                 <div class="panel-body">
                     <form class="form-horizontal" role="form" method="POST" action="{{ url('/register') }}">
                         {{ csrf_field() }}
