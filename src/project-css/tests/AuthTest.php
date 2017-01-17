@@ -36,6 +36,6 @@ class AuthTest extends TestCase
            ->type('password123','password')
            ->type('password123','password_confirmation')
            ->press('Register')
-           ->seePageIs('/home');
+           ->seePageIs('/users');
     }
 }
