@@ -34,7 +34,7 @@
     @foreach($usrs as $usr)
 
       @if($usr->isAdmin)
-      <!-- Checks if the admin is not you -->
+      <!-- Checks if the admin is not youz -->
       @if(!($AuthUsr->id==$usr->id))
       <div class="col-xs-12 col-sm-12 col-md-12">
 

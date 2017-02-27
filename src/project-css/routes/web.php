@@ -45,8 +45,6 @@ Route::group(['prefix' => 'collection'], function(){
   Route::post('edit', 'CollectionController@edit');
   Route::post('disable', 'CollectionController@disable');
   Route::post('enable', 'CollectionController@enable');
-  Route::post('restrict', 'CollectionController@restrict');
-  Route::post('allow', 'CollectionController@allow');
 });
 
 /*
@@ -79,3 +77,4 @@ Route::group(['prefix' => 'user'], function(){
   Route::post('promote', 'UserController@promote');
   Route::post('demote', 'UserController@demote');
 });
+Route::get('table/{id}','UserController@table');

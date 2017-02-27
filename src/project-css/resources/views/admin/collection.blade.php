@@ -52,24 +52,6 @@
                 <p>Add Tables</p>
               </a>
             </div>
-            <!-- Option 2 Permissions -->
-            <div class="colCardOpts">
-              @if($collcntNm->hasAccess)
-              <a href="#" data-toggle="modal" data-target="#rstrctAccsCllctn{{$collcntNm->id}}">
-                <div class="icon hidden-xs hidden-sm">
-                  <i class="glyphicon glyphicon-eye-close"></i>
-                </div>
-                <p>Restrict Access</p>
-              </a>
-              @else
-              <a href="#" data-toggle="modal" data-target="#allwAccsCllctn{{$collcntNm->id}}">
-                <div class="icon hidden-xs hidden-sm">
-                  <i class="glyphicon glyphicon-eye-open"></i>
-                </div>
-                <p>Allow Access</p>
-              </a>
-              @endif
-            </div>
             <!-- Option 3 Edit Collection -->
             <div class="colCardOpts">
               <a href="#" data-toggle="modal" data-target="#editCllctn{{$collcntNm->id}}">
@@ -93,86 +75,6 @@
       </div>
 
       <!-- Modals -->
-      <!-- Restrict Access to Collection -->
-      <div id="allwAccsCllctn{{$collcntNm->id}}" class="modal fade" role="dialog">
-        <div class="modal-dialog">
-
-          <!-- Modal content-->
-          <div class="modal-content">
-            <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal">&times;</button>
-              <h3 class="modal-title">Allow Access to Collection</h3>
-            </div>
-
-            <div class="modal-body">
-              <p>
-                Are you sure you want to Allow access to <b>{{$collcntNm->clctnName}}</b> collection?
-              </p>
-              <form class="form-horizontal" role="form" method="POST" action="{{ url('collection/allow') }}">
-                  {{ csrf_field() }}
-
-                  <input id="id" name="id" type="hidden" value="{{$collcntNm->id}}" />
-
-                  <div class="form-group{{ $errors->has('clctnName') ? ' has-error' : '' }}">
-                    <div class="modal-footer">
-                      <div class="col-md-offset-8 col-md-2">
-                            <button type="submit" class="btn btn-primary">
-                                Confirm
-                            </button>
-                          </div>
-                          <div class="col-md-2">
-                            <button type="button" class="btn btn-primary" data-dismiss="modal">
-                              Close
-                            </button>
-                        </div>
-                    </div>
-                  </div>
-              </form>
-            </div>
-          </div>
-
-        </div>
-      </div>
-
-      <div id="rstrctAccsCllctn{{$collcntNm->id}}" class="modal fade" role="dialog">
-        <div class="modal-dialog">
-
-          <!-- Modal content-->
-          <div class="modal-content">
-            <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal">&times;</button>
-              <h3 class="modal-title">Restrict Access to Collection</h3>
-            </div>
-
-            <div class="modal-body">
-              <p>
-                Are you sure you want to restrict access to <b>{{$collcntNm->clctnName}}</b> collection?
-              </p>
-              <form class="form-horizontal" role="form" method="POST" action="{{ url('collection/restrict') }}">
-                  {{ csrf_field() }}
-
-                  <input id="id" name="id" type="hidden" value="{{$collcntNm->id}}" />
-
-                  <div class="form-group{{ $errors->has('clctnName') ? ' has-error' : '' }}">
-                    <div class="modal-footer">
-                      <div class="col-md-offset-8 col-md-2">
-                            <button type="submit" class="btn btn-primary">
-                                Confirm
-                            </button>
-                          </div>
-                          <div class="col-md-2">
-                            <button type="button" class="btn btn-primary" data-dismiss="modal">
-                              Close
-                            </button>
-                        </div>
-                    </div>
-                  </div>
-              </form>
-            </div>
-          </div>
-
-        </div>
-      </div>
 
       <!-- Edit Collection modal -->
       <div id="editCllctn{{$collcntNm->id}}" class="modal fade" role="dialog">

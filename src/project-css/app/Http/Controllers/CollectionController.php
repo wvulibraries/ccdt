@@ -103,6 +103,14 @@ class CollectionController extends Controller
     // Create the collection name
     $thisClctn = Collection::findorFail($request->id);
     if(strcasecmp($thisClctn->clctnName, $request->clctnName) == 0){
+      // Get all the tables of this collection
+      $thisClctnTbls = $thisClctn->tables()->get();
+      // Update all the tables of this collection
+      foreach($thisClctnTbls as $tbl){
+        $tbl->hasAccess = false;
+        $tbl->save();
+      }
+      // Update the flag
       $thisClctn->isEnabled = false;
       $thisClctn->save();
 
@@ -122,28 +130,6 @@ class CollectionController extends Controller
     // Create the collection name
     $thisClctn = Collection::findorFail($request->id);
     $thisClctn->isEnabled = true;
-    $thisClctn->save();
-    return redirect()->route('collectionIndex');
-  }
-
-  /**
-  * Edit the database entry into the database
-  */
-  public function restrict(Request $request){
-    // Create the collection name
-    $thisClctn = Collection::findorFail($request->id);
-    $thisClctn->hasAccess = false;
-    $thisClctn->save();
-    return redirect()->route('collectionIndex');
-  }
-
-  /**
-  * Edit the database entry into the database
-  */
-  public function allow(Request $request){
-    // Create the collection name
-    $thisClctn = Collection::findorFail($request->id);
-    $thisClctn->hasAccess = true;
     $thisClctn->save();
     return redirect()->route('collectionIndex');
   }
