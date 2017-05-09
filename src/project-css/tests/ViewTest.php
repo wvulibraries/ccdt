@@ -14,10 +14,10 @@ class ViewTest extends TestCase
     public function testWelcomeView()
     {
       // Check for the title of home page
-      $this->visit('/')->see('Constituent Service System');
+      $this->visit('/')->see('Constituent Correspondence Data Tool');
 
       // Check for the links
-      $this->visit('/')->click('CSS')->seePageIs('/');
+      $this->visit('/')->click('CCDT')->seePageIs('/');
       $this->visit('/')->click('Login')->seePageIs('/login');
     }
 
