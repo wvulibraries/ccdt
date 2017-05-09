@@ -13,7 +13,7 @@
 
       <!-- Branding Image -->
       <a class="navbar-brand" href="{{ url('/') }}">
-          {{ config('app.name', 'CSS') }}
+          {{ config('app.name', 'CCDT') }}
       </a>
     </div>
 

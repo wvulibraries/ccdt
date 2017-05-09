@@ -2,11 +2,11 @@
 <meta charset="utf-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<meta name="description" content="Congrestional Constituent Service System"/>
-<meta name="author" content="CSS"/>
+<meta name="description" content="Constituent Correspondence Data Tool"/>
+<meta name="author" content="CCDT"/>
 
 <!-- Title -->
-<title>{{ config('app.name', 'CSS - Constituent Service System') }}</title>
+<title>{{ config('app.name', 'CCDT - Constituent Correspondence Data Tool') }}</title>
 
 <!-- Custom Fonts -->
 <link href="https://fonts.googleapis.com/css?family=Muli" rel="stylesheet"/>
