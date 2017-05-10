@@ -2,3 +2,6 @@
 privateFiles/
 serverConfiguration/
 testData/
+misc/
+sqlFiles/
+scripts/init.sh

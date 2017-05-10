@@ -1,4 +1,4 @@
-![Logo](misc/docs/logo.jpg)
+![Logo](docs/images/logo.jpg)
 
 [Constituent Correspondence Data Tool](https://github.com/wvulibraries/rockefeller-css) is a platform to transform **congressional data** into **information** and **information** into **insights.** The projects aims to provide a holistic interface for importing `flat-files` and provide tools to **research and visualize.**
 
@@ -10,7 +10,7 @@
 
  [Presentation](http://bitly.com/wvusystemscss) | [Documentation](https://github.com/wvulibraries/rockefeller-css/wiki)
 ------------ | -------------
- [![Presentation](misc/docs/i2.png)](http://bitly.com/wvusystemscss) | [![Documentation](misc/docs/i1.png)](https://github.com/wvulibraries/rockefeller-css/wiki)
+ [![Presentation](docs/images/i2.png)](http://bitly.com/wvusystemscss) | [![Documentation](docs/images/i1.png)](https://github.com/wvulibraries/rockefeller-css/wiki)
 
 ## Development and Contributing
 
