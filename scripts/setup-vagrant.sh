@@ -4,13 +4,23 @@
 #description     :This script will set permissions for existing laravel on PHP 7
 #author		       :Ajay Krishna Teja Kavuri
 #date            :20170510
-#version         :0.2
+#version         :0.3
 #==============================================================================
 
-# Set the configurations
+# Install composer packages
+cd /var/www/html/project-css/
+composer update
+
+# Setup the environment variables
+cp .env.vagrant .env
+php artisan key:generate
+
+# Setup the right permissions
 chmod 775 /var/www/html/project-css/storage
 sudo chown -R apache:apache /var/www/html/project-css
 sudo chmod 755 /var/www
+
+# Some apache config for project
 sudo ln -s /vagrant/conf/laravel.conf /etc/httpd/conf.d/
 sudo systemctl restart httpd
 
