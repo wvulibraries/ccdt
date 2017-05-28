@@ -67,7 +67,7 @@ Route::group(['prefix' => 'table'], function(){
 
 /*
 |--------------------------------------------------------------------------
-| Controller for the users homepage
+| Controller for the user management
 |--------------------------------------------------------------------------
 */
 Route::get('users', 'UserController@index')->name('userIndex');
@@ -77,4 +77,10 @@ Route::group(['prefix' => 'user'], function(){
   Route::post('promote', 'UserController@promote');
   Route::post('demote', 'UserController@demote');
 });
-Route::get('table/{id}','UserController@table');
+
+/*
+|--------------------------------------------------------------------------
+| Controller for the collection records
+|--------------------------------------------------------------------------
+*/
+Route::get('data/{tableId}','DataViewController@index')->name('dataIndex');

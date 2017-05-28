@@ -561,5 +561,4 @@ class TableController extends Controller
     return redirect()->route('tableIndex');
   }
 
-
 }
