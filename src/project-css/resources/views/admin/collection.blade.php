@@ -31,7 +31,6 @@
       </div>
     </a>
 
-    <!-- Iterate to show the existing collection -->
     @foreach($collcntNms as $collcntNm)
       <!-- Show the currently enabled cololections -->
       @if($collcntNm->isEnabled)

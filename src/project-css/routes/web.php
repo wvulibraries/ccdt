@@ -32,7 +32,7 @@ Auth::routes();
 | Controller for the home page
 |--------------------------------------------------------------------------
 */
-Route::get('home', 'HomeController@index');
+Route::get('home', 'HomeController@index')->name('home');
 
 /*
 |--------------------------------------------------------------------------
@@ -83,4 +83,4 @@ Route::group(['prefix' => 'user'], function(){
 | Controller for the collection records
 |--------------------------------------------------------------------------
 */
-Route::get('data/{tableId}','DataViewController@index')->name('dataIndex');
+Route::get('data/{curTable}','DataViewController@index')->name('dataIndex');

@@ -31,11 +31,26 @@ class DataViewController extends Controller {
   public function index(Request $request, $curTable){
     // Get the table entry in meta table "tables"
     $curTable = Table::find($curTable);
-    // Get the actual table using the
-    // name of the table we are currently using
-    $rcrds = DB::table($curTable->tblNme)->get();
+    if(!$curTable->hasAccess){
+      return redirect()->route('home')->withErrors(['Table is disabled']);
+    }
+
+    // check for the number of records
+    $numOfRcrds = DB::table($curTable->tblNme)->count();
+    if ($numOfRcrds == 0){
+      return redirect()->route('home')->withErrors(['Table does not have any records.']);
+    }
+
+    // Get the records of the table using the name of the table we are currently using
+    $rcrds = DB::table($curTable->tblNme)->simplePaginate(25);
+    // retrieve the column names
+    $clmnNmes = DB::getSchemaBuilder()->getColumnListing($curTable->tblNme);
+
     // return the index page
-    return $rcrds;
+    return view('user.data')->with('rcrds',$rcrds)
+                            ->with('clmnNmes',$clmnNmes)
+                            ->with('tblNme',$curTable->tblNme)
+                            ->with('tblId',$curTable);
   }
 
 

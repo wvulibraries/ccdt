@@ -129,8 +129,19 @@ class CollectionController extends Controller
   public function enable(Request $request){
     // Create the collection name
     $thisClctn = Collection::findorFail($request->id);
+
+    // Get all the tables of this collection
+    $thisClctnTbls = $thisClctn->tables()->get();
+    // Update all the tables of this collection
+    foreach($thisClctnTbls as $tbl){
+      $tbl->hasAccess = true;
+      $tbl->save();
+    }
+
+    # enable the collection
     $thisClctn->isEnabled = true;
     $thisClctn->save();
+
     return redirect()->route('collectionIndex');
   }
 
