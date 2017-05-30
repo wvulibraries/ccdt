@@ -6077,4 +6077,10 @@ footer {
 .cllctnCntr {
   color: #337ab7; }
 
+.rcrdPrvCard {
+  text-align: left; }
+
+.rcrdNxtCard {
+  text-align: right; }
+
 /*# sourceMappingURL=app.css.map */
