@@ -49,24 +49,32 @@
 <div class="dataWrppr">
     <div class="container">
 
-      <div class="col-xs-12 col-sm-12 col-md-12">
-        @if(1 <= $rcrds->currentPage() and $rcrds->currentPage() <= $rcrds->lastPage())
-        <div class="rcrdOptnsCrd">
-          <ul class="pagination pagination-lg">
-            @if($rcrds->currentPage() != 1)<li><a href="{{$rcrds->previousPageUrl()}}"><i class="glyphicon glyphicon-chevron-left"></i></a></li>@endif
-            @if($rcrds->currentPage() != 1)<li><a href="{{$rcrds->url(1)}}">first</a></li>@endif
-            @if($rcrds->currentPage()-2 >= 1)<li><a href="{{$rcrds->url($rcrds->currentPage()-2)}}">{{$rcrds->currentPage()-2}}</a></li>@endif
-            <li class="active"><a href="{{$rcrds->url($rcrds->currentPage())}}">{{$rcrds->currentPage()}}</a></li>
-            @if($rcrds->hasMorePages() and $rcrds->currentPage()+2 <= $rcrds->lastPage())<li><a href="{{$rcrds->url($rcrds->currentPage()+2)}}">{{$rcrds->currentPage()+2}}</a></li>@endif
-            @if($rcrds->currentPage() != $rcrds->lastPage())<li><a href="{{$rcrds->url($rcrds->lastPage())}}">last</a></li>@endif
-            @if($rcrds->currentPage() != $rcrds->lastPage())<li><a href="{{$rcrds->nextPageUrl()}}"><i class="glyphicon glyphicon-chevron-right"></i></a></li>@endif
-          </ul>
+        <div class="rcrdOptnsCrd-top">
+          <div class="col-xs-12 col-sm-12 col-md-12">
+          <!-- <div class="btn-group btn-group-lg"> -->
+            <div class="col-xs-6 col-sm-6 col-md-6 text-left">
+              @if($rcrds->currentPage() != 1)
+              <a class="btn btn-primary left-button" href="{{$rcrds->previousPageUrl()}}">
+                <span>
+                  <i class="glyphicon glyphicon-chevron-left"></i>
+                </span>
+                <span>previous page</span>
+              </a>
+              @endif
+            </div>
+            <div class="col-xs-6 col-sm-6 col-md-6 text-right">
+              @if($rcrds->currentPage() != $rcrds->lastPage())
+              <a class="btn btn-primary pull-right" href="{{$rcrds->nextPageUrl()}}">
+                <span>next page</span>
+                <span>
+                  <i class="glyphicon glyphicon-chevron-right"></i>
+                </span>
+              </a>
+              @endif
+            </div>
+          <!-- </div> -->
         </div>
-        @else
-        <p class="text-center">Page {{$rcrds->currentPage()}} doesn't exist.</p>
-        @endif
       </div>
-
 
       @foreach($rcrds as $key => $rcrd)
         <div class="col-xs-12 col-sm-12 col-md-12">
@@ -82,6 +90,24 @@
           </div>
         </div>
       @endforeach
+
+      <div class="col-xs-12 col-sm-12 col-md-12">
+        @if(1 <= $rcrds->currentPage() and $rcrds->currentPage() <= $rcrds->lastPage())
+        <div class="rcrdOptnsCrd text-center">
+          <ul class="pagination pagination-lg">
+            @if($rcrds->currentPage() != 1)<li><a href="{{$rcrds->previousPageUrl()}}"><i class="glyphicon glyphicon-chevron-left"></i></a></li>@endif
+            @if($rcrds->currentPage() != 1)<li><a href="{{$rcrds->url(1)}}">first</a></li>@endif
+            @if($rcrds->currentPage()-2 >= 1)<li><a href="{{$rcrds->url($rcrds->currentPage()-2)}}">{{$rcrds->currentPage()-2}}</a></li>@endif
+            <li class="active"><a href="{{$rcrds->url($rcrds->currentPage())}}">{{$rcrds->currentPage()}}</a></li>
+            @if($rcrds->hasMorePages() and $rcrds->currentPage()+2 <= $rcrds->lastPage())<li><a href="{{$rcrds->url($rcrds->currentPage()+2)}}">{{$rcrds->currentPage()+2}}</a></li>@endif
+            @if($rcrds->currentPage() != $rcrds->lastPage())<li><a href="{{$rcrds->url($rcrds->lastPage())}}">last</a></li>@endif
+            @if($rcrds->currentPage() != $rcrds->lastPage())<li><a href="{{$rcrds->nextPageUrl()}}"><i class="glyphicon glyphicon-chevron-right"></i></a></li>@endif
+          </ul>
+        </div>
+        @else
+        <p class="text-center">Page {{$rcrds->currentPage()}} doesn't exist.</p>
+        @endif
+      </div>
 
     </div>
 </div>
