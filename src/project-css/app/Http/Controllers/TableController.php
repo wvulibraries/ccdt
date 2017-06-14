@@ -400,6 +400,13 @@ class TableController extends Controller
             $table->bigInteger($curColNme)->default(0);
           }
         }
+
+        if(str_is($curColType,'text')){
+          // Check for the data type
+          // Default
+          $table->text($curColNme);
+        }
+
       }
 
       // Time stamps
@@ -534,7 +541,8 @@ class TableController extends Controller
 
           // Compact them into one array
           for($i=0;$i<$orgCount;$i++){
-            $curArry[strval($clmnLst[$i])]=$tkns[$i];
+            // added iconv to strip out invalid characters
+            $curArry[strval($clmnLst[$i])]=utf8_encode($tkns[$i]);
           }
 
           // Insert them into DB
