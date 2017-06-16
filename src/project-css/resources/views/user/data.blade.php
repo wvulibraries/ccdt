@@ -79,15 +79,17 @@
       <link rel="stylesheet" href="{{ URL::asset('css/card.css') }}" type="text/css">
       <div class="cardCont">
         @foreach($rcrds as $key => $rcrd)
-          <div class="card">
-            <div class="container">
-              @foreach($rcrd as $field => $field_value)
-                @if(strlen($field_value) > 0)<p>{{$field}} {{$field_value}}</p>@endif
-              @endforeach
+          <a href="{{$rcrd->id}}?cid={{$rcrd->id}}">
+            <div class="card">
+              <div class="container">
+                <h3 class="recId"><b>{{$rcrd->id}}</b></h3>
+                <p><b>Name: </b>{{$rcrd->prefix}} {{$rcrd->first}} {{$rcrd->middle}} {{$rcrd->last}}</p>
+                <p><b>Organization: </b>{{$rcrd->org}}</p>
+                <p><b>Address: </b>{{$rcrd->addr1}}<br/>{{$rcrd->addr2}}, {{$rcrd->city}}, {{$rcrd->state}}<br/>{{$rcrd->zip}}<br/>{{$rcrd->country}}</p>
+              </div>
             </div>
-          </div>
-          <br>
-        @endforeach
+          </a>
+        @endforeach  
       </div>
 
       <div class="col-xs-12 col-sm-12 col-md-12">
