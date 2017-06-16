@@ -17,7 +17,7 @@
   <div class="container">
     <div class="row">
         <div class="col-xs-12 col-sm-12 col-md-12">
-          <form class="form-horizontal" role="search" method="POST" action="/search">
+          <form class="form-horizontal" role="search" method="POST" action="">
               {{ csrf_field() }}
               <div class="form-group{{ $errors->has('search') ? ' has-error' : '' }}">
                   <div class="col-md-10 col-sm-10 col-xs-8">
@@ -75,12 +75,16 @@
         </div>
       </div>
 
-      <div>
+      <base href="/" target="_top">
+      <link rel="stylesheet" href="{{ URL::asset('css/card.css') }}" type="text/css">
+      <div class="cardCont">
         @foreach($rcrds as $key => $rcrd)
-          <div>
-            @foreach($rcrd as $field => $field_value)
-              @if(strlen($field_value) > 0)<p>{{$field}} {{$field_value}}</p>@endif
-            @endforeach
+          <div class="card">
+            <div class="container">
+              @foreach($rcrd as $field => $field_value)
+                @if(strlen($field_value) > 0)<p>{{$field}} {{$field_value}}</p>@endif
+              @endforeach
+            </div>
           </div>
           <br>
         @endforeach
