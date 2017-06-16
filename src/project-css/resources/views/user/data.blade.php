@@ -17,15 +17,14 @@
   <div class="container">
     <div class="row">
         <div class="col-xs-12 col-sm-12 col-md-12">
-          <form class="form-horizontal" role="form" method="POST" action="{{ url('/login') }}">
+          <form class="form-horizontal" role="search" method="POST" action="/search">
               {{ csrf_field() }}
-
               <div class="form-group{{ $errors->has('search') ? ' has-error' : '' }}">
                   <div class="col-md-10 col-sm-10 col-xs-8">
-                      <input id="search" type="search" class="form-control searchBar" name="search" value="{{ old('search') }}" required autofocus>
+                      <input id="search" type="text" class="form-control searchBar" name="search" placeholder="Search..." required autofocus>
 
                       @if ($errors->has('search'))
-                          <span class="help-block">
+                          <span class="fa fa-search">
                               <strong>{{ $errors->first('search') }}</strong>
                           </span>
                       @endif
@@ -76,20 +75,16 @@
         </div>
       </div>
 
-      @foreach($rcrds as $key => $rcrd)
-        <div class="col-xs-12 col-sm-12 col-md-12">
-          <div class="rcrdCard">
-
-            <div class="col-xs-8 col-sm-8 col-md-8">
-              {{$rcrd->first}}
-            </div>
-
-            <div class="col-xs-2 col-sm-2 col-md-2">
-              {{$rcrd->id}}
-            </div>
+      <div>
+        @foreach($rcrds as $key => $rcrd)
+          <div>
+            @foreach($rcrd as $field => $field_value)
+              @if(strlen($field_value) > 0)<p>{{$field}} {{$field_value}}</p>@endif
+            @endforeach
           </div>
-        </div>
-      @endforeach
+          <br>
+        @endforeach
+      </div>
 
       <div class="col-xs-12 col-sm-12 col-md-12">
         @if(1 <= $rcrds->currentPage() and $rcrds->currentPage() <= $rcrds->lastPage())

@@ -29,6 +29,7 @@ class DataViewController extends Controller {
   * Show the data from the selected table
   */
   public function index(Request $request, $curTable){
+
     // Get the table entry in meta table "tables"
     $curTable = Table::find($curTable);
     if(!$curTable->hasAccess){
@@ -43,6 +44,7 @@ class DataViewController extends Controller {
 
     // Get the records of the table using the name of the table we are currently using
     $rcrds = DB::table($curTable->tblNme)->paginate(25);
+
     // retrieve the column names
     $clmnNmes = DB::getSchemaBuilder()->getColumnListing($curTable->tblNme);
 
