@@ -42,7 +42,7 @@ class DataViewController extends Controller {
     }
 
     // Get the records of the table using the name of the table we are currently using
-    $rcrds = DB::table($curTable->tblNme)->paginate(25);
+    $rcrds = DB::table($curTable->tblNme)->paginate(30);
     // retrieve the column names
     $clmnNmes = DB::getSchemaBuilder()->getColumnListing($curTable->tblNme);
 
