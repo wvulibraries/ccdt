@@ -49,8 +49,8 @@
 <div class="dataWrppr">
     <div class="container">
 
+      <div class="col-xs-12 col-sm-12 col-md-12">
         <div class="rcrdOptnsCrd-top">
-          <div class="col-xs-12 col-sm-12 col-md-12">
           <!-- <div class="btn-group btn-group-lg"> -->
             <div class="col-xs-6 col-sm-6 col-md-6 text-left">
               @if($rcrds->currentPage() != 1)
@@ -76,19 +76,19 @@
         </div>
       </div>
 
+      <!-- Separation -->
+      <hr/>
+
       @foreach($rcrds as $key => $rcrd)
-        <div class="col-xs-12 col-sm-12 col-md-12">
-          <div class="rcrdCard">
-
-            <div class="col-xs-8 col-sm-8 col-md-8">
-              {{$rcrd->first}}
-            </div>
-
-            <div class="col-xs-2 col-sm-2 col-md-2">
-              {{$rcrd->id}}
-            </div>
-          </div>
+      <div class="col-xs-12 col-sm-6 col-md-4">
+        <div class="dataCard">
+        @foreach($clmnNmes as $key => $clmnNme)
+          @if($key < 5)
+            <h4><b>{{$clmnNme}}</b>:{{$rcrd->$clmnNme}}</h4>
+          @endif
+        @endforeach
         </div>
+      </div>
       @endforeach
 
       <div class="col-xs-12 col-sm-12 col-md-12">
