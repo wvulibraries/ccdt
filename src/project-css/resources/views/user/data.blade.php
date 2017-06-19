@@ -28,13 +28,13 @@
                       @endforeach
                     </select>
 
-                      <input id="search" type="text" class="form-control searchBar" name="search" placeholder="Search..." required autofocus>
+                    <input id="search" type="text" class="form-control searchBar" name="search" placeholder="Search..." required autofocus>
 
-                      @if ($errors->has('search'))
-                          <span class="fa fa-search">
-                              <strong>{{ $errors->first('search') }}</strong>
-                          </span>
-                      @endif
+                    @if ($errors->has('search'))
+                      <span class="fa fa-search">
+                          <strong>{{ $errors->first('search') }}</strong>
+                      </span>
+                    @endif
                   </div>
 
                   <div class="col-md-2 col-sm-2 col-xs-4">
@@ -55,8 +55,8 @@
 <div class="dataWrppr">
     <div class="container">
 
-        <div class="rcrdOptnsCrd-top">
-          <div class="col-xs-12 col-sm-12 col-md-12">
+        <div class="col-xs-12 col-sm-12 col-md-12">
+          <div class="rcrdOptnsCrd-top">
           <!-- <div class="btn-group btn-group-lg"> -->
             <div class="col-xs-6 col-sm-6 col-md-6 text-left">
               @if($rcrds->currentPage() != 1)
@@ -82,20 +82,25 @@
         </div>
       </div>
 
+      <!-- Separation -->
+      <hr/>
+
       <base href="/" target="_top">
       <link rel="stylesheet" href="{{ URL::asset('css/card.css') }}" type="text/css">
+
       <div class="cardCont">
         @foreach($rcrds as $key => $rcrd)
+        <div class="col-xs-12 col-sm-6 col-md-4">
           <a href="{{$rcrd->id}}?cid={{$rcrd->id}}">
             <div class="card">
-              <div class="container">
-                <p class="recId"><b>{{$rcrd->id}}</b></p>
-                <p><b>Name: </b>{{$rcrd->prefix}} {{$rcrd->first}} {{$rcrd->middle}} {{$rcrd->last}}</p>
-                <p><b>Organization: </b>{{$rcrd->org}}</p>
-                <p><b>Address: </b>{{$rcrd->addr1}} {{$rcrd->addr2}}<br/>{{$rcrd->city}}, {{$rcrd->state}} {{$rcrd->zip}}<br/>{{$rcrd->country}}</p>
-              </div>
+                @foreach($clmnNmes as $key => $clmnNme)
+                  @if($key < 5)
+                    <h4><b>{{$clmnNme}}</b>: {{$rcrd->$clmnNme}}</h4>
+                  @endif
+                @endforeach
             </div>
           </a>
+        </div>
         @endforeach
       </div>
 

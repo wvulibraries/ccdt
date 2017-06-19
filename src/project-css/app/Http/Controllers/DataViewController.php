@@ -37,10 +37,11 @@ class DataViewController extends Controller {
 
     $search = $request->input('search');
     $tblCol = $request->input('tblCol');
-    if ((strlen($search) != '0') && (strlen($tblCol) != '0'))
+    if ((strlen($search) != '0') && (strlen($tblCol) != '0')) {
       $numOfRcrds = DB::table($curTable->tblNme)
                       ->where($tblCol, 'LIKE', $search)
-                      ->count();
+                      ->count();  
+    }
     else {
       $numOfRcrds = DB::table($curTable->tblNme)->count();
     }
@@ -51,14 +52,18 @@ class DataViewController extends Controller {
     }
 
     // Get the records of the table using the name of the table we are currently using
-    if ((strlen($search) != '0') && (strlen($tblCol) != '0'))
+    if ((strlen($search) != '0') && (strlen($tblCol) != '0')) {
       $rcrds = DB::table($curTable->tblNme)
                   ->where($tblCol, 'LIKE', $search)
-                  ->paginate(25);
-    else {
-      $rcrds = DB::table($curTable->tblNme)->paginate(25);
+                  ->paginate(30);
+      $rcrds->appends(array(
+          'tblCol' => $tblCol,
+          'search' => $search,
+      ));
     }
-
+    else {
+      $rcrds = DB::table($curTable->tblNme)->paginate(30);
+    }
 
     // retrieve the column names
     $clmnNmes = DB::getSchemaBuilder()->getColumnListing($curTable->tblNme);
