@@ -29,21 +29,36 @@ class DataViewController extends Controller {
   * Show the data from the selected table
   */
   public function index(Request $request, $curTable){
-
     // Get the table entry in meta table "tables"
     $curTable = Table::find($curTable);
     if(!$curTable->hasAccess){
       return redirect()->route('home')->withErrors(['Table is disabled']);
     }
 
+    $search = $request->input('search');
+    $tblCol = $request->input('tblCol');
+    if ((strlen($search) != '0') && (strlen($tblCol) != '0'))
+      $numOfRcrds = DB::table($curTable->tblNme)
+                      ->where($tblCol, 'LIKE', $search)
+                      ->count();
+    else {
+      $numOfRcrds = DB::table($curTable->tblNme)->count();
+    }
+
     // check for the number of records
-    $numOfRcrds = DB::table($curTable->tblNme)->count();
     if ($numOfRcrds == 0){
       return redirect()->route('home')->withErrors(['Table does not have any records.']);
     }
 
     // Get the records of the table using the name of the table we are currently using
-    $rcrds = DB::table($curTable->tblNme)->paginate(25);
+    if ((strlen($search) != '0') && (strlen($tblCol) != '0'))
+      $rcrds = DB::table($curTable->tblNme)
+                  ->where($tblCol, 'LIKE', $search)
+                  ->paginate(25);
+    else {
+      $rcrds = DB::table($curTable->tblNme)->paginate(25);
+    }
+
 
     // retrieve the column names
     $clmnNmes = DB::getSchemaBuilder()->getColumnListing($curTable->tblNme);
@@ -54,6 +69,8 @@ class DataViewController extends Controller {
                             ->with('tblNme',$curTable->tblNme)
                             ->with('tblId',$curTable);
   }
+
+
 
 
 }
