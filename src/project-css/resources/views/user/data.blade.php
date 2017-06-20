@@ -55,8 +55,8 @@
 <div class="dataWrppr">
     <div class="container">
 
-        <div class="col-xs-12 col-sm-12 col-md-12">
-          <div class="rcrdOptnsCrd-top">
+      <div class="col-xs-12 col-sm-12 col-md-12">
+        <div class="rcrdOptnsCrd-top">
           <!-- <div class="btn-group btn-group-lg"> -->
             <div class="col-xs-6 col-sm-6 col-md-6 text-left">
               @if($rcrds->currentPage() != 1)
