@@ -85,24 +85,19 @@
       <!-- Separation -->
       <hr/>
 
-      <base href="/" target="_top">
-      <link rel="stylesheet" href="{{ URL::asset('css/card.css') }}" type="text/css">
-
-      <div class="cardCont">
-        @foreach($rcrds as $key => $rcrd)
-        <div class="col-xs-12 col-sm-6 col-md-4">
-          <a href="{{$rcrd->id}}?cid={{$rcrd->id}}">
-            <div class="card">
-                @foreach($clmnNmes as $key => $clmnNme)
-                  @if($key < 5)
-                    <h4><b>{{$clmnNme}}</b>: {{$rcrd->$clmnNme}}</h4>
-                  @endif
-                @endforeach
-            </div>
-          </a>
-        </div>
-        @endforeach
+      @foreach($rcrds as $key => $rcrd)
+      <div class="col-xs-12 col-sm-6 col-md-4">
+        <a href="{{ url('/data',$tblId) }}?id={{$rcrd->id}}">
+          <div class="dataCard">
+              @foreach($clmnNmes as $key => $clmnNme)
+                @if($key < 5)
+                  <h4><b>{{$clmnNme}}</b>: {{$rcrd->$clmnNme}}</h4>
+                @endif
+              @endforeach
+          </div>
+        </a>
       </div>
+      @endforeach
 
       <div class="col-xs-12 col-sm-12 col-md-12">
         @if(1 <= $rcrds->currentPage() and $rcrds->currentPage() <= $rcrds->lastPage())

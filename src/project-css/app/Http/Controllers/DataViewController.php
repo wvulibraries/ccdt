@@ -35,12 +35,17 @@ class DataViewController extends Controller {
       return redirect()->route('home')->withErrors(['Table is disabled']);
     }
 
+    /**
+    * set passed values to variables
+    */
     $search = $request->input('search');
     $tblCol = $request->input('tblCol');
+    $id = $request->input('id');
+
     if ((strlen($search) != '0') && (strlen($tblCol) != '0')) {
       $numOfRcrds = DB::table($curTable->tblNme)
                       ->where($tblCol, 'LIKE', $search)
-                      ->count();  
+                      ->count();
     }
     else {
       $numOfRcrds = DB::table($curTable->tblNme)->count();
@@ -61,6 +66,10 @@ class DataViewController extends Controller {
           'search' => $search,
       ));
     }
+    // elseif (strlen($id) != '0') {
+    //   $rcrds = DB::table($curTable->tblNme)
+    //               ->where('id', 'LIKE', $id);
+    // }
     else {
       $rcrds = DB::table($curTable->tblNme)->paginate(30);
     }
