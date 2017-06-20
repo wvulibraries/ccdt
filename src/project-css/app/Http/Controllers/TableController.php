@@ -381,6 +381,26 @@ class TableController extends Controller
           }
         }
 
+        // Check for Text data type
+        if(str_is($curColType,'text')){
+          // Check for the data type
+          // Default
+          if(str_is($curColSze,'default')){
+            // For text default is text type
+            $table->text($curColNme);
+          }
+          // Medium
+          if(str_is($curColSze,'medium')){
+            // For text medium is mediumtext type
+            $table->mediumText($curColNme);
+          }
+          // Big
+          if(str_is($curColSze,'big')){
+            // For text big is longtext type
+            $table->longText($curColNme);
+          }
+        }
+
         // Check for Integer
         if(str_is($curColType,'integer')){
           // Check for the data type
@@ -532,9 +552,9 @@ class TableController extends Controller
           // Declae an array
           $curArry = array();
 
-          // Compact them into one array
+          // Compact them into one array with utf8 encoding
           for($i=0;$i<$orgCount;$i++){
-            $curArry[strval($clmnLst[$i])]=$tkns[$i];
+            $curArry[strval($clmnLst[$i])]=utf8_encode($tkns[$i]);
           }
 
           // Insert them into DB

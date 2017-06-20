@@ -80,7 +80,7 @@
       <hr/>
 
       @foreach($rcrds as $key => $rcrd)
-      <div class="col-xs-12 col-sm-6 col-md-4">
+      <div class="col-xs-12 col-sm-4 col-md-4">
         <div class="dataCard">
         @foreach($clmnNmes as $key => $clmnNme)
           @if($key < 5)

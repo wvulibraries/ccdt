@@ -54,6 +54,7 @@
                   <select id="col-{{$key}}-data" type="text" class="form-control" name="col-{{$key}}-data" required autofocus>
                     <option value="string">String</option>
                     <option value="integer">Integer</option>
+                    <option value="text">Text</option>
                   </select>
                 </div>
               </td>
