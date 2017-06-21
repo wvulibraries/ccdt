@@ -54,8 +54,9 @@
                 <div class="form-group{{$errors->has('col-'.$key.'-data') ? ' has-error' : ''}}">
                   <!-- <label for="col-{{$key}}-data">Datatype</label> -->
                   <select id="col-{{$key}}-data" type="text" class="form-control" name="col-{{$key}}-data" required autofocus>
-                    <option value="string">String</option>
                     <option value="integer">Integer</option>
+                    <option selected="selected" value="string">String</option>
+                    <option value="text">Text</option>
                   </select>
                 </div>
               </td>
