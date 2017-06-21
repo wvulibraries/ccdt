@@ -1,3 +1,4 @@
+
 @extends('layouts.default')
 
 <!-- Heading -->
@@ -17,18 +18,23 @@
   <div class="container">
     <div class="row">
         <div class="col-xs-12 col-sm-12 col-md-12">
-          <form class="form-horizontal" role="form" method="POST" action="{{ url('/login') }}">
+          <form class="form-horizontal" role="search" method="get" action="{{ url('/data',$tblId) }}">
               {{ csrf_field() }}
-
               <div class="form-group{{ $errors->has('search') ? ' has-error' : '' }}">
                   <div class="col-md-10 col-sm-10 col-xs-8">
-                      <input id="search" type="search" class="form-control searchBar" name="search" value="{{ old('search') }}" required autofocus>
+                    <select id="tblCol" name="tblCol" class="form-control">
+                      @foreach($clmnNmes as $clmnNme)
+                        <option value="{{ $clmnNme }}">{{ $clmnNme }}</option>
+                      @endforeach
+                    </select>
 
-                      @if ($errors->has('search'))
-                          <span class="help-block">
-                              <strong>{{ $errors->first('search') }}</strong>
-                          </span>
-                      @endif
+                    <input id="search" type="text" class="form-control searchBar" name="search" placeholder="Search..." required autofocus>
+
+                    @if ($errors->has('search'))
+                      <span class="fa fa-search">
+                          <strong>{{ $errors->first('search') }}</strong>
+                      </span>
+                    @endif
                   </div>
 
                   <div class="col-md-2 col-sm-2 col-xs-4">
@@ -81,13 +87,15 @@
 
       @foreach($rcrds as $key => $rcrd)
       <div class="col-xs-12 col-sm-4 col-md-4">
-        <div class="dataCard">
-        @foreach($clmnNmes as $key => $clmnNme)
-          @if($key < 5)
-            <h4><b>{{$clmnNme}}</b>:{{$rcrd->$clmnNme}}</h4>
-          @endif
-        @endforeach
-        </div>
+        <a href="{{ url('/data',$tblId) }}?id={{$rcrd->id}}">
+          <div class="dataCard">
+              @foreach($clmnNmes as $key => $clmnNme)
+                @if($key < 5)
+                  <h4><b>{{$clmnNme}}</b>: {{$rcrd->$clmnNme}}</h4>
+                @endif
+              @endforeach
+          </div>
+        </a>
       </div>
       @endforeach
 

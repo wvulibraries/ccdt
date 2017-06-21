@@ -15,7 +15,7 @@ class CreateTablesTable extends Migration
     {
         Schema::create('tables', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('tblNme',191)->unique();
+            $table->string('tblNme', 191)->unique();
             $table->integer('collection_id')->unsigned();
             $table->boolean('hasAccess')->default(true);
             $table->timestamps();
