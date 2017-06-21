@@ -22,13 +22,20 @@
 
               <div class="form-group{{ $errors->has('search') ? ' has-error' : '' }}">
                   <div class="col-md-10 col-sm-10 col-xs-8">
-                      <input id="search" type="search" class="form-control searchBar" name="search" value="{{ old('search') }}" required autofocus>
+                    <!-- <label for="tblCol">Table Columns</label> -->
+                    <select id="tblCol" name="tblCol" class="form-control">
+                      @foreach($clmnNmes as $clmnNme)
+                        <option value="{{ $clmnNme }}">{{ $clmnNme }}</option>
+                      @endforeach
+                    </select>
+                    <!-- <label for="search">Search</label> -->
+                    <input id="search" type="text" class="form-control searchBar" name="search" placeholder="Search..." required autofocus>
 
-                      @if ($errors->has('search'))
-                          <span class="help-block">
-                              <strong>{{ $errors->first('search') }}</strong>
-                          </span>
-                      @endif
+                    @if ($errors->has('search'))
+                      <span class="fa fa-search">
+                          <strong>{{ $errors->first('search') }}</strong>
+                      </span>
+                    @endif
                   </div>
 
                   <div class="col-md-2 col-sm-2 col-xs-4">

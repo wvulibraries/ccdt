@@ -45,12 +45,14 @@
               <td>
                 <!-- Show the columns for edit -->
                 <div class="form-group{{ $errors->has('col-'.$key.'-name') ? ' has-error' : '' }}">
+                  <!-- <label for="col-{{$key}}-name">Datatype Name</label> -->
                   <input id="col-{{$key}}-name" type="text" class="form-control" name="col-{{$key}}-name" value="{{$col}}" required autofocus>
                 </div>
               </td>
               <td>
                 <!-- Show the data type to choose from -->
                 <div class="form-group{{$errors->has('col-'.$key.'-data') ? ' has-error' : ''}}">
+                  <!-- <label for="col-{{$key}}-data">Datatype</label> -->
                   <select id="col-{{$key}}-data" type="text" class="form-control" name="col-{{$key}}-data" required autofocus>
                     <option value="string">String</option>
                     <option value="integer">Integer</option>
@@ -60,6 +62,7 @@
               <td>
                 <!-- Show the data size to choose from -->
                 <div class="form-group{{$errors->has('col-'.$key.'-size') ? ' has-error' : ''}}">
+                  <label for="col-{{$key}}-size">Datatype Size</label>
                   <select id="col-{{$key}}-size" type="text" class="form-control" name="col-{{$key}}-size" required autofocus>
                     <option value="default">Default</option>
                     <option value="medium">Medium</option>
