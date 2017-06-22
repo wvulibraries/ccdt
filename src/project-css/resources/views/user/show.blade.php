@@ -50,7 +50,7 @@
       <hr/>
 
       @foreach($rcrds as $key => $rcrd)
-      <div class="col-xs-12 col-sm-4 col-md-4">
+      <div class="col-xs-12 col-sm-12 col-md-12">
           @foreach($clmnNmes as $key => $clmnNme)
             <h4><b>{{$clmnNme}}</b>: {{$rcrd->$clmnNme}}</h4>
           @endforeach
