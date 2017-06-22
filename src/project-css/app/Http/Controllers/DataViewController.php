@@ -40,37 +40,32 @@ class DataViewController extends Controller {
     */
     $search = $request->input('search');
     $tblCol = $request->input('tblCol');
-    $id = $request->input('id');
 
-    if ((strlen($search) != '0') && (strlen($tblCol) != '0')) {
+    // Check if search string and column were passed
+    if ((strlen($search) != 0) && (strlen($tblCol) != 0)) {
       $numOfRcrds = DB::table($curTable->tblNme)
                       ->where($tblCol, 'LIKE', $search)
                       ->count();
+      // check for the number of records
+      if ($numOfRcrds == 0){
+        return redirect()->route('home')->withErrors(['Search Yeilded No Results']);
+      }
+      else {
+        $rcrds = DB::table($curTable->tblNme)
+                    ->where($tblCol, 'LIKE', $search)
+                    ->paginate(30);
+        $rcrds->appends(array(
+            'tblCol' => $tblCol,
+            'search' => $search,
+        ));
+      }
     }
     else {
       $numOfRcrds = DB::table($curTable->tblNme)->count();
-    }
-
-    // check for the number of records
-    if ($numOfRcrds == 0){
-      return redirect()->route('home')->withErrors(['Table does not have any records.']);
-    }
-
-    // Get the records of the table using the name of the table we are currently using
-    if ((strlen($search) != '0') && (strlen($tblCol) != '0')) {
-      $rcrds = DB::table($curTable->tblNme)
-                  ->where($tblCol, 'LIKE', $search)
-                  ->paginate(30);
-      $rcrds->appends(array(
-          'tblCol' => $tblCol,
-          'search' => $search,
-      ));
-    }
-    // elseif (strlen($id) != '0') {
-    //   $rcrds = DB::table($curTable->tblNme)
-    //               ->where('id', 'LIKE', $id);
-    // }
-    else {
+      // check for the number of records
+      if ($numOfRcrds == 0){
+        return redirect()->route('home')->withErrors(['Table does not have any records.']);
+      }
       $rcrds = DB::table($curTable->tblNme)->paginate(30);
     }
 
@@ -84,7 +79,40 @@ class DataViewController extends Controller {
                             ->with('tblId',$curTable);
   }
 
+  public function show(Request $request, $curTable, $curId){
+    // Get the table entry in meta table "tables"
+    $curTable = Table::find($curTable);
+    if(!$curTable->hasAccess){
+      return redirect()->route('home')->withErrors(['Table is disabled']);
+    }
 
+    // Check if search string and column were passed
+    if (strlen($curId) != 0) {
+      $numOfRcrds = DB::table($curTable->tblNme)
+                      ->where('id', 'LIKE', $curId)
+                      ->count();
+      // check for the number of records
+      if ($numOfRcrds == 0){
+        return redirect()->route('home')->withErrors(['Search Yeilded No Results']);
+      }
+      else {
+        $rcrds = DB::table($curTable->tblNme)
+                    ->where('id', 'LIKE', $curId)
+                    ->get();
+      }
+    }
+    else {
+      return redirect()->route('home')->withErrors(['Invalid ID']);
+    }
 
+    // retrieve the column names
+    $clmnNmes = DB::getSchemaBuilder()->getColumnListing($curTable->tblNme);
+
+    // return the index page
+    return view('user.show')->with('rcrds',$rcrds)
+                            ->with('clmnNmes',$clmnNmes)
+                            ->with('tblNme',$curTable->tblNme)
+                            ->with('tblId',$curTable);
+  }
 
 }

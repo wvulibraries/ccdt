@@ -88,7 +88,7 @@
 
       @foreach($rcrds as $key => $rcrd)
       <div class="col-xs-12 col-sm-4 col-md-4">
-        <a href="{{ url('/data',$tblId) }}?id={{$rcrd->id}}">
+        <a href="{{ url('/data', [$tblId, $rcrd->id]) }}">
           <div class="dataCard">
               @foreach($clmnNmes as $key => $clmnNme)
                 @if($key < 5)
