@@ -65,7 +65,7 @@ class DataViewController extends Controller {
     // Check if search string and column were passed
     if (strlen($curId) != 0) {
       $numOfRcrds = DB::table($curTable->tblNme)
-                      ->where('id', 'LIKE', $curId)
+                      ->where('id', '=', $curId)
                       ->count();
       // check for the number of records
       if ($numOfRcrds == 0){
@@ -73,7 +73,7 @@ class DataViewController extends Controller {
       }
       else {
         $rcrds = DB::table($curTable->tblNme)
-                    ->where('id', 'LIKE', $curId)
+                    ->where('id', '=', $curId)
                     ->get();
       }
     }
