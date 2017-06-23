@@ -63,7 +63,7 @@
               <td>
                 <!-- Show the data size to choose from -->
                 <div class="form-group{{$errors->has('col-'.$key.'-size') ? ' has-error' : ''}}">
-                  <label for="col-{{$key}}-size">Datatype Size</label>
+                  <!-- <label for="col-{{$key}}-size">Datatype Size</label> -->
                   <select id="col-{{$key}}-size" type="text" class="form-control" name="col-{{$key}}-size" required autofocus>
                     <option value="default">Default</option>
                     <option value="medium">Medium</option>

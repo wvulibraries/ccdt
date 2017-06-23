@@ -420,13 +420,6 @@ class TableController extends Controller
             $table->bigInteger($curColNme)->default(0);
           }
         }
-
-        if(str_is($curColType,'text')){
-          // Check for the data type
-          // Default
-          $table->text($curColNme);
-        }
-
       }
 
       // Time stamps

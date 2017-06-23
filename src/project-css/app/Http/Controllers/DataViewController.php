@@ -35,39 +35,15 @@ class DataViewController extends Controller {
       return redirect()->route('home')->withErrors(['Table is disabled']);
     }
 
-    /**
-    * set passed values to variables
-    */
-    $search = $request->input('search');
-    $tblCol = $request->input('tblCol');
+    // Get and return of table doesn't have any records
+    $numOfRcrds = DB::table($curTable->tblNme)->count();
+    // check for the number of records
+    if ($numOfRcrds == 0){
+      return redirect()->route('home')->withErrors(['Table does not have any records.']);
+    }
 
-    // Check if search string and column were passed
-    if ((strlen($search) != 0) && (strlen($tblCol) != 0)) {
-      $numOfRcrds = DB::table($curTable->tblNme)
-                      ->where($tblCol, 'LIKE', $search)
-                      ->count();
-      // check for the number of records
-      if ($numOfRcrds == 0){
-        return redirect()->route('home')->withErrors(['Search Yeilded No Results']);
-      }
-      else {
-        $rcrds = DB::table($curTable->tblNme)
-                    ->where($tblCol, 'LIKE', $search)
-                    ->paginate(30);
-        $rcrds->appends(array(
-            'tblCol' => $tblCol,
-            'search' => $search,
-        ));
-      }
-    }
-    else {
-      $numOfRcrds = DB::table($curTable->tblNme)->count();
-      // check for the number of records
-      if ($numOfRcrds == 0){
-        return redirect()->route('home')->withErrors(['Table does not have any records.']);
-      }
-      $rcrds = DB::table($curTable->tblNme)->paginate(30);
-    }
+    // Get the records 30 at a time
+    $rcrds = DB::table($curTable->tblNme)->paginate(30);
 
     // retrieve the column names
     $clmnNmes = DB::getSchemaBuilder()->getColumnListing($curTable->tblNme);
