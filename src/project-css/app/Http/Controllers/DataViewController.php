@@ -72,9 +72,11 @@ class DataViewController extends Controller {
         return redirect()->route('home')->withErrors(['Search Yeilded No Results']);
       }
       else {
-        $rcrds = DB::table($curTable->tblNme)
-                    ->where('id', '=', $curId)
-                    ->get();
+        // $rcrds = DB::table($curTable->tblNme)
+        //             ->where('id', '=', $curId)
+        //             ->get();
+
+        $rcrds = Searchy::search($curTable->tblNme)->fields('id')->query($curId)->get();
       }
     }
     else {

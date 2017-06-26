@@ -178,6 +178,11 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 
+        /*
+         * 3rd Party Service Providers
+         */
+        TomLingham\Searchy\SearchyServiceProvider::class,
+
     ],
 
     /*
@@ -225,6 +230,7 @@ return [
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
+        'Searchy' => TomLingham\Searchy\Facades\Searchy::class
 
     ],
 
