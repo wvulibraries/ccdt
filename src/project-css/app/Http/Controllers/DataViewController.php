@@ -58,25 +58,19 @@ class DataViewController extends Controller {
   public function show(Request $request, $curTable, $curId){
     // Get the table entry in meta table "tables"
     $curTable = Table::find($curTable);
+
     if(!$curTable->hasAccess){
       return redirect()->route('home')->withErrors(['Table is disabled']);
     }
 
     // Check if search string and column were passed
     if (strlen($curId) != 0) {
-      $numOfRcrds = DB::table($curTable->tblNme)
-                      ->where('id', '=', $curId)
-                      ->count();
+      $rcrds = DB::table($curTable->tblNme)
+                  ->where('id', '=', $curId)
+                  ->get();
       // check for the number of records
-      if ($numOfRcrds == 0){
+      if (count ($rcrds) == 0){
         return redirect()->route('home')->withErrors(['Search Yeilded No Results']);
-      }
-      else {
-        // $rcrds = DB::table($curTable->tblNme)
-        //             ->where('id', '=', $curId)
-        //             ->get();
-
-        $rcrds = Searchy::search($curTable->tblNme)->fields('id')->query($curId)->get();
       }
     }
     else {
@@ -91,6 +85,28 @@ class DataViewController extends Controller {
                             ->with('clmnNmes',$clmnNmes)
                             ->with('tblNme',$curTable->tblNme)
                             ->with('tblId',$curTable);
+  }
+
+  public function search(Request $request, $curTable){
+    // Get the table entry in meta table "tables"
+    $curTable = Table::find($curTable);
+    $search = $request->input('search');
+    if(!$curTable->hasAccess){
+      return redirect()->route('home')->withErrors(['Table is disabled']);
+    }
+
+    // retrieve the column names
+    $clmnNmes = DB::getSchemaBuilder()->getColumnListing($curTable->tblNme);
+
+    // Check if search string and column were passed
+    $rcrds = \Searchy::search($curTable->tblNme)->fields($clmnNmes)->query($search)->get();
+
+    // return the index page
+    return view('user.search')->with('rcrds',$rcrds)
+                            ->with('clmnNmes',$clmnNmes)
+                            ->with('tblNme',$curTable->tblNme)
+                            ->with('tblId',$curTable)
+                            ->with('search', $search);
   }
 
 }

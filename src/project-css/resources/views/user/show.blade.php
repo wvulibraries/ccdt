@@ -4,7 +4,7 @@
 @section('content')
 
 <!-- Search engine -->
-@include('user/search');
+@include('user/searchbox');
 
 <!-- Separation -->
 <hr/>
