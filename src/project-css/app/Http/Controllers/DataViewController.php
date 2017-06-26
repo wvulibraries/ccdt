@@ -90,16 +90,18 @@ class DataViewController extends Controller {
   public function search(Request $request, $curTable){
     // Get the table entry in meta table "tables"
     $curTable = Table::find($curTable);
-    $search = $request->input('search');
+
     if(!$curTable->hasAccess){
       return redirect()->route('home')->withErrors(['Table is disabled']);
     }
 
+    $search = $request->input('search');
+    
     // retrieve the column names
     $clmnNmes = DB::getSchemaBuilder()->getColumnListing($curTable->tblNme);
 
     // Check if search string and column were passed
-    $rcrds = \Searchy::search($curTable->tblNme)->fields($clmnNmes)->query($search)->get();
+    $rcrds = \Searchy::search($curTable->tblNme)->fields($clmnNmes)->query($search)->getQuery()->limit(30)->get();
 
     // return the index page
     return view('user.search')->with('rcrds',$rcrds)
