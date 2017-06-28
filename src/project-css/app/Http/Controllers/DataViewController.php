@@ -96,19 +96,38 @@ class DataViewController extends Controller {
     }
 
     $search = $request->input('search');
-    
+
     // retrieve the column names
     $clmnNmes = DB::getSchemaBuilder()->getColumnListing($curTable->tblNme);
+    $perPage = 30;
+    $tblNme = $curTable->tblNme;
 
-    // Check if search string and column were passed
-    $rcrds = \Searchy::search($curTable->tblNme)->fields($clmnNmes)->query($search)->getQuery()->limit(30)->get();
+    // Searchy is returning a collection aka Array of Objects
+    $rcrds = \Searchy::$tblNme($clmnNmes)->query($search)->get();
+
+    // create array chunks of results for use in page views
+    $chunks = $rcrds->chunk($perPage);
+    $chunks->toArray();
+
+    $pageStart = \Request::get('page', 1);
+    // Start displaying items from this number;
+    $offSet = ($pageStart * $perPage) - $perPage;
+
+    if (count($rcrds) > $perPage) {
+      $lastPage = count($rcrds) / $perPage;
+    }
+    else {
+      $lastPage = $pageStart;
+    }
 
     // return the index page
-    return view('user.search')->with('rcrds',$rcrds)
-                            ->with('clmnNmes',$clmnNmes)
-                            ->with('tblNme',$curTable->tblNme)
-                            ->with('tblId',$curTable)
-                            ->with('search', $search);
+    return view('user.search')->with('rcrds', $chunks[$pageStart])
+                              ->with('clmnNmes', $clmnNmes)
+                              ->with('tblNme', $curTable->tblNme)
+                              ->with('tblId', $curTable)
+                              ->with('search', $search)
+                              ->with('page', $pageStart)
+                              ->with('lastPage', $lastPage);
   }
 
 }
