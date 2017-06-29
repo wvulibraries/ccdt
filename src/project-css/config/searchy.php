@@ -2,7 +2,7 @@
 
 return [
 
-    'default' => 'simple',
+    'default' => 'fuzzy',
 
     'fieldName' => 'relevance',
 

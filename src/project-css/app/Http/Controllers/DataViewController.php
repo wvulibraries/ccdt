@@ -87,7 +87,7 @@ class DataViewController extends Controller {
                             ->with('tblId',$curTable);
   }
 
-  public function search(Request $request, $curTable){
+  public function search(Request $request, $curTable, $search = NULL){
     // Get the table entry in meta table "tables"
     $curTable = Table::find($curTable);
 
@@ -95,39 +95,56 @@ class DataViewController extends Controller {
       return redirect()->route('home')->withErrors(['Table is disabled']);
     }
 
-    $search = $request->input('search');
+    if ($search == NULL) {
+      $search = $request->input('search');
+    }
 
     // retrieve the column names
     $clmnNmes = DB::getSchemaBuilder()->getColumnListing($curTable->tblNme);
     $perPage = 30;
     $tblNme = $curTable->tblNme;
 
+    //set current page
+    $pageStart = \Request::get('page', 1);
+
     // Searchy is returning a collection aka Array of Objects
-    $rcrds = \Searchy::$tblNme($clmnNmes)->query($search)->get();
+    // Copy Column names
+    $srcClmn = $clmnNmes;
+    // Remove first item which is ID
+    array_shift($srcClmn);
+    
+    $rcrds = \Searchy::$tblNme($srcClmn)
+      ->query($search)
+      ->getQuery()
+      ->having('relevance', '>', 20)
+      ->get();
+
+    $rcrdsCount = $rcrds->count();
 
     // create array chunks of results for use in page views
-    $chunks = $rcrds->chunk($perPage);
-    $chunks->toArray();
+    if ($rcrdsCount > $perPage) {
+      $chunks = $rcrds->chunk(30);
+      $chunks->toArray();
+      $rcrds = $chunks[$pageStart];
+    }
 
-    $pageStart = \Request::get('page', 1);
-    // Start displaying items from this number;
-    $offSet = ($pageStart * $perPage) - $perPage;
-
-    if (count($rcrds) > $perPage) {
-      $lastPage = count($rcrds) / $perPage;
+    // set $lastPage
+    if ($rcrdsCount > $perPage) {
+      $lastPage = ceil($rcrdsCount / $perPage);
     }
     else {
       $lastPage = $pageStart;
     }
 
     // return the index page
-    return view('user.search')->with('rcrds', $chunks[$pageStart])
+    return view('user.search')->with('rcrds', $rcrds)
                               ->with('clmnNmes', $clmnNmes)
                               ->with('tblNme', $curTable->tblNme)
                               ->with('tblId', $curTable)
                               ->with('search', $search)
                               ->with('page', $pageStart)
-                              ->with('lastPage', $lastPage);
+                              ->with('lastPage', $lastPage)
+                              ->with('morepages', $pageStart < $lastPage);
   }
 
 }
