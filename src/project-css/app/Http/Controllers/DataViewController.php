@@ -88,6 +88,14 @@ class DataViewController extends Controller {
   }
 
   public function search(Request $request, $curTable, $search = NULL){
+    // set records per page
+    $perPage = 30;
+    $relevance = 20;
+    $limit = 1000;
+
+    //set current page
+    $pageStart = \Request::get('page', 1);
+
     // Get the table entry in meta table "tables"
     $curTable = Table::find($curTable);
 
@@ -95,38 +103,70 @@ class DataViewController extends Controller {
       return redirect()->route('home')->withErrors(['Table is disabled']);
     }
 
+    // retrieve the column names
+    $clmnNmes = DB::getSchemaBuilder()->getColumnListing($curTable->tblNme);
+
+    $tblNme = $curTable->tblNme;
+
     if ($search == NULL) {
       $search = $request->input('search');
     }
 
-    // retrieve the column names
-    $clmnNmes = DB::getSchemaBuilder()->getColumnListing($curTable->tblNme);
-    $perPage = 30;
-    $tblNme = $curTable->tblNme;
+    // check for the presence of the srchindex column
+    // set $srcClmns to only search 'srchindex' if found
+    if (in_array("srchindex", $clmnNmes)) {
+      $srcClmns = "srchindex";
+    }
+    else {
+      // Copy Column names
+      $srcClmns = $clmnNmes;
+      // Remove first item which is ID
+      array_shift($srcClmns);
+      // pick first 5 columns only
+      //$srcClmn = array_slice($srcClmn, 0, 5, true);
+    }
 
-    //set current page
-    $pageStart = \Request::get('page', 1);
-
-    // Searchy is returning a collection aka Array of Objects
-    // Copy Column names
-    $srcClmn = $clmnNmes;
-    // Remove first item which is ID
-    array_shift($srcClmn);
-    
-    $rcrds = \Searchy::$tblNme($srcClmn)
-      ->query($search)
-      ->getQuery()
-      ->having('relevance', '>', 20)
-      ->get();
-
-    $rcrdsCount = $rcrds->count();
+    $startTime = microtime(true);
 
     // create array chunks of results for use in page views
-    if ($rcrdsCount > $perPage) {
-      $chunks = $rcrds->chunk(30);
-      $chunks->toArray();
-      $rcrds = $chunks[$pageStart];
+    $file = fopen("microtime.log","a");
+
+    if (\Cache::has($search . $pageStart))
+    {
+      $rcrdsCount = \Cache::get($search);
+      $rcrds = \Cache::get($search . $pageStart);
+      fwrite($file,"Cache - Searchy - Search " . $search . " " . $tblNme . " ");
     }
+    else {
+      \Cache::flush();
+      // Searchy is returning a collection aka Array of Objects
+      $rcrds = \Searchy::$tblNme($srcClmns)
+        ->query($search)
+        ->getQuery()
+        ->limit($limit)
+        ->having('relevance', '>', $relevance)
+        ->get();
+
+      $rcrdsCount = $rcrds->count();
+      \Cache::put($search, $rcrdsCount, 60);
+      if ($rcrdsCount > $perPage) {
+        $chunks = $rcrds->chunk(30);
+        $chunks->toArray();
+        foreach($chunks as $key => $chunk) {
+          \Cache::put($search . $key, $chunk, 60);
+        }
+        $rcrds = $chunks[$pageStart];
+      }
+      else {
+        \Cache::put($search . '1', $rcrds, 60);
+      }
+
+      fwrite($file,"Normal - Searchy - Search " . $search . " " . $tblNme . " ");
+    }
+
+    $secs = microtime(true)-$startTime;
+    fwrite($file, number_format($secs,3) . "\n");
+    fclose($file);
 
     // set $lastPage
     if ($rcrdsCount > $perPage) {

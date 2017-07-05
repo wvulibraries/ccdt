@@ -560,6 +560,11 @@ class TableController extends Controller
 
           // Insert them into DB
           \DB::table($request->tblNme)->insert($curArry);
+
+          // to do if creating specific column to search
+          // sanitize $curLine removing all special chars and , 
+          // that isn't used strip out extra spaces
+          // store result in search.index column
         }
 
         // Update the counter
