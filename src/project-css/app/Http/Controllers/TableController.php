@@ -534,7 +534,7 @@ class TableController extends Controller
       $prcssd = 0;
 
       // For each line
-      while(!$curFltFleObj->eof()){
+      while($curFltFleObj->valid()){
         // Get the line
         $curLine = $curFltFleObj->current();
 
