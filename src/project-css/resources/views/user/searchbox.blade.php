@@ -9,7 +9,7 @@
                   <div class="col-md-10 col-sm-10 col-xs-8">
 
                     <!-- <label for="search">Search</label> -->
-                    <input id="search" type="text" class="form-control searchBar" name="search" placeholder="Search..." required autofocus>
+                    <input id="search" type="search" class="form-control searchBar" name="search" placeholder="Search..."  aria-required="true" aria-label="Search Input" required autofocus>
 
                     @if ($errors->has('search'))
                       <span class="fa fa-search">
@@ -23,7 +23,35 @@
                           Search
                       </button>
                   </div>
+
+                  <div id="search-options">
+                    <label for="search-col"> Search on a Specific Column: </label>
+                    <select id="search-col" name="search-col" aria-label="Search on a specific column" aria-required="false">
+                      <!-- remove id from list -->
+                      @array_shift($clmnNmes);
+                      @foreach($clmnNmes as $clmnNme)
+                        @if (strpos($clmnNme, 'index') !== false)
+                          <option value="{{ $clmnNme }}" selected> All Columns </option>
+                        @else
+                          <option value="{{ $clmnNme }}">{{ $clmnNme }} </option>
+                        @endif
+                      @endforeach
+                    </select>
+
+                    <label for="search-type"> Type of Search: </label>
+                    <select id="search-type" name="driver" aria-label="Type of Search" aria-required="false">
+                      <option value="simple">Simple</option>
+                      <option value="fuzzy" selected>Fuzzy</option>
+                    </select>
+
+                    <div class="cache-check">
+                      <label for="cache"> Check Cached Search </label>
+                      <input type="checkbox" name="cache" value="true" checked> Use Cache?
+                    </div>
+                  </div>
+
               </div>
+
           </form>
         </div>
     </div>

@@ -87,14 +87,14 @@ class DataViewController extends Controller {
                             ->with('tblId',$curTable);
   }
 
-  public function search(Request $request, $curTable, $search = NULL){
+  public function search(Request $request, $curTable, $search = NULL, $page = 1, $driver = NULL, $column = NULL, $cache = NULL){
     // set records per page
     $perPage = 30;
     $relevance = 20;
     $limit = 1000;
 
     //set current page
-    $pageStart = \Request::get('page', 1);
+    //$page = \Request::get('page', 1);
 
     // Get the table entry in meta table "tables"
     $curTable = Table::find($curTable);
@@ -112,35 +112,42 @@ class DataViewController extends Controller {
       $search = $request->input('search');
     }
 
-    // check for the presence of the srchindex column
-    // set $srcClmns to only search 'srchindex' if found
-    if (in_array("srchindex", $clmnNmes)) {
-      $srcClmns = "srchindex";
+    if ($driver == NULL) {
+      $driver = \Request::get('driver', 'fuzzy');
     }
-    else {
-      // Copy Column names
-      $srcClmns = $clmnNmes;
-      // Remove first item which is ID
-      array_shift($srcClmns);
-      // pick first 5 columns only
-      //$srcClmn = array_slice($srcClmn, 0, 5, true);
+
+    if ($column == NULL) {
+      $column = \Request::get('search-col', 'srchindex');
     }
+
+    if ($cache == NULL) {
+      $cache = \Request::get('cache', 'false');
+    }
+
+    // echo ('<pre>');
+    // var_dump($search);
+    // var_dump($page);
+    // var_dump($driver);
+    // var_dump($column);
+    // var_dump($cache);
+    // echo ('</pre>');
+    // die();
 
     $startTime = microtime(true);
 
     // create array chunks of results for use in page views
     $file = fopen("microtime.log","a");
 
-    if (\Cache::has($search . $pageStart))
+    if (\Cache::has($driver . $tblNme . $column . $search . $page) && (strcmp($cache, 'true') == 0))
     {
-      $rcrdsCount = \Cache::get($search);
-      $rcrds = \Cache::get($search . $pageStart);
-      fwrite($file,"Cache - Searchy - Search " . $search . " " . $tblNme . " ");
+      $rcrdsCount = \Cache::get($driver . $tblNme . $column . $search);
+      $rcrds = \Cache::get($driver . $tblNme . $column . $search . $page);
+      fwrite($file,"Cached Search - Driver " . $driver . " Column " . $column . " Search " . $search . " Table " . $tblNme . " ");
     }
     else {
-      \Cache::flush();
       // Searchy is returning a collection aka Array of Objects
-      $rcrds = \Searchy::$tblNme($srcClmns)
+      $rcrds = \Searchy::driver($driver)
+        ->$tblNme($column)
         ->query($search)
         ->getQuery()
         ->limit($limit)
@@ -148,20 +155,24 @@ class DataViewController extends Controller {
         ->get();
 
       $rcrdsCount = $rcrds->count();
-      \Cache::put($search, $rcrdsCount, 60);
+
       if ($rcrdsCount > $perPage) {
         $chunks = $rcrds->chunk(30);
         $chunks->toArray();
-        foreach($chunks as $key => $chunk) {
-          \Cache::put($search . $key, $chunk, 60);
+        if (strcmp($cache, 'true') == 0) {
+          \Cache::put($driver . $tblNme . $column . $search, $rcrdsCount, 60);
+          foreach($chunks as $key => $chunk) {
+            \Cache::put($driver . $tblNme . $column . $search . $key, $chunk, 60);
+          }
         }
-        $rcrds = $chunks[$pageStart];
+        $rcrds = $chunks[$page];
       }
-      else {
-        \Cache::put($search . '1', $rcrds, 60);
+      elseif (strcmp($cache, 'true') == 0) {
+        \Cache::put($driver . $tblNme . $column . $search, $rcrdsCount, 60);
+        \Cache::put($driver . $tblNme . $column . $search . '1', $rcrds, 60);
       }
 
-      fwrite($file,"Normal - Searchy - Search " . $search . " " . $tblNme . " ");
+      fwrite($file,"Normal Search - Driver " . $driver . " Column " . $column . " Search " . $search . " Table " . $tblNme . " ");
     }
 
     $secs = microtime(true)-$startTime;
@@ -182,9 +193,12 @@ class DataViewController extends Controller {
                               ->with('tblNme', $curTable->tblNme)
                               ->with('tblId', $curTable)
                               ->with('search', $search)
-                              ->with('page', $pageStart)
+                              ->with('page', $page)
                               ->with('lastPage', $lastPage)
-                              ->with('morepages', $pageStart < $lastPage);
+                              ->with('morepages', $page < $lastPage)
+                              ->with('driver', $driver)
+                              ->with('column', $column)
+                              ->with('cache', $cache);
   }
 
 }

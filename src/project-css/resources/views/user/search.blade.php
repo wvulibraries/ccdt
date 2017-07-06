@@ -27,7 +27,7 @@
           <!-- <div class="btn-group btn-group-lg"> -->
             <div class="col-xs-6 col-sm-6 col-md-6 text-left">
               @if($page != 1)
-              <a class="btn btn-primary left-button" href="{{ url('/data', ['curTable' => $tblId]) . '/search/' . $search }}?page={{$page-1}}">
+              <a class="btn btn-primary left-button" href="{{ url('/data', ['curTable' => $tblId, 'search' => $search, 'page' => $page-1, 'driver' => $driver, 'column' => $column, 'cache' => $cache])}}">
                 <span>
                   <i class="glyphicon glyphicon-chevron-left"></i>
                 </span>
@@ -37,7 +37,7 @@
             </div>
             <div class="col-xs-6 col-sm-6 col-md-6 text-right">
               @if($page != $lastPage)
-              <a class="btn btn-primary pull-right" href="{{ url('/data', ['curTable' => $tblId]) . '/search/' . $search }}?page={{$page+1}}">
+              <a class="btn btn-primary pull-right" href="{{ url('/data', ['curTable' => $tblId, 'search' => $search, 'page' => $page+1, 'driver' => $driver, 'column' => $column, 'cache' => $cache])}}">
                 <span>next page</span>
                 <span>
                   <i class="glyphicon glyphicon-chevron-right"></i>
@@ -70,13 +70,13 @@
         @if(1 <= $page and $page <= $lastPage)
         <div class="rcrdOptnsCrd text-center">
           <ul class="pagination pagination-lg">
-            @if($page != 1)<li><a href="{{ url('/data', ['curTable' => $tblId]) . '/search/' . $search }}?page={{$page-1}}"><i class="glyphicon glyphicon-chevron-left"></i></a></li>@endif
-            @if($page != 1)<li><a href="{{ url('/data', ['curTable' => $tblId]) . '/search/' . $search }}?page=1">first</a></li>@endif
-            @if($page-2 >= 1)<li><a href="{{ url('/data', ['curTable' => $tblId]) . '/search/' . $search }}?page={{$page-1}}">{{$page-2}}</a></li>@endif
-            <li class="active"><a href="{{ url('/data', ['curTable' => $tblId]) . '/search/' . $search }}?page={{$page}}">{{$page}}</a></li>
-            @if($morepages and $page+2 <= $lastPage)<li><a href="{{ url('/data', ['curTable' => $tblId]) . '/search/' . $search }}?page={{$page+2}}">{{$page+2}}</a></li>@endif
-            @if($page != $lastPage)<li><a href="{{ url('/data', ['curTable' => $tblId]) . '/search/' . $search }}?page={{$lastPage}}">last</a></li>@endif
-            @if($page != $lastPage)<li><a href="{{ url('/data', ['curTable' => $tblId]) . '/search/' . $search }}?page={{$page+1}}"><i class="glyphicon glyphicon-chevron-right"></i></a></li>@endif
+            @if($page != 1)<li><a href="{{ url('/data', ['curTable' => $tblId]) . '/search/' . $search }}?page={{$page-1}}&driver={{$driver}}&cache={{$cache}}"><i class="glyphicon glyphicon-chevron-left"></i></a></li>@endif
+            @if($page != 1)<li><a href="{{ url('/data', ['curTable' => $tblId]) . '/search/' . $search }}?page=1&driver={{$driver}}&cache={{$cache}}">first</a></li>@endif
+            @if($page-2 >= 1)<li><a href="{{ url('/data', ['curTable' => $tblId]) . '/search/' . $search }}?page={{$page-1}}&driver={{$driver}}&cache={{$cache}}">{{$page-2}}</a></li>@endif
+            <li class="active"><a href="{{ url('/data', ['curTable' => $tblId]) . '/search/' . $search }}?page={{$page}}&driver={{$driver}}&cache={{$cache}}">{{$page}}</a></li>
+            @if($morepages and $page+2 <= $lastPage)<li><a href="{{ url('/data', ['curTable' => $tblId]) . '/search/' . $search }}?page={{$page+2}}&driver={{$driver}}&cache={{$cache}}">{{$page+2}}</a></li>@endif
+            @if($page != $lastPage)<li><a href="{{ url('/data', ['curTable' => $tblId]) . '/search/' . $search }}?page={{$lastPage}}&driver={{$driver}}&cache={{$cache}}">last</a></li>@endif
+            @if($page != $lastPage)<li><a href="{{ url('/data', ['curTable' => $tblId]) . '/search/' . $search }}?page={{$page+1}}&driver={{$driver}}&cache={{$cache}}"><i class="glyphicon glyphicon-chevron-right"></i></a></li>@endif
           </ul>
         </div>
         @else
