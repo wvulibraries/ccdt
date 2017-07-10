@@ -534,7 +534,7 @@ class TableController extends Controller
       $prcssd = 0;
 
       // For each line
-      while(!$curFltFleObj->eof()){
+      while(!$curFltFleObj->valid()){
         // Get the line
         $curLine = $curFltFleObj->current();
 
@@ -562,7 +562,7 @@ class TableController extends Controller
           \DB::table($request->tblNme)->insert($curArry);
 
           // to do if creating specific column to search
-          // sanitize $curLine removing all special chars and , 
+          // sanitize $curLine removing all special chars and ,
           // that isn't used strip out extra spaces
           // store result in search.index column
         }

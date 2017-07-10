@@ -93,9 +93,6 @@ class DataViewController extends Controller {
     $relevance = 20;
     $limit = 1000;
 
-    //set current page
-    //$page = \Request::get('page', 1);
-
     // Get the table entry in meta table "tables"
     $curTable = Table::find($curTable);
 
@@ -123,15 +120,6 @@ class DataViewController extends Controller {
     if ($cache == NULL) {
       $cache = \Request::get('cache', 'false');
     }
-
-    // echo ('<pre>');
-    // var_dump($search);
-    // var_dump($page);
-    // var_dump($driver);
-    // var_dump($column);
-    // var_dump($cache);
-    // echo ('</pre>');
-    // die();
 
     $startTime = microtime(true);
 
@@ -169,7 +157,7 @@ class DataViewController extends Controller {
       }
       elseif (strcmp($cache, 'true') == 0) {
         \Cache::put($driver . $tblNme . $column . $search, $rcrdsCount, 60);
-        \Cache::put($driver . $tblNme . $column . $search . '1', $rcrds, 60);
+        \Cache::put($driver . $tblNme . $column . $search . $page, $rcrds, 60);
       }
 
       fwrite($file,"Normal Search - Driver " . $driver . " Column " . $column . " Search " . $search . " Table " . $tblNme . " ");
