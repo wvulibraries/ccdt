@@ -5,3 +5,5 @@ testData/
 misc/
 sqlFiles/
 scripts/init.sh
+
+*.log
