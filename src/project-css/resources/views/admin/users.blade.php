@@ -24,7 +24,7 @@
       <div class="col-xs-12 col-sm-12 col-md-12">
         <div class="colHeadCard">
           <div class="icon hidden-xs hidden-sm">
-            <i class="glyphicon glyphicon-plus"></i>
+            <span class="glyphicon glyphicon-plus"></span>
           </div>
           <h4>Create User(s)</h4>
         </div>
@@ -51,14 +51,14 @@
               @if($usr->hasAccess)
               <a href="#" data-toggle="modal" data-target="#rstrctAccsCllctn{{$usr->id}}">
                 <div class="icon hidden-xs hidden-sm">
-                  <i class="glyphicon glyphicon-eye-close"></i>
+                  <span class="glyphicon glyphicon-eye-close"></span>
                 </div>
                 <p>Restrict Access</p>
               </a>
               @else
               <a href="#" data-toggle="modal" data-target="#allwAccsCllctn{{$usr->id}}">
                 <div class="icon hidden-xs hidden-sm">
-                  <i class="glyphicon glyphicon-eye-open"></i>
+                  <span class="glyphicon glyphicon-eye-open"></span>
                 </div>
                 <p>Allow Access</p>
               </a>
@@ -68,7 +68,7 @@
             <div class="colCardOpts">
               <a href="#" data-toggle="modal" data-target="#removeAdmin{{$usr->id}}">
                 <div class="icon hidden-xs hidden-sm">
-                  <i class="glyphicon glyphicon-thumbs-down"></i>
+                  <span class="glyphicon glyphicon-thumbs-down"></span>
                 </div>
                 <p>Remove Admin</p>
               </a>
@@ -229,14 +229,14 @@
               @if($usr->hasAccess)
               <a href="#" data-toggle="modal" data-target="#rstrctAccsCllctn{{$usr->id}}">
                 <div class="icon hidden-xs hidden-sm">
-                  <i class="glyphicon glyphicon-eye-close"></i>
+                  <span class="glyphicon glyphicon-eye-close"></span>
                 </div>
                 <p>Restrict Access</p>
               </a>
               @else
               <a href="#" data-toggle="modal" data-target="#allwAccsCllctn{{$usr->id}}">
                 <div class="icon hidden-xs hidden-sm">
-                  <i class="glyphicon glyphicon-eye-open"></i>
+                  <span class="glyphicon glyphicon-eye-open"></span>
                 </div>
                 <p>Allow Access</p>
               </a>
@@ -246,7 +246,7 @@
             <div class="colCardOpts">
               <a href="#" data-toggle="modal" data-target="#makeAdmin{{$usr->id}}">
                 <div class="icon hidden-xs hidden-sm">
-                  <i class="glyphicon glyphicon-thumbs-up"></i>
+                  <span class="glyphicon glyphicon-thumbs-up"></span>
                 </div>
                 <p>Make Admin</p>
               </a>
