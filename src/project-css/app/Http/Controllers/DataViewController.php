@@ -1,8 +1,12 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Response;
 use Illuminate\Http\Request;
+
+// Import the storage class too
+use Illuminate\Support\Facades\Storage;
+
 use Illuminate\Support\Facades\DB;
 
 // Import the table and collection models
@@ -59,6 +63,9 @@ class DataViewController extends Controller {
     // Get the table entry in meta table "tables"
     $curTable = Table::find($curTable);
 
+    // Get the list of files in the directory
+    $fileList = Storage::allFiles($curTable->tblNme);
+
     if(!$curTable->hasAccess){
       return redirect()->route('home')->withErrors(['Table is disabled']);
     }
@@ -68,10 +75,17 @@ class DataViewController extends Controller {
       $rcrds = DB::table($curTable->tblNme)
                   ->where('id', '=', $curId)
                   ->get();
+
       // check for the number of records
       if (count ($rcrds) == 0){
         return redirect()->route('home')->withErrors(['Search Yeilded No Results']);
       }
+
+      // echo ('<pre>');
+      // var_dump($rcrds);
+      // echo ('</pre>');
+      // die();
+
     }
     else {
       return redirect()->route('home')->withErrors(['Invalid ID']);
@@ -84,7 +98,8 @@ class DataViewController extends Controller {
     return view('user.show')->with('rcrds',$rcrds)
                             ->with('clmnNmes',$clmnNmes)
                             ->with('tblNme',$curTable->tblNme)
-                            ->with('tblId',$curTable);
+                            ->with('tblId',$curTable)
+                            ->with('fileList', $fileList);
   }
 
   public function search(Request $request, $curTable, $search = NULL, $page = 1, $driver = NULL, $column = NULL, $cache = NULL){
@@ -187,6 +202,37 @@ class DataViewController extends Controller {
                               ->with('driver', $driver)
                               ->with('column', $column)
                               ->with('cache', $cache);
+  }
+
+  public function view(Request $request, $curTable, $filename){
+    // Get the table entry in meta table "tables"
+    $curTable = Table::find($curTable);
+
+    if(!$curTable->hasAccess){
+      return redirect()->route('home')->withErrors(['Table is disabled']);
+    }
+
+    // retrieve the column names
+    $clmnNmes = DB::getSchemaBuilder()->getColumnListing($curTable->tblNme);
+
+    // Get the list of files in the directory
+    //$file = Storage::get($curTable->tblNme . '/' . $filename);
+
+    // return the index page
+    // return view('user.view')->with('clmnNmes', $clmnNmes)
+    //                         ->with('tblNme', $curTable->tblNme)
+    //                         ->with('tblId', $curTable)
+    //                         ->with('file', $file);
+
+    $path = storage_path('app/' . $curTable->tblNme . '/' . $filename);
+
+    //line will just download file
+    //return Response::download($path);
+
+    return Response::make(file_get_contents($path), 200, [
+        'Content-Type' => Storage::getMimeType($curTable->tblNme . '/' . $filename),
+        'Content-Disposition' => 'inline; filename="'.$filename.'"'
+    ]);
   }
 
 }

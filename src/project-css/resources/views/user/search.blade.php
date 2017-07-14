@@ -40,7 +40,7 @@
               <a class="btn btn-primary pull-right" href="{{ url('/data', ['curTable' => $tblId, 'search' => $search, 'page' => $page+1, 'driver' => $driver, 'column' => $column, 'cache' => $cache])}}">
                 <span>next page</span>
                 <span>
-                  <i class="glyphicon glyphicon-chevron-right"></i>
+                  <span class="glyphicon glyphicon-chevron-right"></span>
                 </span>
               </a>
               @endif
