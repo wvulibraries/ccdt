@@ -85,3 +85,4 @@ Route::group(['prefix' => 'user'], function(){
 */
 Route::get('data/{curTable}','DataViewController@index')->name('dataIndex');
 Route::get('data/{curTable}/{id}','DataViewController@show')->name('dataShow');
+Route::get('data/{curTable}/view/{filename}','DataViewController@view')->name('dataFileView');
