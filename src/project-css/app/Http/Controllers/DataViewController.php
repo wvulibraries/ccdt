@@ -1,8 +1,12 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Response;
 use Illuminate\Http\Request;
+
+// Import the storage class too
+use Illuminate\Support\Facades\Storage;
+
 use Illuminate\Support\Facades\DB;
 
 // Import the table and collection models
@@ -58,24 +62,25 @@ class DataViewController extends Controller {
   public function show(Request $request, $curTable, $curId){
     // Get the table entry in meta table "tables"
     $curTable = Table::find($curTable);
+
+    // Get the list of files in the directory
+    $fileList = Storage::allFiles($curTable->tblNme);
+
     if(!$curTable->hasAccess){
       return redirect()->route('home')->withErrors(['Table is disabled']);
     }
 
     // Check if search string and column were passed
     if (strlen($curId) != 0) {
-      $numOfRcrds = DB::table($curTable->tblNme)
-                      ->where('id', '=', $curId)
-                      ->count();
+      $rcrds = DB::table($curTable->tblNme)
+                  ->where('id', '=', $curId)
+                  ->get();
+
       // check for the number of records
-      if ($numOfRcrds == 0){
+      if (count ($rcrds) == 0){
         return redirect()->route('home')->withErrors(['Search Yeilded No Results']);
       }
-      else {
-        $rcrds = DB::table($curTable->tblNme)
-                    ->where('id', '=', $curId)
-                    ->get();
-      }
+
     }
     else {
       return redirect()->route('home')->withErrors(['Invalid ID']);
@@ -88,7 +93,30 @@ class DataViewController extends Controller {
     return view('user.show')->with('rcrds',$rcrds)
                             ->with('clmnNmes',$clmnNmes)
                             ->with('tblNme',$curTable->tblNme)
-                            ->with('tblId',$curTable);
+                            ->with('tblId',$curTable)
+                            ->with('fileList', $fileList);
+  }
+
+  public function view(Request $request, $curTable, $filename){
+    // Get the table entry in meta table "tables"
+    $curTable = Table::find($curTable);
+
+    if(!$curTable->hasAccess){
+      return redirect()->route('home')->withErrors(['Table is disabled']);
+    }
+
+    // retrieve the column names
+    $clmnNmes = DB::getSchemaBuilder()->getColumnListing($curTable->tblNme);
+
+    $path = storage_path('app/' . $curTable->tblNme . '/' . $filename);
+
+    //line will just download file
+    //return Response::download($path);
+
+    return Response::make(file_get_contents($path), 200, [
+        'Content-Type' => Storage::getMimeType($curTable->tblNme . '/' . $filename),
+        'Content-Disposition' => 'inline; filename="'.$filename.'"'
+    ]);
   }
 
 }
