@@ -187,7 +187,7 @@ class DataViewController extends Controller {
       $lastPage = ceil($rcrdsCount / $perPage);
     }
     else {
-      $lastPage = $pageStart;
+      $lastPage = $page;
     }
 
     // return the index page
