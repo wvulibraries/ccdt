@@ -3,7 +3,9 @@
 @section('content')
 
 <!-- Search engine -->
-@include('user/searchbox');
+@include('user/searchbox')
+
+@inject('helper', \App\Libraries\Helper)
 
 <!-- Separation -->
 <hr/>
@@ -15,31 +17,58 @@
       <hr/>
 
       @foreach($rcrds as $key => $rcrd)
-      <div class="col-xs-12 col-sm-12 col-md-12">
-          @foreach($clmnNmes as $key => $clmnNme)
-            @if ((strpos($rcrd->$clmnNme, '\\') !== FALSE) && (strpos($clmnNme, 'index') == false))
-              <h4><b>{{$clmnNme}}</b>: {{$rcrd->$clmnNme}}
+        @foreach($clmnNmes as $key => $clmnNme)
+
+          <!-- string contains a \ that may indicate a file path -->
+          @if ((strpos($rcrd->$clmnNme, '\\') !== FALSE) && (strpos($clmnNme, 'index') == false))
+            <!-- check if string contains a ^ may indicate that multiple files exists-->
+            @if (strpos($rcrd->$clmnNme, '^') !== FALSE)
+
               @php
-                $tokens = explode('\\',$rcrd->$clmnNme);
-                $filename = end($tokens);
+                $filesArray = $helper->separateFiles($rcrd->$clmnNme)
               @endphp
 
-              @foreach($fileList as $key => $item)
-                @if (basename($item) == $filename)
+              @if (count($filesArray) > 0)
+                <div class="col-xs-12 col-sm-12 col-md-12">
+                  <h4><b>{{$clmnNme}}</b>:
+                    @for ($arrayPos = 0; $arrayPos < count($filesArray); $arrayPos++)
+                      </br>{{$filesArray[$arrayPos]}}
+
+                      <!-- check filename to see it it exists in $fileList -->
+                      <!-- if found show a View link -->
+
+                      @if ($helper->fileExists($tblNme, $filesArray[$arrayPos]))
+                        <a href="{{ url('/data', ['curTable' => $tblId, 'view' => 'view', 'filename' => $filesArray[$arrayPos]])}}">
+                          <span> View</span>
+                        </a>
+                      @endif
+                    @endfor
+                  </h4>
+                </div>
+              @endif
+            @else
+              <div class="col-xs-12 col-sm-12 col-md-12">
+                <h4><b>{{$clmnNme}}</b>: {{$rcrd->$clmnNme}}
+
+                <!-- check filename to see it it exists in $fileList -->
+                <!--  if found show a View link -->
+                {{$filename = $helper->getFilename($rcrd->$clmnNme)}}
+                @if ($helper->fileExists($tblNme, $filename))
                   <a href="{{ url('/data', ['curTable' => $tblId, 'view' => 'view', 'filename' => $filename])}}">
-                    <span>View</span>
+                    <span> View</span>
                   </a>
                 @endif
-              @endforeach
-              </h4>
-            @else
-              <h4><b>{{$clmnNme}}</b>: {{$rcrd->$clmnNme}}</h4>
+                </h4>
+              </div>
             @endif
-          @endforeach
-      </div>
+          @else
+            <div class="col-xs-12 col-sm-12 col-md-12">
+              <h4><b>{{$clmnNme}}</b>: {{$rcrd->$clmnNme}}</h4>
+            </div>
+          @endif
+        @endforeach
       @endforeach
-
-    </div>
+   </div>
 </div>
 
 @endsection
