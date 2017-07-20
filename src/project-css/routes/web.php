@@ -87,4 +87,4 @@ Route::get('data/{curTable}','DataViewController@index')->name('dataIndex');
 Route::get('data/{curTable}/{id}','DataViewController@show')->name('dataShow');
 Route::post('data/{curTable}','DataViewController@search')->name('dataSearch');
 Route::get('data/{curTable}/{search}/{page}/{driver}/{column}/{cache}','DataViewController@search')->name('dataSearch');
-Route::get('data/{curTable}/view/{filename}','DataViewController@view')->name('dataFileView');
+Route::get('data/{curTable}/view/{subfolder}/{filename}','DataViewController@view')->name('dataFileView');

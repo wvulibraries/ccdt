@@ -63,9 +63,6 @@ class DataViewController extends Controller {
     // Get the table entry in meta table "tables"
     $curTable = Table::find($curTable);
 
-    // Get the list of files in the directory
-    $fileList = Storage::allFiles($curTable->tblNme);
-
     if(!$curTable->hasAccess){
       return redirect()->route('home')->withErrors(['Table is disabled']);
     }
@@ -81,11 +78,6 @@ class DataViewController extends Controller {
         return redirect()->route('home')->withErrors(['Search Yeilded No Results']);
       }
 
-      // echo ('<pre>');
-      // var_dump($rcrds);
-      // echo ('</pre>');
-      // die();
-
     }
     else {
       return redirect()->route('home')->withErrors(['Invalid ID']);
@@ -98,8 +90,7 @@ class DataViewController extends Controller {
     return view('user.show')->with('rcrds',$rcrds)
                             ->with('clmnNmes',$clmnNmes)
                             ->with('tblNme',$curTable->tblNme)
-                            ->with('tblId',$curTable)
-                            ->with('fileList', $fileList);
+                            ->with('tblId',$curTable);
   }
 
   public function search(Request $request, $curTable, $search = NULL, $page = 1, $driver = NULL, $column = NULL, $cache = NULL){
@@ -204,7 +195,7 @@ class DataViewController extends Controller {
                               ->with('cache', $cache);
   }
 
-  public function view(Request $request, $curTable, $filename){
+  public function view(Request $request, $curTable, $subfolder, $filename){
     // Get the table entry in meta table "tables"
     $curTable = Table::find($curTable);
 
@@ -215,22 +206,13 @@ class DataViewController extends Controller {
     // retrieve the column names
     $clmnNmes = DB::getSchemaBuilder()->getColumnListing($curTable->tblNme);
 
-    // Get the list of files in the directory
-    //$file = Storage::get($curTable->tblNme . '/' . $filename);
-
-    // return the index page
-    // return view('user.view')->with('clmnNmes', $clmnNmes)
-    //                         ->with('tblNme', $curTable->tblNme)
-    //                         ->with('tblId', $curTable)
-    //                         ->with('file', $file);
-
-    $path = storage_path('app/' . $curTable->tblNme . '/' . $filename);
+    $path = storage_path('app/' . $curTable->tblNme . '/' . $subfolder . '/' . $filename);
 
     //line will just download file
     //return Response::download($path);
 
     return Response::make(file_get_contents($path), 200, [
-        'Content-Type' => Storage::getMimeType($curTable->tblNme . '/' . $filename),
+        'Content-Type' => Storage::getMimeType($curTable->tblNme . '/' . $subfolder . '/' . $filename),
         'Content-Disposition' => 'inline; filename="'.$filename.'"'
     ]);
   }

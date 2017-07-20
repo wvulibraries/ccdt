@@ -2,17 +2,15 @@
 
 namespace App\Libraries;
 
-class Helper {
+class CustomStringHelper {
 
     // checks if files exists in storage under the folder for the table
-    public function fileExists($tblNme, $filename) {
-      // if \ exist in the filename call getFilename
-      if (strpos($filename, '\\') !== FALSE) {
-        // call getFilename to strip off the old path to the file
-        $filename = $this->getFilename($filename);
-      }
+    public function fileExists($tblNme, $str) {
+      return \Storage::exists($tblNme . '/' . $str);
+    }
 
-      return \Storage::exists($tblNme . '/' . $filename);
+    public function fileExistsInFolder($tblNme, $str) {
+      return \Storage::exists($tblNme . '/' . $this->getFolderName($str) . '/' . $this->getFilename($str));
     }
 
     public function separateFiles($str) {
@@ -28,6 +26,15 @@ class Helper {
     // takes a string with a windows style path and returns only the filename
     public function getFilename($str) {
       $tokens = explode('\\',$str);
-      return end($tokens);
+      $filename = end($tokens);
+      return $filename;
+    }
+
+    public function getFolderName($str) {
+      $tokens = explode('\\',$str);
+      $filename = end($tokens);
+      $subfolder = prev($tokens);
+      //build new string containing folder
+      return $subfolder;
     }
 }
