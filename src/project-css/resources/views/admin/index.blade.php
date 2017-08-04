@@ -25,7 +25,7 @@
             <span class="glyphicon glyphicon-user visible-xs visible-sm smallIcon"></span><label>User(s)</label>
           </div>
           <div class="icon hidden-xs hidden-sm">
-            <i class="glyphicon glyphicon-user"></i>
+            <span class="glyphicon glyphicon-user"></span>
           </div>
           <div class="desc hidden-xs">
             <var>{{$usrCnt}}</var>
@@ -41,7 +41,7 @@
             <span class="glyphicon glyphicon-book visible-xs visible-sm smallIcon"></span><label>Collection(s)</label>
           </div>
           <div class="icon hidden-xs hidden-sm">
-            <i class="glyphicon glyphicon-book"></i>
+            <span class="glyphicon glyphicon-book"></span>
           </div>
           <div class="desc hidden-xs">
             <var>{{$cllctCnt}}</var>
@@ -57,7 +57,7 @@
             <span class="glyphicon glyphicon-duplicate visible-xs visible-sm smallIcon"></span><label>Table(s)</label>
           </div>
           <div class="icon hidden-xs hidden-sm">
-            <i class="glyphicon glyphicon-duplicate"></i>
+            <span class="glyphicon glyphicon-duplicate"></span>
           </div>
           <div class="desc hidden-xs">
             <var>{{$tblCnt}}</var>
@@ -72,7 +72,7 @@
           <span class="glyphicon glyphicon-cog visible-xs visible-sm smallIcon"></span><label>Admin(s)</label>
         </div>
         <div class="icon hidden-xs hidden-sm">
-          <i class="glyphicon glyphicon-cog"></i>
+          <span class="glyphicon glyphicon-cog"></span>
         </div>
         <div class="desc hidden-xs">
           <var>{{$admnCnt}}</var>

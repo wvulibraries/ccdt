@@ -24,7 +24,7 @@
       <div class="col-xs-12 col-sm-12 col-md-12">
         <div class="colHeadCard">
           <div class="icon hidden-xs hidden-sm">
-            <i class="glyphicon glyphicon-plus"></i>
+            <span class="glyphicon glyphicon-plus"></span>
           </div>
           <h4>Create Collection(s)</h4>
         </div>
@@ -46,7 +46,7 @@
             <div class="colCardOpts">
               <a href="{{url('table/create')}}">
                 <div class="icon hidden-xs hidden-sm">
-                  <i class="glyphicon glyphicon-plus"></i>
+                  <span class="glyphicon glyphicon-plus"></span>
                 </div>
                 <p>Add Tables</p>
               </a>
@@ -55,7 +55,7 @@
             <div class="colCardOpts">
               <a href="#" data-toggle="modal" data-target="#editCllctn{{$collcntNm->id}}">
                 <div class="icon hidden-xs hidden-sm">
-                  <i class="glyphicon glyphicon-pencil"></i>
+                  <span class="glyphicon glyphicon-pencil"></span>
                 </div>
                 <p>Edit</p>
               </a>
@@ -64,7 +64,7 @@
             <div class="colCardOpts">
               <a href="#" data-toggle="modal" data-target="#dsbleCllctn{{$collcntNm->id}}">
                 <div class="icon hidden-xs hidden-sm">
-                  <i class="glyphicon glyphicon-trash"></i>
+                  <span class="glyphicon glyphicon-trash"></span>
                 </div>
                 <p>Disable</p>
               </a>
@@ -132,12 +132,13 @@
               </p>
               <form class="form-horizontal" role="form" method="POST" action="{{ url('collection/disable') }}">
                   {{ csrf_field() }}
-
+                  <label for="id"> Collection ID </label>
                   <input id="id" name="id" type="hidden" value="{{$collcntNm->id}}" />
 
                   <div class="form-group{{ $errors->has('clctnName') ? ' has-error' : '' }}">
 
                       <div class="col-md-6">
+                          <label for="clctnName"> Collection Name </label>
                           <input id="clctnName" type="text" class="form-control" name="clctnName" required autofocus>
                       </div>
                       <div class="col-md-3">
@@ -177,7 +178,7 @@
             <div class="colCardOpts">
               <a href="#" data-toggle="modal" data-target="#enblCllctn{{$collcntNm->id}}">
                 <div class="icon hidden-xs hidden-sm">
-                  <i class="glyphicon glyphicon-fire"></i>
+                  <span class="glyphicon glyphicon-fire"></span>
                 </div>
                 <p>Enable</p>
               </a>
@@ -204,7 +205,7 @@
               </p>
               <form class="form-horizontal" role="form" method="POST" action="{{ url('collection/enable') }}">
                   {{ csrf_field() }}
-
+                  <label for="id" class="col-md-3 control-label">Collection ID</label>
                   <input id="id" name="id" type="hidden" value="{{$collcntNm->id}}" />
 
                   <div class="form-group{{ $errors->has('clctnName') ? ' has-error' : '' }}">

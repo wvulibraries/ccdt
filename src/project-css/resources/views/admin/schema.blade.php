@@ -24,9 +24,13 @@
         <!-- CSRF Fields -->
         {{ csrf_field() }}
         <!-- Form group for the column name -->
+        <label for="kCnt"> Collection Count </label>
         <input id="kCnt" type="hidden" class="form-control" name="kCnt" value="{{count($schema)}}">
+        <label for="tblNme"> Table Name </label>
         <input id="tblNme" type="hidden" class="form-control" name="tblNme" value="{{$tblNme}}">
+        <label for="collctnId"> Collection ID </label>
         <input id="collctnId" type="hidden" class="form-control" name="collctnId" value="{{$collctnId}}">
+        <label for="fltFile"> FlatFile </label>
         <input id="fltFile" type="hidden" class="form-control" name="fltFile" value="{{$fltFile}}">
         <!-- Heading for the table -->
         <thead>
@@ -45,14 +49,13 @@
               <td>
                 <!-- Show the columns for edit -->
                 <div class="form-group{{ $errors->has('col-'.$key.'-name') ? ' has-error' : '' }}">
-                  <!-- <label for="col-{{$key}}-name">Datatype Name</label> -->
+                  <label for="col-{{$key}}-name"> Collection {{$key}} </label>
                   <input id="col-{{$key}}-name" type="text" class="form-control" name="col-{{$key}}-name" value="{{$col}}" required autofocus>
                 </div>
               </td>
               <td>
                 <!-- Show the data type to choose from -->
                 <div class="form-group{{$errors->has('col-'.$key.'-data') ? ' has-error' : ''}}">
-                  <!-- <label for="col-{{$key}}-data">Datatype</label> -->
                   <select id="col-{{$key}}-data" type="text" class="form-control" name="col-{{$key}}-data" required autofocus>
                     <option value="integer">Integer</option>
                     <option selected="selected" value="string">String</option>
@@ -63,7 +66,6 @@
               <td>
                 <!-- Show the data size to choose from -->
                 <div class="form-group{{$errors->has('col-'.$key.'-size') ? ' has-error' : ''}}">
-                  <!-- <label for="col-{{$key}}-size">Datatype Size</label> -->
                   <select id="col-{{$key}}-size" type="text" class="form-control" name="col-{{$key}}-size" required autofocus>
                     <option value="default">Default</option>
                     <option value="medium">Medium</option>
