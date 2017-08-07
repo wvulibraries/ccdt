@@ -42,6 +42,7 @@
                     <select id="search-type" name="driver" aria-label="Type of Search" aria-required="false">
                       <option value="simple">Simple</option>
                       <option value="fuzzy" selected>Fuzzy</option>
+                      <option value="fulltext" selected>Full Text</option>                      
                     </select>
 
                     <div class="cache-check">

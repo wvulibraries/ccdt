@@ -138,6 +138,34 @@ class DataViewController extends Controller {
       $rcrds = \Cache::get($driver . $tblNme . $column . $search . $page);
       fwrite($file,"Cached Search - Driver " . $driver . " Column " . $column . " Search " . $search . " Table " . $tblNme . " ");
     }
+    else if (strcmp($driver, 'fulltext') == 0) {
+      // $rcrds = DB::table($tblNme)->whereRaw("MATCH (srchindex) AGAINST ('$search')")->orderBy('id', 'asc')->get();
+
+      $rcrds = DB::table($tblNme)
+                   ->whereRaw("MATCH (srchindex) AGAINST ('$search' IN NATURAL LANGUAGE MODE)")
+                   ->orderBy('id', 'asc')
+                   ->get();
+
+      $rcrdsCount = count($rcrds);
+
+      if ($rcrdsCount > $perPage) {
+        $chunks = $rcrds->chunk(30);
+        $chunks->toArray();
+        if (strcmp($cache, 'true') == 0) {
+          \Cache::put($driver . $tblNme . $column . $search, $rcrdsCount, 60);
+          foreach($chunks as $key => $chunk) {
+            \Cache::put($driver . $tblNme . $column . $search . $key, $chunk, 60);
+          }
+        }
+        $rcrds = $chunks[$page];
+      }
+      elseif (strcmp($cache, 'true') == 0) {
+        \Cache::put($driver . $tblNme . $column . $search, $rcrdsCount, 60);
+        \Cache::put($driver . $tblNme . $column . $search . $page, $rcrds, 60);
+      }
+
+      fwrite($file,"Normal Search - Driver " . $driver . " Column " . $column . " Search " . $search . " Table " . $tblNme . " ");
+    }
     else {
       // Searchy is returning a collection aka Array of Objects
       $rcrds = \Searchy::driver($driver)
@@ -175,7 +203,7 @@ class DataViewController extends Controller {
 
     // set $lastPage
     if ($rcrdsCount > $perPage) {
-      $lastPage = ceil($rcrdsCount / $perPage);
+      $lastPage = ceil($rcrdsCount / $perPage) - 1;
     }
     else {
       $lastPage = $page;
