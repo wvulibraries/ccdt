@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 // Import the storage class too
 use Illuminate\Support\Facades\Storage;
 
+use Illuminate\Support\Facades\DB;
+
 // Import the supported facades for creating tables
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
@@ -422,16 +424,21 @@ class TableController extends Controller
         }
       }
 
+      // search index
+      $table->longText('srchindex');
+
       // Time stamps
       $table->timestamps();
     });
+
+    // modify table for fulltext search using the srchindex column
+    DB::connection()->getPdo()->exec( 'ALTER TABLE ' . $tblNme . ' ADD FULLTEXT fulltext_index (srchindex)');
 
     // Check for the number of columns we actually added into database
 
     // Finally create the table
     // Save the table upon the schema
     $this->crteTblInCollctn($tblNme,$collctnId);
-
 
     // Finally return the view to load data
     return $this->load(True,$tblNme,$fltFile);
@@ -544,9 +551,9 @@ class TableController extends Controller
         // Validate the tokens and filter them
         $tkns = $this->fltrTkns($tkns);
 
-        // Size of both colmn array and data should be same
+        // Size of both column array and data should be same
         // Count of tokens
-        $orgCount = count($clmnLst);
+        $orgCount = count($clmnLst)-1;
 
         if(count($tkns)==$orgCount){
           // Declae an array
@@ -557,6 +564,9 @@ class TableController extends Controller
             // added iconv to strip out invalid characters
             $curArry[strval($clmnLst[$i])]=utf8_encode($tkns[$i]);
           }
+
+          // add srchindex
+          $curArry["srchindex"]=utf8_encode(implode(" ", $tkns));
 
           // Insert them into DB
           \DB::table($request->tblNme)->insert($curArry);
