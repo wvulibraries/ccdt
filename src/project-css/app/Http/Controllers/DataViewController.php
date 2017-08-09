@@ -141,7 +141,7 @@ class DataViewController extends Controller {
     else if (strcmp($driver, 'fulltext') == 0) {
       // $rcrds = DB::table($tblNme)->whereRaw("MATCH (srchindex) AGAINST ('$search')")->orderBy('id', 'asc')->get();
 
-      $search = strip_tags($search);//remove undesired characters
+      //$search = trim(preg_replace('/[*^A-Za-z0-9_\s]/', '', $search));//remove undesired characters
       // $words = explode(" ", trim($search));
 
       $rcrds = DB::table($tblNme)
