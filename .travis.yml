@@ -30,7 +30,7 @@ before_script:
   # Set up the environment variables
   - cp .env.travis .env
   # Create the database and set users
-  - mysql -e 'CREATE DATABASE travis IF NOT EXISTS;'
+  - mysql -e 'CREATE DATABASE IF NOT EXISTS travis;'
   # Install dependencies
   - composer self-update
   - composer install --no-interaction
