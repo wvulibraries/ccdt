@@ -42,12 +42,17 @@
                     <select id="search-type" name="driver" aria-label="Type of Search" aria-required="false">
                       <option value="simple">Simple</option>
                       <option value="fuzzy" selected>Fuzzy</option>
-                      <option value="fulltext" selected>Full Text</option>                      
+                      <option value="fulltext" selected>Full Text</option>
                     </select>
 
                     <div class="cache-check">
                       <label for="cache"> Check Cached Search </label>
                       <input type="checkbox" name="cache" value="true" checked> Use Cache?
+                    </div>
+
+                    <div class="bool-check">
+                      <label for="bool"> Check Boolean Mode </label>
+                      <input type="checkbox" name="bool" value="false" checked> Use Boolean Mode (Fulltext Search Only)?
                     </div>
                   </div>
 

@@ -37,4 +37,12 @@ class CustomStringHelper {
       //build new string containing folder
       return $subfolder;
     }
+
+    public function cleanSearchString($search) {
+      //replace ? with * for wildcard searches
+      $str = str_replace('?', '*', $search);
+
+      return $str;
+    }
+
 }

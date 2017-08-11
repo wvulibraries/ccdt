@@ -289,7 +289,7 @@ class TableController extends Controller
 
     // Loop till EOF
     while(!$fltFleObj->eof()){
-      // Check if the file has atleast one line
+      // Check if the file has at least one line
       if($len>=1){
         // Break here so that it's not reading huge files
         break;
@@ -539,6 +539,9 @@ class TableController extends Controller
 
       // Counter for processed
       $prcssd = 0;
+
+      // increse time limit for importing files
+      set_time_limit ( 120 );
 
       // For each line
       while($curFltFleObj->valid()){

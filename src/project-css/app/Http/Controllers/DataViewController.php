@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use Response;
 use Illuminate\Http\Request;
 
@@ -13,6 +14,8 @@ use Illuminate\Support\Facades\DB;
 use App\Table;
 use App\Collection;
 use Illuminate\Support\Facades\Auth;
+
+use App\Libraries\CustomStringHelper;
 
 /**
 * The controller is responsible for showing the cards data
@@ -93,11 +96,12 @@ class DataViewController extends Controller {
                             ->with('tblId',$curTable);
   }
 
-  public function search(Request $request, $curTable, $search = NULL, $page = 1, $driver = NULL, $column = NULL, $cache = NULL){
+  public function search(Request $request, $curTable, $search = NULL, $page = 1, $driver = NULL, $column = NULL, $cache = NULL, $bool = NULL){
     // set records per page
     $perPage = 30;
     $relevance = 20;
     $limit = 1000;
+    $string_helper = new customStringHelper();
 
     // Get the table entry in meta table "tables"
     $curTable = Table::find($curTable);
@@ -127,27 +131,37 @@ class DataViewController extends Controller {
       $cache = \Request::get('cache', 'false');
     }
 
+    if ($bool == NULL) {
+      $bool = \Request::get('bool', 'false');
+    }
+
     $startTime = microtime(true);
 
     // create array chunks of results for use in page views
     $file = fopen("microtime.log","a");
 
-    if (\Cache::has($driver . $tblNme . $column . $search . $page) && (strcmp($cache, 'true') == 0))
-    {
+    if (\Cache::has($driver . $tblNme . $column . $search . $page) && (strcmp($cache, 'true') == 0)) {
       $rcrdsCount = \Cache::get($driver . $tblNme . $column . $search);
       $rcrds = \Cache::get($driver . $tblNme . $column . $search . $page);
       fwrite($file,"Cached Search - Driver " . $driver . " Column " . $column . " Search " . $search . " Table " . $tblNme . " ");
     }
     else if (strcmp($driver, 'fulltext') == 0) {
-      // $rcrds = DB::table($tblNme)->whereRaw("MATCH (srchindex) AGAINST ('$search')")->orderBy('id', 'asc')->get();
-
-      //$search = trim(preg_replace('/[*^A-Za-z0-9_\s]/', '', $search));//remove undesired characters
-      // $words = explode(" ", trim($search));
-
-      $rcrds = DB::table($tblNme)
-                   ->whereRaw("MATCH (srchindex) AGAINST (? IN BOOLEAN MODE)", [$search])
-                   ->orderBy('id', 'asc')
-                   ->get();
+      if (strcmp($bool, 'true') == 0) {
+        $rcrds = DB::table($tblNme)
+                     ->whereRaw("MATCH (srchindex) AGAINST (? IN NATURAL LANGUAGE MODE)", [$search])
+                     ->orderBy('id', 'asc')
+                     ->get();
+      }
+      else {
+        // var_dump($search);
+        // $search = $string_helper->searchParser($search);
+        // var_dump($search);
+        // die();
+        $rcrds = DB::table($tblNme)
+                     ->whereRaw("MATCH (srchindex) AGAINST (? IN BOOLEAN MODE)", $string_helper->cleanSearchString($search))
+                     ->orderBy('id', 'asc')
+                     ->get();
+      }
 
       $rcrdsCount = count($rcrds);
 
@@ -155,19 +169,19 @@ class DataViewController extends Controller {
         $chunks = $rcrds->chunk(30);
         $chunks->toArray();
         if (strcmp($cache, 'true') == 0) {
-          \Cache::put($driver . $tblNme . $column . $search, $rcrdsCount, 60);
+          \Cache::put($driver . $bool . $tblNme . $column . $search, $rcrdsCount, 60);
           foreach($chunks as $key => $chunk) {
-            \Cache::put($driver . $tblNme . $column . $search . $key, $chunk, 60);
+            \Cache::put($driver . $bool . $tblNme . $column . $search . $key, $chunk, 60);
           }
         }
         $rcrds = $chunks[$page];
       }
       elseif (strcmp($cache, 'true') == 0) {
-        \Cache::put($driver . $tblNme . $column . $search, $rcrdsCount, 60);
-        \Cache::put($driver . $tblNme . $column . $search . $page, $rcrds, 60);
+        \Cache::put($driver . $bool . $tblNme . $column . $search, $rcrdsCount, 60);
+        \Cache::put($driver . $bool . $tblNme . $column . $search . $page, $rcrds, 60);
       }
 
-      fwrite($file,"Normal Search - Driver " . $driver . " Column " . $column . " Search " . $search . " Table " . $tblNme . " ");
+      fwrite($file,"Normal Search - Driver " . $driver . " Boolean Mode for fulltext " . $bool . " Column " . $column . " Search " . $search . " Table " . $tblNme . " ");
     }
     else {
       // Searchy is returning a collection aka Array of Objects
@@ -197,7 +211,7 @@ class DataViewController extends Controller {
         \Cache::put($driver . $tblNme . $column . $search . $page, $rcrds, 60);
       }
 
-      fwrite($file,"Normal Search - Driver " . $driver . " Column " . $column . " Search " . $search . " Table " . $tblNme . " ");
+      fwrite($file,"Normal Search - Driver " . $driver . " Boolean Mode for fulltext " . $column . " Search " . $search . " Table " . $tblNme . " ");
     }
 
     $secs = microtime(true)-$startTime;
