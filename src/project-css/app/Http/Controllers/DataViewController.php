@@ -96,7 +96,7 @@ class DataViewController extends Controller {
                             ->with('tblId',$curTable);
   }
 
-  public function search(Request $request, $curTable, $search = NULL, $page = 1, $driver = NULL, $column = NULL, $cache = NULL, $bool = NULL){
+  public function search(Request $request, $curTable, $search = NULL, $page = 1){
     // set records per page
     $perPage = 30;
     $relevance = 20;
@@ -119,100 +119,68 @@ class DataViewController extends Controller {
       $search = $request->input('search');
     }
 
-    if ($driver == NULL) {
-      $driver = \Request::get('driver', 'fuzzy');
-    }
-
-    if ($column == NULL) {
-      $column = \Request::get('search-col', 'srchindex');
-    }
-
-    if ($cache == NULL) {
-      $cache = \Request::get('cache', 'false');
-    }
-
-    if ($bool == NULL) {
-      $bool = \Request::get('bool', 'false');
-    }
-
     $startTime = microtime(true);
 
     // create array chunks of results for use in page views
     $file = fopen("microtime.log","a");
 
-    if (\Cache::has($driver . $tblNme . $column . $search . $page) && (strcmp($cache, 'true') == 0)) {
-      $rcrdsCount = \Cache::get($driver . $tblNme . $column . $search);
-      $rcrds = \Cache::get($driver . $tblNme . $column . $search . $page);
-      fwrite($file,"Cached Search - Driver " . $driver . " Column " . $column . " Search " . $search . " Table " . $tblNme . " ");
-    }
-    else if (strcmp($driver, 'fulltext') == 0) {
-      if (strcmp($bool, 'true') == 0) {
-        $rcrds = DB::table($tblNme)
-                     ->whereRaw("MATCH (srchindex) AGAINST (? IN NATURAL LANGUAGE MODE)", [$search])
-                     ->orderBy('id', 'asc')
-                     ->get();
-      }
-      else {
-        // var_dump($search);
-        // $search = $string_helper->searchParser($search);
-        // var_dump($search);
-        // die();
-        $rcrds = DB::table($tblNme)
-                     ->whereRaw("MATCH (srchindex) AGAINST (? IN BOOLEAN MODE)", $string_helper->cleanSearchString($search))
-                     ->orderBy('id', 'asc')
-                     ->get();
-      }
-
-      $rcrdsCount = count($rcrds);
-
-      if ($rcrdsCount > $perPage) {
-        $chunks = $rcrds->chunk(30);
-        $chunks->toArray();
-        if (strcmp($cache, 'true') == 0) {
-          \Cache::put($driver . $bool . $tblNme . $column . $search, $rcrdsCount, 60);
-          foreach($chunks as $key => $chunk) {
-            \Cache::put($driver . $bool . $tblNme . $column . $search . $key, $chunk, 60);
-          }
-        }
-        $rcrds = $chunks[$page];
-      }
-      elseif (strcmp($cache, 'true') == 0) {
-        \Cache::put($driver . $bool . $tblNme . $column . $search, $rcrdsCount, 60);
-        \Cache::put($driver . $bool . $tblNme . $column . $search . $page, $rcrds, 60);
-      }
-
-      fwrite($file,"Normal Search - Driver " . $driver . " Boolean Mode for fulltext " . $bool . " Column " . $column . " Search " . $search . " Table " . $tblNme . " ");
+    if (\Cache::has($tblNme . $search . $page)) {
+      $rcrdsCount = \Cache::get($tblNme . $search);
+      $rcrds = \Cache::get($tblNme . $search . $page);
+      fwrite($file,"Cached Search - Table " . $tblNme . " Search " . $search . " Page" . $page);
     }
     else {
-      // Searchy is returning a collection aka Array of Objects
-      $rcrds = \Searchy::driver($driver)
-        ->$tblNme($column)
-        ->query($search)
-        ->getQuery()
-        ->limit($limit)
-        ->having('relevance', '>', $relevance)
-        ->get();
-
-      $rcrdsCount = $rcrds->count();
-
+      $rcrds = DB::table($tblNme)
+                   ->whereRaw("MATCH (srchindex) AGAINST (? IN BOOLEAN MODE)", $string_helper->cleanSearchString($search))
+                   ->orderBy('id', 'asc')
+                   ->get();
+      $rcrdsCount = count($rcrds);
       if ($rcrdsCount > $perPage) {
         $chunks = $rcrds->chunk(30);
         $chunks->toArray();
-        if (strcmp($cache, 'true') == 0) {
-          \Cache::put($driver . $tblNme . $column . $search, $rcrdsCount, 60);
-          foreach($chunks as $key => $chunk) {
-            \Cache::put($driver . $tblNme . $column . $search . $key, $chunk, 60);
-          }
-        }
-        $rcrds = $chunks[$page];
+        \Cache::put($tblNme . $search, $rcrdsCount, 60);
+        foreach($chunks as $key => $chunk) {
+          \Cache::put($tblNme . $search . $key, $chunk, 60);
+         }
+         $rcrds = $chunks[$page];
       }
-      elseif (strcmp($cache, 'true') == 0) {
-        \Cache::put($driver . $tblNme . $column . $search, $rcrdsCount, 60);
-        \Cache::put($driver . $tblNme . $column . $search . $page, $rcrds, 60);
+      else {
+        \Cache::put($tblNme . $search, $rcrdsCount, 60);
+        \Cache::put($tblNme . $search . $page, $rcrds, 60);
       }
 
-      fwrite($file,"Normal Search - Driver " . $driver . " Boolean Mode for fulltext " . $column . " Search " . $search . " Table " . $tblNme . " ");
+      fwrite($file,"Normal Search - Table " . $tblNme . " Search " . $search . " Page" . $page);
     }
+    // else {
+    //   // Searchy is returning a collection aka Array of Objects
+    //   $rcrds = \Searchy::driver($driver)
+    //     ->$tblNme($column)
+    //     ->query($search)
+    //     ->getQuery()
+    //     ->limit($limit)
+    //     ->having('relevance', '>', $relevance)
+    //     ->get();
+    //
+    //   $rcrdsCount = $rcrds->count();
+    //
+    //   if ($rcrdsCount > $perPage) {
+    //     $chunks = $rcrds->chunk(30);
+    //     $chunks->toArray();
+    //     if (strcmp($cache, 'true') == 0) {
+    //       \Cache::put($driver . $tblNme . $column . $search, $rcrdsCount, 60);
+    //       foreach($chunks as $key => $chunk) {
+    //         \Cache::put($driver . $tblNme . $column . $search . $key, $chunk, 60);
+    //       }
+    //     }
+    //     $rcrds = $chunks[$page];
+    //   }
+    //   elseif (strcmp($cache, 'true') == 0) {
+    //     \Cache::put($driver . $tblNme . $column . $search, $rcrdsCount, 60);
+    //     \Cache::put($driver . $tblNme . $column . $search . $page, $rcrds, 60);
+    //   }
+    //
+    //   fwrite($file,"Normal Search - Driver " . $driver . " Boolean Mode for fulltext " . $column . " Search " . $search . " Table " . $tblNme . " ");
+    // }
 
     $secs = microtime(true)-$startTime;
     fwrite($file, number_format($secs,3) . "\n");
@@ -234,10 +202,7 @@ class DataViewController extends Controller {
                               ->with('search', $search)
                               ->with('page', $page)
                               ->with('lastPage', $lastPage)
-                              ->with('morepages', $page < $lastPage)
-                              ->with('driver', $driver)
-                              ->with('column', $column)
-                              ->with('cache', $cache);
+                              ->with('morepages', $page < $lastPage);
   }
 
   public function view(Request $request, $curTable, $subfolder, $filename){
