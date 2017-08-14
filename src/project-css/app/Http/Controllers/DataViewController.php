@@ -149,7 +149,7 @@ class DataViewController extends Controller {
         \Cache::put($tblNme . $search . $page, $rcrds, 60);
       }
 
-      fwrite($file,"Normal Search - Table " . $tblNme . " Search " . $search . " Page" . $page);
+      fwrite($file,"Normal Search - Table " . $tblNme . " Search " . $search . " Page " . $page);
     }
     // else {
     //   // Searchy is returning a collection aka Array of Objects
