@@ -9,6 +9,7 @@
   <div class="container adminHeading">
     <span class="text-center">
       <h2><a href="{{ url('/help') }}">Help</a></h2>
+      <p>Various information to help you import and access the data.</p>
     </span>
   </div>
 </div>

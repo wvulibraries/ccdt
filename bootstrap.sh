@@ -17,6 +17,17 @@ rpm -Uvh https://mirror.webtatic.com/yum/el7/webtatic-release.rpm
 yum -y update
 echo -e "----Added RPM's----\n\n"
 
+rpm -ivh https://kojipkgs.fedoraproject.org//packages/http-parser/2.7.1/3.el7/x86_64/http-parser-2.7.1-3.el7.x86_64.rpm
+yum install epel-release
+yum install nodejs
+yum install npm
+
+# npm install --global gulp-cli
+npm install gulp --save-dev
+npm install laravel-elixir --save-dev
+
+echo -e "----Installed http-parser, nodejs and gulp-cli"
+
 # Install apache
 yum -y install httpd httpd-devel httpd-manual httpd-tools
 echo -e "----Installed Apache----\n\n"

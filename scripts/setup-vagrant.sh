@@ -7,13 +7,12 @@
 #version         :0.3
 #==============================================================================
 
-# Install latest node and npm
-# sudo yum update
-# sudo yum install nodejs
-
 # Install composer packages
 cd /var/www/html/project-css/
 composer update
+
+# Install Laravel Elixir
+sudo npm install
 
 # Setup the environment variables
 cp .env.vagrant .env
