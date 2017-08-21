@@ -4,15 +4,19 @@
 #description     :This script will set permissions for existing laravel on PHP 7
 #author		       :Ajay Krishna Teja Kavuri
 #date            :20170510
-#version         :0.3
+#updated by      :Tracy A McCormick
+#date            :20170817
+#version         :0.4
 #==============================================================================
 
 # Install composer packages
 cd /var/www/html/project-css/
 composer update
 
-# Install Laravel Elixir
-sudo npm install
+# Install npm packages
+npm install
+# update graceful-fs
+# sudo npm install -g graceful-fs graceful-fs@latest-version
 
 # Setup the environment variables
 cp .env.vagrant .env

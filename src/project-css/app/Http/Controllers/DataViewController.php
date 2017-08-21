@@ -127,9 +127,11 @@ class DataViewController extends Controller {
     if (\Cache::has($tblNme . $search . $page)) {
       $rcrdsCount = \Cache::get($tblNme . $search);
       $rcrds = \Cache::get($tblNme . $search . $page);
-      fwrite($file,"Cached Search - Table " . $tblNme . " Search " . $search . " Page" . $page);
+      fwrite($file,"Cached Search - Table " . $tblNme . " Search " . $search . " Page " . $page  . " ");
     }
     else {
+      set_time_limit ( 120 );
+
       $rcrds = DB::table($tblNme)
                    ->whereRaw("MATCH (srchindex) AGAINST (? IN BOOLEAN MODE)", $string_helper->cleanSearchString($search))
                    ->orderBy('id', 'asc')
@@ -149,7 +151,7 @@ class DataViewController extends Controller {
         \Cache::put($tblNme . $search . $page, $rcrds, 60);
       }
 
-      fwrite($file,"Normal Search - Table " . $tblNme . " Search " . $search . " Page " . $page);
+      fwrite($file,"Normal Search - Table " . $tblNme . " Search " . $search . " Page " . $page . " ");
     }
     // else {
     //   // Searchy is returning a collection aka Array of Objects

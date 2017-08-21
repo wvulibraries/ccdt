@@ -4,7 +4,9 @@
 #description     :This script will install LAMP stack and Composer on centos 7.2
 #author		       :Ajay Krishna Teja Kavuri
 #date            :20161014
-#version         :0.2
+#updated by      :Tracy A McCormick
+#date            :20170817
+#version         :0.3
 #==============================================================================
 
 #Formal update for no reason
@@ -16,17 +18,6 @@ rpm -Uvh https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
 rpm -Uvh https://mirror.webtatic.com/yum/el7/webtatic-release.rpm
 yum -y update
 echo -e "----Added RPM's----\n\n"
-
-rpm -ivh https://kojipkgs.fedoraproject.org//packages/http-parser/2.7.1/3.el7/x86_64/http-parser-2.7.1-3.el7.x86_64.rpm
-yum install epel-release
-yum install nodejs
-yum install npm
-
-# npm install --global gulp-cli
-npm install gulp --save-dev
-npm install laravel-elixir --save-dev
-
-echo -e "----Installed http-parser, nodejs and gulp-cli"
 
 # Install apache
 yum -y install httpd httpd-devel httpd-manual httpd-tools
@@ -44,9 +35,12 @@ echo -e "----Installed Auth Plugins for MySQL----\n\n"
 yum -y install php70w php70w-bcmath php70w-cli php70w-common php70w-gd php70w-ldap php70w-mbstring php70w-mcrypt php70w-mysql php70w-odbc php70w-pdo php70w-pear php70w-pear-Benchmark php70w-pecl-apc php70w-pecl-imagick php70w-pecl-memcache php70w-soap php70w-xml php70w-xmlrpc
 echo -e "----Installed PHP 7----\n\n"
 
-# remove php.ini and link it to our custom file
-rm -f /etc/php.ini
-ln -s /vagrant/serverConfiguration/php.ini /etc/php.ini
+# remove php.ini and link our custom file if a custom php.ini exists
+if [ -e /vagrant/serverConfiguration/php.ini ]
+then
+   rm -f /etc/php.ini
+   ln -s /vagrant/serverConfiguration/php.ini /etc/php.ini
+fi
 
 # Start and set apache
 sudo systemctl start httpd
@@ -58,11 +52,16 @@ sudo systemctl start mysqld
 sudo systemctl enable mysqld
 echo -e "----Started MySQL----\n\n"
 
-# Install Node, gulp and libnotify
-yum -y install nodejs npm --enablerepo=epel
+# Install Node and gulp
+rpm -ivh https://kojipkgs.fedoraproject.org//packages/http-parser/2.7.1/3.el7/x86_64/http-parser-2.7.1-3.el7.x86_64.rpm
+yum install -y gcc-c++ make
+curl -sL https://rpm.nodesource.com/setup_8.x | bash -
+yum install -y nodejs
 npm install --global gulp-cli
-yum -y install libnotify
 echo -e "----Installed Node and Gulp----\n\n"
+
+yum -y install libnotify
+echo -e "----Installed libnotify----\n\n"
 
 # Install git
 yum -y install git

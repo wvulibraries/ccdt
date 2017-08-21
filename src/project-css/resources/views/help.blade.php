@@ -1,5 +1,3 @@
-<link href="{{ asset('/css/divTable.css') }}" rel="stylesheet">
-
 @extends('layouts.default')
 
 <!-- Heading -->
@@ -9,7 +7,7 @@
   <div class="container adminHeading">
     <span class="text-center">
       <h2><a href="{{ url('/help') }}">Help</a></h2>
-      <p>Various information to help you import and access the data.</p>
+      <p>Information to help you make the most of CCDT.</p>
     </span>
   </div>
 </div>
@@ -17,7 +15,7 @@
 <!-- Separation -->
 <hr/>
 
-<div class="col-xs-12 col-sm-12 col-md-12">
+<div class="container">
 
     <h2>Search</h2>
     <p></p>

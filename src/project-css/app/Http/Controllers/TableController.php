@@ -131,7 +131,6 @@ class TableController extends Controller
     // Store in the directory inside storage/app
     $thisFltFile->storeAs($this->strDir,$thisFltFileNme);
 
-
     // 3. Show the users schema for further verification
     $schema = $this->schema($this->strDir.'/'.$thisFltFileNme);
     // If the file isn't valid return with an error
@@ -569,7 +568,13 @@ class TableController extends Controller
           }
 
           // add srchindex
-          $curArry["srchindex"]=utf8_encode(implode(" ", $tkns));
+          //$curArry["srchindex"]=utf8_encode(implode(" ", $tkns));
+
+          // remove extra characters replacing them with spaces
+          $cleanString = preg_replace('/[^A-Za-z0-9. ]/', ' ', str_replace('..', '',$curLine));
+
+          // remove extra spaces
+          $curArry["srchindex"]= preg_replace('/\s+/', ' ', $cleanString);
 
           // Insert them into DB
           \DB::table($request->tblNme)->insert($curArry);
