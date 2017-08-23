@@ -42,7 +42,15 @@ class CustomStringHelper {
       //replace ? with * for wildcard searches
       $str = str_replace('?', '*', $search);
 
-      return $str;
+      // remove extra characters replacing them with spaces
+      // also only allow on . for use in filename extensions
+      //$cleanString = preg_replace('/[^A-Za-z0-9+-()*~"<>. ]/', ' ', str_replace('..', '',$str));
+
+      // remove extra spaces
+      $str = preg_replace('/\s+/', ' ', $str);
+
+      //return string as lowercase
+      return strtolower($str);
     }
 
 }

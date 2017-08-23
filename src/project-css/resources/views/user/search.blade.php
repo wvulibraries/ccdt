@@ -67,21 +67,30 @@
       @endforeach
 
       <div class="col-xs-12 col-sm-12 col-md-12">
-        @if(1 <= $page and $page <= $lastPage)
-        <div class="rcrdOptnsCrd text-center">
-          <ul class="pagination pagination-lg">
-            @if($page != 1)<li><a href="{{ url('/data', ['curTable' => $tblId, 'search' => $search, 'page' => $page-1])}}"><i class="glyphicon glyphicon-chevron-left"></i></a></li>@endif
-            @if($page != 1)<li><a href="{{ url('/data', ['curTable' => $tblId, 'search' => $search, 'page' => 1])}}">first</a></li>@endif
-            @if($page-2 >= 1)<li><a href="{{ url('/data', ['curTable' => $tblId, 'search' => $search, 'page' => $page-2])}}">{{$page-2}}</a></li>@endif
-            <li class="active"><a href="{{ url('/data', ['curTable' => $tblId, 'search' => $search, 'page' => $page])}}">{{$page}}</a></li>
-            @if($morepages and $page+2 <= $lastPage)<li><a href="{{ url('/data', ['curTable' => $tblId, 'search' => $search, 'page' => $page+2])}}">{{$page+2}}</a></li>@endif
-            @if($page != $lastPage)<li><a href="{{ url('/data', ['curTable' => $tblId, 'search' => $search, 'page' => $lastPage])}}">last</a></li>@endif
-            @if($page != $lastPage)<li><a href="{{ url('/data', ['curTable' => $tblId, 'search' => $search, 'page' => $page+1])}}"><i class="glyphicon glyphicon-chevron-right"></i></a></li>@endif
-          </ul>
+        <div class="rcrdOptnsCrd-top">
+          <!-- <div class="btn-group btn-group-lg"> -->
+            <div class="col-xs-6 col-sm-6 col-md-6 text-left">
+              @if($page != 1)
+              <a class="btn btn-primary left-button" href="{{ url('/data', ['curTable' => $tblId, 'search' => $search, 'page' => $page-1])}}">
+                <span>
+                  <i class="glyphicon glyphicon-chevron-left"></i>
+                </span>
+                <span>previous page</span>
+              </a>
+              @endif
+            </div>
+            <div class="col-xs-6 col-sm-6 col-md-6 text-right">
+              @if($page != $lastPage)
+              <a class="btn btn-primary pull-right" href="{{ url('/data', ['curTable' => $tblId, 'search' => $search, 'page' => $page+1])}}">
+                <span>next page</span>
+                <span>
+                  <span class="glyphicon glyphicon-chevron-right"></span>
+                </span>
+              </a>
+              @endif
+            </div>
+          <!-- </div> -->
         </div>
-        @else
-        <p class="text-center">Page {{$page}} doesn't exist.</p>
-        @endif
       </div>
 
     </div>

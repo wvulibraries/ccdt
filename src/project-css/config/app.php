@@ -181,7 +181,6 @@ return [
         /*
          * 3rd Party Service Providers
          */
-        TomLingham\Searchy\SearchyServiceProvider::class,
 
     ],
 
@@ -229,8 +228,7 @@ return [
         'Storage' => Illuminate\Support\Facades\Storage::class,
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
-        'View' => Illuminate\Support\Facades\View::class,
-        'Searchy' => TomLingham\Searchy\Facades\Searchy::class
+        'View' => Illuminate\Support\Facades\View::class
 
     ],
 

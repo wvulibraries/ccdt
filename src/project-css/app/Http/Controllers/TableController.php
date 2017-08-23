@@ -571,18 +571,19 @@ class TableController extends Controller
           //$curArry["srchindex"]=utf8_encode(implode(" ", $tkns));
 
           // remove extra characters replacing them with spaces
+          // also remove .. that is in the filenames
           $cleanString = preg_replace('/[^A-Za-z0-9. ]/', ' ', str_replace('..', '',$curLine));
 
-          // remove extra spaces
-          $curArry["srchindex"]= preg_replace('/\s+/', ' ', $cleanString);
+          // remove extra spaces and make string all lower case
+          $cleanString = strtolower(preg_replace('/\s+/', ' ', $cleanString));
+
+          // remove duplicate keywords in the srchindex
+          $srchArr = explode( " " , $cleanString );
+          $srchArr = array_unique( $srchArr );
+          $curArry["srchindex"] = implode(" " , $srchArr);
 
           // Insert them into DB
           \DB::table($request->tblNme)->insert($curArry);
-
-          // to do if creating specific column to search
-          // sanitize $curLine removing all special chars and ,
-          // that isn't used strip out extra spaces
-          // store result in search.index column
         }
 
         // Update the counter

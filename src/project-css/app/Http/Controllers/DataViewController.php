@@ -99,8 +99,7 @@ class DataViewController extends Controller {
   public function search(Request $request, $curTable, $search = NULL, $page = 1){
     // set records per page
     $perPage = 30;
-    $relevance = 20;
-    $limit = 1000;
+
     $string_helper = new customStringHelper();
 
     // Get the table entry in meta table "tables"
@@ -119,84 +118,25 @@ class DataViewController extends Controller {
       $search = $request->input('search');
     }
 
-    $startTime = microtime(true);
-
-    // create array chunks of results for use in page views
-    $file = fopen("microtime.log","a");
-
-    if (\Cache::has($tblNme . $search . $page)) {
-      $rcrdsCount = \Cache::get($tblNme . $search);
-      $rcrds = \Cache::get($tblNme . $search . $page);
-      fwrite($file,"Cached Search - Table " . $tblNme . " Search " . $search . " Page " . $page  . " ");
-    }
-    else {
-      set_time_limit ( 120 );
-
-      $rcrds = DB::table($tblNme)
-                   ->whereRaw("MATCH (srchindex) AGAINST (? IN BOOLEAN MODE)", $string_helper->cleanSearchString($search))
-                   ->orderBy('id', 'asc')
-                   ->get();
-      $rcrdsCount = count($rcrds);
-      if ($rcrdsCount > $perPage) {
-        $chunks = $rcrds->chunk(30);
-        $chunks->toArray();
-        \Cache::put($tblNme . $search, $rcrdsCount, 60);
-        foreach($chunks as $key => $chunk) {
-          \Cache::put($tblNme . $search . $key, $chunk, 60);
-         }
-         $rcrds = $chunks[$page];
-      }
-      else {
-        \Cache::put($tblNme . $search, $rcrdsCount, 60);
-        \Cache::put($tblNme . $search . $page, $rcrds, 60);
-      }
-
-      fwrite($file,"Normal Search - Table " . $tblNme . " Search " . $search . " Page " . $page . " ");
-    }
-    // else {
-    //   // Searchy is returning a collection aka Array of Objects
-    //   $rcrds = \Searchy::driver($driver)
-    //     ->$tblNme($column)
-    //     ->query($search)
-    //     ->getQuery()
-    //     ->limit($limit)
-    //     ->having('relevance', '>', $relevance)
-    //     ->get();
-    //
-    //   $rcrdsCount = $rcrds->count();
-    //
-    //   if ($rcrdsCount > $perPage) {
-    //     $chunks = $rcrds->chunk(30);
-    //     $chunks->toArray();
-    //     if (strcmp($cache, 'true') == 0) {
-    //       \Cache::put($driver . $tblNme . $column . $search, $rcrdsCount, 60);
-    //       foreach($chunks as $key => $chunk) {
-    //         \Cache::put($driver . $tblNme . $column . $search . $key, $chunk, 60);
-    //       }
-    //     }
-    //     $rcrds = $chunks[$page];
-    //   }
-    //   elseif (strcmp($cache, 'true') == 0) {
-    //     \Cache::put($driver . $tblNme . $column . $search, $rcrdsCount, 60);
-    //     \Cache::put($driver . $tblNme . $column . $search . $page, $rcrds, 60);
-    //   }
-    //
-    //   fwrite($file,"Normal Search - Driver " . $driver . " Boolean Mode for fulltext " . $column . " Search " . $search . " Table " . $tblNme . " ");
-    // }
-
-    $secs = microtime(true)-$startTime;
-    fwrite($file, number_format($secs,3) . "\n");
-    fclose($file);
-
-    // set $lastPage
-    if ($rcrdsCount > $perPage) {
-      $lastPage = ceil($rcrdsCount / $perPage) - 1;
+    $cleanString = $string_helper->cleanSearchString($search);
+    $rcrds = DB::table($tblNme)
+                 ->whereRaw("MATCH (srchindex) AGAINST (? IN BOOLEAN MODE)", $cleanString)
+                 ->orderBy('id', 'asc')
+                 ->offset($page * $perPage)
+                 ->limit($perPage)
+                 ->get();
+    $rcrdsCount = count($rcrds);
+    
+    // if last query returned exactly 30 items
+    // we assume that their are additional pages
+    // so we set $lastPage to $page + 1
+    if ($rcrdsCount == 30) {
+      $lastPage = $page + 1;
     }
     else {
       $lastPage = $page;
     }
 
-    // return the index page
     return view('user.search')->with('rcrds', $rcrds)
                               ->with('clmnNmes', $clmnNmes)
                               ->with('tblNme', $curTable->tblNme)
@@ -219,9 +159,6 @@ class DataViewController extends Controller {
     $clmnNmes = DB::getSchemaBuilder()->getColumnListing($curTable->tblNme);
 
     $path = storage_path('app/' . $curTable->tblNme . '/' . $subfolder . '/' . $filename);
-
-    //line will just download file
-    //return Response::download($path);
 
     return Response::make(file_get_contents($path), 200, [
         'Content-Type' => Storage::getMimeType($curTable->tblNme . '/' . $subfolder . '/' . $filename),

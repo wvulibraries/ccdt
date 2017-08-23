@@ -27,6 +27,25 @@ echo -e "----Installed Apache----\n\n"
 yum -y install mysql-connector-java mysql-connector-odbc mysql-devel mysql-lib mysql-server
 echo -e "----Installed MySQL----\n\n"
 
+# remove my.cnf and link our custom file if a custom my.cnf exists
+if [ -e /vagrant/serverConfiguration/my.cnf ]
+then
+   rm -f /etc/my.cnf
+   ln -s /vagrant/serverConfiguration/my.cnf /etc/my.cnf
+
+   #create logs
+   touch /vagrant/serverConfiguration/logs/mysql.log
+   touch /vagrant/serverConfiguration/logs/mysql-slow.log
+
+   #symlink logs
+   ln -s /vagrant/serverConfiguration/logs/mysql.log /var/log/mysql.log
+   ln -s /vagrant/serverConfiguration/logs/mysql-slow.log /var/log/mysql-slow.log
+
+   # make sure mysql is the owner of the logs
+   chown mysql:mysql /var/log/mysql.log
+   chown mysql:mysql /var/log/mysql-slow.log
+fi
+
 # Install MySQL mods
 yum -y install mod_auth_kerb mod_auth_mysql mod_authz_ldap mod_evasive mod_perl mod_security mod_ssl mod_wsgi
 echo -e "----Installed Auth Plugins for MySQL----\n\n"
