@@ -119,18 +119,33 @@ class DataViewController extends Controller {
     }
 
     $cleanString = $string_helper->cleanSearchString($search);
+
     $rcrds = DB::table($tblNme)
                  ->whereRaw("MATCH (srchindex) AGAINST (? IN BOOLEAN MODE)", $cleanString)
                  ->orderBy('id', 'asc')
-                 ->offset($page * $perPage)
+                 ->offset($page-1 * $perPage)
                  ->limit($perPage)
                  ->get();
+
+    // query sorted by revelancy score
+    // $query = DB::table($tblNme)
+    //         ->whereRaw("match(srchindex) against (? in boolean mode)", [$cleanString])
+    //         ->orderBy('score', 'desc')
+    //         ->offset($page-1 * $perPage)
+    //         ->limit($perPage);
+    //
+    // $rcrds = $query
+    //         ->get(['*', DB::raw("MATCH (srchindex) AGAINST ('".$cleanString."') AS score")]);
+
     $rcrdsCount = count($rcrds);
-    
+    // var_dump($rcrds);
+    // var_dump($rcrdsCount);
+    // die();
+
     // if last query returned exactly 30 items
     // we assume that their are additional pages
     // so we set $lastPage to $page + 1
-    if ($rcrdsCount == 30) {
+    if ($rcrdsCount == $perPage) {
       $lastPage = $page + 1;
     }
     else {
