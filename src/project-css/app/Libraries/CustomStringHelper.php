@@ -41,13 +41,11 @@ class CustomStringHelper {
     public function cleanSearchString($search) {
       //replace ? with * for wildcard searches
       $str = str_replace('?', '*', $search);
-
-      // remove extra characters replacing them with spaces
-      // also only allow on . for use in filename extensions
-      //$cleanString = preg_replace('/[^A-Za-z0-9+-()*~"<>. ]/', ' ', str_replace('..', '',$str));
-
+      $str = trim($str);
+      $str = htmlspecialchars($str);
+      
       // remove extra spaces
-      $str = preg_replace('/\s+/', ' ', $str);
+      //$str = preg_replace('/\s+/', ' ', $str);
 
       //return string as lowercase
       return strtolower($str);

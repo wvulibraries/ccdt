@@ -439,6 +439,11 @@ class TableController extends Controller
     // Save the table upon the schema
     $this->crteTblInCollctn($tblNme,$collctnId);
 
+    // create folder in storage that will contain any additional files associated to the table
+    if (Storage::exists($tblNme) == FALSE) {
+      Storage::makeDirectory($tblNme);
+    }
+
     // Finally return the view to load data
     return $this->load(True,$tblNme,$fltFile);
   }

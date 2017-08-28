@@ -97,45 +97,59 @@ class DataViewController extends Controller {
   }
 
   public function search(Request $request, $curTable, $search = NULL, $page = 1){
-    // set records per page
-    $perPage = 30;
-
-    $string_helper = new customStringHelper();
+    // test for the validity of curtable
+    if(!$this->isValidTable($curTable)){
+      return redirect()->route('home')->withErrors(['Table id is invalid']);
+    }
 
     // Get the table entry in meta table "tables"
     $curTable = Table::find($curTable);
-
     if(!$curTable->hasAccess){
       return redirect()->route('home')->withErrors(['Table is disabled']);
     }
+
+    if ($search == NULL) {
+      $search = $request->input('search');
+    }
+
+    // Sanitize the user query
+    // $srchStrng = trim($search);
+    // $srchStrng = htmlspecialchars($srchStrng);
+
+    $string_helper = new customStringHelper();
+    $srchStrng = $string_helper->cleanSearchString($search);
+
+    // set records per page
+    $perPage = 30;
+
+    // Get the table entry in meta table "tables"
+    //$curTable = Table::find($curTable);
+
+    // if(!$curTable->hasAccess){
+    //   return redirect()->route('home')->withErrors(['Table is disabled']);
+    // }
 
     // retrieve the column names
     $clmnNmes = DB::getSchemaBuilder()->getColumnListing($curTable->tblNme);
 
     $tblNme = $curTable->tblNme;
 
-    if ($search == NULL) {
-      $search = $request->input('search');
-    }
-
-    $cleanString = $string_helper->cleanSearchString($search);
-
-    $rcrds = DB::table($tblNme)
-                 ->whereRaw("MATCH (srchindex) AGAINST (? IN BOOLEAN MODE)", $cleanString)
-                 ->orderBy('id', 'asc')
-                 ->offset($page-1 * $perPage)
-                 ->limit($perPage)
-                 ->get();
+    // $rcrds = DB::table($tblNme)
+    //          ->whereRaw("MATCH (srchindex) AGAINST (? IN BOOLEAN MODE)", $srchStrng)
+    //          ->orderBy('id', 'asc')
+    //          ->offset($page-1 * $perPage)
+    //          ->limit($perPage)
+    //          ->get();
 
     // query sorted by revelancy score
-    // $query = DB::table($tblNme)
-    //         ->whereRaw("match(srchindex) against (? in boolean mode)", [$cleanString])
-    //         ->orderBy('score', 'desc')
-    //         ->offset($page-1 * $perPage)
-    //         ->limit($perPage);
-    //
-    // $rcrds = $query
-    //         ->get(['*', DB::raw("MATCH (srchindex) AGAINST ('".$cleanString."') AS score")]);
+    $query = DB::table($tblNme)
+            ->whereRaw("match(srchindex) against (? in boolean mode)", [$srchStrng])
+            ->orderBy('score', 'desc')
+            ->offset($page-1 * $perPage)
+            ->limit($perPage);
+
+    $rcrds = $query
+            ->get(['*', DB::raw("MATCH (srchindex) AGAINST ('".$srchStrng."') AS score")]);
 
     $rcrdsCount = count($rcrds);
     // var_dump($rcrds);
@@ -156,7 +170,7 @@ class DataViewController extends Controller {
                               ->with('clmnNmes', $clmnNmes)
                               ->with('tblNme', $curTable->tblNme)
                               ->with('tblId', $curTable)
-                              ->with('search', $search)
+                              ->with('search', $srchStrng)
                               ->with('page', $page)
                               ->with('lastPage', $lastPage)
                               ->with('morepages', $page < $lastPage);
@@ -179,6 +193,30 @@ class DataViewController extends Controller {
         'Content-Type' => Storage::getMimeType($curTable->tblNme . '/' . $subfolder . '/' . $filename),
         'Content-Disposition' => 'inline; filename="'.$filename.'"'
     ]);
+  }
+
+  /**
+  * The function will check if the passed id is valid using:
+  * 1. Check for the null values
+  * 2. Check for the non numeric values
+  * 3. Check for the table id
+  **/
+  public function isValidTable($curTable){
+    if(is_null($curTable) || !is_numeric($curTable) || !$this->isCurTableExists($curTable)){
+      return false;
+    }
+    return true;
+  }
+  
+  // Check weather the table with id=curTable exists
+  public function isCurTableExists($curTable){
+    try{
+      // returns exception if doesn't exists
+      $curTable = Table::findorFail($curTable);
+    } catch (\Exception $e){
+      return false;
+    }
+    return true;
   }
 
 }

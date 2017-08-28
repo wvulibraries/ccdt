@@ -80,5 +80,10 @@ class ViewTest extends TestCase
             ->click('Table(s)')
             ->see('Create Table(s)')
             ->see('Load Data');
+
+        // Check for the dashboard views
+        $this->visit('/help')
+            ->see('Help')
+            ->see('Search');        
      }
 }
