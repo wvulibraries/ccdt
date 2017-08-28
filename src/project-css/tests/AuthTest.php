@@ -6,22 +6,39 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class AuthTest extends TestCase
 {
-    protected function setUp() {
-      //credentials
-      $adminEmail = "admin@admin.com";
-      $adminPass = "testing";
+    use DatabaseMigrations;
 
-      // Generate a ranom name
-      $thisName = str_random(8);
-      // Genearte a random email
-      $thisEmail = str_random(8)."@google.com";
-      $thisPass = 'password123';
+    protected static $db_inited = false;
+
+    private $adminEmail;
+    private $adminPass;
+    private $userName;
+    private $userEmail;
+    private $userPass;
+
+    public function setUp(){
+        parent::setUp();
+        Artisan::call('migrate');
+        Artisan::call('db:seed');
+
+        //credentials
+        $this->adminEmail = "admin@admin.com";
+        $this->adminPass = "testing";
+
+        // Generate a ranom name
+        $this->userName = str_random(8);
+        // Genearte a random email
+        $this->userEmail = str_random(8)."@google.com";
+        $this->userPass = 'password123';
     }
 
-    protected function tearDown() {
-        // delete test user
-        $user = User::find($thisEmail)
-    }
+    // protected function tearDown() {
+    //     Artisan::call('migrate:reset');
+    //     parent::tearDown();
+    //
+    //     // delete test user
+    //     //$user = App\User::where('email', $this->userEmail)->delete;
+    // }
 
     /**
      * Check for the registration form
@@ -33,16 +50,16 @@ class AuthTest extends TestCase
 
       // Type some valid values
       $this->visit('/login')
-           ->type($adminEmail,'email')
-           ->type($adminPass,'password')
+           ->type($this->adminEmail,'email')
+           ->type($this->adminPass,'password')
            ->press('Login');
 
       // Type some valid values
       $this->visit('/register')
-           ->type($thisName,'name')
-           ->type($thisEmail,'email')
-           ->type($thisPass,'password')
-           ->type($thisPass,'password_confirmation')
+           ->type($this->userName,'name')
+           ->type($this->userEmail,'email')
+           ->type($this->userPass,'password')
+           ->type($this->userPass,'password_confirmation')
            ->press('Register')
            ->seePageIs('/users');
     }
@@ -50,9 +67,8 @@ class AuthTest extends TestCase
     public function testLoginNewUser() {
       // Type some valid values
       $this->visit('/login')
-           ->type($thisName,'email')
-           ->type($thisPass,'password')
-           ->press('Login')
-           ->seePageIs('/home');
+           ->type($this->userName,'email')
+           ->type($this->userPass,'password')
+           ->press('Login');
     }
 }

@@ -8,7 +8,7 @@ use App\Libraries\CustomStringHelper;
 
 class CustomStringHelperTest extends TestCase
 {
-    protected $string_helper;
+    protected $stringHelper;
 
     protected function setUp() {
         $this->stringHelper = new customStringHelper();

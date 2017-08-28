@@ -6,6 +6,13 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class ViewTest extends TestCase
 {
+
+    public function setUp(){
+      parent::setUp();
+      Artisan::call('migrate');
+      Artisan::call('db:seed');
+    }
+
     /**
      * Check the views for the home page
      *
@@ -84,6 +91,6 @@ class ViewTest extends TestCase
         // Check for the dashboard views
         $this->visit('/help')
             ->see('Help')
-            ->see('Search');        
+            ->see('Search');
      }
 }
