@@ -1,5 +1,4 @@
 *
-!public/
-!files/
+!test/
 !.gitignore
 .DS_Store
