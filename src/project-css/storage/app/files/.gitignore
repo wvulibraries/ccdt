@@ -1,4 +1,3 @@
-*
-!test/
+!test
 !.gitignore
 .DS_Store
