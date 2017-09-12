@@ -25,16 +25,22 @@ class CustomStringHelper {
 
     // takes a string with a windows style path and returns only the filename
     public function getFilename($str) {
+      // explode string
       $tokens = explode('\\',$str);
+      // get filename from end of string
       $filename = end($tokens);
+      // return filename
       return $filename;
     }
 
     public function getFolderName($str) {
+      // explode string
       $tokens = explode('\\',$str);
+      // get filename from end of string
       $filename = end($tokens);
+      // get the last folder the file exists in
       $subfolder = prev($tokens);
-      //build new string containing folder
+      //return folder name
       return $subfolder;
     }
 
@@ -43,9 +49,6 @@ class CustomStringHelper {
       $str = str_replace('?', '*', $search);
       $str = trim($str);
       $str = htmlspecialchars($str);
-      
-      // remove extra spaces
-      //$str = preg_replace('/\s+/', ' ', $str);
 
       //return string as lowercase
       return strtolower($str);

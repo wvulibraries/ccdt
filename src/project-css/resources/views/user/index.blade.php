@@ -1,7 +1,5 @@
 @extends('layouts.default')
 
-
-@section('content')
 <!-- Heading -->
 @section('content')
 <div class="headingWrapper">

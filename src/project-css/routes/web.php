@@ -85,6 +85,7 @@ Route::group(['prefix' => 'user'], function(){
   Route::post('allow', 'UserController@allow');
   Route::post('promote', 'UserController@promote');
   Route::post('demote', 'UserController@demote');
+  Route::post('reset', 'UserController@reset');
 });
 
 /*

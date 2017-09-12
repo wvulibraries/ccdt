@@ -112,34 +112,16 @@ class DataViewController extends Controller {
       $search = $request->input('search');
     }
 
-    // Sanitize the user query
-    // $srchStrng = trim($search);
-    // $srchStrng = htmlspecialchars($srchStrng);
-
     $string_helper = new customStringHelper();
     $srchStrng = $string_helper->cleanSearchString($search);
 
     // set records per page
     $perPage = 30;
 
-    // Get the table entry in meta table "tables"
-    //$curTable = Table::find($curTable);
-
-    // if(!$curTable->hasAccess){
-    //   return redirect()->route('home')->withErrors(['Table is disabled']);
-    // }
-
     // retrieve the column names
     $clmnNmes = DB::getSchemaBuilder()->getColumnListing($curTable->tblNme);
 
     $tblNme = $curTable->tblNme;
-
-    // $rcrds = DB::table($tblNme)
-    //          ->whereRaw("MATCH (srchindex) AGAINST (? IN BOOLEAN MODE)", $srchStrng)
-    //          ->orderBy('id', 'asc')
-    //          ->offset($page-1 * $perPage)
-    //          ->limit($perPage)
-    //          ->get();
 
     // query sorted by revelancy score
     $query = DB::table($tblNme)
@@ -152,19 +134,29 @@ class DataViewController extends Controller {
             ->get(['*', DB::raw("MATCH (srchindex) AGAINST ('".$srchStrng."') AS score")]);
 
     $rcrdsCount = count($rcrds);
-    // var_dump($rcrds);
-    // var_dump($rcrdsCount);
-    // die();
+
+    // if fulltext search yeilds no results try a basic like search
+    if ($rcrdsCount == 0) {
+
+      $offsetNum = ($page == 1) ? 0 : ($page-1) * $perPage;
+
+      $query = DB::table($tblNme)
+              ->where('srchindex', 'like', '%' . $srchStrng . '%')
+              ->orderBy('id', 'asc')
+              ->offset($offsetNum)
+              ->limit($perPage);
+
+      $rcrds = $query
+              ->get();
+
+      $rcrdsCount = count($rcrds);
+    }
 
     // if last query returned exactly 30 items
     // we assume that their are additional pages
     // so we set $lastPage to $page + 1
-    if ($rcrdsCount == $perPage) {
-      $lastPage = $page + 1;
-    }
-    else {
-      $lastPage = $page;
-    }
+    $lastPage = ($rcrdsCount == $perPage) ? $page + 1 : $page;
+
 
     return view('user.search')->with('rcrds', $rcrds)
                               ->with('clmnNmes', $clmnNmes)
@@ -207,7 +199,7 @@ class DataViewController extends Controller {
     }
     return true;
   }
-  
+
   // Check weather the table with id=curTable exists
   public function isCurTableExists($curTable){
     try{

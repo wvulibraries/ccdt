@@ -253,6 +253,10 @@ class TableController extends Controller
     // Get the first line as the header
     $fltFleObj->seek(0);
     $hdr = $fltFleObj->fgets();
+
+    // Strip out Quotes that are sometimes seen in header rows of csv files
+    $hdr = str_replace('"', "", $hdr);
+
     // Tokenize the line
     $tkns = $this->tknze($hdr);
     // Validate the tokens and filter them
@@ -452,7 +456,7 @@ class TableController extends Controller
   * Method responsible to load the data into the given table
   **/
   public function load($isFrwded=False,$tblNme="",$fltFle=""){
-    // Check if the request is formwarded
+    // Check if the request is forwarded
     if($isFrwded){
       // Forward the file and table name
       $tblNms=Table::where('tblNme', $tblNme)->get();
@@ -545,12 +549,15 @@ class TableController extends Controller
       $prcssd = 0;
 
       // increse time limit for importing files
-      set_time_limit ( 120 );
+      set_time_limit ( 240 );
 
       // For each line
       while($curFltFleObj->valid()){
         // Get the line
         $curLine = $curFltFleObj->current();
+
+        // Strip out Quotes that are sometimes seen in csv files around each item
+        $curLine = str_replace('"', "", $curLine);
 
         // Tokenize the line
         $tkns = $this->tknze($curLine);

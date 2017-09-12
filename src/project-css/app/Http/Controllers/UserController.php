@@ -10,15 +10,13 @@ use Illuminate\Support\Facades\Auth;
 // Import the user model
 use App\User;
 
-class UserController extends Controller
-{
+class UserController extends Controller{
   /**
    * Create a new controller instance.
    *
    * @return void
    */
-  public function __construct()
-  {
+  public function __construct(){
       $this->middleware('admin');
   }
 

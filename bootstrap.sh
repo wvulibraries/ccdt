@@ -54,6 +54,10 @@ echo -e "----Installed Auth Plugins for MySQL----\n\n"
 yum -y install php70w php70w-bcmath php70w-cli php70w-common php70w-gd php70w-ldap php70w-mbstring php70w-mcrypt php70w-mysql php70w-odbc php70w-pdo php70w-pear php70w-pear-Benchmark php70w-pecl-apc php70w-pecl-imagick php70w-pecl-memcache php70w-soap php70w-xml php70w-xmlrpc
 echo -e "----Installed PHP 7----\n\n"
 
+# Install Xdebug
+yum -y install php70w-pecl-xdebug.x86_64
+echo -e "----Installed Xdebug----\n\n"
+
 # remove php.ini and link our custom file if a custom php.ini exists
 if [ -e /vagrant/serverConfiguration/php.ini ]
 then

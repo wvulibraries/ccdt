@@ -8,7 +8,7 @@ class AuthTest extends TestCase
 {
     use DatabaseMigrations;
 
-    protected static $db_inited = false;
+    protected $user;
 
     private $adminEmail;
     private $adminPass;
@@ -25,27 +25,24 @@ class AuthTest extends TestCase
         $this->adminEmail = "admin@admin.com";
         $this->adminPass = "testing";
 
-        // Generate a ranom name
+        // Generate a random name
         $this->userName = str_random(8);
         // Genearte a random email
         $this->userEmail = str_random(8)."@google.com";
         $this->userPass = 'password123';
     }
 
-    // protected function tearDown() {
-    //     Artisan::call('migrate:reset');
-    //     parent::tearDown();
-    //
-    //     // delete test user
-    //     //$user = App\User::where('email', $this->userEmail)->delete;
-    // }
+    protected function tearDown() {
+        Artisan::call('migrate:reset');
+        parent::tearDown();
+    }
 
     /**
      * Check for the registration form
      *
      * @return void
      */
-    public function testNewUserRegister(){
+    public function testAdminCreateUser(){
       // Go to login page and enter credentials
 
       // Type some valid values
@@ -64,11 +61,62 @@ class AuthTest extends TestCase
            ->seePageIs('/users');
     }
 
-    public function testLoginNewUser() {
-      // Type some valid values
-      $this->visit('/login')
-           ->type($this->userName,'email')
-           ->type($this->userPass,'password')
-           ->press('Login');
+    /** @test */
+    public function testWrongLoginCredentials() {
+        $this->visit(route('login'))
+             ->type($this->userEmail, 'email')
+             ->type('invalid-password', 'password')
+             ->press('Login')
+             ->see('These credentials do not match our records.');
     }
+
+    /** @test */
+    public function testForgotPasswordWithIncorrectEmail() {
+        $this->visit('/password/reset')
+             ->see('Reset Password')
+             ->type('test', 'email')
+             ->press('Send Password Reset Link')
+             ->see('The email must be a valid email address.')
+             ->type('test@nowhere.com', 'email')
+             ->press('Send Password Reset Link')
+             ->see("We can't find a user with that e-mail address.");
+    }
+
+    /** @test */
+    // fails cannot send email password reset
+    // public function testForgotPassword() {
+    //     // Generate Test User
+    //     $user = factory(App\User::class)->create([
+    //         'email' => $this->userEmail,
+    //         'password' => bcrypt($this->userPass),
+    //     ]);
+    //
+    //     $response = $this->visit('/password/reset')
+    //          ->see('Reset Password')
+    //          ->type($this->userEmail, 'email')
+    //          ->press('Send Password Reset Link');
+    //
+    //     var_dump($response);
+    // }
+
+    public function testUserRedirectedToDashboard()
+    {
+        // Generate Test User
+        $user = factory(App\User::class)->create([
+            'email' => $this->userEmail,
+            'password' => bcrypt($this->userPass),
+        ]);
+
+        $this->actingAs($user)
+              ->visit(route('login'))
+              ->seePageIs(route('home'));
+    }
+
+    /** @test */
+    public function testUserRedirectedToLoginPage()
+    {
+        $this->visit(route('home'));
+        $this->seePageIs(route('login'));
+    }
+
 }
