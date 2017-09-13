@@ -48,40 +48,6 @@
             ->assertResponseStatus(302);
     }
 
-    // public function testAdminCanCreateTable(){
-    //     // find admin user
-    //     $admin = App\User::where('isAdmin', '=', '1')->first();
-    //
-    //     // try to get to the user(s) page
-    //     $this->actingAs($admin)
-    //         ->get('table')
-    //         //valid admin user should get response 200
-    //         ->assertResponseStatus(200);
-    // }
-
-    // public function testAdminCreateTable(){
-    //     // find admin user
-    //     $admin = App\User::where('isAdmin', '=', '1')->first();
-    //
-    //     // try to get to the table/create page
-    //     $this->actingAs($admin)
-    //          ->get('table/create')
-    //          ->see('Please create active collection here first')
-    //          //valid admin user should get response 200
-    //          ->assertResponseStatus(200);
-    //
-    //     // Generate Test Collection
-    //     $collection = factory(App\Collection::class)->create([
-    //         'clctnName' => 'collection1',
-    //     ]);
-    //
-    //     $this->actingAs($admin)
-    //          ->get('table/create')
-    //          ->see('Create Table(s) Wizard')
-    //          ->assertResponseStatus(200)
-    //          ->see('Table Name');
-    // }
-
     public function testFileUploadAndTableCreate(){
         // find admin user
         $admin = App\User::where('isAdmin', '=', '1')->first();
@@ -92,26 +58,26 @@
         ]);
 
         $tblname = 'importtest' . mt_rand();
-        $response = $this->actingAs($admin)
-                         ->visit('table/create')
-                         ->type($tblname,'imprtTblNme')
-                         ->type('1','colID')
-                         ->attach('./storage/app/files/test/zillow.csv','fltFile')
-                         ->press('Import')
-                         ->assertResponseStatus(200)
-                         ->see('Edit Schema')
-                         ->submitForm('Submit', ['col-0-data' => 'integer', 'col-0-size' => 'default',
-                                                 'col-1-data' => 'integer', 'col-1-size' => 'medium',
-                                                 'col-2-data' => 'integer', 'col-2-size' => 'big',
-                                                 'col-3-data' => 'string', 'col-3-size' => 'default',
-                                                 'col-4-data' => 'string', 'col-4-size' => 'medium',
-                                                 'col-5-data' => 'string', 'col-5-size' => 'big',
-                                                 'col-6-data' => 'text', 'col-6-size' => 'default'])
-                         ->assertResponseStatus(200)
-                         ->see('Load Data')
-                         ->press('Load Data')
-                         ->see('Table(s)')
-                         ->assertResponseStatus(200);
+        $this->actingAs($admin)
+             ->visit('table/create')
+             ->type($tblname,'imprtTblNme')
+             ->type('1','colID')
+             ->attach('./storage/app/files/test/zillow.csv','fltFile')
+             ->press('Import')
+             ->assertResponseStatus(200)
+             ->see('Edit Schema')
+             ->submitForm('Submit', ['col-0-data' => 'integer', 'col-0-size' => 'default',
+                                     'col-1-data' => 'integer', 'col-1-size' => 'medium',
+                                     'col-2-data' => 'integer', 'col-2-size' => 'big',
+                                     'col-3-data' => 'string', 'col-3-size' => 'default',
+                                     'col-4-data' => 'string', 'col-4-size' => 'medium',
+                                     'col-5-data' => 'string', 'col-5-size' => 'big',
+                                     'col-6-data' => 'text', 'col-6-size' => 'default'])
+             ->assertResponseStatus(200)
+             ->see('Load Data')
+             ->press('Load Data')
+             ->see('Table(s)')
+             ->assertResponseStatus(200);
 
          // cleanup remove directory for the test table
          Storage::deleteDirectory($tblname);
@@ -127,14 +93,14 @@
         ]);
 
         $tblname = 'importtest' . mt_rand();
-        $response = $this->actingAs($admin)
-                         ->visit('table/create')
-                         ->type($tblname,'imprtTblNme')
-                         ->type('1','colID')
-                         ->attach('./storage/app/files/test/images.png','fltFile')
-                         ->press('Import')
-                         ->assertResponseStatus(200)
-                         ->see('The flat file must be a file of type: text/plain.');
+        $this->actingAs($admin)
+             ->visit('table/create')
+             ->type($tblname,'imprtTblNme')
+             ->type('1','colID')
+             ->attach('./storage/app/files/test/images.png','fltFile')
+             ->press('Import')
+             ->assertResponseStatus(200)
+             ->see('The flat file must be a file of type: text/plain.');
 
         // cleanup remove directory for the test table
         Storage::deleteDirectory($tblname);
@@ -154,14 +120,14 @@
         ]);
 
         $tblname = 'importtest' . mt_rand();
-        $response = $this->actingAs($admin)
-                         ->visit('table/create')
-                         ->type($tblname,'imprtTblNme')
-                         ->type('1','colID')
-                         ->attach('./storage/app/files/test/zillow.csv','fltFile')
-                         ->press('Import')
-                         ->assertResponseStatus(200)
-                         ->see('File already exists. Please select the file or rename and re-upload.');
+        $this->actingAs($admin)
+             ->visit('table/create')
+             ->type($tblname,'imprtTblNme')
+             ->type('1','colID')
+             ->attach('./storage/app/files/test/zillow.csv','fltFile')
+             ->press('Import')
+             ->assertResponseStatus(200)
+             ->see('File already exists. Please select the file or rename and re-upload.');
 
         // cleanup remove directory for the test table
         Storage::deleteDirectory($tblname);
@@ -203,7 +169,7 @@
         ]);
 
         $tblname = 'importtest' . mt_rand();
-        $response = $this->actingAs($admin)
+        $this->actingAs($admin)
              ->visit('table/create')
              ->submitForm('Select', ['slctTblNme' => $tblname, 'colID' => '1', 'fltFile' => 'zillow.csv'])
              ->assertResponseStatus(200)
@@ -226,7 +192,7 @@
         $table = App\Table::where('tblNme', '=', $tblname)->first();
 
         // While using a admin account try to disable a table
-        $response = $this->actingAs($admin)->post('table/restrict', ['id' => $table->id]);
+        $this->actingAs($admin)->post('table/restrict', ['id' => $table->id]);
         $table = App\Table::where('tblNme', '=', $tblname)->first();
         $this->assertEquals('0', $table->hasAccess);
 
@@ -235,6 +201,15 @@
 
         // cleanup remove zillow.csv from upload folder
         Storage::delete('/flatfiles/zillow.csv');
+    }
+
+
+    public function testLoad(){
+        // calling load should return items one is the list of files
+        // in the flatfile directory under Storage
+        // we are testing that the array is present and valid
+        $response = (new TableController)->load();
+        $this->assertInternalType('array', $response->fltFleList);
     }
 
   }

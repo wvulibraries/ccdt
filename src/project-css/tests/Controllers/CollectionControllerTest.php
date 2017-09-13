@@ -92,8 +92,8 @@
         ]);
 
         // While using a admin account try to rename collection name
-        $response = $this->actingAs($admin)
-                         ->post('collection/edit', ['id' => $collection->id, 'clctnName' => 'collection2']);
+        $this->actingAs($admin)
+             ->post('collection/edit', ['id' => $collection->id, 'clctnName' => 'collection2']);
 
         //check if collection was renamed
         $collection = App\Collection::find($collection->id);
@@ -110,20 +110,20 @@
         ]);
 
         // While using a admin account try to disable a collection with invalid name (should be redirected)
-        $response = $this->actingAs($admin)->post('collection/disable', ['id' => $collection->id, 'clctnName' => 'collection'])->assertResponseStatus(302);
+        $this->actingAs($admin)->post('collection/disable', ['id' => $collection->id, 'clctnName' => 'collection'])->assertResponseStatus(302);
 
         // While using a admin account try to disable a collection
-        $response = $this->actingAs($admin)->post('collection/disable', ['id' => $collection->id, 'clctnName' => $collection->clctnName]);
+        $this->actingAs($admin)->post('collection/disable', ['id' => $collection->id, 'clctnName' => $collection->clctnName]);
 
         // Verify Collection is disabled
         $collection = App\Collection::find($collection->id);
         $this->assertEquals('0', $collection->isEnabled);
 
         // While using a admin account try to enable a collection with invalid name (should be redirected)
-        $response = $this->actingAs($admin)->post('collection/enable', ['id' => $collection->id, 'clctnName' => 'collection'])->assertResponseStatus(302);
+        $this->actingAs($admin)->post('collection/enable', ['id' => $collection->id, 'clctnName' => 'collection'])->assertResponseStatus(302);
 
         // While using a admin account try to enable a collection
-        $response = $this->actingAs($admin)->post('collection/enable', ['id' => $collection->id]);
+        $this->actingAs($admin)->post('collection/enable', ['id' => $collection->id]);
 
         $collection = App\Collection::find($collection->id);
         $this->assertEquals('1', $collection->hasAccess);
@@ -139,7 +139,7 @@
         ]);
 
         // While using a admin account try to disable a collection
-        $response = $this->actingAs($user)->post('collection/disable', ['id' => $collection->id, 'clctnName' => $collection->clctnName]);
+        $this->actingAs($user)->post('collection/disable', ['id' => $collection->id, 'clctnName' => $collection->clctnName]);
 
         // Verify Collection hasn't changed
         $collection = App\Collection::find($collection->id);

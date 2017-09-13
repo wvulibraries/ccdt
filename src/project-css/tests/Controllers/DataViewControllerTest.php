@@ -41,10 +41,10 @@
       $admin = App\User::where('isAdmin', '=', '1')->first();
 
       //try to import a table without a collection
-      $response = $this->actingAs($admin)
-                       ->visit('table/create')
-                       ->see('Please create active collection here first')
-                       ->assertResponseStatus(200);
+      $this->actingAs($admin)
+           ->visit('table/create')
+           ->see('Please create active collection here first')
+           ->assertResponseStatus(200);
 
       // Generate Test Collection
       $collection = factory(App\Collection::class)->create([
@@ -53,30 +53,29 @@
 
       $tblname = 'importtest' . mt_rand();
 
-      $response = $this->actingAs($admin)
-                       ->visit('table/create')
-                       ->type($tblname,'imprtTblNme')
-                       ->type('1','colID')
-                       ->attach('./storage/app/files/test/mlb_players.csv','fltFile')
-                       ->press('Import')
-                       ->assertResponseStatus(200)
-                       ->see('Edit Schema')
-                       ->submitForm('Submit', ['col-0-data' => 'string', 'col-0-size' => 'default',
-                                               'col-1-data' => 'string', 'col-1-size' => 'default',
-                                               'col-2-data' => 'string', 'col-2-size' => 'default',
-                                               'col-3-data' => 'integer', 'col-3-size' => 'default',
-                                               'col-4-data' => 'integer', 'col-4-size' => 'default',
-                                               'col-5-data' => 'integer', 'col-5-size' => 'default'])
-                       ->assertResponseStatus(200)
-                       ->see('Load Data')
-                       ->press('Load Data')
-                       ->see('Table(s)')
-                       ->assertResponseStatus(200)
-                       ->visit('data/1')
-                       ->see($tblname . ' Records')
-                       ->visit('data/1/1')
-                       ->assertResponseStatus(200)
-                       ->see('Adam Donachie');
+      $this->visit('table/create')
+           ->type($tblname,'imprtTblNme')
+           ->type('1','colID')
+           ->attach('./storage/app/files/test/mlb_players.csv','fltFile')
+           ->press('Import')
+           ->assertResponseStatus(200)
+           ->see('Edit Schema')
+           ->submitForm('Submit', ['col-0-data' => 'string', 'col-0-size' => 'default',
+                                   'col-1-data' => 'string', 'col-1-size' => 'default',
+                                   'col-2-data' => 'string', 'col-2-size' => 'default',
+                                   'col-3-data' => 'integer', 'col-3-size' => 'default',
+                                   'col-4-data' => 'integer', 'col-4-size' => 'default',
+                                   'col-5-data' => 'integer', 'col-5-size' => 'default'])
+           ->assertResponseStatus(200)
+           ->see('Load Data')
+           ->press('Load Data')
+           ->see('Table(s)')
+           ->assertResponseStatus(200)
+           ->visit('data/1')
+           ->see($tblname . ' Records')
+           ->visit('data/1/1')
+           ->assertResponseStatus(200)
+           ->see('Adam Donachie');
 
       // test isValidTable
       $this->assertTrue((new DataViewController)->isValidTable('1'));
@@ -88,67 +87,67 @@
       touch($filePath . '/' . $emptyFile);
 
       // While using a admin account try to disable a collection
-      $response = $this->actingAs($admin)
-                       ->post('collection/disable', ['id' => $collection->id, 'clctnName' => $collection->clctnName])
-                       // try to visit the disabled table
-                       ->visit('data/1')
-                       ->assertResponseStatus(200)
-                       ->see('Table is disabled')
-                       // try to view a record in a disabled table
-                       ->visit('data/1/1')
-                       ->assertResponseStatus(200)
-                       ->see('Table is disabled');
+      $this->post('collection/disable', ['id' => $collection->id, 'clctnName' => $collection->clctnName])
+           // try to visit the disabled table
+           ->visit('data/1')
+           ->assertResponseStatus(200)
+           ->see('Table is disabled')
+           // try to view a record in a disabled table
+           ->visit('data/1/1')
+           ->assertResponseStatus(200)
+           ->see('Table is disabled');
 
       // while table is disabled try to view a file
-      $response = $this->actingAs($admin)
-                      ->visit('data/1/view' . '/test/' . $emptyFile)
-                      ->assertResponseStatus(200);
+      $this->visit('data/1/view' . '/test/' . $emptyFile)
+            ->assertResponseStatus(200);
 
       // While using a admin account try to enable a collection
-      $response = $this->actingAs($admin)
-                       ->post('collection/enable', ['id' => $collection->id, 'clctnName' => $collection->clctnName])
-                       ->visit('data/1')
-                       ->assertResponseStatus(200);
+      $this->post('collection/enable', ['id' => $collection->id, 'clctnName' => $collection->clctnName])
+           ->visit('data/1')
+           ->assertResponseStatus(200);
 
       // search for a name this will go to the fulltext search
-      $response = $this->actingAs($admin)
-                       ->visit('data/1/1')
-                       ->type('Adam Donachie','search')
-                       ->press('Search')
-                       ->assertResponseStatus(200)
-                       ->see('Adam Donachie');
+      $this->visit('data/1/1')
+           ->type('Adam Donachie','search')
+           ->press('Search')
+           ->assertResponseStatus(200)
+           ->see('Adam Donachie');
 
       // search for a number that will go to the basic "like" search
-      $response = $this->actingAs($admin)
-                       ->visit('data/1/1')
-                       ->type('75','search')
-                       ->press('Search')
-                       ->assertResponseStatus(200)
-                       ->see('75');
+      $this->visit('data/1/1')
+           ->type('75','search')
+           ->press('Search')
+           ->assertResponseStatus(200)
+           ->see('75');
 
       // view specific record
-      $response = $this->actingAs($admin)
-                       ->visit('data/1/19')
-                       ->assertResponseStatus(200)
-                       ->see('Hayden Penn');
+      $this->visit('data/1/19')
+           ->assertResponseStatus(200)
+           ->see('Hayden Penn');
 
       // view specific record with a invalid id
       // should produce invalid id message
-      $response = $this->actingAs($admin)
-                       ->visit('data/1/2000')
-                       ->assertResponseStatus(200)
-                       ->see('Search Yeilded No Results');
+      $this->visit('data/1/2000')
+           ->assertResponseStatus(200)
+           ->see('Search Yeilded No Results');
 
-      $response = $this->actingAs($admin)
-                       ->visit('data/1/view' . '/test/' . $emptyFile)
-                       ->assertResponseStatus(200);
+      $this->visit('data/1/view' . '/test/' . $emptyFile)
+           ->assertResponseStatus(200);
+
+      // logout user
+      Auth::logout();
+
+      // try to view a record without a authenticated user
+      // they should be redirected to the Login page
+      $this->visit('data/1/view' . '/test/' . $emptyFile)
+           ->see('Login');
 
       unlink($filePath . '/' . $emptyFile);
 
       // cleanup remove directory for the test table
       Storage::deleteDirectory($tblname);
 
-      // cleanup remove zillow.csv from upload folder
+      // cleanup remove mlb_players.csv from upload folder
       Storage::delete('/flatfiles/mlb_players.csv');
     }
 
@@ -162,31 +161,30 @@
       ]);
 
       $tblname = 'importtest' . mt_rand();
-      $response = $this->actingAs($admin)
-                       ->visit('table/create')
-                       ->type($tblname,'imprtTblNme')
-                       ->type('1','colID')
-                       ->attach('./storage/app/files/test/header_only.csv','fltFile')
-                       ->press('Import')
-                       ->assertResponseStatus(200)
-                       ->see('Edit Schema')
-                       ->submitForm('Submit', ['col-0-data' => 'string', 'col-0-size' => 'default',
-                                               'col-1-data' => 'string', 'col-1-size' => 'default',
-                                               'col-2-data' => 'string', 'col-2-size' => 'default',
-                                               'col-3-data' => 'integer', 'col-3-size' => 'default',
-                                               'col-4-data' => 'integer', 'col-4-size' => 'default',
-                                               'col-5-data' => 'integer', 'col-5-size' => 'default'])
-                       ->assertResponseStatus(200)
-                       ->see('Load Data')
-                       ->press('Load Data')
-                       ->assertResponseStatus(200)
-                       ->see('0 Records');
+      $this->actingAs($admin)
+           ->visit('table/create')
+           ->type($tblname,'imprtTblNme')
+           ->type('1','colID')
+           ->attach('./storage/app/files/test/header_only.csv','fltFile')
+           ->press('Import')
+           ->assertResponseStatus(200)
+           ->see('Edit Schema')
+           ->submitForm('Submit', ['col-0-data' => 'string', 'col-0-size' => 'default',
+                                   'col-1-data' => 'string', 'col-1-size' => 'default',
+                                   'col-2-data' => 'string', 'col-2-size' => 'default',
+                                   'col-3-data' => 'integer', 'col-3-size' => 'default',
+                                   'col-4-data' => 'integer', 'col-4-size' => 'default',
+                                   'col-5-data' => 'integer', 'col-5-size' => 'default'])
+           ->assertResponseStatus(200)
+           ->see('Load Data')
+           ->press('Load Data')
+           ->assertResponseStatus(200)
+           ->see('0 Records');
 
        // visit a table with no records
-       $response = $this->actingAs($admin)
-                        ->visit('data/1')
-                        ->assertResponseStatus(200)
-                        ->see('Table does not have any records.');
+       $this->visit('data/1')
+            ->assertResponseStatus(200)
+            ->see('Table does not have any records.');
 
        // cleanup remove directory for the test table
        Storage::deleteDirectory($tblname);

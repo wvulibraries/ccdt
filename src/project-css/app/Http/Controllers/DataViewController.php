@@ -62,6 +62,9 @@ class DataViewController extends Controller {
                             ->with('tblId',$curTable);
   }
 
+  /**
+  * Show a record in the table
+  */
   public function show(Request $request, $curTable, $curId){
     // Get the table entry in meta table "tables"
     $curTable = Table::find($curTable);
@@ -108,9 +111,10 @@ class DataViewController extends Controller {
       return redirect()->route('home')->withErrors(['Table is disabled']);
     }
 
-    if ($search == NULL) {
-      $search = $request->input('search');
-    }
+    $search = ($search == NULL ? $request->input('search'));
+    // if ($search == NULL) {
+    //   $search = $request->input('search');
+    // }
 
     $string_helper = new customStringHelper();
     $srchStrng = $string_helper->cleanSearchString($search);
@@ -121,10 +125,8 @@ class DataViewController extends Controller {
     // retrieve the column names
     $clmnNmes = DB::getSchemaBuilder()->getColumnListing($curTable->tblNme);
 
-    $tblNme = $curTable->tblNme;
-
     // query sorted by revelancy score
-    $query = DB::table($tblNme)
+    $query = DB::table($curTable->tblNme)
             ->whereRaw("match(srchindex) against (? in boolean mode)", [$srchStrng])
             ->orderBy('score', 'desc')
             ->offset($page-1 * $perPage)
@@ -140,7 +142,10 @@ class DataViewController extends Controller {
 
       $offsetNum = ($page == 1) ? 0 : ($page-1) * $perPage;
 
-      $query = DB::table($tblNme)
+      // strip characters used by the fulltext boolean search
+      //$srchStrng = preg_replace('/[+-]/', '', $srchStrng);
+
+      $query = DB::table($curTable->tblNme)
               ->where('srchindex', 'like', '%' . $srchStrng . '%')
               ->orderBy('id', 'asc')
               ->offset($offsetNum)
