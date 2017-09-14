@@ -23,7 +23,7 @@
       <div class="col-xs-6 col-sm-6 col-md-6">
         <div class="colHeadCard">
           <div class="icon hidden-xs hidden-sm">
-            <i class="glyphicon glyphicon-plus"></i>
+            <span class="glyphicon glyphicon-plus"></span>
           </div>
           <h4>Create Table(s)</h4>
         </div>
@@ -34,7 +34,7 @@
       <div class="col-xs-6 col-sm-6 col-md-6">
         <div class="colHeadCard">
           <div class="icon hidden-xs hidden-sm">
-            <i class="glyphicon glyphicon-import"></i>
+            <span class="glyphicon glyphicon-import"></span>
           </div>
           <h4>Load Data</h4>
         </div>
@@ -58,7 +58,7 @@
               <div class="colCardOpts">
                 <a href="{{ url('/data',['tableId' => $tbl->id]) }}">
                   <div class="icon hidden-xs hidden-sm">
-                    <i class="glyphicon glyphicon-cd"></i>
+                    <span class="glyphicon glyphicon-cd"></span>
                   </div>
                   <p>{{DB::table($tbl->tblNme)->count()}} Records</p>
                 </a>
