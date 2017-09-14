@@ -111,10 +111,9 @@ class DataViewController extends Controller {
       return redirect()->route('home')->withErrors(['Table is disabled']);
     }
 
-    $search = ($search == NULL) ? $request->input('search');
-    // if ($search == NULL) {
-    //   $search = $request->input('search');
-    // }
+    if ($search == NULL){
+      $search = $request->input('search');
+    }
 
     $string_helper = new customStringHelper();
     $srchStrng = $string_helper->cleanSearchString($search);
