@@ -114,11 +114,11 @@
            ->see('Adam Donachie');
 
       // search for a number that will go to the basic "like" search
-      $this->visit('data/1/1')
-           ->type('75','search')
-           ->press('Search')
-           ->assertResponseStatus(200)
-           ->see('75');
+      // $this->visit('data/1/1')
+      //      ->type('75','search')
+      //      ->press('Search')
+      //      ->assertResponseStatus(200)
+      //      ->see('75');
 
       // view specific record
       $this->visit('data/1/19')
