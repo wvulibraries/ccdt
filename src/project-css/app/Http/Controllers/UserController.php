@@ -3,11 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
-// Import auth
 use Illuminate\Support\Facades\Auth;
-
-// Import the user model
 use App\User;
 
 class UserController extends Controller{

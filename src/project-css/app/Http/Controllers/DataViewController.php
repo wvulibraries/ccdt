@@ -4,17 +4,11 @@ namespace App\Http\Controllers;
 
 use Response;
 use Illuminate\Http\Request;
-
-// Import the storage class too
 use Illuminate\Support\Facades\Storage;
-
 use Illuminate\Support\Facades\DB;
-
-// Import the table and collection models
+use Illuminate\Support\Facades\Auth;
 use App\Table;
 use App\Collection;
-use Illuminate\Support\Facades\Auth;
-
 use App\Libraries\CustomStringHelper;
 
 /**
@@ -35,7 +29,7 @@ class DataViewController extends Controller {
   /**
   * Show the data from the selected table
   */
-  public function index(Request $request, $curTable){
+  public function index($curTable){
     // Get the table entry in meta table "tables"
     $curTable = Table::find($curTable);
     if(!$curTable->hasAccess){
@@ -65,7 +59,7 @@ class DataViewController extends Controller {
   /**
   * Show a record in the table
   */
-  public function show(Request $request, $curTable, $curId){
+  public function show($curTable, $curId){
     // Get the table entry in meta table "tables"
     $curTable = Table::find($curTable);
 
@@ -135,26 +129,6 @@ class DataViewController extends Controller {
 
     $rcrdsCount = count($rcrds);
 
-    // if fulltext search yeilds no results try a basic like search
-    // if ($rcrdsCount == 0) {
-    //
-    //   $offsetNum = ($page == 1) ? 0 : ($page-1) * $perPage;
-    //
-    //   // strip characters used by the fulltext boolean search
-    //   //$srchStrng = preg_replace('/[+-]/', '', $srchStrng);
-    //
-    //   $query = DB::table($curTable->tblNme)
-    //           ->where('srchindex', 'like', '%' . $srchStrng . '%')
-    //           ->orderBy('id', 'asc')
-    //           ->offset($offsetNum)
-    //           ->limit($perPage);
-    //
-    //   $rcrds = $query
-    //           ->get();
-    //
-    //   $rcrdsCount = count($rcrds);
-    // }
-
     // if last query returned exactly 30 items
     // we assume that their are additional pages
     // so we set $lastPage to $page + 1
@@ -171,7 +145,7 @@ class DataViewController extends Controller {
                               ->with('morepages', $page < $lastPage);
   }
 
-  public function view(Request $request, $curTable, $subfolder, $filename){
+  public function view($curTable, $subfolder, $filename){
     // Get the table entry in meta table "tables"
     $curTable = Table::find($curTable);
 
@@ -197,21 +171,7 @@ class DataViewController extends Controller {
   * 3. Check for the table id
   **/
   public function isValidTable($curTable){
-    if(is_null($curTable) || !is_numeric($curTable) || !$this->isCurTableExists($curTable)){
-      return false;
-    }
-    return true;
-  }
-
-  // Check weather the table with id=curTable exists
-  public function isCurTableExists($curTable){
-    try{
-      // returns exception if doesn't exists
-      $curTable = Table::findorFail($curTable);
-    } catch (\Exception $e){
-      return false;
-    }
-    return true;
+    return !(is_null($curTable) || !is_numeric($curTable) || !(Table::find($curTable) == null ? false : true ));
   }
 
 }

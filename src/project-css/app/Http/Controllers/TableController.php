@@ -3,17 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
-// Import the storage class too
-use Illuminate\Support\Facades\Storage;
-
 use Illuminate\Support\Facades\DB;
-
-// Import the supported facades for creating tables
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
-
-// Import the table and collection models
 use App\Table;
 use App\Collection;
 

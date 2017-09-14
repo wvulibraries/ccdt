@@ -3,8 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
-// Import the Collection model
 use App\Collection;
 
 class CollectionController extends Controller

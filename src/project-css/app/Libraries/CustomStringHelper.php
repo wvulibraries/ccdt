@@ -15,11 +15,6 @@ class CustomStringHelper {
 
     public function separateFiles($str) {
       $filesArray = explode('^',$str);
-      // if (count($filesArray) > 0) {
-      //   for ($arrayPos = 0; $arrayPos < count($filesArray); $arrayPos++) {
-      //     $filesArray[$arrayPos] = $this->getFilename($filesArray[$arrayPos]);
-      //   }
-      // }
       return $filesArray;
     }
 
