@@ -115,8 +115,7 @@ class DataViewController extends Controller {
       $search = $request->input('search');
     }
 
-    $string_helper = new customStringHelper();
-    $srchStrng = $string_helper->cleanSearchString($search);
+    $srchStrng = (new customStringHelper)->cleanSearchString($search);
 
     // set records per page
     $perPage = 30;
