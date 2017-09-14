@@ -137,24 +137,24 @@ class DataViewController extends Controller {
     $rcrdsCount = count($rcrds);
 
     // if fulltext search yeilds no results try a basic like search
-    if ($rcrdsCount == 0) {
-
-      $offsetNum = ($page == 1) ? 0 : ($page-1) * $perPage;
-
-      // strip characters used by the fulltext boolean search
-      //$srchStrng = preg_replace('/[+-]/', '', $srchStrng);
-
-      $query = DB::table($curTable->tblNme)
-              ->where('srchindex', 'like', '%' . $srchStrng . '%')
-              ->orderBy('id', 'asc')
-              ->offset($offsetNum)
-              ->limit($perPage);
-
-      $rcrds = $query
-              ->get();
-
-      $rcrdsCount = count($rcrds);
-    }
+    // if ($rcrdsCount == 0) {
+    //
+    //   $offsetNum = ($page == 1) ? 0 : ($page-1) * $perPage;
+    //
+    //   // strip characters used by the fulltext boolean search
+    //   //$srchStrng = preg_replace('/[+-]/', '', $srchStrng);
+    //
+    //   $query = DB::table($curTable->tblNme)
+    //           ->where('srchindex', 'like', '%' . $srchStrng . '%')
+    //           ->orderBy('id', 'asc')
+    //           ->offset($offsetNum)
+    //           ->limit($perPage);
+    //
+    //   $rcrds = $query
+    //           ->get();
+    //
+    //   $rcrdsCount = count($rcrds);
+    // }
 
     // if last query returned exactly 30 items
     // we assume that their are additional pages
