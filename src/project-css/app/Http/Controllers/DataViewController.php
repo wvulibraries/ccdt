@@ -14,7 +14,7 @@ use App\Libraries\CustomStringHelper;
 /**
 * The controller is responsible for showing the cards data
 */
-class DataViewController extends Controller {
+class DataViewController extends Controller{
 
   /**
    * Constructor that associates the middlewares
@@ -68,19 +68,18 @@ class DataViewController extends Controller {
     }
 
     // Check if search string and column were passed
-    if (strlen($curId) != 0) {
-      $rcrds = DB::table($curTable->tblNme)
-                  ->where('id', '=', $curId)
-                  ->get();
-
-      // check for the number of records
-      if (count ($rcrds) == 0){
-        return redirect()->route('home')->withErrors(['Search Yeilded No Results']);
-      }
-
-    }
-    else {
+    if (strlen($curId) == 0){
       return redirect()->route('home')->withErrors(['Invalid ID']);
+    }
+
+    // query database for record
+    $rcrds = DB::table($curTable->tblNme)
+                ->where('id', '=', $curId)
+                ->get();
+
+    // check for the number of records if their is non return with error message
+    if (count ($rcrds) == 0){
+      return redirect()->route('home')->withErrors(['Search Yeilded No Results']);
     }
 
     // retrieve the column names
@@ -171,6 +170,8 @@ class DataViewController extends Controller {
   * 3. Check for the table id
   **/
   public function isValidTable($curTable){
+    //return !(is_null($curTable) || !is_numeric($curTable) || Table::find($curTable) == null);
+
     return !(is_null($curTable) || !is_numeric($curTable) || !(Table::find($curTable) == null ? false : true ));
   }
 

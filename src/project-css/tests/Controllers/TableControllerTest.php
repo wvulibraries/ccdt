@@ -9,7 +9,7 @@
 
   use App\Http\Controllers\TableController;
 
-  class TableControllerTest extends TestCase {
+  class TableControllerTest extends TestCase{
 
     private $adminEmail;
     private $adminPass;
@@ -81,6 +81,9 @@
 
          // cleanup remove directory for the test table
          Storage::deleteDirectory($tblname);
+
+         // drop table after Testing
+         Schema::drop($tblname);
     }
 
     public function testInvalidFileTypeUpload(){
@@ -141,7 +144,7 @@
     }
 
     public function testSchema(){
-        if (File::exists(storage_path('/flatfiles/mlb_players.csv'))) {
+        if (File::exists(storage_path('/flatfiles/mlb_players.csv'))){
           // check for a valid file
           $result = (new TableController)->schema('/files/test/mlb_players.csv');
           $this->assertEquals($result[0], 'Name');
@@ -201,6 +204,9 @@
 
         // cleanup remove zillow.csv from upload folder
         Storage::delete('/flatfiles/zillow.csv');
+
+        // drop table after Testing
+        Schema::drop($tblname);
     }
 
 

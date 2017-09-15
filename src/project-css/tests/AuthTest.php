@@ -4,8 +4,7 @@ use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
-class AuthTest extends TestCase
-{
+class AuthTest extends TestCase{
     use DatabaseMigrations;
 
     protected $user;
@@ -32,7 +31,7 @@ class AuthTest extends TestCase
         $this->userPass = 'password123';
     }
 
-    protected function tearDown() {
+    protected function tearDown(){
         Artisan::call('migrate:reset');
         parent::tearDown();
     }
@@ -62,7 +61,7 @@ class AuthTest extends TestCase
     }
 
     /** @test */
-    public function testWrongLoginCredentials() {
+    public function testWrongLoginCredentials(){
         $this->visit(route('login'))
              ->type($this->userEmail, 'email')
              ->type('invalid-password', 'password')
@@ -71,7 +70,7 @@ class AuthTest extends TestCase
     }
 
     /** @test */
-    public function testForgotPasswordWithIncorrectEmail() {
+    public function testForgotPasswordWithIncorrectEmail(){
         $this->visit('/password/reset')
              ->see('Reset Password')
              ->type('test', 'email')
@@ -99,8 +98,7 @@ class AuthTest extends TestCase
     //     var_dump($response);
     // }
 
-    public function testUserRedirectedToDashboard()
-    {
+    public function testUserRedirectedToDashboard(){
         // Generate Test User
         $user = factory(App\User::class)->create([
             'email' => $this->userEmail,
@@ -113,8 +111,7 @@ class AuthTest extends TestCase
     }
 
     /** @test */
-    public function testUserRedirectedToLoginPage()
-    {
+    public function testUserRedirectedToLoginPage(){
         $this->visit(route('home'));
         $this->seePageIs(route('login'));
     }

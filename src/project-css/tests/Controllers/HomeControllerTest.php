@@ -23,12 +23,12 @@
       $this->userPass = "testing";
     }
 
-    protected function tearDown() {
+    protected function tearDown(){
       Artisan::call('migrate:reset');
       parent::tearDown();
     }
 
-    public function test_login_with_user() {
+    public function test_login_with_user(){
         // Generate Test User
         $this->user = factory(App\User::class)->create([
             'email' => $this->userEmail,
@@ -44,7 +44,7 @@
              ->see('Please kindly select the collection and table to view the records');
     }
 
-    public function test_login_with_admin() {
+    public function test_login_with_admin(){
         // Type some valid values
         $this->visit('/login')
              ->type($this->adminEmail,'email')

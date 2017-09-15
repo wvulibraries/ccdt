@@ -8,7 +8,7 @@
   use Illuminate\Foundation\Testing\DatabaseMigrations;
   use Illuminate\Foundation\Testing\DatabaseTransactions;
 
-  class DataViewControllerTest extends TestCase {
+  class DataViewControllerTest extends TestCase{
 
     private $adminEmail;
     private $adminPass;
@@ -31,9 +31,10 @@
       $this->userPass = "testing";
     }
 
-    protected function tearDown() {
+    protected function tearDown(){
       Artisan::call('migrate:reset');
       parent::tearDown();
+
     }
 
     public function testIndex(){
@@ -126,7 +127,7 @@
            ->see('Hayden Penn');
 
       // view specific record with a invalid id
-      // should produce invalid id message
+      // should produce error messsage that no results
       $this->visit('data/1/2000')
            ->assertResponseStatus(200)
            ->see('Search Yeilded No Results');
@@ -149,6 +150,9 @@
 
       // cleanup remove mlb_players.csv from upload folder
       Storage::delete('/flatfiles/mlb_players.csv');
+
+      // drop table after Testing
+      Schema::drop($tblname);
     }
 
     public function testImportWithNoRecords(){
@@ -191,6 +195,9 @@
 
        // cleanup remove zillow.csv from upload folder
        Storage::delete('/flatfiles/header_only.csv');
+
+       // drop table after Testing
+       Schema::drop($tblname);
     }
 
     public function testInvalidTableId(){
