@@ -66,8 +66,7 @@ class UserController extends Controller{
     }
 
     // Error message
-    $thisErrMsg = "The user names doesn't match";
-    return redirect()->route('userIndex')->withErrors($thisErrMsg);
+    return redirect()->route('userIndex')->withErrors("The user names doesn't match");
   }
 
   /**
@@ -83,8 +82,7 @@ class UserController extends Controller{
     }
 
     // Error message
-    $thisErrMsg = "The user names doesn't match";
-    return redirect()->route('userIndex')->withErrors($thisErrMsg);
+    return redirect()->route('userIndex')->withErrors("The user names doesn't match");
   }
 
 }

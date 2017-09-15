@@ -428,7 +428,7 @@ class TableController extends Controller
     });
 
     // modify table for fulltext search using the srchindex column
-    DB::connection()->getPdo()->exec( 'ALTER TABLE ' . $tblNme . ' ADD FULLTEXT fulltext_index (srchindex)');
+    DB::connection()->getPdo()->exec('ALTER TABLE ' . $tblNme . ' ADD FULLTEXT fulltext_index (srchindex)');
 
     // Check for the number of columns we actually added into database
 
