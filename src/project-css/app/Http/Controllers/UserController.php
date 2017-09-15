@@ -3,22 +3,16 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
-// Import auth
 use Illuminate\Support\Facades\Auth;
-
-// Import the user model
 use App\User;
 
-class UserController extends Controller
-{
+class UserController extends Controller{
   /**
    * Create a new controller instance.
    *
    * @return void
    */
-  public function __construct()
-  {
+  public function __construct(){
       $this->middleware('admin');
   }
 
@@ -72,8 +66,7 @@ class UserController extends Controller
     }
 
     // Error message
-    $thisErrMsg = "The user names doesn't match";
-    return redirect()->route('userIndex')->withErrors($thisErrMsg);
+    return redirect()->route('userIndex')->withErrors("Failed to Promote User to Admin. User wasn't found.");
   }
 
   /**
@@ -89,8 +82,7 @@ class UserController extends Controller
     }
 
     // Error message
-    $thisErrMsg = "The user names doesn't match";
-    return redirect()->route('userIndex')->withErrors($thisErrMsg);
+    return redirect()->route('userIndex')->withErrors("Failed to Demote Admin to User. Admin wasn't found.");
   }
 
 }

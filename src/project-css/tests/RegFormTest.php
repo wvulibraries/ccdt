@@ -12,6 +12,17 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
  */
 class RegFormTest extends TestCase
 {
+    public function setUp(){
+      parent::setUp();
+      Artisan::call('migrate');
+      Artisan::call('db:seed');
+    }
+
+    protected function tearDown() {
+      Artisan::call('migrate:reset');
+      parent::tearDown();
+    }
+
     /**
      * Testing for the password in registration form
      *

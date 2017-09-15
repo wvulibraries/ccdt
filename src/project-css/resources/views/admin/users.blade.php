@@ -6,7 +6,7 @@
   <!-- Heading -->
   <div class="container adminHeading">
     <span class="text-center">
-      <h2><a href="{{ url('user') }}">User(s)</a></h2>
+      <h2><a href="{{ url('users') }}">User(s)</a></h2>
       <p>Create, view and manage users here.</p>
     </span>
   </div>
@@ -73,7 +73,7 @@
                 <p>Remove Admin</p>
               </a>
             </div>
-
+            
           </div>
 
         </div>

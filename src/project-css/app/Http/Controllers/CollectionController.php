@@ -3,8 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
-// Import the Collection model
 use App\Collection;
 
 class CollectionController extends Controller
@@ -119,8 +117,7 @@ class CollectionController extends Controller
     }
 
     // Else redirect with error
-    $thisErrMsg = "The collection name doesn't match";
-    return redirect()->route('collectionIndex')->withErrors($thisErrMsg);
+    return redirect()->route('collectionIndex')->withErrors("The collection name doesn't match");
   }
 
   /**

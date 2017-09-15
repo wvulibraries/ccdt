@@ -14,7 +14,7 @@
 </div>
 
 <!-- Search engine -->
-@include('user/search');
+@include('user/searchbox');
 
 <!-- Separation -->
 <hr/>
@@ -70,13 +70,13 @@
         @if(1 <= $rcrds->currentPage() and $rcrds->currentPage() <= $rcrds->lastPage())
         <div class="rcrdOptnsCrd text-center">
           <ul class="pagination pagination-lg">
-            @if($rcrds->currentPage() != 1)<li><a href="{{$rcrds->previousPageUrl()}}"><i class="glyphicon glyphicon-chevron-left"></i></a></li>@endif
+            @if($rcrds->currentPage() != 1)<li><a href="{{$rcrds->previousPageUrl()}}"><span class="glyphicon glyphicon-chevron-left"></span></a></li>@endif
             @if($rcrds->currentPage() != 1)<li><a href="{{$rcrds->url(1)}}">first</a></li>@endif
             @if($rcrds->currentPage()-2 >= 1)<li><a href="{{$rcrds->url($rcrds->currentPage()-2)}}">{{$rcrds->currentPage()-2}}</a></li>@endif
             <li class="active"><a href="{{$rcrds->url($rcrds->currentPage())}}">{{$rcrds->currentPage()}}</a></li>
             @if($rcrds->hasMorePages() and $rcrds->currentPage()+2 <= $rcrds->lastPage())<li><a href="{{$rcrds->url($rcrds->currentPage()+2)}}">{{$rcrds->currentPage()+2}}</a></li>@endif
             @if($rcrds->currentPage() != $rcrds->lastPage())<li><a href="{{$rcrds->url($rcrds->lastPage())}}">last</a></li>@endif
-            @if($rcrds->currentPage() != $rcrds->lastPage())<li><a href="{{$rcrds->nextPageUrl()}}"><i class="glyphicon glyphicon-chevron-right"></i></a></li>@endif
+            @if($rcrds->currentPage() != $rcrds->lastPage())<li><a href="{{$rcrds->nextPageUrl()}}"><span class="glyphicon glyphicon-chevron-right"></span></a></li>@endif
           </ul>
         </div>
         @else

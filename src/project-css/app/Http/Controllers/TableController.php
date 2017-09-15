@@ -3,15 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
-// Import the storage class too
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
-
-// Import the supported facades for creating tables
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
-
-// Import the table and collection models
 use App\Table;
 use App\Collection;
 
@@ -128,7 +123,6 @@ class TableController extends Controller
     // 2. Store the file on to Storage Directory if uploaded
     // Store in the directory inside storage/app
     $thisFltFile->storeAs($this->strDir,$thisFltFileNme);
-
 
     // 3. Show the users schema for further verification
     $schema = $this->schema($this->strDir.'/'.$thisFltFileNme);
@@ -252,6 +246,10 @@ class TableController extends Controller
     // Get the first line as the header
     $fltFleObj->seek(0);
     $hdr = $fltFleObj->fgets();
+
+    // Strip out Quotes that are sometimes seen in header rows of csv files
+    $hdr = str_replace('"', "", $hdr);
+
     // Tokenize the line
     $tkns = $this->tknze($hdr);
     // Validate the tokens and filter them
@@ -287,7 +285,7 @@ class TableController extends Controller
 
     // Loop till EOF
     while(!$fltFleObj->eof()){
-      // Check if the file has atleast one line
+      // Check if the file has at least one line
       if($len>=1){
         // Break here so that it's not reading huge files
         break;
@@ -422,9 +420,15 @@ class TableController extends Controller
         }
       }
 
+      // search index
+      $table->longText('srchindex');
+
       // Time stamps
       $table->timestamps();
     });
+
+    // modify table for fulltext search using the srchindex column
+    DB::connection()->getPdo()->exec('ALTER TABLE ' . $tblNme . ' ADD FULLTEXT fulltext_index (srchindex)');
 
     // Check for the number of columns we actually added into database
 
@@ -432,6 +436,10 @@ class TableController extends Controller
     // Save the table upon the schema
     $this->crteTblInCollctn($tblNme,$collctnId);
 
+    // create folder in storage that will contain any additional files associated to the table
+    if (Storage::exists($tblNme) == FALSE) {
+      Storage::makeDirectory($tblNme);
+    }
 
     // Finally return the view to load data
     return $this->load(True,$tblNme,$fltFile);
@@ -441,7 +449,7 @@ class TableController extends Controller
   * Method responsible to load the data into the given table
   **/
   public function load($isFrwded=False,$tblNme="",$fltFle=""){
-    // Check if the request is formwarded
+    // Check if the request is forwarded
     if($isFrwded){
       // Forward the file and table name
       $tblNms=Table::where('tblNme', $tblNme)->get();
@@ -533,10 +541,16 @@ class TableController extends Controller
       // Counter for processed
       $prcssd = 0;
 
+      // increse time limit for importing files
+      set_time_limit ( 240 );
+
       // For each line
       while($curFltFleObj->valid()){
         // Get the line
         $curLine = $curFltFleObj->current();
+
+        // Strip out Quotes that are sometimes seen in csv files around each item
+        $curLine = str_replace('"', "", $curLine);
 
         // Tokenize the line
         $tkns = $this->tknze($curLine);
@@ -544,9 +558,9 @@ class TableController extends Controller
         // Validate the tokens and filter them
         $tkns = $this->fltrTkns($tkns);
 
-        // Size of both colmn array and data should be same
+        // Size of both column array and data should be same
         // Count of tokens
-        $orgCount = count($clmnLst);
+        $orgCount = count($clmnLst)-1;
 
         if(count($tkns)==$orgCount){
           // Declae an array
@@ -557,6 +571,21 @@ class TableController extends Controller
             // added iconv to strip out invalid characters
             $curArry[strval($clmnLst[$i])]=utf8_encode($tkns[$i]);
           }
+
+          // add srchindex
+          //$curArry["srchindex"]=utf8_encode(implode(" ", $tkns));
+
+          // remove extra characters replacing them with spaces
+          // also remove .. that is in the filenames
+          $cleanString = preg_replace('/[^A-Za-z0-9. ]/', ' ', str_replace('..', '',$curLine));
+
+          // remove extra spaces and make string all lower case
+          $cleanString = strtolower(preg_replace('/\s+/', ' ', $cleanString));
+
+          // remove duplicate keywords in the srchindex
+          $srchArr = explode( " " , $cleanString );
+          $srchArr = array_unique( $srchArr );
+          $curArry["srchindex"] = implode(" " , $srchArr);
 
           // Insert them into DB
           \DB::table($request->tblNme)->insert($curArry);

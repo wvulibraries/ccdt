@@ -1,10 +1,11 @@
 @extends('layouts.default')
 
-
 @section('content')
 
 <!-- Search engine -->
-@include('user/search');
+@include('user/searchbox')
+
+@inject('strhelper', \App\Libraries\CustomStringHelper)
 
 <!-- Separation -->
 <hr/>
@@ -16,14 +17,52 @@
       <hr/>
 
       @foreach($rcrds as $key => $rcrd)
-      <div class="col-xs-12 col-sm-12 col-md-12">
-          @foreach($clmnNmes as $key => $clmnNme)
-            <h4><b>{{$clmnNme}}</b>: {{$rcrd->$clmnNme}}</h4>
-          @endforeach
-      </div>
-      @endforeach
+        @foreach($clmnNmes as $key => $clmnNme)
 
-    </div>
+          <!-- string contains a \ that may indicate a file path -->
+          @if ((strpos($rcrd->$clmnNme, '\\') !== FALSE) && (strpos($clmnNme, 'index') == false))
+            <!-- check if string contains a ^ may indicate that multiple files exists-->
+            @if (strpos($rcrd->$clmnNme, '^') !== FALSE)
+
+              @php
+                $filesArray = $strhelper->separateFiles($rcrd->$clmnNme)
+              @endphp
+
+              @if (count($filesArray) > 0)
+                <div class="col-xs-12 col-sm-12 col-md-12">
+                  <h4><b>{{$clmnNme}}</b>:
+                    @for ($arrayPos = 0; $arrayPos < count($filesArray); $arrayPos++)
+                      </br>{{$filesArray[$arrayPos]}}
+
+                      @if ($strhelper->fileExistsInFolder($tblNme, $filesArray[$arrayPos]))
+                        <a href="{{ url('/data', ['curTable' => $tblId, 'view' => 'view', 'subfolder' => $strhelper->getFolderName($filesArray[$arrayPos]), 'filename' => $strhelper->getFilename($filesArray[$arrayPos])])}}">
+                          <span> View</span>
+                        </a>
+                      @endif
+                    @endfor
+                  </h4>
+                </div>
+              @endif
+            @else
+              <div class="col-xs-12 col-sm-12 col-md-12">
+                <h4><b>{{$clmnNme}}</b>: {{$rcrd->$clmnNme}}
+
+                @if ($strhelper->fileExistsInFolder($tblNme, $rcrd->$clmnNme))
+                  <a href="{{ url('/data', ['curTable' => $tblId, 'view' => 'view', 'subfolder' => $strhelper->getFolderName($rcrd->$clmnNme), 'filename' => $strhelper->getFilename($rcrd->$clmnNme)])}}">
+                    <span> View</span>
+                  </a>
+                @endif
+                </h4>
+              </div>
+            @endif
+          @else
+            <div class="col-xs-12 col-sm-12 col-md-12">
+              <h4><b>{{$clmnNme}}</b>: {{$rcrd->$clmnNme}}</h4>
+            </div>
+          @endif
+        @endforeach
+      @endforeach
+   </div>
 </div>
 
 @endsection

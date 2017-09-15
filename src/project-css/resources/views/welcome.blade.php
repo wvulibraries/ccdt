@@ -11,7 +11,7 @@
       <!-- Link cards -->
       <div class="qckLnksWrppr">
         <!-- header -->
-        <h3>Made with <i style="color:red" class="glyphicon glyphicon-heart"></i> for open source.</h3>
+        <h3>Made with <span style="color:red" class="glyphicon glyphicon-heart"></span> for open source.</h3>
         <!-- Row -->
         <div class="row">
           <!-- cards -->
@@ -25,7 +25,7 @@
                 </div>
                 <!-- Icon -->
                 <div class="icon hidden-xs hidden-sm">
-                  <i class="glyphicon glyphicon-blackboard"></i>
+                  <span class="glyphicon glyphicon-blackboard"></span>
                 </div>
               </div>
             </a>
@@ -39,7 +39,7 @@
                 </div>
                 <!-- Icon -->
                 <div class="icon hidden-xs hidden-sm">
-                  <i class="glyphicon glyphicon-console"></i>
+                  <span class="glyphicon glyphicon-console"></span>
                 </div>
               </div>
             </a>
@@ -53,7 +53,7 @@
                 </div>
                 <!-- Icon -->
                 <div class="icon hidden-xs hidden-sm">
-                  <i class="glyphicon glyphicon-book"></i>
+                  <span class="glyphicon glyphicon-book"></span>
                 </div>
               </div>
             </a>
@@ -67,7 +67,7 @@
                 </div>
                 <!-- Icon -->
                 <div class="icon hidden-xs hidden-sm">
-                  <i class="glyphicon glyphicon-comment"></i>
+                  <span class="glyphicon glyphicon-comment"></span>
                 </div>
               </div>
             </a>

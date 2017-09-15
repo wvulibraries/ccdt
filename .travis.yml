@@ -2,6 +2,8 @@
 #description     :This script will communicate with travis CI
 #author		       :Ajay Krishna Teja Kavuri
 #date            :20161209
+#modified        :Tracy A McCormick
+#date            :20170809
 #version         :1.0
 #==============================================================================
 
@@ -28,7 +30,7 @@ before_script:
   # Set up the environment variables
   - cp .env.travis .env
   # Create the database and set users
-  - mysql -e 'CREATE DATABASE IF NOT EXISTS travis;'
+  - mysql -e 'CREATE DATABASE IF NOT EXISTS css_testing;'
   # Install dependencies
   - composer self-update
   - composer install --no-interaction

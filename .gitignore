@@ -6,3 +6,4 @@ misc/
 sqlFiles/
 scripts/init.sh
 .DS_Store
+*.log

@@ -1,3 +1,5 @@
 *
-!public/
+/files/*
+!/files/test
 !.gitignore
+.DS_Store

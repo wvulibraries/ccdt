@@ -3,8 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
-//Import models
 use App\Collection;
 use App\User;
 use App\Table;
