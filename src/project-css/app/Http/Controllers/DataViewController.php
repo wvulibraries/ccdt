@@ -67,7 +67,7 @@ class DataViewController extends Controller{
       return redirect()->route('home')->withErrors(['Table is disabled']);
     }
 
-    // Check if search string and column were passed
+    // Check if id
     if (strlen($curId) == 0){
       return redirect()->route('home')->withErrors(['Invalid ID']);
     }
@@ -170,9 +170,15 @@ class DataViewController extends Controller{
   * 3. Check for the table id
   **/
   public function isValidTable($curTable){
-    //return !(is_null($curTable) || !is_numeric($curTable) || Table::find($curTable) == null);
+    if(is_null($curTable) || !is_numeric($curTable)){
+      return false;
+    } else {
+      $tableExists = Table::find($curTable) == null ? false : true;
+      return $tableExists;
+    }
+    //return !(is_null($curTable) || !is_numeric($curTable) || Table::find($curTable) != null);
 
-    return !(is_null($curTable) || !is_numeric($curTable) || !(Table::find($curTable) == null ? false : true ));
+    //return !(is_null($curTable) || !is_numeric($curTable) || !(Table::find($curTable) == null ? false : true ));
   }
 
 }

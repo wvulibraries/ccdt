@@ -66,7 +66,7 @@ class UserController extends Controller{
     }
 
     // Error message
-    return redirect()->route('userIndex')->withErrors("The user names doesn't match");
+    return redirect()->route('userIndex')->withErrors("Failed to Promote User to Admin. User wasn't found.");
   }
 
   /**
@@ -82,7 +82,7 @@ class UserController extends Controller{
     }
 
     // Error message
-    return redirect()->route('userIndex')->withErrors("The user names doesn't match");
+    return redirect()->route('userIndex')->withErrors("Failed to Demote Admin to User. Admin wasn't found.");
   }
 
 }
