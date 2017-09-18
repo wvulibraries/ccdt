@@ -4,5 +4,5 @@ build:
             -
                 command: 'vendor/bin/phpunit --coverage-clover=coverage.txt'
                 coverage:
-                    file: 'some-file'
+                    file: 'coverage.txt'
                     format: 'clover'
