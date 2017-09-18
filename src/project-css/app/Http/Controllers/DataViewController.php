@@ -170,15 +170,12 @@ class DataViewController extends Controller{
   * 3. Check for the table id
   **/
   public function isValidTable($curTable){
-    if(is_null($curTable) || !is_numeric($curTable)){
+    if (is_null($curTable) || !is_numeric($curTable)){
       return false;
     } else {
       $tableExists = Table::find($curTable) == null ? false : true;
       return $tableExists;
     }
-    //return !(is_null($curTable) || !is_numeric($curTable) || Table::find($curTable) != null);
-
-    //return !(is_null($curTable) || !is_numeric($curTable) || !(Table::find($curTable) == null ? false : true ));
   }
 
 }

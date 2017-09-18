@@ -49,7 +49,7 @@
               <td>
                 <!-- Show the columns for edit -->
                 <div class="form-group{{ $errors->has('col-'.$key.'-name') ? ' has-error' : '' }}">
-                  <label for="col-{{$key}}-name"> Collection {{$key}} </label>
+                  <!-- <label for="col-{{$key}}-name"> Collection {{$key}} </label> -->
                   <input id="col-{{$key}}-name" type="text" class="form-control" name="col-{{$key}}-name" value="{{$col}}" required autofocus>
                 </div>
               </td>
