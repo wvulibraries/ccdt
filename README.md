@@ -4,7 +4,7 @@
 
 ## Status
 
-[![Build Status](https://travis-ci.org/wvulibraries/rockefeller-css.svg?branch=master)](https://travis-ci.org/wvulibraries/rockefeller-css) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/wvulibraries/rockefeller-css/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/wvulibraries/rockefeller-css/?branch=master)
+[![Build Status](https://travis-ci.org/wvulibraries/rockefeller-css.svg?branch=master)](https://travis-ci.org/wvulibraries/rockefeller-css) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/wvulibraries/rockefeller-css/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/wvulibraries/rockefeller-css/?branch=master) [![Code Coverage](https://scrutinizer-ci.com/g/wvulibraries/rockefeller-css/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/wvulibraries/rockefeller-css/?branch=master)
 
 ## Quick Start
 
