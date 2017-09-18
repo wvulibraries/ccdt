@@ -1,13 +1,19 @@
-inherit: true
+checks:
+    php: true
+
 filter:
-    paths: [src/*]
-    excluded_paths: [tests/*]
+    excluded_paths:
+        - tests/*
 tools:
-    php_code_coverage: true
+    external_code_coverage:
+        timeout: 1800
+        runs: 2
+
 build:
     tests:
         override:
             -
-                command: 'phpunit --coverage-clover=coverage.xml'
+                command: 'vendor/bin/phpunit --coverage-clover=coverage.txt'
                 coverage:
-                    file: 'coverage.xml'
+                    file: 'coverage.txt'
+                    format: 'clover'
