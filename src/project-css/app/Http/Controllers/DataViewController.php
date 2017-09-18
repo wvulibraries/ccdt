@@ -18,8 +18,6 @@ class DataViewController extends Controller{
 
   /**
    * Constructor that associates the middlewares
-   *
-   * @return void
    */
   public function __construct(){
     // Middleware to check for authenticated
