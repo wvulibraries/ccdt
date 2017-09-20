@@ -98,3 +98,4 @@ Route::get('data/{curTable}/{id}','DataViewController@show')->name('dataShow');
 Route::post('data/{curTable}','DataViewController@search')->name('dataSearch');
 Route::get('data/{curTable}/{search}/{page}','DataViewController@search')->name('dataSearch');
 Route::get('data/{curTable}/view/{subfolder}/{filename}','DataViewController@view')->name('dataFileView');
+Route::post('data/{curTable}/view/{subfolder}/{filename}','DataViewController@view')->name('dataFileViewer');

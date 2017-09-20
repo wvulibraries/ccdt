@@ -12,10 +12,11 @@ use App\Collection;
 
 class TableController extends Controller
 {
+  private $strDir;
+  private $extraClmns;
+
   /**
    * Create a new controller instance.
-   *
-   * @return void
    */
   public function __construct()
   {
@@ -111,7 +112,7 @@ class TableController extends Controller
     // Get the file name
     $thisFltFileNme = $thisFltFile->getClientOriginalName();
     // Get the client extension
-    $thisFltFileExt = $thisFltFile->getClientOriginalExtension();
+    // $thisFltFileExt = $thisFltFile->getClientOriginalExtension();
     // check if the file exists
     // Get the list of files in the directory
     $fltFleList = Storage::allFiles($this->strDir);
@@ -338,7 +339,7 @@ class TableController extends Controller
       $curNme = 'col-'.$i.'-name';
       $rules[$curNme]='required|alpha_dash';
       // Rules for all data type
-      $curDTyp = 'col-'.$i.'-data';
+      // $curDTyp = 'col-'.$i.'-data';
       $rules[$curNme]='required|string';
       // Rules for all data sizes
       $curDataSz = 'col-'.$i.'-size';
