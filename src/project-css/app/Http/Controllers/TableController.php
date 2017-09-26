@@ -80,6 +80,7 @@ class TableController extends Controller
   * 3. Show the users schema for further verification
   */
   public function import(Request $request){
+
     // 1. Input the table name in the meta Directory
     //Rules for validation
     $rules = array(
@@ -124,6 +125,9 @@ class TableController extends Controller
     // 2. Store the file on to Storage Directory if uploaded
     // Store in the directory inside storage/app
     $thisFltFile->storeAs($this->strDir,$thisFltFileNme);
+
+    // Storage::disk('local')->put($thisFltFileNme.'.'.$thisFltFileExt,  File::get($thisFltFile));
+
 
     // 3. Show the users schema for further verification
     $schema = $this->schema($this->strDir.'/'.$thisFltFileNme);

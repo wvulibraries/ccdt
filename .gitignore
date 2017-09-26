@@ -1,6 +1,6 @@
 .vagrant
 privateFiles/
-serverConfiguration/
+serverConfiguration/logs
 testData/
 misc/
 sqlFiles/

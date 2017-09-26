@@ -27,7 +27,7 @@
                 <div class="panel-heading"><a data-toggle="collapse" href="#imprtPnlBdy"><h3>Import from flat file</h3></a></div>
                 <div id="imprtPnlBdy" class="panel-collapse collapse">
                   <div class="panel-body">
-                      <form class="form-horizontal" enctype="multipart/form-data" role="form" method="POST" action="{{ url('/table/create/import') }}">
+                      <form class="form-horizontal" role="form" method="POST" enctype="multipart/form-data" action="{{ url('/table/create/import') }}">
                           {{ csrf_field() }}
                           <!-- Table name -->
                           <div class="form-group{{ $errors->has('imprtTblNme') ? ' has-error' : '' }}">

@@ -8,3 +8,5 @@ Homestead.yaml
 composer.lock
 .DS_Store
 .log
+/resources/views/vendor
+/public/fonts/bootstrap

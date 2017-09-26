@@ -98,4 +98,15 @@ Route::get('data/{curTable}/{id}','DataViewController@show')->name('dataShow');
 Route::post('data/{curTable}','DataViewController@search')->name('dataSearch');
 Route::get('data/{curTable}/{search}/{page}','DataViewController@search')->name('dataSearch');
 Route::get('data/{curTable}/view/{subfolder}/{filename}','DataViewController@view')->name('dataFileView');
+<<<<<<< Updated upstream
 Route::post('data/{curTable}/view/{subfolder}/{filename}','DataViewController@view')->name('dataFileViewer');
+=======
+
+/*
+|--------------------------------------------------------------------------
+| Controller for managing file uploads to tables
+|--------------------------------------------------------------------------
+*/
+Route::get('upload/{curTable}','UploadController@index');
+Route::post('upload/{curTable}', 'UploadController@storeFiles');
+>>>>>>> Stashed changes

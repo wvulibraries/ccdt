@@ -45,7 +45,7 @@
     @foreach($tbls as $key=>$tbl)
       <!-- Check for the access -->
       @if($tbl->hasAccess)
-      <!-- SHow thw tables -->
+      <!-- Show the tables -->
         <div class="col-xs-12 col-sm-12 col-md-12">
           <div class="colCard">
             <!-- Display the collection name -->
@@ -63,7 +63,14 @@
                   <p>{{DB::table($tbl->tblNme)->count()}} Records</p>
                 </a>
               </div>
-
+              <div class="colCardOpts">
+                <a href="{{ url('/upload',['tableId' => $tbl->id]) }}">
+                  <div class="icon hidden-xs hidden-sm">
+                    <span class="glyphicon glyphicon-upload"></span>
+                  </div>
+                  <p>Upload Linked Files</p>
+                </a>
+              </div>
             </div>
           </div>
         </div>
