@@ -1,5 +1,5 @@
 <?php
-  # app/tests/controllers/TableControllerTest.php
+  # app/tests/controllers/DataViewControllerTest.php
 
   use App\Http\Controllers\DataViewController;
   use Illuminate\Http\UploadedFile;
