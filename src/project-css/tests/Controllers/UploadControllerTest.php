@@ -8,7 +8,7 @@
   use Illuminate\Foundation\Testing\DatabaseMigrations;
   use Illuminate\Foundation\Testing\DatabaseTransactions;
 
-  class DataViewControllerTest extends TestCase{
+  class UploadControllerTest extends TestCase{
 
     private $adminEmail;
     private $adminPass;
