@@ -79,11 +79,12 @@
            ->attach(array('./storage/app/files/test/test_upload.txt'),'attachments[]')
            ->press('Upload')
            ->assertResponseStatus(200)
-           ->see('Table(s)');
+           ->see('Table(s)')
+           ->assertFileExists(storage_path('app/' . $tblname . '/test/test_upload.txt'));
 
       // cleanup remove mlb_players.csv from upload folder
       Storage::delete('/flatfiles/mlb_players.csv');
-      //Storage::delete('/' . $tblname . '/test_upload.txt');
+      Storage::delete('/' . $tblname . '/test/test_upload.txt');
 
       // cleanup remove directory for the test table
       Storage::deleteDirectory($tblname);
