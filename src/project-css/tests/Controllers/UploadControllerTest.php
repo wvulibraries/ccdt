@@ -74,13 +74,19 @@
            ->assertResponseStatus(200)
            ->visit('upload/1')
            ->assertResponseStatus(200)
-           ->see('Upload files to ' . $tblname . ' Table');
-
-      // cleanup remove directory for the test table
-      Storage::deleteDirectory($tblname);
+           ->see('Upload files to ' . $tblname . ' Table')
+           ->type('test', 'upFldNme')
+           ->attach(array('./storage/app/files/test/test_upload.txt'),'attachments[]')
+           ->press('Upload')
+           ->assertResponseStatus(200)
+           ->see('Table(s)');
 
       // cleanup remove mlb_players.csv from upload folder
       Storage::delete('/flatfiles/mlb_players.csv');
+      //Storage::delete('/' . $tblname . '/test_upload.txt');
+
+      // cleanup remove directory for the test table
+      Storage::deleteDirectory($tblname);
 
       // drop table after Testing
       Schema::drop($tblname);
