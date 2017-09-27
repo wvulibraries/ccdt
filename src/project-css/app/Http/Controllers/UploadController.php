@@ -60,7 +60,6 @@ class UploadController extends Controller{
           // Get the orginal filname or create the filename of your choice
           $filename = $file->getClientOriginalName();
           // Copy the file in our upload folder
-          //$file->move($destinationPath, $filename);
           $file->storeAs($destinationPath,$filename);
         }
       }
