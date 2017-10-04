@@ -10,7 +10,6 @@
     @endforeach
 
     @else
-
       <div class="alert alert-danger alrtArea" data-toggle="collapse" data-target="#alrtsWrappr">
         <h4>One or more errors exists. Please click to reveal.</h4>
       </div>

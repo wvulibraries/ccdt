@@ -15,6 +15,8 @@
 <!-- Separation -->
 <hr/>
 
+@include('admin/messages')
+
 <!-- Upload Form -->
 <div class="container">
 
