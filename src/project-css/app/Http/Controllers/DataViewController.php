@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Table;
 use App\Collection;
 use App\Libraries\CustomStringHelper;
+use App\Libraries\ParseWordDocuments;
 use PhpOffice\PhpWord\IOFactory;
 
 /**
@@ -29,36 +30,47 @@ class DataViewController extends Controller{
   * Show the data from the selected table
   */
   public function index($curTable){
-    // Get the table entry in meta table "tables"
-    $curTable = Table::find($curTable);
-    if(!$curTable->hasAccess){
-      return redirect()->route('home')->withErrors(['Table is disabled']);
-    }
+      // test for the validity of curtable
+      if(!$this->isValidTable($curTable)){
+        return redirect()->route('home')->withErrors(['Table id is invalid']);
+      }
 
-    // Get and return of table doesn't have any records
-    $numOfRcrds = DB::table($curTable->tblNme)->count();
-    // check for the number of records
-    if ($numOfRcrds == 0){
-      return redirect()->route('home')->withErrors(['Table does not have any records.']);
-    }
+      // Get the table entry in meta table "tables"
+      $curTable = Table::find($curTable);
+      if(!$curTable->hasAccess){
+        return redirect()->route('home')->withErrors(['Table is disabled']);
+      }
 
-    // Get the records 30 at a time
-    $rcrds = DB::table($curTable->tblNme)->paginate(30);
+      // Get and return of table doesn't have any records
+      $numOfRcrds = DB::table($curTable->tblNme)->count();
+      // check for the number of records
+      if ($numOfRcrds == 0){
+        return redirect()->route('home')->withErrors(['Table does not have any records.']);
+      }
 
-    // retrieve the column names
-    $clmnNmes = DB::getSchemaBuilder()->getColumnListing($curTable->tblNme);
+      // Get the records 30 at a time
+      $rcrds = DB::table($curTable->tblNme)->paginate(30);
 
-    // return the index page
-    return view('user.data')->with('rcrds',$rcrds)
-                            ->with('clmnNmes',$clmnNmes)
-                            ->with('tblNme',$curTable->tblNme)
-                            ->with('tblId',$curTable);
+      // retrieve the column names
+      $clmnNmes = DB::getSchemaBuilder()->getColumnListing($curTable->tblNme);
+
+      // return the index page
+      return view('user.data')->with('rcrds',$rcrds)
+                              ->with('clmnNmes',$clmnNmes)
+                              ->with('tblNme',$curTable->tblNme)
+                              ->with('tblId',$curTable);
+
   }
 
   /**
   * Show a record in the table
   */
   public function show($curTable, $curId){
+    // test for the validity of curtable
+    if(!$this->isValidTable($curTable)){
+      return redirect()->route('home')->withErrors(['Table id is invalid']);
+    }
+
     // Get the table entry in meta table "tables"
     $curTable = Table::find($curTable);
 
@@ -67,7 +79,7 @@ class DataViewController extends Controller{
     }
 
     // Check if id
-    if (strlen($curId) == 0){
+    if (is_null($curId) || !is_numeric($curId)){
       return redirect()->route('home')->withErrors(['Invalid ID']);
     }
 
@@ -76,7 +88,7 @@ class DataViewController extends Controller{
                 ->where('id', '=', $curId)
                 ->get();
 
-    // check for the number of records if their is non return with error message
+    // check for the number of records if their is none return with error message
     if (count ($rcrds) == 0){
       return redirect()->route('home')->withErrors(['Search Yeilded No Results']);
     }
@@ -143,26 +155,12 @@ class DataViewController extends Controller{
                               ->with('morepages', $page < $lastPage);
   }
 
-  function parseWord($userDoc)
-  {
-      $fileHandle = fopen($userDoc, "r");
-      $line = @fread($fileHandle, filesize($userDoc));
-      $lines = explode(chr(0x0D),$line);
-      $outtext = "";
-      foreach($lines as $thisline)
-        {
-          $pos = strpos($thisline, chr(0x00));
-          if (($pos !== FALSE)||(strlen($thisline)==0))
-            {
-            } else {
-              $outtext .= $thisline." ";
-            }
-        }
-       //$outtext = preg_replace("/[^a-zA-Z0-9\s\,\.\-\n\r\t@\/\_\(\)]/","",$outtext);
-      return $outtext;
-  }
-
   public function view($curTable, $subfolder, $filename){
+    // test for the validity of curtable
+    if(!$this->isValidTable($curTable)){
+      return redirect()->route('home')->withErrors(['Table id is invalid']);
+    }
+    
     // Get the table entry in meta table "tables"
     $curTable = Table::find($curTable);
 
@@ -176,85 +174,20 @@ class DataViewController extends Controller{
     $path = storage_path('app/' . $curTable->tblNme . '/' . $subfolder . '/' . $filename);
 
     $fileMimeType = Storage::getMimeType($curTable->tblNme . '/' . $subfolder . '/' . $filename);
-    // var_dump($fileMimeType);
-    // die();
 
     switch ($fileMimeType) {
         case 'text/plain':
         case 'message/rfc822':
              $fileContents = file_get_contents($path);
+             return Response::make($fileContents);
              break;
         case 'application/msword':
-          // $fileHandle = fopen($path, "r");
-          // $line = @fread($fileHandle, filesize($path));
-          // $lines = explode(chr(0x0D),$line);
-          //
-          // //$outtext = "";
-          //
-          // foreach($lines as $thisline)
-          //   {
-          //     $pos = strpos($thisline, chr(0x00));
-          //     if (($pos !== FALSE)||(strlen($thisline)==0))
-          //       {
-          //       } else {
-          //         //echo htmlspecialchars($thisline) . '<br>';
-          //         array_push($outArray, htmlspecialchars($thisline));
-          //         //$outtext .= $thisline." ";
-          //       }
-          //   }
-           //$outtext = preg_replace("/[^a-zA-Z0-9\s\,\.\-\n\r\t@\/\_\(\)]/","",$outtext);
-
-          //  $outArray = [];
-          //  $content = \File::get($path);
-          //  $lines = explode(chr(0x0D),$content);
-          //  foreach($lines as $line) {
-          //      $outtext = preg_replace("/[^a-zA-Z0-9\s\,\.\-\n\r\t@\/\_\(\)]/","", $line);
-          //      $outtext = htmlspecialchars($outtext);
-          //      //echo $outtext . '<br>';
-          //      array_push($outArray, $outtext);
-          //  }
-
-            // $striped_content = '';
-            // $content = '';
-            //
-            // $lines = explode(chr(0x0D), \File::get($path));
-            // foreach($lines as $line) {
-            //     $line = preg_replace("/[^a-zA-Z0-9\s\,\.\-\n\r\t@\/\_\(\)]/","", $line);
-            //     $content .= $line;
-            // }
-            // $content = str_replace('</w:r></w:p></w:tc><w:tc>', " ", $content);
-            // $content = str_replace('</w:r></w:p>', "\r\n", $content);
-            // $fileContents = strip_tags($content);
-
-            $fileContents = preg_replace("/[^a-zA-Z0-9\s\,\.\-\n\r\t@\/\_\(\)]/","", $this->parseWord($path));
-            return Response::make($fileContents);
-            break;
+             $fileContents = preg_replace("/[^a-zA-Z0-9\s\,\.\-\n\r\t@\/\_\(\)]/","", (new ParseWordDocuments)->parseDoc($path));
+             return Response::make($fileContents);
+             break;
 
        case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
-             $striped_content = '';
-             $content = '';
-
-             if(!$filename || !file_exists($path)) return false;
-
-             $zip = zip_open($path);
-             if (!$zip || is_numeric($zip)) return false;
-
-             while ($zip_entry = zip_read($zip)) {
-
-                 if (zip_entry_open($zip, $zip_entry) == FALSE) continue;
-
-                 if (zip_entry_name($zip_entry) != "word/document.xml") continue;
-
-                 $line = zip_entry_read($zip_entry, zip_entry_filesize($zip_entry));
-
-                 //echo $line . '<br>';
-                 $content .= $line;
-                 zip_entry_close($zip_entry);
-             }
-             zip_close($zip);
-             $content = str_replace('</w:r></w:p></w:tc><w:tc>', " ", $content);
-             $content = str_replace('</w:r></w:p>', "\r\n", $content);
-             $fileContents = strip_tags($content);
+             $fileContents = preg_replace("/[^a-zA-Z0-9\s\,\.\-\n\r\t@\/\_\(\)]/","", (new ParseWordDocuments)->parseDocx($path));
              return Response::make($fileContents);
              break;
 
@@ -269,8 +202,6 @@ class DataViewController extends Controller{
           // break;
 
         default:
-          //  var_dump($fileMimeType);
-          //  die();
            // download file if we cannot determine what kind of file it is.
            return Response::make(file_get_contents($path), 200, [
               'Content-Type' => Storage::getMimeType($curTable->tblNme . '/' . $subfolder . '/' . $filename),

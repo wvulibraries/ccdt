@@ -114,13 +114,6 @@
            ->assertResponseStatus(200)
            ->see('Adam Donachie');
 
-      // search for a number that will go to the basic "like" search
-      // $this->visit('data/1/1
-      //      ->type('75','search')
-      //      ->press('Search')
-      //      ->assertResponseStatus(200)
-      //      ->see('75');
-
       // view specific record
       $this->visit('data/1/19')
            ->assertResponseStatus(200)
@@ -134,6 +127,19 @@
 
       $this->visit('data/1/view' . '/test/' . $emptyFile)
            ->assertResponseStatus(200);
+
+      $this->visit('upload/1')
+           ->assertResponseStatus(200)
+           ->see('Upload files to ' . $tblname . ' Table')
+           ->type('test', 'upFldNme')
+           ->attach(array('./storage/app/files/test/test_upload.txt'),'attachments[]')
+           ->press('Upload')
+           ->assertResponseStatus(200)
+           ->see('Upload files to ' . $tblname . ' Table')
+           ->assertFileExists(storage_path('app/' . $tblname . '/test/test_upload.txt'));
+
+     $this->visit('data/1/view' . '/test/' . 'test_upload.txt')
+          ->assertResponseStatus(200);
 
       // logout user
       Auth::logout();
@@ -153,6 +159,21 @@
 
       // drop table after Testing
       Schema::drop($tblname);
+    }
+
+    public function testIndexWithInvalidTable(){
+      // find admin user
+      $admin = App\User::where('isAdmin', '=', '1')->first();
+
+      //try to import a table without a collection
+      $this->actingAs($admin)
+           ->visit('data/1')
+           ->see("Table id is invalid");
+
+      // test using non-numeric table id
+      $this->actingAs($admin)
+           ->visit('data/idontexist')
+           ->see("Table id is invalid");
     }
 
     public function testImportWithNoRecords(){

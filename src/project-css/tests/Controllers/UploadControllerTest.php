@@ -145,6 +145,22 @@
       $messages = session()->get('messages');
       $this->assertEquals(count($messages), 2, 'Message Count Should Equal 2');
 
+      // Try to upload the file again causing error
+      // since file already exists
+      $this->visit('upload/1')
+           ->assertResponseStatus(200)
+           ->see('Upload files to ' . $tblname . ' Table')
+           ->type('test', 'upFldNme')
+           ->attach(array('./storage/app/files/test/fake_socials.txt'),'attachments[]')
+           ->press('Upload')
+           ->assertResponseStatus(200)
+           ->see('Upload files to ' . $tblname . ' Table')
+           ->assertFileExists(storage_path('app/' . $tblname . '/test/fake_socials.txt'));
+
+      // should only have one message since upload failed
+      $messages = session()->get('messages');
+      $this->assertEquals(count($messages), 1, 'Message Count Should Equal 1');
+
       // cleanup remove mlb_players.csv from upload folder
       Storage::delete('/flatfiles/mlb_players.csv');
       Storage::delete('/' . $tblname . '/test/test_upload.txt');
@@ -154,6 +170,13 @@
 
       // drop table after Testing
       Schema::drop($tblname);
+    }
+
+    public function testCheckForSSN(){
+      $this->assertTrue((new UploadController)->checkForSSN('/files/test/fake_socials.txt'));
+      $this->assertTrue((new UploadController)->checkForSSN('/files/test/fake_socials.doc'));
+      $this->assertTrue((new UploadController)->checkForSSN('/files/test/fake_socials.docx'));
+      $this->assertFalse((new UploadController)->checkForSSN('/files/test/test_upload.txt'));
     }
 
   }

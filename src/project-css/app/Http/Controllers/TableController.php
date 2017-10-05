@@ -582,7 +582,7 @@ class TableController extends Controller
 
           // remove extra characters replacing them with spaces
           // also remove .. that is in the filenames
-          $cleanString = preg_replace('/[^A-Za-z0-9. ]/', ' ', str_replace('..', '',$curLine));
+          $cleanString = preg_replace('/[^A-Za-z0-9._ ]/', ' ', str_replace('..', '',$curLine));
 
           // remove extra spaces and make string all lower case
           $cleanString = strtolower(preg_replace('/\s+/', ' ', $cleanString));

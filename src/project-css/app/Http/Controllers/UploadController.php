@@ -8,6 +8,7 @@ use App\Collection;
 use App\User;
 use App\Table;
 use Auth;
+use App\Libraries\ParseWordDocuments;
 
 class UploadController extends Controller{
     /**
@@ -91,24 +92,6 @@ class UploadController extends Controller{
       }
     }
 
-    function parseWord($userDoc)
-    {
-        $fileHandle = fopen($userDoc, "r");
-        $line = @fread($fileHandle, filesize($userDoc));
-        $lines = explode(chr(0x0D),$line);
-        $outtext = "";
-        foreach($lines as $thisline)
-          {
-            $pos = strpos($thisline, chr(0x00));
-            if (($pos !== FALSE)||(strlen($thisline)==0))
-              {
-              } else {
-                $outtext .= $thisline." ";
-              }
-          }
-        return $outtext;
-    }
-
     public function checkForSSN($file)
     {
         // get MimeType for the file this will allow us
@@ -121,7 +104,10 @@ class UploadController extends Controller{
                  $contents = file_get_contents($path);
                  break;
             case 'application/msword':
-                 $contents = preg_replace("/[^a-zA-Z0-9\s\,\.\-\n\r\t@\/\_\(\)]/","", $this->parseWord($path));
+                 $contents = preg_replace("/[^a-zA-Z0-9\s\,\.\-\n\r\t@\/\_\(\)]/","", (new ParseWordDocuments)->parseDoc($path));
+                 break;
+            case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
+                 $contents = preg_replace("/[^a-zA-Z0-9\s\,\.\-\n\r\t@\/\_\(\)]/","", (new ParseWordDocuments)->parseDocx($path));
                  break;
         }
 
