@@ -6,7 +6,7 @@
 #date            :20161014
 #updated by      :Tracy A McCormick
 #date            :20170926
-#version         :0.4
+#version         :0.5
 #==============================================================================
 
 #Formal update for no reason
@@ -80,7 +80,12 @@ sudo systemctl enable mysqld
 echo -e "----Started MySQL----\n\n"
 
 # Install Node and gulp
-vag
+rpm -ivh https://kojipkgs.fedoraproject.org//packages/http-parser/2.7.1/3.el7/x86_64/http-parser-2.7.1-3.el7.x86_64.rpm
+yum install -y gcc-c++ make
+curl -sL https://rpm.nodesource.com/setup_8.x | bash -
+yum install -y nodejs
+npm install --global gulp-cli
+echo -e "----Installed Node and Gulp----\n\n"
 
 yum -y install libnotify
 echo -e "----Installed libnotify----\n\n"

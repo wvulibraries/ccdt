@@ -85,7 +85,7 @@ class UploadController extends Controller{
           array_push($messages, $message);
         }
 
-        session()->put('messages', $messages);
+        session()->flash('messages', $messages);
         return view('admin/upload')->with('tblNme',$curTable->tblNme)
                                    ->with('tblId',$curTable);
       }
