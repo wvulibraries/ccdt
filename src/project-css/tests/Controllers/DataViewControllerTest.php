@@ -125,8 +125,13 @@
            ->assertResponseStatus(200)
            ->see('Search Yeilded No Results');
 
+      // try viewing emptyfile
       $this->visit('data/1/view' . '/test/' . $emptyFile)
            ->assertResponseStatus(200);
+
+      // try with invalid table id
+      $this->visit('data/2/view' . '/test/' . $emptyFile)
+           ->see('Table id is invalid');           
 
       $this->visit('upload/1')
            ->assertResponseStatus(200)
@@ -226,6 +231,8 @@
         // test should fail
         $this->assertFalse((new DataViewController)->isValidTable('99'));
     }
+
+
 
   }
 ?>
