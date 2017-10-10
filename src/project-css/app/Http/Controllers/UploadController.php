@@ -9,6 +9,7 @@ use App\User;
 use App\Table;
 use Auth;
 use App\Libraries\ParseWordDocuments;
+use App\Libraries\ParsePDFDocuments;
 
 class UploadController extends Controller{
     /**
@@ -90,6 +91,7 @@ class UploadController extends Controller{
         return view('admin/upload')->with('tblNme',$curTable->tblNme)
                                    ->with('tblId',$curTable);
       }
+      return(false);
     }
 
     public function checkForSSN($file)
@@ -109,6 +111,11 @@ class UploadController extends Controller{
             case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
                  $contents = preg_replace("/[^a-zA-Z0-9\s\,\.\-\n\r\t@\/\_\(\)]/","", (new ParseWordDocuments)->parseDocx($path));
                  break;
+            case 'application/pdf':
+                 $contents = preg_replace("/[^a-zA-Z0-9\s\,\.\-\n\r\t@\/\_\(\)]/","", (new ParsePDFDocuments)->parsePDF($path));
+                 break;
+            default:
+                 $contents = null;
         }
 
         if ($contents != null) {

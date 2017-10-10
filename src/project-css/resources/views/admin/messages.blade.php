@@ -1,5 +1,4 @@
 <!-- Alerts to show the messages and notifications -->
-
 @if(session()->has('messages'))
   @if(count(session()->get('messages')) > 0)
 

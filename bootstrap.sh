@@ -94,6 +94,38 @@ echo -e "----Installed libnotify----\n\n"
 yum -y install git
 echo -e "----Installed Git----\n\n"
 
+# Install poppler-utils used by pdf-to-text package
+yum -y install poppler-utils
+echo -e "----Installed Poppler-Utils----\n\n"
+
+#install 3rd Party dependencies
+cd /vagrant/serverConfiguration/3rdParty
+
+# install support files for leptonica for image files
+yum -y install libjpeg-devel libpng-devel libtiff-devel
+
+tar -zxf /vagrant/serverConfiguration/3rdParty/leptonica-1.69.tar.gz --directory=/tmp
+tar -zxf /vagrant/serverConfiguration/3rdParty/tesseract-ocr-3.02.02.tar.gz --directory=/tmp
+tar -zxf /vagrant/serverConfiguration/3rdParty/tesseract-ocr-3.02.eng.tar.gz --directory=/tmp
+
+cd /tmp/leptonica-1.69
+./configure
+make
+make install
+echo -e "----Installed Leptonica----\n\n"
+
+cd /tmp/tesseract-ocr
+./autogen.sh
+./configure
+make
+make install
+
+cp /tmp/tesseract-ocr/tessdata/eng.* /usr/local/share/tessdata
+
+ln -s /usr/local/bin/tesseract /usr/bin/
+
+echo -e "----Installed Tesseract OCR----\n\n"
+
 # Install composer
 curl -sS https://getcomposer.org/installer | php
 sudo chmod +x composer.phar

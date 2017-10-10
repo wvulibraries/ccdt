@@ -11,7 +11,11 @@ use App\Table;
 use App\Collection;
 use App\Libraries\CustomStringHelper;
 use App\Libraries\ParseWordDocuments;
-use PhpOffice\PhpWord\IOFactory;
+use App\Libraries\ParsePDFDocuments;
+//use Spatie\PdfToText\Pdf;
+use Spatie\PdfToImage\Pdf;
+use Imagick;
+//use TesseractOCR;
 
 /**
 * The controller is responsible for showing the cards data
@@ -160,7 +164,7 @@ class DataViewController extends Controller{
     if(!$this->isValidTable($curTable)){
       return redirect()->route('home')->withErrors(['Table id is invalid']);
     }
-    
+
     // Get the table entry in meta table "tables"
     $curTable = Table::find($curTable);
 
@@ -190,23 +194,21 @@ class DataViewController extends Controller{
              $fileContents = preg_replace("/[^a-zA-Z0-9\s\,\.\-\n\r\t@\/\_\(\)]/","", (new ParseWordDocuments)->parseDocx($path));
              return Response::make($fileContents);
              break;
-
-
-           // convert to html with phpword
-          //  $phpWord = IOFactory::load($path, 'Word2007');
-          //  $fileContents = IOFactory::createWriter($phpWord, 'HTML');
-          //  return view('user.fileviewer')->with('tblId', $curTable)
-          //                                ->with('fileMimeType', $fileMimeType)
-          //                                ->with('fileContents', $fileContents)
-          //                                ->with('fileName', $filename);
-          // break;
-
-        default:
-           // download file if we cannot determine what kind of file it is.
-           return Response::make(file_get_contents($path), 200, [
-              'Content-Type' => Storage::getMimeType($curTable->tblNme . '/' . $subfolder . '/' . $filename),
-              'Content-Disposition' => 'inline; filename="'.$filename.'"'
-          ]);
+       case 'application/pdf':
+             $fileContents = preg_replace("/[^a-zA-Z0-9\s\,\.\-\n\r\t@\/\_\(\)]/","", (new ParsePDFDocuments)->parsePDF($path));
+             return Response::make($fileContents);
+             break;
+       case 'text/rtf':
+             $matches = array('"{\*?\\.+(;})|\s?\\[A-Za-z0-9]+|\s?{\s?\\[A-Za-z0-9]+\s?|\s?}\s?"');
+             $fileContents = preg_replace($matches,"", \File::get($path));
+             return Response::make($fileContents);
+             break;
+       default:
+             // download file if we cannot determine what kind of file it is.
+             return Response::make(file_get_contents($path), 200, [
+                'Content-Type' => Storage::getMimeType($curTable->tblNme . '/' . $subfolder . '/' . $filename),
+                'Content-Disposition' => 'inline; filename="'.$filename.'"'
+            ]);
     }
   }
 
