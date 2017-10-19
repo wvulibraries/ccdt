@@ -25,7 +25,7 @@ before_install:
 
 # Commands to run before the testing
 before_script:
-  - sudo apt-get install -y imagick
+  - sudo apt-get install imagemagick
   # Set the required permissions
   - chmod 777 -R storage
   # Set up the environment variables
