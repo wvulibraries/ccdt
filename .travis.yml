@@ -25,6 +25,8 @@ before_install:
 
 # Commands to run before the testing
 before_script:
+  # Install imagick
+  - pecl install imagick
   # Set the required permissions
   - chmod 777 -R storage
   # Set up the environment variables
@@ -38,8 +40,7 @@ before_script:
   - php artisan key:generate
   # Migrate the users
   - php artisan migrate --seed
-  # Install imagick
-  - pecl install imagick
+
 #==============================================================================
 
 # Run the actual test
