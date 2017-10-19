@@ -25,7 +25,7 @@ before_install:
 
 # Commands to run before the testing
 before_script:
-  - sudo apt-get pecl install imagick
+  - sudo pecl install imagick
   # Set the required permissions
   - chmod 777 -R storage
   # Set up the environment variables
