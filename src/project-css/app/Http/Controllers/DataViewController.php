@@ -10,12 +10,14 @@ use Illuminate\Support\Facades\Auth;
 use App\Table;
 use App\Collection;
 use App\Libraries\CustomStringHelper;
-use App\Libraries\ParseWordDocuments;
 use App\Libraries\ParsePDFDocuments;
+use App\Libraries\TikaConvert;
+
 //use Spatie\PdfToText\Pdf;
-use Spatie\PdfToImage\Pdf;
-use Imagick;
+//use Spatie\PdfToImage\Pdf;
+//use Imagick;
 //use TesseractOCR;
+//use PhpOffice\PhpWord\IOFactory;
 
 /**
 * The controller is responsible for showing the cards data
@@ -175,37 +177,32 @@ class DataViewController extends Controller{
     // retrieve the column names
     $clmnNmes = DB::getSchemaBuilder()->getColumnListing($curTable->tblNme);
 
-    $path = storage_path('app/' . $curTable->tblNme . '/' . $subfolder . '/' . $filename);
+    $source = storage_path('app/' . $curTable->tblNme . '/' . $subfolder . '/' . $filename);
 
     $fileMimeType = Storage::getMimeType($curTable->tblNme . '/' . $subfolder . '/' . $filename);
+
+    $matches = "/[^a-zA-Z0-9\s\,\.\-\n\r\t@\/\_\(\)]/";
 
     switch ($fileMimeType) {
         case 'text/plain':
         case 'message/rfc822':
-             $fileContents = file_get_contents($path);
-             return Response::make($fileContents);
-             break;
-        case 'application/msword':
-             $fileContents = preg_replace("/[^a-zA-Z0-9\s\,\.\-\n\r\t@\/\_\(\)]/","", (new ParseWordDocuments)->parseDoc($path));
-             return Response::make($fileContents);
-             break;
-
-       case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
-             $fileContents = preg_replace("/[^a-zA-Z0-9\s\,\.\-\n\r\t@\/\_\(\)]/","", (new ParseWordDocuments)->parseDocx($path));
+             $fileContents = file_get_contents($source);
              return Response::make($fileContents);
              break;
        case 'application/pdf':
-             $fileContents = preg_replace("/[^a-zA-Z0-9\s\,\.\-\n\r\t@\/\_\(\)]/","", (new ParsePDFDocuments)->parsePDF($path));
+             $fileContents = preg_replace($matches,"", (new ParsePDFDocuments)->parsePDF($source));
              return Response::make($fileContents);
              break;
+       case 'application/msword':
+       case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
        case 'text/rtf':
              $matches = array('"{\*?\\.+(;})|\s?\\[A-Za-z0-9]+|\s?{\s?\\[A-Za-z0-9]+\s?|\s?}\s?"');
-             $fileContents = preg_replace($matches,"", \File::get($path));
+             $fileContents = preg_replace($matches,"", (new tikaConvert)->convert($source));
              return Response::make($fileContents);
              break;
        default:
              // download file if we cannot determine what kind of file it is.
-             return Response::make(file_get_contents($path), 200, [
+             return Response::make(file_get_contents($source), 200, [
                 'Content-Type' => Storage::getMimeType($curTable->tblNme . '/' . $subfolder . '/' . $filename),
                 'Content-Disposition' => 'inline; filename="'.$filename.'"'
             ]);

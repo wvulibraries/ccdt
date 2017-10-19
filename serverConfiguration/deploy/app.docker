@@ -1,0 +1,18 @@
+FROM php:7.0.4-fpm
+
+RUN apt-get update && apt-get install -y libmcrypt-dev \
+    mysql-client libmagickwand-dev --no-install-recommends \
+    && pecl install imagick \
+    && docker-php-ext-enable imagick \
+    && docker-php-ext-install mcrypt pdo_mysql
+
+WORKDIR /var/www
+
+# added for rockefeller-css dependencies
+RUN apt-get install -y --fix-missing poppler-utils
+RUN apt-get install -y ghostscript libjpeg-dev libpng12-dev libtiff-dev
+
+# composer needed for development most likely can be removed during production
+RUN curl -sS https://getcomposer.org/installer | php && mv composer.phar /usr/local/bin/composer
+
+ADD ./serverConfiguration/php.ini /usr/local/etc/php

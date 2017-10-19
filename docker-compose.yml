@@ -1,0 +1,42 @@
+version: '2'
+services:
+    web:
+        build:
+            context: ./
+            dockerfile: serverConfiguration/deploy/web.docker
+        volumes:
+            - ./src/project-css/:/var/www
+        ports:
+            - "8080:80"
+        links:
+            - app
+    app:
+        build:
+            context: ./
+            dockerfile: serverConfiguration/deploy/app.docker
+        volumes:
+            - ./src/project-css/:/var/www
+        links:
+            - database
+            - tika
+        environment:
+            - "DB_PORT=3306"
+            - "DB_HOST=database"
+            - "TIKA_PORT=9998"
+            - "TIKA_HOST=tika"
+    database:
+        image: mysql:5.7.16
+        command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+        environment:
+            - "MYSQL_ROOT_PASSWORD=mountaineer"
+            - "MYSQL_DATABASE=css"
+            - "MYSQL_USER=mountaineer"
+            - "MYSQL_PASSWORD=mountaineer"
+        volumes:
+            - ./serverConfiguration/mysql_data:/var/lib/mysql
+        ports:
+            - "33061:3306"
+    tika:
+        image: trmccormick/tika
+        ports:
+            - "9998:9998"

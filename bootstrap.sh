@@ -60,8 +60,15 @@ then
    ln -s /vagrant/serverConfiguration/mod_security.conf /etc/httpd/conf.d/mod_security.conf
 fi
 
+# remove my.cnf and link our custom file if a custom my.cnf exists
+# if [ -e /vagrant/serverConfiguration/my.cnf ]
+# then
+#    rm -f /etc/my.cnf
+#    ln -s /vagrant/serverConfiguration/my.cnf /etc/my.cnf
+# fi
+
 # create folder for the log files
-mkdir /vagrant/serverConfiguration/logs
+mkdir -p /vagrant/serverConfiguration/logs
 
 # create access log
 touch /vagrant/serverConfiguration/logs/access_log

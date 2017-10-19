@@ -8,8 +8,8 @@ use App\Collection;
 use App\User;
 use App\Table;
 use Auth;
-use App\Libraries\ParseWordDocuments;
 use App\Libraries\ParsePDFDocuments;
+use App\Libraries\TikaConvert;
 
 class UploadController extends Controller{
     /**
@@ -106,10 +106,9 @@ class UploadController extends Controller{
                  $contents = file_get_contents($path);
                  break;
             case 'application/msword':
-                 $contents = preg_replace("/[^a-zA-Z0-9\s\,\.\-\n\r\t@\/\_\(\)]/","", (new ParseWordDocuments)->parseDoc($path));
-                 break;
             case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
-                 $contents = preg_replace("/[^a-zA-Z0-9\s\,\.\-\n\r\t@\/\_\(\)]/","", (new ParseWordDocuments)->parseDocx($path));
+            case 'text/rtf':
+                 $contents = preg_replace("/[^a-zA-Z0-9\s\,\.\-\n\r\t@\/\_\(\)]/","", (new tikaConvert)->convert($path));
                  break;
             case 'application/pdf':
                  $contents = preg_replace("/[^a-zA-Z0-9\s\,\.\-\n\r\t@\/\_\(\)]/","", (new ParsePDFDocuments)->parsePDF($path));
@@ -117,6 +116,7 @@ class UploadController extends Controller{
             default:
                  $contents = null;
         }
+      }
 
         if ($contents != null) {
             // finalise the regular expression, matching the whole line
