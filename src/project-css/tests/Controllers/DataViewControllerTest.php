@@ -131,7 +131,7 @@
 
       // try with invalid table id
       $this->visit('data/2/view' . '/test/' . $emptyFile)
-           ->see('Table id is invalid');           
+           ->see('Table id is invalid');
 
       $this->visit('upload/1')
            ->assertResponseStatus(200)
@@ -219,7 +219,7 @@
        // cleanup remove directory for the test table
        Storage::deleteDirectory($tblname);
 
-       // cleanup remove zillow.csv from upload folder
+       // cleanup remove header_only.csv from upload folder
        Storage::delete('/flatfiles/header_only.csv');
 
        // drop table after Testing
