@@ -19,13 +19,13 @@ php:
 
 # Commands to run before the install
 before_install:
+  - sudo apt-get -y install imagick
   # Change the project directory
   - cd src/project-css
 #==============================================================================
 
 # Commands to run before the testing
 before_script:
-  - sudo apt-get install imagemagick
   # Set the required permissions
   - chmod 777 -R storage
   # Set up the environment variables
@@ -48,5 +48,5 @@ script:
   - vendor/bin/phpunit --coverage-clover=coverage.clover
 
 after_script:
-    - wget https://scrutinizer-ci.com/ocular.phar
-    - php ocular.phar code-coverage:upload --format=php-clover coverage.clover
+  - wget https://scrutinizer-ci.com/ocular.phar
+  - php ocular.phar code-coverage:upload --format=php-clover coverage.clover
