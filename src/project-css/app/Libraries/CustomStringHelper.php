@@ -100,4 +100,23 @@ class CustomStringHelper {
       return strtolower($str);
     }
 
+    public function checkForSSN($fileContents)
+    {
+        // if we have pulled the text from the file next we need to scan for
+        // any social security numbers using regex pattern
+        if ($contents != null) {
+            // finalise the regular expression, matching the whole line
+            $pattern = '#\b[0-9]{3}-[0-9]{2}-[0-9]{4}\b#';
+
+            // preg_match_all will return a count if it is greater than
+            // 0 we have matches against the SSN pattern and will return
+            // a true value
+            if(preg_match_all($pattern, $contents, $matches) > 0){
+                return(true);
+            }
+
+        }
+        return(false);
+    }
+
 }
