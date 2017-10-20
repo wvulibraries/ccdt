@@ -22,7 +22,7 @@ before_install:
   - sudo add-apt-repository -y ppa:moti-p/cc
   - sudo apt-get -y --reinstall install ghostscript
   - sudo apt-get -y --reinstall install imagemagick
-  - pecl install imagick-beta
+  - printf "\n" | pecl install imagick-beta
   # Change the project directory
   - cd src/project-css
 #==============================================================================
