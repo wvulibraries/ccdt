@@ -116,8 +116,9 @@ class UploadController extends Controller{
             default:
                  $contents = null;
         }
-      }
 
+        // if we have pulled the text from the file next we need to scan for
+        // any social security numbers using regex pattern
         if ($contents != null) {
             // finalise the regular expression, matching the whole line
             $pattern = '#\b[0-9]{3}-[0-9]{2}-[0-9]{4}\b#';
