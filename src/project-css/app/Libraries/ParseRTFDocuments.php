@@ -2,7 +2,7 @@
 
 namespace App\Libraries;
 
-class ParseWordDocuments {
+class ParseRTFDocuments {
     /**
      * Parse Word Documents
      *
@@ -19,52 +19,51 @@ class ParseWordDocuments {
     *              this should containe file path and filename
     * @return
     */
-    function parseDoc($filename)
+    function parseRTF($filename)
     {
+        // verify that file exists
         if(!$filename || !file_exists($filename)) return false;
 
-        $fileHandle = fopen($filename, "r");
-        $line = @fread($fileHandle, filesize($filename));
-        $lines = explode(chr(0x0D),$line);
-        $outtext = "";
-        foreach($lines as $thisline)
-          {
-            $pos = strpos($thisline, chr(0x00));
-            if (($pos !== FALSE)||(strlen($thisline)==0))
-              {
-              } else {
-                $outtext .= $thisline." ";
-              }
-          }
-        return $outtext;
+        // verify that tika server is accepting connections
+        if(!$this->tikaServerOpen()) return false;
+
+        // this is one way to use the tika server using the exec command creates a temporary file
+        # $randomNum = mt_rand();
+        # $pngPath = 'app/tmp/' . $randomNum . '.txt';
+        # $destination = storage_path($pngPath);
+        # exec("curl -T " . $filename . " http://tika:9998/tika > " . $destination);
+        # $fileContents = file_get_contents($destination);
+        # unlink($destination);
+
+        // this method doesn't use exec or temp files that need deleted
+        // Set where to connect to
+        $ch = curl_init("http://tika:9998/tika");
+        // Request will be a PUT
+        curl_setopt($ch, CURLOPT_PUT, 1);
+        $fh_res = fopen($filename, 'r');
+
+        curl_setopt($ch, CURLOPT_INFILE, $fh_res);
+        curl_setopt($ch, CURLOPT_INFILESIZE, filesize($filename));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        // Send the request
+        $fileContents = curl_exec ($ch);
+        fclose($fh_res);
+
+        return($fileContents);
     }
 
-    function parseDocx($filename){
+    function tikaServerOpen() {
+      $connection = @fsockopen('tika', '9998');
 
-        if(!$filename || !file_exists($filename)) return false;
-
-        $striped_content = '';
-        $content = '';
-
-        $zip = zip_open($filename);
-        if (!$zip || is_numeric($zip)) return false;
-
-        while ($zip_entry = zip_read($zip)) {
-
-            if (zip_entry_open($zip, $zip_entry) == FALSE) continue;
-
-            if (zip_entry_name($zip_entry) != "word/document.xml") continue;
-
-            $content .= zip_entry_read($zip_entry, zip_entry_filesize($zip_entry));
-
-            zip_entry_close($zip_entry);
-        }
-        zip_close($zip);
-        $content = str_replace('</w:r></w:p></w:tc><w:tc>', " ", $content);
-        $content = str_replace('</w:r></w:p>', "\r\n", $content);
-        $striped_content = strip_tags($content);
-
-        return $striped_content;
+      if (is_resource($connection))
+      {
+          fclose($connection);
+          return(true);
+      }
+      else
+      {
+          return(false);
+      }
     }
 
 }
