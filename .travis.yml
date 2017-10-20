@@ -19,7 +19,7 @@ php:
 
 # Commands to run before the install
 before_install:
-  - sudo apt-get -y install imagick
+  - sudo apt-get -y --reinstall install imagemagick
   # Change the project directory
   - cd src/project-css
 #==============================================================================
