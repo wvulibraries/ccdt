@@ -24,6 +24,8 @@ services:
             - "DB_HOST=database"
             - "TIKA_PORT=9998"
             - "TIKA_HOST=tika"
+        #    - "REDIS_PORT=6379"
+        #    - "REDIS_HOST=cache"
     database:
         image: mysql:5.7.16
         command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
@@ -40,3 +42,7 @@ services:
         image: trmccormick/tika
         ports:
             - "9998:9998"
+    #cache:
+    #    image: redis:3.0
+    #    ports:
+    #        - "63791:6379"
