@@ -9,6 +9,7 @@ RUN apt-get update && apt-get install -y libmcrypt-dev \
 # added for rockefeller-css dependencies
 RUN apt-get install -y --fix-missing poppler-utils
 RUN apt-get install -y ghostscript libjpeg-dev libpng12-dev libtiff-dev
+RUN apt-get install -y supervisor
 
 # composer needed for development most likely can be removed during production
 RUN curl -sS https://getcomposer.org/installer | php && mv composer.phar /usr/local/bin/composer
