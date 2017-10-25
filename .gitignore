@@ -7,3 +7,4 @@ sqlFiles/
 scripts/init.sh
 .DS_Store
 *.log
+docker-images/

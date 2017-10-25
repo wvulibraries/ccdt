@@ -535,6 +535,20 @@ class TableController extends Controller
     $fltFleNme = $request->fltFle;
     $fltFleAbsPth = $this->strDir.'/'.$fltFleNme;
 
+    // $linecount = 0;
+    // $handle = fopen(\storage_path()."/app/".$fltFleAbsPth, "r");
+    // while(!feof($handle)){
+    //   $line = fgets($handle);
+    //   $linecount++;
+    // }
+    //
+    // fclose($handle);
+    //
+    // echo $linecount-1;
+    // die();
+
+
+
     // Create an instance for the file
     $curFltFleObj = new \SplFileObject(\storage_path()."/app/".$fltFleAbsPth);
 
@@ -546,8 +560,7 @@ class TableController extends Controller
       // Counter for processed
       $prcssd = 0;
 
-      // increse time limit for importing files
-      set_time_limit ( 240 );
+      //set_time_limit(0);
 
       // For each line
       while($curFltFleObj->valid()){
