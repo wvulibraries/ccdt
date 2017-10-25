@@ -189,14 +189,13 @@ class DataViewController extends Controller{
              $fileContents = file_get_contents($source);
              return Response::make($fileContents);
              break;
-       case 'application/pdf':
-             $fileContents = preg_replace($matches,"", (new ParsePDFDocuments)->parsePDF($source));
-             return Response::make($fileContents);
-             break;
+      //  case 'application/pdf':
+      //        $fileContents = preg_replace($matches,"", (new ParsePDFDocuments)->parsePDF($source));
+      //        return Response::make($fileContents);
+      //        break;
        case 'application/msword':
        case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
        case 'text/rtf':
-             $matches = array('"{\*?\\.+(;})|\s?\\[A-Za-z0-9]+|\s?{\s?\\[A-Za-z0-9]+\s?|\s?}\s?"');
              $fileContents = preg_replace($matches,"", (new tikaConvert)->convert($source));
              return Response::make($fileContents);
              break;

@@ -8,8 +8,6 @@ use App\Collection;
 use App\User;
 use App\Table;
 use Auth;
-use App\Libraries\ParsePDFDocuments;
-use App\Libraries\TikaConvert;
 
 class UploadController extends Controller{
     /**

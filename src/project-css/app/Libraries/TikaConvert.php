@@ -10,6 +10,13 @@ class TikaConvert {
      * that is in either doc or docx files.
      *
      */
+    private $tika_host;
+    private $tika_port;
+
+    function __construct() {
+        $this->tika_host = env('TIKA_HOST', 'localhost');
+        $this->tika_port = env('TIKA_PORT', 'localhost');
+    }
 
    /**
     * checks if files exists in storage under the folder
@@ -31,13 +38,13 @@ class TikaConvert {
         # $randomNum = mt_rand();
         # $pngPath = 'app/tmp/' . $randomNum . '.txt';
         # $destination = storage_path($pngPath);
-        # exec("curl -T " . $filename . " http://tika:9998/tika > " . $destination);
+        # exec("curl -T " . $filename . " http://" . $this->tika_host . ":" . $this->tika_port. "/tika > " . $destination);
         # $fileContents = file_get_contents($destination);
         # unlink($destination);
 
         // this method doesn't use exec or temp files that need deleted
         // Set where to connect to
-        $ch = curl_init("http://" . $TIKA_HOST . ':' . $TIKA_PORT . "/tika");
+        $ch = curl_init("http://" . $this->tika_host . ':' . $this->tika_port . "/tika");
         // Request will be a PUT
         curl_setopt($ch, CURLOPT_PUT, 1);
         $fh_res = fopen($filename, 'r');
@@ -53,17 +60,17 @@ class TikaConvert {
     }
 
     function serverOpen() {
-      $connection = @fsockopen($TIKA_HOST, $TIKA_PORT);
+        $connection = @fsockopen($this->tika_host, $this->tika_port);
 
-      if (is_resource($connection))
-      {
-          fclose($connection);
-          return(true);
-      }
-      else
-      {
-          return(false);
-      }
+        if (is_resource($connection))
+        {
+            fclose($connection);
+            return(true);
+        }
+        else
+        {
+            return(false);
+        }
     }
 
 }
