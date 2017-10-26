@@ -32,12 +32,12 @@ services:
         image: mysql:5.7.16
         command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
         environment:
-            - "MYSQL_ROOT_PASSWORD=mountaineer"
-            - "MYSQL_DATABASE=css"
-            - "MYSQL_USER=mountaineer"
-            - "MYSQL_PASSWORD=mountaineer"
+           - "MYSQL_ROOT_PASSWORD=mountaineer"
+           - "MYSQL_USER=mountaineer"
+           - "MYSQL_PASSWORD=mountaineer"
         volumes:
             - ./serverConfiguration/mysql_data:/var/lib/mysql
+            - ./conf/setup-docker.sql:/docker-entrypoint-initdb.d/setup-docker.sql
         ports:
             - "33061:3306"
     tika:
