@@ -186,18 +186,13 @@ class DataViewController extends Controller{
     switch ($fileMimeType) {
         case 'text/plain':
         case 'message/rfc822':
-             $fileContents = file_get_contents($source);
-             return Response::make($fileContents);
+             return Response::make((new customStringHelper)->ssnRedact(file_get_contents($source)));
              break;
-      //  case 'application/pdf':
-      //        $fileContents = preg_replace($matches,"", (new ParsePDFDocuments)->parsePDF($source));
-      //        return Response::make($fileContents);
-      //        break;
        case 'application/msword':
        case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
        case 'text/rtf':
              $fileContents = preg_replace($matches,"", (new tikaConvert)->convert($source));
-             return Response::make($fileContents);
+             return Response::make((new customStringHelper)->ssnRedact($fileContents));
              break;
        default:
              // download file if we cannot determine what kind of file it is.

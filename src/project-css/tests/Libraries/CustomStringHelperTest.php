@@ -120,7 +120,13 @@ class CustomStringHelperTest extends TestCase
 
 
     public function testCheckForSSN(){
-        $this->assertTrue($this->stringHelper->checkForSSN(file_get_contents('./storage/app/files/test/fake_socials.txt')));
-        $this->assertFalse($this->stringHelper->checkForSSN(file_get_contents('./storage/app/files/test/test_upload.txt')));
+        $this->assertTrue($this->stringHelper->ssnExists(file_get_contents('./storage/app/files/test/fake_socials.txt')));
     }
+
+    public function testRedactSSN(){
+        // test should remove ssn from file and then ssnExists should report false that it exists
+        $contents = $this->stringHelper->ssnRedact(file_get_contents('./storage/app/files/test/fake_socials.txt'));
+        $this->assertFalse($this->stringHelper->ssnExists($contents));
+    }
+
 }
