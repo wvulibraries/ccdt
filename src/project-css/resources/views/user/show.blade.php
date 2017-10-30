@@ -1,5 +1,6 @@
 @extends('layouts.default')
 
+<!-- Heading -->
 @section('content')
 
 <!-- Search engine -->

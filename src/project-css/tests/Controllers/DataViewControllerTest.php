@@ -232,7 +232,5 @@
         $this->assertFalse((new DataViewController)->isValidTable('99'));
     }
 
-
-
   }
 ?>
