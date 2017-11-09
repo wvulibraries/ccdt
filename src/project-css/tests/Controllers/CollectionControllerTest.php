@@ -7,9 +7,8 @@
 
     private $adminEmail;
     private $adminPass;
-    private $userName;
-    private $userEmail;
-    private $userPass;
+    private $admin;
+    private $user;
 
     public function setUp(){
       parent::setUp();
@@ -20,10 +19,9 @@
       $this->adminEmail = "admin@admin.com";
       $this->adminPass = "testing";
 
-      //user credentials
-      $this->userName = "testuser";
-      $this->userEmail = "testuser@google.com";
-      $this->userPass = "testing";
+      // find admin and test user accounts
+      $this->admin = App\User::where('name', '=', 'admin')->first();
+      $this->user = App\User::where('name', '=', 'test')->first();
     }
 
     protected function tearDown() {
@@ -49,50 +47,38 @@
     }
 
     public function testNonAdminCannotCreateCollection(){
-        // find non-admin user
-        $user = App\User::where('isAdmin', '=', '0')->first();
-
         // try to get to the user(s) page
-        $this->actingAs($user)
+        $this->actingAs($this->user)
             ->get('collection')
             //invalid user gets redirected
             ->assertResponseStatus(302);
     }
 
-    // public function testAdminCanCreateCollection(){
-    //     // find admin user
-    //     $admin = App\User::where('isAdmin', '=', '1')->first();
-    //
-    //     // try to get to the user(s) page
-    //     $this->actingAs($admin)
-    //         ->get('collection')
-    //         //valid admin user should get response 200
-    //         ->assertResponseStatus(200);
-    // }
+    public function testAdminCanCreateCollection(){
+        // try to get to the user(s) page
+        $this->actingAs($this->admin)
+            ->get('collection')
+            //valid admin user should get response 200
+            ->assertResponseStatus(200);
+    }
 
-    // public function testAdminCreateCollection(){
-    //     // find admin user
-    //     $admin = App\User::where('isAdmin', '=', '1')->first();
-    //
-    //     // try to get to the user(s) page
-    //     $this->actingAs($admin)
-    //         ->get('table/create')
-    //         ->see('Create, import and manage collections here.')
-    //         //valid admin user should get response 200
-    //         ->assertResponseStatus(200);
-    // }
+    public function testAdminCreateCollection(){
+        // try to get to the user(s) page
+        $this->actingAs($this->admin)
+            ->get('table/create')
+            ->see('Create, import and manage collections here.')
+            //valid admin user should get response 200
+            ->assertResponseStatus(200);
+    }
 
     public function testEditingCollectionName(){
-        // find admin user
-        $admin = App\User::where('isAdmin', '=', '1')->first();
-
         // Generate Test Collection
         $collection = factory(App\Collection::class)->create([
             'clctnName' => 'collection1',
         ]);
 
         // While using a admin account try to rename collection name
-        $this->actingAs($admin)
+        $this->actingAs($this->admin)
              ->post('collection/edit', ['id' => $collection->id, 'clctnName' => 'collection2']);
 
         //check if collection was renamed
@@ -101,51 +87,44 @@
     }
 
     public function testDisableThenEnableCollection(){
-        // find admin user
-        $admin = App\User::where('isAdmin', '=', '1')->first();
-
         // Generate Test Collection
         $collection = factory(App\Collection::class)->create([
             'clctnName' => 'collection1',
         ]);
 
         // While using a admin account try to disable a collection with invalid name (should be redirected)
-        $this->actingAs($admin)->post('collection/disable', ['id' => $collection->id, 'clctnName' => 'collection'])->assertResponseStatus(302);
+        $this->actingAs($this->admin)->post('collection/disable', ['id' => $collection->id, 'clctnName' => 'collection'])->assertResponseStatus(302);
 
         // While using a admin account try to disable a collection
-        $this->actingAs($admin)->post('collection/disable', ['id' => $collection->id, 'clctnName' => $collection->clctnName]);
+        $this->actingAs($this->admin)->post('collection/disable', ['id' => $collection->id, 'clctnName' => $collection->clctnName]);
 
         // Verify Collection is disabled
         $collection = App\Collection::find($collection->id);
         $this->assertEquals('0', $collection->isEnabled);
 
         // While using a admin account try to enable a collection with invalid name (should be redirected)
-        $this->actingAs($admin)->post('collection/enable', ['id' => $collection->id, 'clctnName' => 'collection'])->assertResponseStatus(302);
+        $this->actingAs($this->admin)->post('collection/enable', ['id' => $collection->id, 'clctnName' => 'collection'])->assertResponseStatus(302);
 
         // While using a admin account try to enable a collection
-        $this->actingAs($admin)->post('collection/enable', ['id' => $collection->id]);
+        $this->actingAs($this->admin)->post('collection/enable', ['id' => $collection->id]);
 
         $collection = App\Collection::find($collection->id);
         $this->assertEquals('1', $collection->hasAccess);
     }
 
     public function testNonAdminDisableCollection(){
-        // find user user
-        $user = App\User::where('isAdmin', '=', '0')->first();
-
         // Generate Test Collection
         $collection = factory(App\Collection::class)->create([
-            'clctnName' => 'collection1',
+           'clctnName' => 'collection1',
         ]);
 
         // While using a admin account try to disable a collection
-        $this->actingAs($user)->post('collection/disable', ['id' => $collection->id, 'clctnName' => $collection->clctnName]);
+        $this->actingAs($this->user)->post('collection/disable', ['id' => $collection->id, 'clctnName' => $collection->clctnName]);
 
         // Verify Collection hasn't changed
         $collection = App\Collection::find($collection->id);
         $this->assertEquals('1', $collection->isEnabled);
     }
-
 
   }
 ?>

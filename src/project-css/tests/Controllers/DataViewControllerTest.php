@@ -10,46 +10,34 @@
 
   class DataViewControllerTest extends TestCase{
 
-    private $adminEmail;
-    private $adminPass;
-    private $userName;
-    private $userEmail;
-    private $userPass;
+    private $admin;
+    private $user;
 
     public function setUp(){
-      parent::setUp();
-      Artisan::call('migrate');
-      Artisan::call('db:seed');
+           parent::setUp();
+           Artisan::call('migrate');
+           Artisan::call('db:seed');
 
-      //admin credentials
-      $this->adminEmail = "admin@admin.com";
-      $this->adminPass = "testing";
-
-      //user credentials
-      $this->userName = "testuser";
-      $this->userEmail = "testuser@google.com";
-      $this->userPass = "testing";
+           // find admin and test user accounts
+           $this->admin = App\User::where('name', '=', 'admin')->first();
+           $this->user = App\User::where('name', '=', 'test')->first();
     }
 
     protected function tearDown(){
-      Artisan::call('migrate:reset');
-      parent::tearDown();
-
+           Artisan::call('migrate:reset');
+           parent::tearDown();
     }
 
     public function testIndex(){
-      // find admin user
-      $admin = App\User::where('isAdmin', '=', '1')->first();
-
       //try to import a table without a collection
-      $this->actingAs($admin)
+      $this->actingAs($this->admin)
            ->visit('table/create')
            ->see('Please create active collection here first')
            ->assertResponseStatus(200);
 
       // Generate Test Collection
       $collection = factory(App\Collection::class)->create([
-          'clctnName' => 'collection1',
+           'clctnName' => 'collection1',
       ]);
 
       $tblname = 'importtest' . mt_rand();
@@ -100,7 +88,7 @@
 
       // while table is disabled try to view a file
       $this->visit('data/1/view' . '/test/' . $emptyFile)
-            ->assertResponseStatus(200);
+           ->assertResponseStatus(200);
 
       // While using a admin account try to enable a collection
       $this->post('collection/enable', ['id' => $collection->id, 'clctnName' => $collection->clctnName])
@@ -167,31 +155,25 @@
     }
 
     public function testIndexWithInvalidTable(){
-      // find admin user
-      $admin = App\User::where('isAdmin', '=', '1')->first();
-
       //try to import a table without a collection
-      $this->actingAs($admin)
+      $this->actingAs($this->admin)
            ->visit('data/1')
            ->see("Table id is invalid");
 
       // test using non-numeric table id
-      $this->actingAs($admin)
+      $this->actingAs($this->admin)
            ->visit('data/idontexist')
            ->see("Table id is invalid");
     }
 
     public function testImportWithNoRecords(){
-      // find admin user
-      $admin = App\User::where('isAdmin', '=', '1')->first();
-
       // Generate Test Collection
       $collection = factory(App\Collection::class)->create([
           'clctnName' => 'collection1',
       ]);
 
       $tblname = 'importtest' . mt_rand();
-      $this->actingAs($admin)
+      $this->actingAs($this->admin)
            ->visit('table/create')
            ->type($tblname,'imprtTblNme')
            ->type('1','colID')

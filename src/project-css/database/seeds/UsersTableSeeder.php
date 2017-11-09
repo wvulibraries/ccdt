@@ -15,6 +15,7 @@ class UsersTableSeeder extends Seeder
           'name' => 'test',
           'email' => 'test@test.com',
           'password' => bcrypt('testing'),
+          'isAdmin' => false
         ]);
 
       // Insert an admin user
@@ -22,7 +23,7 @@ class UsersTableSeeder extends Seeder
           'name' => 'admin',
           'email' => 'admin@admin.com',
           'password' => bcrypt('testing'),
-          'isAdmin' => true,
+          'isAdmin' => true
         ]);
 
     }

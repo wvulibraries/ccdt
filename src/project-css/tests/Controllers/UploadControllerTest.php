@@ -10,39 +10,27 @@
 
   class UploadControllerTest extends TestCase{
 
-    private $adminEmail;
-    private $adminPass;
-    private $userName;
-    private $userEmail;
-    private $userPass;
+    private $admin;
+    private $user;
 
     public function setUp(){
       parent::setUp();
       Artisan::call('migrate');
       Artisan::call('db:seed');
 
-      //admin credentials
-      $this->adminEmail = "admin@admin.com";
-      $this->adminPass = "testing";
-
-      //user credentials
-      $this->userName = "testuser";
-      $this->userEmail = "testuser@google.com";
-      $this->userPass = "testing";
+      // find admin and test user accounts
+      $this->admin = App\User::where('name', '=', 'admin')->first();
+      $this->user = App\User::where('name', '=', 'test')->first();
     }
 
     protected function tearDown(){
       Artisan::call('migrate:reset');
       parent::tearDown();
-
     }
 
     public function testUploadFileToDisabledTable(){
-      // find admin user
-      $admin = App\User::where('isAdmin', '=', '1')->first();
-
       //try to import a table without a collection
-      $this->actingAs($admin)
+      $this->actingAs($this->admin)
            ->visit('table/create')
            ->see('Please create active collection here first')
            ->assertResponseStatus(200);
@@ -77,7 +65,7 @@
        $table = App\Table::where('tblNme', '=', $tblname)->first();
 
        // While using a admin account try to disable a table
-       $this->actingAs($admin)->post('table/restrict', ['id' => $table->id]);
+       $this->actingAs($this->admin)->post('table/restrict', ['id' => $table->id]);
        $table = App\Table::where('tblNme', '=', $tblname)->first();
        $this->assertEquals('0', $table->hasAccess);
 
@@ -96,11 +84,8 @@
     }
 
     public function testUploadFile(){
-      // find admin user
-      $admin = App\User::where('isAdmin', '=', '1')->first();
-
       //try to import a table without a collection
-      $this->actingAs($admin)
+      $this->actingAs($this->admin)
            ->visit('table/create')
            ->see('Please create active collection here first')
            ->assertResponseStatus(200);

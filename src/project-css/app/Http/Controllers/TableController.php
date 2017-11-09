@@ -126,9 +126,6 @@ class TableController extends Controller
     // Store in the directory inside storage/app
     $thisFltFile->storeAs($this->strDir,$thisFltFileNme);
 
-    // Storage::disk('local')->put($thisFltFileNme.'.'.$thisFltFileExt,  File::get($thisFltFile));
-
-
     // 3. Show the users schema for further verification
     $schema = $this->schema($this->strDir.'/'.$thisFltFileNme);
     // If the file isn't valid return with an error
@@ -311,11 +308,6 @@ class TableController extends Controller
   public function fltrTkns($tkns){
     // Run through the files
     foreach($tkns as $key => $tkn){
-      // Check if the token is null
-      // if(empty(trim($tkn))){
-      //   // Replace the content with null
-      //   $tkns[$key] = "null";
-      // }
       // trim the token
       $tkns[$key]=trim($tkn);
     }
@@ -435,8 +427,6 @@ class TableController extends Controller
     // modify table for fulltext search using the srchindex column
     DB::connection()->getPdo()->exec('ALTER TABLE ' . $tblNme . ' ADD FULLTEXT fulltext_index (srchindex)');
 
-    // Check for the number of columns we actually added into database
-
     // Finally create the table
     // Save the table upon the schema
     $this->crteTblInCollctn($tblNme,$collctnId);
@@ -535,20 +525,6 @@ class TableController extends Controller
     $fltFleNme = $request->fltFle;
     $fltFleAbsPth = $this->strDir.'/'.$fltFleNme;
 
-    // $linecount = 0;
-    // $handle = fopen(\storage_path()."/app/".$fltFleAbsPth, "r");
-    // while(!feof($handle)){
-    //   $line = fgets($handle);
-    //   $linecount++;
-    // }
-    //
-    // fclose($handle);
-    //
-    // echo $linecount-1;
-    // die();
-
-
-
     // Create an instance for the file
     $curFltFleObj = new \SplFileObject(\storage_path()."/app/".$fltFleAbsPth);
 
@@ -559,8 +535,6 @@ class TableController extends Controller
 
       // Counter for processed
       $prcssd = 0;
-
-      //set_time_limit(0);
 
       // For each line
       while($curFltFleObj->valid()){
@@ -590,9 +564,6 @@ class TableController extends Controller
             $curArry[strval($clmnLst[$i])]=utf8_encode($tkns[$i]);
           }
 
-          // add srchindex
-          //$curArry["srchindex"]=utf8_encode(implode(" ", $tkns));
-
           // remove extra characters replacing them with spaces
           // also remove .. that is in the filenames
           $cleanString = preg_replace('/[^A-Za-z0-9._ ]/', ' ', str_replace('..', '',$curLine));
@@ -602,7 +573,9 @@ class TableController extends Controller
 
           // remove duplicate keywords in the srchindex
           $srchArr = explode( " " , $cleanString );
-          $srchArr = array_unique( $srchArr );
+          //$srchArr = array_unique( $srchArr );
+
+          // add srchindex
           $curArry["srchindex"] = implode(" " , $srchArr);
 
           // Insert them into DB
