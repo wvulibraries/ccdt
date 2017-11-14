@@ -26,10 +26,14 @@ class TikaConvert {
     function convert($filename)
     {
         // verify that file exists
-        if(!$filename || !file_exists($filename)) return false;
+        if(!$filename || !file_exists($filename)) {
+          return false;
+        }
 
         // verify that tika server is accepting connections
-        if(!$this->serverOpen()) return false;
+        if(!$this->serverOpen()) {
+          return false;
+        }
 
         // this is one way to use the tika server using the exec command creates a temporary file
         # $randomNum = mt_rand();
@@ -59,13 +63,11 @@ class TikaConvert {
     function serverOpen() {
         $connection = @fsockopen($this->tika_host, $this->tika_port);
 
-        if (is_resource($connection))
-        {
+        if (is_resource($connection)) {
             fclose($connection);
             return(true);
         }
-        else
-        {
+        else {
             return(false);
         }
     }

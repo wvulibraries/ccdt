@@ -199,6 +199,8 @@ class TableController extends Controller
 
   /**
   * Simple function to create the table within the collections
+  * @param string $tblNme
+  * @param string $collctnId
   */
   public function crteTblInCollctn($tblNme,$collctnId){
     // declare a new table instance
@@ -218,6 +220,8 @@ class TableController extends Controller
   * 3. Tokenize the current line
   * 4. Validate the tokens and return
   * 5. Return first line as array
+  * @param string $fltFlePth
+  * @return boolean
   */
   public function schema($fltFlePth){
     // 1. Get the flatfile instance
@@ -277,6 +281,7 @@ class TableController extends Controller
 
   /**
   * Get the line numbers for a fileobject
+  * @param \SplFileObject $fltFleObj
   */
   public function isEmpty($fltFleObj){
     // Before anytthing set to seek first line
@@ -449,8 +454,7 @@ class TableController extends Controller
       // Forward the file and table name
       $tblNms=Table::where('tblNme', $tblNme)->get();
       $fltFleList=array($fltFle);
-    }
-    else{
+    } else{
       // Get all the tables
       $tblNms = Table::all();
       // Get the list of files in the directory
