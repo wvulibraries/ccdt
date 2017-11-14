@@ -13,16 +13,16 @@ class CustomStringHelper {
      *
      */
 
-   /**
-    * checks if files exists in storage under the folder
-    * for the table
-    *
-    * @param       string  $tblNme    Input string
-    * @param       string  $str    Input string
-    * @return      boolean
-    */
+    /**
+     * checks if files exists in storage under the folder
+     * for the table
+     *
+     * @param       string  $tblNme    Input string
+     * @param       string  $str    Input string
+     * @return      boolean
+     */
     public function fileExists($tblNme, $str) {
-      return \Storage::exists($tblNme . '/' . $str);
+        return \Storage::exists($tblNme . '/' . $str);
     }
 
     /**
@@ -35,7 +35,7 @@ class CustomStringHelper {
      * @return      boolean
      */
     public function fileExistsInFolder($tblNme, $str) {
-      return \Storage::exists($tblNme . '/' . $this->getFolderName($str) . '/' . $this->getFilename($str));
+        return \Storage::exists($tblNme . '/' . $this->getFolderName($str) . '/' . $this->getFilename($str));
     }
 
     /**
@@ -45,8 +45,8 @@ class CustomStringHelper {
      * @return      array of strings
      */
     public function separateFiles($str) {
-      $filesArray = explode('^',$str);
-      return $filesArray;
+        $filesArray = explode('^',$str);
+        return $filesArray;
     }
 
     /**
@@ -56,12 +56,12 @@ class CustomStringHelper {
      * @return      string
      */
     public function getFilename($str) {
-      // explode string
-      $tokens = explode('\\',$str);
-      // get filename from end of string
-      $filename = end($tokens);
-      // return filename
-      return $filename;
+        // explode string
+        $tokens = explode('\\',$str);
+        // get filename from end of string
+        $filename = end($tokens);
+        // return filename
+        return $filename;
     }
 
     /**
@@ -72,14 +72,14 @@ class CustomStringHelper {
      * @return      string
      */
     public function getFolderName($str) {
-      // explode string
-      $tokens = explode('\\',$str);
-      // get filename from end of string
-      $filename = end($tokens);
-      // get the last folder the file exists in
-      $subfolder = prev($tokens);
-      //return folder name
-      return $subfolder;
+        // explode string
+        $tokens = explode('\\',$str);
+        // get filename from end of string
+        $filename = end($tokens);
+        // get the last folder the file exists in
+        $subfolder = prev($tokens);
+        //return folder name
+        return $subfolder;
     }
 
     /**
@@ -91,35 +91,35 @@ class CustomStringHelper {
      * @return      string
      */
     public function cleanSearchString($search) {
-      //replace ? with * for wildcard searches
-      $str = str_replace('?', '*', $search);
-      $str = trim($str);
-      $str = htmlspecialchars($str);
+        //replace ? with * for wildcard searches
+        $str = str_replace('?', '*', $search);
+        $str = trim($str);
+        $str = htmlspecialchars($str);
 
-      //return string as lowercase
-      return strtolower($str);
+        //return string as lowercase
+        return strtolower($str);
     }
 
     /**
     * @param string $fileContents
     */
     public function ssnExists($fileContents) {
-      // ssnExists uses preg_match_all to detect a vaild social security
-      // number pattern. If the number of matches are above 0 then we
-      // will return true.
-      if ($fileContents != null) {
-          // regex patter we will use to detect a social security number
-          $pattern = '#\b[0-9]{3}-[0-9]{2}-[0-9]{4}\b#';
+        // ssnExists uses preg_match_all to detect a vaild social security
+        // number pattern. If the number of matches are above 0 then we
+        // will return true.
+        if ($fileContents != null) {
+            // regex patter we will use to detect a social security number
+            $pattern = '#\b[0-9]{3}-[0-9]{2}-[0-9]{4}\b#';
 
-          // preg_match_all will return a count if it is greater than
-          // 0 we have matches against the SSN pattern and will return
-          // a true value
-          if(preg_match_all($pattern, $fileContents, $matches) > 0) {
-              return(true);
-          }
+            // preg_match_all will return a count if it is greater than
+            // 0 we have matches against the SSN pattern and will return
+            // a true value
+            if(preg_match_all($pattern, $fileContents, $matches) > 0) {
+                return(true);
+            }
 
-      }
-      return(false);
+        }
+        return(false);
     }
 
   /**

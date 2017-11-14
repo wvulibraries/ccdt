@@ -16,15 +16,15 @@ class RedirectIfAdmin
      * @return mixed
      */
     public function handle($request, Closure $next){
-      // Check if the user is logged in
-      if(Auth::check()){
+        // Check if the user is logged in
+        if(Auth::check()){
         // Check if the user is admin
         if($request->user()->isAdmin){
-          return $next($request);
+            return $next($request);
         }
       }
 
-      // Else just redirect him to the home page
-      return redirect('home');
+        // Else just redirect him to the home page
+        return redirect('home');
     }
 }
