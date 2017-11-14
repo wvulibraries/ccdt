@@ -22,9 +22,9 @@ class CreateTablesTable extends Migration
 
             // Table cascade if the collections are deleted
             $table->foreign('collection_id')
-                  ->references('id')
-                  ->on('collections')
-                  ->onDelete('cascade');
+                     ->references('id')
+                     ->on('collections')
+                     ->onDelete('cascade');
         });
     }
 
