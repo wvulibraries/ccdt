@@ -36,7 +36,7 @@ class RegisterController extends Controller
      *
      * @return void
      */
-    public function __construct(){
+    public function __construct() {
         //$this->middleware('guest');
         // Protection to make sure this only accessible to admin
         $this->middleware('admin');
@@ -84,10 +84,10 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-      return User::create([
-          'name' => $data['name'],
-          'email' => $data['email'],
-          'password' => bcrypt($data['password']),
-      ]);
+        return User::create([
+            'name' => $data[ 'name' ],
+            'email' => $data[ 'email' ],
+            'password' => bcrypt($data[ 'password' ]),
+        ]);
     }
 }
