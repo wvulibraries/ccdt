@@ -39,7 +39,7 @@ services:
             - ./serverConfiguration/mysql_data:/var/lib/mysql
             - ./conf/setup-docker.sql:/docker-entrypoint-initdb.d/setup-docker.sql
         ports:
-            - "33061:3306"
+            - "3306:3306"
     tika:
         image: trmccormick/tika
         container_name: tika_service
