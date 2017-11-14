@@ -4,11 +4,8 @@ namespace App\Libraries;
 
 class TikaConvert {
     /**
-     * Parse Word Documents
-     *
-     * These functions are to help with pulling out the text
-     * that is in either doc or docx files.
-     *
+     * TikaConvert helps connect to the tika server to perform various
+     * file type conversions and ocr'ing of images
      */
     private $tika_host;
     private $tika_port;

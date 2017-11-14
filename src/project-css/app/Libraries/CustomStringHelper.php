@@ -101,10 +101,11 @@ class CustomStringHelper {
     }
 
     public function ssnExists($fileContents) {
-      // if we have pulled the text from the file next we need to scan for
-      // any social security numbers using regex pattern
+      // ssnExists uses preg_match_all to detect a vaild social security
+      // number pattern. If the number of matches are above 0 then we
+      // will return true.
       if ($fileContents != null) {
-          // finalise the regular expression, matching the whole line
+          // regex patter we will use to detect a social security number
           $pattern = '#\b[0-9]{3}-[0-9]{2}-[0-9]{4}\b#';
 
           // preg_match_all will return a count if it is greater than
@@ -118,6 +119,12 @@ class CustomStringHelper {
       return(false);
     }
 
+    /**
+     * If ssnExists returns true we use a preg_replace
+     * to replace the social with ###-##-####
+     * @param       string  $fileContents    Input string
+     * @return      string
+     */
   public function ssnRedact($fileContents) {
       $pattern = '#\b[0-9]{3}-[0-9]{2}-[0-9]{4}\b#';
       $redacted = '###-##-####';

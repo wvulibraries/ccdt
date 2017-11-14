@@ -10,14 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Table;
 use App\Collection;
 use App\Libraries\CustomStringHelper;
-use App\Libraries\ParsePDFDocuments;
 use App\Libraries\TikaConvert;
-
-//use Spatie\PdfToText\Pdf;
-//use Spatie\PdfToImage\Pdf;
-//use Imagick;
-//use TesseractOCR;
-//use PhpOffice\PhpWord\IOFactory;
 
 /**
 * The controller is responsible for showing the cards data
