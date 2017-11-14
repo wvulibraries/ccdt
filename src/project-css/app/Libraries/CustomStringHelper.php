@@ -101,8 +101,8 @@ class CustomStringHelper {
     }
 
     /**
-    * @param string $fileContents
-    */
+     * @param string $fileContents
+     */
     public function ssnExists($fileContents) {
         // ssnExists uses preg_match_all to detect a vaild social security
         // number pattern. If the number of matches are above 0 then we
@@ -122,19 +122,19 @@ class CustomStringHelper {
         return(false);
     }
 
-  /**
-   * If ssnExists returns true we use a preg_replace
-   * to replace the social with ###-##-####
-   * @param       string  $fileContents    Input string
-   * @return      string
-   */
-  public function ssnRedact($fileContents) {
-      $pattern = '#\b[0-9]{3}-[0-9]{2}-[0-9]{4}\b#';
-      $redacted = '###-##-####';
-      if ($this->ssnExists($fileContents)) {
-        return (preg_replace($pattern, $redacted, $fileContents));
-      }
-      return($fileContents);
-  }
+    /**
+     * If ssnExists returns true we use a preg_replace
+     * to replace the social with ###-##-####
+     * @param       string  $fileContents    Input string
+     * @return      string
+     */
+    public function ssnRedact($fileContents) {
+        $pattern = '#\b[0-9]{3}-[0-9]{2}-[0-9]{4}\b#';
+        $redacted = '###-##-####';
+        if ($this->ssnExists($fileContents)) {
+            return (preg_replace($pattern, $redacted, $fileContents));
+        }
+        return($fileContents);
+    }
 
 }
