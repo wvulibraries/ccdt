@@ -1,8 +1,6 @@
 <?php
   # app/tests/controllers/CollectionControllerTest.php
 
-  use App\Http\Controllers\CollectionController;
-
   class CollectionControllerTest extends TestCase {
 
     private $adminEmail;

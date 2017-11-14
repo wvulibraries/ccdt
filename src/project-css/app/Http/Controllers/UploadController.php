@@ -4,10 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-use App\Collection;
-use App\User;
 use App\Table;
-use Auth;
 
 class UploadController extends Controller{
     /**

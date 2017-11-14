@@ -2,7 +2,6 @@
   # app/tests/controllers/HomeControllerTest.php
 
   use App\User;
-  use App\Http\Controllers\HomeController;
 
   class HomeControllerTest extends TestCase {
 

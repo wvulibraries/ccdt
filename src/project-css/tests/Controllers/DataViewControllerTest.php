@@ -2,11 +2,7 @@
   # app/tests/controllers/DataViewControllerTest.php
 
   use App\Http\Controllers\DataViewController;
-  use Illuminate\Http\UploadedFile;
   use Illuminate\Support\Facades\Storage;
-  use Illuminate\Foundation\Testing\WithoutMiddleware;
-  use Illuminate\Foundation\Testing\DatabaseMigrations;
-  use Illuminate\Foundation\Testing\DatabaseTransactions;
 
   class DataViewControllerTest extends TestCase{
 

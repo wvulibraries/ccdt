@@ -1,13 +1,7 @@
 <?php
   # app/tests/controllers/TableControllerTest.php
 
-  use Illuminate\Http\UploadedFile;
   use Illuminate\Support\Facades\Storage;
-  use Illuminate\Foundation\Testing\WithoutMiddleware;
-  use Illuminate\Foundation\Testing\DatabaseMigrations;
-  use Illuminate\Foundation\Testing\DatabaseTransactions;
-
-  use App\Http\Controllers\TableController;
 
   class TableControllerTest extends TestCase{
 

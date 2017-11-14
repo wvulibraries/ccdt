@@ -1,19 +1,14 @@
 <?php
   # app/tests/controllers/UploadControllerTest.php
 
-  use App\Http\Controllers\UploadController;
-  use Illuminate\Http\UploadedFile;
   use Illuminate\Support\Facades\Storage;
-  use Illuminate\Foundation\Testing\WithoutMiddleware;
-  use Illuminate\Foundation\Testing\DatabaseMigrations;
-  use Illuminate\Foundation\Testing\DatabaseTransactions;
 
   class UploadControllerTest extends TestCase{
 
     private $admin;
     private $user;
 
-    public function setUp(){
+    public function setUp() {
       parent::setUp();
       Artisan::call('migrate');
       Artisan::call('db:seed');
@@ -23,12 +18,12 @@
       $this->user = App\User::where('name', '=', 'test')->first();
     }
 
-    protected function tearDown(){
+    protected function tearDown() {
       Artisan::call('migrate:reset');
       parent::tearDown();
     }
 
-    public function testUploadFileToDisabledTable(){
+    public function testUploadFileToDisabledTable() {
       //try to import a table without a collection
       $this->actingAs($this->admin)
            ->visit('table/create')
@@ -83,7 +78,7 @@
       Schema::drop($tblname);
     }
 
-    public function testUploadFile(){
+    public function testUploadFile() {
       //try to import a table without a collection
       $this->actingAs($this->admin)
            ->visit('table/create')

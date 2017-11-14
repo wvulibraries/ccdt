@@ -23,7 +23,7 @@ class HomeController extends Controller {
     public function index() {
         // Check if the user is admin
         // Page for a normal user
-        if(!(Auth::user()->isAdmin)) {
+        if (!(Auth::user()->isAdmin)) {
         // Get the required variables
         // Collections
         $cllctns = Collection::all();
