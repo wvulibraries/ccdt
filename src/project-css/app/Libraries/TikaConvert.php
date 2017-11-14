@@ -66,8 +66,7 @@ class TikaConvert {
         if (is_resource($connection)) {
             fclose($connection);
             return(true);
-        }
-        else {
+        } else {
             return(false);
         }
     }

@@ -1,10 +1,5 @@
 <?php
 
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Foundation\Testing\WithoutMiddleware;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
-
 use App\Libraries\tikaConvert;
 
 class tikaConvertTest extends TestCase
@@ -24,7 +19,7 @@ class tikaConvertTest extends TestCase
         parent::tearDown();
     }
 
-    public function testConvert(){
+    public function testConvert() {
         $contents = $this->tikaConvert->convert($this->singlefilewithpath);
         $this->assertTrue(strpos($contents, 'testing') !== false);
     }

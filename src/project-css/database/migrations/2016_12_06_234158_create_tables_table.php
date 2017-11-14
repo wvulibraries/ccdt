@@ -13,7 +13,7 @@ class CreateTablesTable extends Migration
      */
     public function up()
     {
-        Schema::create('tables', function (Blueprint $table) {
+        Schema::create('tables', function(Blueprint $table) {
             $table->increments('id');
             $table->string('tblNme', 191)->unique();
             $table->integer('collection_id')->unsigned();

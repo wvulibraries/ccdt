@@ -62,8 +62,7 @@ class UploadController extends Controller{
 
           if (Storage::exists($destinationPath . '/' . $filename)) {
             $message = ['content' =>  $filename . ' Already Exists', 'level' =>  'info'];
-          }
-          else {
+          } else {
              // Copy the file in our upload folder
              $file->storeAs($destinationPath,$filename);
 

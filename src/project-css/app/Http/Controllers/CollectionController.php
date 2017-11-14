@@ -25,16 +25,16 @@ class CollectionController extends Controller
   /**
   * Show the collection index page
   */
-  public function index(){
+  public function index() {
     $collcntNms = Collection::all();
     // check if the user is admin
-    return view('admin/collection')->with('collcntNms',$collcntNms);
+    return view('admin/collection')->with('collcntNms', $collcntNms);
   }
 
   /**
   * Create the database entry into the database
   */
-  public function create(Request $request){
+  public function create(Request $request) {
     //Customize the error messages
     $messages = array(
       'clctnName.required' => 'Please enter a collection name',
@@ -65,7 +65,7 @@ class CollectionController extends Controller
   /**
   * Edit the database entry into the database
   */
-  public function edit(Request $request){
+  public function edit(Request $request) {
     //Customize the error messages
     $messages = array(
       'clctnName.required' => 'Please enter a collection name',
@@ -81,7 +81,7 @@ class CollectionController extends Controller
     );
 
     // Validate the request before storing the data
-    $this->validate($request,$rules,$messages);
+    $this->validate($request, $rules, $messages);
 
     // Create the collection name
     $thisClctn = Collection::findorFail($request->id);
@@ -95,14 +95,14 @@ class CollectionController extends Controller
   /**
   * Edit the database entry into the database
   */
-  public function disable(Request $request){
+  public function disable(Request $request) {
     // Create the collection name
     $thisClctn = Collection::findorFail($request->id);
-    if(strcasecmp($thisClctn->clctnName, $request->clctnName) == 0){
+    if(strcasecmp($thisClctn->clctnName, $request->clctnName) == 0) {
       // Get all the tables of this collection
       $thisClctnTbls = $thisClctn->tables()->get();
       // Update all the tables of this collection
-      foreach($thisClctnTbls as $tbl){
+      foreach($thisClctnTbls as $tbl) {
         $tbl->hasAccess = false;
         $tbl->save();
       }
@@ -121,14 +121,14 @@ class CollectionController extends Controller
   /**
   * Edit the database entry into the database
   */
-  public function enable(Request $request){
+  public function enable(Request $request) {
     // Create the collection name
     $thisClctn = Collection::findorFail($request->id);
 
     // Get all the tables of this collection
     $thisClctnTbls = $thisClctn->tables()->get();
     // Update all the tables of this collection
-    foreach($thisClctnTbls as $tbl){
+    foreach($thisClctnTbls as $tbl) {
       $tbl->hasAccess = true;
       $tbl->save();
     }

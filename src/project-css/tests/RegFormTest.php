@@ -12,7 +12,7 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
  */
 class RegFormTest extends TestCase
 {
-    public function setUp(){
+    public function setUp() {
       parent::setUp();
       Artisan::call('migrate');
       Artisan::call('db:seed');
@@ -28,23 +28,23 @@ class RegFormTest extends TestCase
      *
      * @return void
      */
-    public function testPassword(){
+    public function testPassword() {
       // Go to login page and enter credentials
       //credentials
       $adminEmail = "admin@admin.com";
       $adminPass = "testing";
       // Type some valid values
       $this->visit('/login')
-           ->type($adminEmail,'email')
-           ->type($adminPass,'password')
+           ->type($adminEmail, 'email')
+           ->type($adminPass, 'password')
            ->press('Login');
 
       // Test for the name field
       $this->visit('/register')
-           ->type('Tyrion Lannister','name')
-           ->type('user@google.com','email')
-           ->type('test','password')
-           ->type('test','password_confirmation')
+           ->type('Tyrion Lannister', 'name')
+           ->type('user@google.com', 'email')
+           ->type('test', 'password')
+           ->type('test', 'password_confirmation')
            ->press('Register')
            ->see('The password must be at least 6 characters.');
     }

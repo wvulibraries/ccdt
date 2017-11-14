@@ -13,7 +13,7 @@ class ViewTest extends TestCase
     private $userEmail;
     private $userPass;
 
-    public function setUp(){
+    public function setUp() {
       parent::setUp();
       Artisan::call('migrate');
       Artisan::call('db:seed');
@@ -30,7 +30,7 @@ class ViewTest extends TestCase
 
     protected function tearDown() {
       Artisan::call('migrate:reset');
-      parent::tearDown();  // Moving that call to the top of the function didn't work either.
+      parent::tearDown(); // Moving that call to the top of the function didn't work either.
     }
 
     /**
@@ -74,8 +74,8 @@ class ViewTest extends TestCase
 
       // Go to login page and enter credentials
       $this->visit('/login')
-           ->type($this->adminEmail,'email')
-           ->type($this->adminPass,'password')
+           ->type($this->adminEmail, 'email')
+           ->type($this->adminPass, 'password')
            ->press('Login')
            ->seePageIs('/home');
 
@@ -84,20 +84,20 @@ class ViewTest extends TestCase
            ->see('Create, view and manage users here.');
     }
 
-    public function testUserRegister(){
+    public function testUserRegister() {
       // Go to login page and enter credentials
       $this->visit('/login')
-           ->type($this->adminEmail,'email')
-           ->type($this->adminPass,'password')
+           ->type($this->adminEmail, 'email')
+           ->type($this->adminPass, 'password')
            ->press('Login')
            ->seePageIs('/home');
 
       // Go to register and create new user
      $this->visit('/register')
-          ->type($this->userName,'name')
-          ->type($this->userEmail,'email')
-          ->type($this->userPass,'password')
-          ->type($this->userPass,'password_confirmation')
+          ->type($this->userName, 'name')
+          ->type($this->userEmail, 'email')
+          ->type($this->userPass, 'password')
+          ->type($this->userPass, 'password_confirmation')
           ->press('Register')
           ->see('Create, view and manage users here.')
           ->see($this->userName);
@@ -109,12 +109,12 @@ class ViewTest extends TestCase
      *
      * @return void
      */
-     public function testDashboardViews(){
+     public function testDashboardViews() {
        // Click on the all the links on dashboard
        // Type some valid values
        $this->visit('/login')
-            ->type($this->adminEmail,'email')
-            ->type($this->adminPass,'password')
+            ->type($this->adminEmail, 'email')
+            ->type($this->adminPass, 'password')
             ->press('Login')
             ->seePageIs('/home')
             ->see('Dashboard');
