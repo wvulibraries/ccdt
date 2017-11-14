@@ -1,5 +1,13 @@
 <?php
 
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Foundation\Testing\WithoutMiddleware;
+use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
+
+use App\Libraries\CustomStringHelper;
+
 class CustomStringHelperTest extends TestCase
 {
     protected $stringHelper;

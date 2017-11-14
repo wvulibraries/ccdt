@@ -1,7 +1,12 @@
 <?php
   # app/tests/controllers/UploadControllerTest.php
 
+  use App\Http\Controllers\UploadController;
+  use Illuminate\Http\UploadedFile;
   use Illuminate\Support\Facades\Storage;
+  use Illuminate\Foundation\Testing\WithoutMiddleware;
+  use Illuminate\Foundation\Testing\DatabaseMigrations;
+  use Illuminate\Foundation\Testing\DatabaseTransactions;
 
   class UploadControllerTest extends TestCase{
 
