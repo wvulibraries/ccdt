@@ -17,18 +17,18 @@ class UploadController extends Controller{
     }
 
     /**
-    * Show the table index page
-    */
+     * Show the table index page
+     */
     public function index($curTable) {
-      // Get the table entry in meta table "tables"
-      $curTable = Table::find($curTable);
-      if(!$curTable->hasAccess){
+        // Get the table entry in meta table "tables"
+        $curTable = Table::find($curTable);
+        if(!$curTable->hasAccess) {
         return redirect()->route('home')->withErrors(['Table is disabled']);
-      }
+        }
 
-      // return the index page
-      return view('admin/upload')->with('tblNme',$curTable->tblNme)
-                                 ->with('tblId',$curTable);
+        // return the index page
+        return view('admin/upload')->with('tblNme',$curTable->tblNme)
+                                   ->with('tblId',$curTable);
     }
 
     /**
