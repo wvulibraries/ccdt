@@ -117,4 +117,16 @@ class CustomStringHelperTest extends TestCase
         // check that file doesn't exists using our function
         $this->assertFalse($this->stringHelper->fileExistsInFolder('testtable1', $this->singlefilewithpath));
     }
+
+
+    public function testCheckForSSN(){
+        $this->assertTrue($this->stringHelper->ssnExists(file_get_contents('./storage/app/files/test/fake_socials.txt')));
+    }
+
+    public function testRedactSSN(){
+        // test should remove ssn from file and then ssnExists should report false that it exists
+        $contents = $this->stringHelper->ssnRedact(file_get_contents('./storage/app/files/test/fake_socials.txt'));
+        $this->assertFalse($this->stringHelper->ssnExists($contents));
+    }
+
 }

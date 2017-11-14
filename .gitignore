@@ -1,8 +1,10 @@
 .vagrant
 privateFiles/
+serverConfiguration/logs
 testData/
 misc/
 sqlFiles/
 scripts/init.sh
 .DS_Store
 *.log
+docker-images/

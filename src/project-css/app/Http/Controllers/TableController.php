@@ -12,10 +12,11 @@ use App\Collection;
 
 class TableController extends Controller
 {
+  private $strDir;
+  private $extraClmns;
+
   /**
    * Create a new controller instance.
-   *
-   * @return void
    */
   public function __construct()
   {
@@ -79,6 +80,7 @@ class TableController extends Controller
   * 3. Show the users schema for further verification
   */
   public function import(Request $request){
+
     // 1. Input the table name in the meta Directory
     //Rules for validation
     $rules = array(
@@ -111,7 +113,7 @@ class TableController extends Controller
     // Get the file name
     $thisFltFileNme = $thisFltFile->getClientOriginalName();
     // Get the client extension
-    $thisFltFileExt = $thisFltFile->getClientOriginalExtension();
+    // $thisFltFileExt = $thisFltFile->getClientOriginalExtension();
     // check if the file exists
     // Get the list of files in the directory
     $fltFleList = Storage::allFiles($this->strDir);
@@ -306,11 +308,6 @@ class TableController extends Controller
   public function fltrTkns($tkns){
     // Run through the files
     foreach($tkns as $key => $tkn){
-      // Check if the token is null
-      // if(empty(trim($tkn))){
-      //   // Replace the content with null
-      //   $tkns[$key] = "null";
-      // }
       // trim the token
       $tkns[$key]=trim($tkn);
     }
@@ -338,7 +335,7 @@ class TableController extends Controller
       $curNme = 'col-'.$i.'-name';
       $rules[$curNme]='required|alpha_dash';
       // Rules for all data type
-      $curDTyp = 'col-'.$i.'-data';
+      // $curDTyp = 'col-'.$i.'-data';
       $rules[$curNme]='required|string';
       // Rules for all data sizes
       $curDataSz = 'col-'.$i.'-size';
@@ -429,8 +426,6 @@ class TableController extends Controller
 
     // modify table for fulltext search using the srchindex column
     DB::connection()->getPdo()->exec('ALTER TABLE ' . $tblNme . ' ADD FULLTEXT fulltext_index (srchindex)');
-
-    // Check for the number of columns we actually added into database
 
     // Finally create the table
     // Save the table upon the schema
@@ -541,9 +536,6 @@ class TableController extends Controller
       // Counter for processed
       $prcssd = 0;
 
-      // increse time limit for importing files
-      set_time_limit ( 240 );
-
       // For each line
       while($curFltFleObj->valid()){
         // Get the line
@@ -572,19 +564,18 @@ class TableController extends Controller
             $curArry[strval($clmnLst[$i])]=utf8_encode($tkns[$i]);
           }
 
-          // add srchindex
-          //$curArry["srchindex"]=utf8_encode(implode(" ", $tkns));
-
           // remove extra characters replacing them with spaces
           // also remove .. that is in the filenames
-          $cleanString = preg_replace('/[^A-Za-z0-9. ]/', ' ', str_replace('..', '',$curLine));
+          $cleanString = preg_replace('/[^A-Za-z0-9._ ]/', ' ', str_replace('..', '',$curLine));
 
           // remove extra spaces and make string all lower case
           $cleanString = strtolower(preg_replace('/\s+/', ' ', $cleanString));
 
           // remove duplicate keywords in the srchindex
           $srchArr = explode( " " , $cleanString );
-          $srchArr = array_unique( $srchArr );
+          //$srchArr = array_unique( $srchArr );
+
+          // add srchindex
           $curArry["srchindex"] = implode(" " , $srchArr);
 
           // Insert them into DB

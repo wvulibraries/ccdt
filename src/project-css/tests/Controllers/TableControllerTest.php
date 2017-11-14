@@ -11,25 +11,23 @@
 
   class TableControllerTest extends TestCase{
 
-    private $adminEmail;
-    private $adminPass;
-    private $userName;
-    private $userEmail;
-    private $userPass;
+    private $admin;
+    private $user;
+    private $collection;
 
     public function setUp(){
-      parent::setUp();
-      Artisan::call('migrate');
-      Artisan::call('db:seed');
+         parent::setUp();
+         Artisan::call('migrate');
+         Artisan::call('db:seed');
 
-      //admin credentials
-      $this->adminEmail = "admin@admin.com";
-      $this->adminPass = "testing";
+         // find admin and test user accounts
+         $this->admin = App\User::where('name', '=', 'admin')->first();
+         $this->user = App\User::where('name', '=', 'test')->first();
 
-      //user credentials
-      $this->userName = "testuser";
-      $this->userEmail = "testuser@google.com";
-      $this->userPass = "testing";
+         // Generate Test Collection
+         $this->collection = factory(App\Collection::class)->create([
+             'clctnName' => 'collection1',
+         ]);
     }
 
     protected function tearDown() {
@@ -38,27 +36,16 @@
     }
 
     public function testNonAdminCannotCreateTable(){
-        // find non-admin user
-        $user = App\User::where('isAdmin', '=', '0')->first();
-
         // try to get to the user(s) page
-        $this->actingAs($user)
+        $this->actingAs($this->user)
             ->get('table')
             //invalid user gets redirected
             ->assertResponseStatus(302);
     }
 
     public function testFileUploadAndTableCreate(){
-        // find admin user
-        $admin = App\User::where('isAdmin', '=', '1')->first();
-
-        // Generate Test Collection
-        $collection = factory(App\Collection::class)->create([
-            'clctnName' => 'collection1',
-        ]);
-
         $tblname = 'importtest' . mt_rand();
-        $this->actingAs($admin)
+        $this->actingAs($this->admin)
              ->visit('table/create')
              ->type($tblname,'imprtTblNme')
              ->type('1','colID')
@@ -87,16 +74,8 @@
     }
 
     public function testInvalidFileTypeUpload(){
-        // find admin user
-        $admin = App\User::where('isAdmin', '=', '1')->first();
-
-        // Generate Test Collection
-        $collection = factory(App\Collection::class)->create([
-            'clctnName' => 'collection1',
-        ]);
-
         $tblname = 'importtest' . mt_rand();
-        $this->actingAs($admin)
+        $this->actingAs($this->admin)
              ->visit('table/create')
              ->type($tblname,'imprtTblNme')
              ->type('1','colID')
@@ -114,16 +93,8 @@
     }
 
     public function testFileExistsUpload(){
-        // find admin user
-        $admin = App\User::where('isAdmin', '=', '1')->first();
-
-        // Generate Test Collection
-        $collection = factory(App\Collection::class)->create([
-            'clctnName' => 'collection1',
-        ]);
-
         $tblname = 'importtest' . mt_rand();
-        $this->actingAs($admin)
+        $this->actingAs($this->admin)
              ->visit('table/create')
              ->type($tblname,'imprtTblNme')
              ->type('1','colID')
@@ -164,15 +135,8 @@
     }
 
     public function testSelectAndCreateTableThenDisable(){        // find admin user
-        $admin = App\User::where('isAdmin', '=', '1')->first();
-
-        // Generate Test Collection
-        $collection = factory(App\Collection::class)->create([
-            'clctnName' => 'collection1',
-        ]);
-
         $tblname = 'importtest' . mt_rand();
-        $this->actingAs($admin)
+        $this->actingAs($this->admin)
              ->visit('table/create')
              ->submitForm('Select', ['slctTblNme' => $tblname, 'colID' => '1', 'fltFile' => 'zillow.csv'])
              ->assertResponseStatus(200)
@@ -195,7 +159,7 @@
         $table = App\Table::where('tblNme', '=', $tblname)->first();
 
         // While using a admin account try to disable a table
-        $this->actingAs($admin)->post('table/restrict', ['id' => $table->id]);
+        $this->actingAs($this->admin)->post('table/restrict', ['id' => $table->id]);
         $table = App\Table::where('tblNme', '=', $tblname)->first();
         $this->assertEquals('0', $table->hasAccess);
 
@@ -208,7 +172,6 @@
         // drop table after Testing
         Schema::drop($tblname);
     }
-
 
     public function testLoad(){
         // calling load should return items one is the list of files

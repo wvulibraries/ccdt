@@ -1,5 +1,5 @@
 <?php
-  # app/tests/controllers/TableControllerTest.php
+  # app/tests/controllers/DataViewControllerTest.php
 
   use App\Http\Controllers\DataViewController;
   use Illuminate\Http\UploadedFile;
@@ -10,46 +10,34 @@
 
   class DataViewControllerTest extends TestCase{
 
-    private $adminEmail;
-    private $adminPass;
-    private $userName;
-    private $userEmail;
-    private $userPass;
+    private $admin;
+    private $user;
 
     public function setUp(){
-      parent::setUp();
-      Artisan::call('migrate');
-      Artisan::call('db:seed');
+           parent::setUp();
+           Artisan::call('migrate');
+           Artisan::call('db:seed');
 
-      //admin credentials
-      $this->adminEmail = "admin@admin.com";
-      $this->adminPass = "testing";
-
-      //user credentials
-      $this->userName = "testuser";
-      $this->userEmail = "testuser@google.com";
-      $this->userPass = "testing";
+           // find admin and test user accounts
+           $this->admin = App\User::where('name', '=', 'admin')->first();
+           $this->user = App\User::where('name', '=', 'test')->first();
     }
 
     protected function tearDown(){
-      Artisan::call('migrate:reset');
-      parent::tearDown();
-
+           Artisan::call('migrate:reset');
+           parent::tearDown();
     }
 
     public function testIndex(){
-      // find admin user
-      $admin = App\User::where('isAdmin', '=', '1')->first();
-
       //try to import a table without a collection
-      $this->actingAs($admin)
+      $this->actingAs($this->admin)
            ->visit('table/create')
            ->see('Please create active collection here first')
            ->assertResponseStatus(200);
 
       // Generate Test Collection
       $collection = factory(App\Collection::class)->create([
-          'clctnName' => 'collection1',
+           'clctnName' => 'collection1',
       ]);
 
       $tblname = 'importtest' . mt_rand();
@@ -100,7 +88,7 @@
 
       // while table is disabled try to view a file
       $this->visit('data/1/view' . '/test/' . $emptyFile)
-            ->assertResponseStatus(200);
+           ->assertResponseStatus(200);
 
       // While using a admin account try to enable a collection
       $this->post('collection/enable', ['id' => $collection->id, 'clctnName' => $collection->clctnName])
@@ -114,13 +102,6 @@
            ->assertResponseStatus(200)
            ->see('Adam Donachie');
 
-      // search for a number that will go to the basic "like" search
-      // $this->visit('data/1/1
-      //      ->type('75','search')
-      //      ->press('Search')
-      //      ->assertResponseStatus(200)
-      //      ->see('75');
-
       // view specific record
       $this->visit('data/1/19')
            ->assertResponseStatus(200)
@@ -132,8 +113,26 @@
            ->assertResponseStatus(200)
            ->see('Search Yeilded No Results');
 
+      // try viewing emptyfile
       $this->visit('data/1/view' . '/test/' . $emptyFile)
            ->assertResponseStatus(200);
+
+      // try with invalid table id
+      $this->visit('data/2/view' . '/test/' . $emptyFile)
+           ->see('Table id is invalid');
+
+      $this->visit('upload/1')
+           ->assertResponseStatus(200)
+           ->see('Upload files to ' . $tblname . ' Table')
+           ->type('test', 'upFldNme')
+           ->attach(array('./storage/app/files/test/test_upload.txt'),'attachments[]')
+           ->press('Upload')
+           ->assertResponseStatus(200)
+           ->see('Upload files to ' . $tblname . ' Table')
+           ->assertFileExists(storage_path('app/' . $tblname . '/test/test_upload.txt'));
+
+     $this->visit('data/1/view' . '/test/' . 'test_upload.txt')
+          ->assertResponseStatus(200);
 
       // logout user
       Auth::logout();
@@ -155,17 +154,26 @@
       Schema::drop($tblname);
     }
 
-    public function testImportWithNoRecords(){
-      // find admin user
-      $admin = App\User::where('isAdmin', '=', '1')->first();
+    public function testIndexWithInvalidTable(){
+      //try to import a table without a collection
+      $this->actingAs($this->admin)
+           ->visit('data/1')
+           ->see("Table id is invalid");
 
+      // test using non-numeric table id
+      $this->actingAs($this->admin)
+           ->visit('data/idontexist')
+           ->see("Table id is invalid");
+    }
+
+    public function testImportWithNoRecords(){
       // Generate Test Collection
       $collection = factory(App\Collection::class)->create([
           'clctnName' => 'collection1',
       ]);
 
       $tblname = 'importtest' . mt_rand();
-      $this->actingAs($admin)
+      $this->actingAs($this->admin)
            ->visit('table/create')
            ->type($tblname,'imprtTblNme')
            ->type('1','colID')
@@ -193,7 +201,7 @@
        // cleanup remove directory for the test table
        Storage::deleteDirectory($tblname);
 
-       // cleanup remove zillow.csv from upload folder
+       // cleanup remove header_only.csv from upload folder
        Storage::delete('/flatfiles/header_only.csv');
 
        // drop table after Testing

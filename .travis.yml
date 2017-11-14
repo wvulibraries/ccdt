@@ -19,6 +19,10 @@ php:
 
 # Commands to run before the install
 before_install:
+  - sudo add-apt-repository -y ppa:moti-p/cc
+  - sudo apt-get -y --reinstall install ghostscript
+  - sudo apt-get -y --reinstall install imagemagick
+  - printf "\n" | pecl install imagick-beta
   # Change the project directory
   - cd src/project-css
 #==============================================================================
@@ -38,6 +42,7 @@ before_script:
   - php artisan key:generate
   # Migrate the users
   - php artisan migrate --seed
+
 #==============================================================================
 
 # Run the actual test
@@ -46,5 +51,5 @@ script:
   - vendor/bin/phpunit --coverage-clover=coverage.clover
 
 after_script:
-    - wget https://scrutinizer-ci.com/ocular.phar
-    - php ocular.phar code-coverage:upload --format=php-clover coverage.clover
+  - wget https://scrutinizer-ci.com/ocular.phar
+  - php ocular.phar code-coverage:upload --format=php-clover coverage.clover

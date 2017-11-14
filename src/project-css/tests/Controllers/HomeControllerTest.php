@@ -19,7 +19,7 @@
       $this->adminPass = "testing";
 
       //user credentials
-      $this->userEmail = "testuser@google.com";
+      $this->userEmail = "test@test.com";
       $this->userPass = "testing";
     }
 
@@ -29,12 +29,6 @@
     }
 
     public function test_login_with_user(){
-        // Generate Test User
-        $this->user = factory(App\User::class)->create([
-            'email' => $this->userEmail,
-            'password' => bcrypt($this->userPass),
-        ]);
-
         // Type some valid values
         $this->visit('/login')
              ->type($this->userEmail,'email')

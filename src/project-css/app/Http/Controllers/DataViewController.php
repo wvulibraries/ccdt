@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Table;
 use App\Collection;
 use App\Libraries\CustomStringHelper;
+use App\Libraries\TikaConvert;
 
 /**
 * The controller is responsible for showing the cards data
@@ -18,8 +19,6 @@ class DataViewController extends Controller{
 
   /**
    * Constructor that associates the middlewares
-   *
-   * @return void
    */
   public function __construct(){
     // Middleware to check for authenticated
@@ -30,36 +29,47 @@ class DataViewController extends Controller{
   * Show the data from the selected table
   */
   public function index($curTable){
-    // Get the table entry in meta table "tables"
-    $curTable = Table::find($curTable);
-    if(!$curTable->hasAccess){
-      return redirect()->route('home')->withErrors(['Table is disabled']);
-    }
+      // test for the validity of curtable
+      if(!$this->isValidTable($curTable)){
+        return redirect()->route('home')->withErrors(['Table id is invalid']);
+      }
 
-    // Get and return of table doesn't have any records
-    $numOfRcrds = DB::table($curTable->tblNme)->count();
-    // check for the number of records
-    if ($numOfRcrds == 0){
-      return redirect()->route('home')->withErrors(['Table does not have any records.']);
-    }
+      // Get the table entry in meta table "tables"
+      $curTable = Table::find($curTable);
+      if(!$curTable->hasAccess){
+        return redirect()->route('home')->withErrors(['Table is disabled']);
+      }
 
-    // Get the records 30 at a time
-    $rcrds = DB::table($curTable->tblNme)->paginate(30);
+      // Get and return of table doesn't have any records
+      $numOfRcrds = DB::table($curTable->tblNme)->count();
+      // check for the number of records
+      if ($numOfRcrds == 0){
+        return redirect()->route('home')->withErrors(['Table does not have any records.']);
+      }
 
-    // retrieve the column names
-    $clmnNmes = DB::getSchemaBuilder()->getColumnListing($curTable->tblNme);
+      // Get the records 30 at a time
+      $rcrds = DB::table($curTable->tblNme)->paginate(30);
 
-    // return the index page
-    return view('user.data')->with('rcrds',$rcrds)
-                            ->with('clmnNmes',$clmnNmes)
-                            ->with('tblNme',$curTable->tblNme)
-                            ->with('tblId',$curTable);
+      // retrieve the column names
+      $clmnNmes = DB::getSchemaBuilder()->getColumnListing($curTable->tblNme);
+
+      // return the index page
+      return view('user.data')->with('rcrds',$rcrds)
+                              ->with('clmnNmes',$clmnNmes)
+                              ->with('tblNme',$curTable->tblNme)
+                              ->with('tblId',$curTable);
+
   }
 
   /**
   * Show a record in the table
   */
   public function show($curTable, $curId){
+    // test for the validity of curtable
+    if(!$this->isValidTable($curTable)){
+      return redirect()->route('home')->withErrors(['Table id is invalid']);
+    }
+
     // Get the table entry in meta table "tables"
     $curTable = Table::find($curTable);
 
@@ -68,7 +78,7 @@ class DataViewController extends Controller{
     }
 
     // Check if id
-    if (strlen($curId) == 0){
+    if (is_null($curId) || !is_numeric($curId)){
       return redirect()->route('home')->withErrors(['Invalid ID']);
     }
 
@@ -77,7 +87,7 @@ class DataViewController extends Controller{
                 ->where('id', '=', $curId)
                 ->get();
 
-    // check for the number of records if their is non return with error message
+    // check for the number of records if their is none return with error message
     if (count ($rcrds) == 0){
       return redirect()->route('home')->withErrors(['Search Yeilded No Results']);
     }
@@ -145,6 +155,11 @@ class DataViewController extends Controller{
   }
 
   public function view($curTable, $subfolder, $filename){
+    // test for the validity of curtable
+    if(!$this->isValidTable($curTable)){
+      return redirect()->route('home')->withErrors(['Table id is invalid']);
+    }
+
     // Get the table entry in meta table "tables"
     $curTable = Table::find($curTable);
 
@@ -155,12 +170,30 @@ class DataViewController extends Controller{
     // retrieve the column names
     $clmnNmes = DB::getSchemaBuilder()->getColumnListing($curTable->tblNme);
 
-    $path = storage_path('app/' . $curTable->tblNme . '/' . $subfolder . '/' . $filename);
+    $source = storage_path('app/' . $curTable->tblNme . '/' . $subfolder . '/' . $filename);
 
-    return Response::make(file_get_contents($path), 200, [
-        'Content-Type' => Storage::getMimeType($curTable->tblNme . '/' . $subfolder . '/' . $filename),
-        'Content-Disposition' => 'inline; filename="'.$filename.'"'
-    ]);
+    $fileMimeType = Storage::getMimeType($curTable->tblNme . '/' . $subfolder . '/' . $filename);
+
+    $matches = "/[^a-zA-Z0-9\s\,\.\-\n\r\t@\/\_\(\)]/";
+
+    switch ($fileMimeType) {
+        case 'text/plain':
+        case 'message/rfc822':
+             return Response::make((new customStringHelper)->ssnRedact(file_get_contents($source)));
+             break;
+       case 'application/msword':
+       case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
+       case 'text/rtf':
+             $fileContents = preg_replace($matches,"", (new tikaConvert)->convert($source));
+             return Response::make((new customStringHelper)->ssnRedact($fileContents));
+             break;
+       default:
+             // download file if we cannot determine what kind of file it is.
+             return Response::make(file_get_contents($source), 200, [
+                'Content-Type' => Storage::getMimeType($curTable->tblNme . '/' . $subfolder . '/' . $filename),
+                'Content-Disposition' => 'inline; filename="'.$filename.'"'
+            ]);
+    }
   }
 
   /**

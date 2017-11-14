@@ -5,8 +5,8 @@
 #author		       :Ajay Krishna Teja Kavuri
 #date            :20161014
 #updated by      :Tracy A McCormick
-#date            :20170817
-#version         :0.3
+#date            :20170926
+#version         :0.5
 #==============================================================================
 
 #Formal update for no reason
@@ -27,25 +27,6 @@ echo -e "----Installed Apache----\n\n"
 yum -y install mysql-connector-java mysql-connector-odbc mysql-devel mysql-lib mysql-server
 echo -e "----Installed MySQL----\n\n"
 
-# remove my.cnf and link our custom file if a custom my.cnf exists
-if [ -e /vagrant/serverConfiguration/my.cnf ]
-then
-   rm -f /etc/my.cnf
-   ln -s /vagrant/serverConfiguration/my.cnf /etc/my.cnf
-
-   #create logs
-   touch /vagrant/serverConfiguration/logs/mysql.log
-   touch /vagrant/serverConfiguration/logs/mysql-slow.log
-
-   #symlink logs
-   ln -s /vagrant/serverConfiguration/logs/mysql.log /var/log/mysql.log
-   ln -s /vagrant/serverConfiguration/logs/mysql-slow.log /var/log/mysql-slow.log
-
-   # make sure mysql is the owner of the logs
-   chown mysql:mysql /var/log/mysql.log
-   chown mysql:mysql /var/log/mysql-slow.log
-fi
-
 # Install MySQL mods
 yum -y install mod_auth_kerb mod_auth_mysql mod_authz_ldap mod_evasive mod_perl mod_security mod_ssl mod_wsgi
 echo -e "----Installed Auth Plugins for MySQL----\n\n"
@@ -58,12 +39,42 @@ echo -e "----Installed PHP 7----\n\n"
 yum -y install php70w-pecl-xdebug.x86_64
 echo -e "----Installed Xdebug----\n\n"
 
-# remove php.ini and link our custom file if a custom php.ini exists
+# remove httpd.conf and link our custom file if a custom vagrant_httpd.conf if it exists
+if [ -e /vagrant/serverConfiguration/vagrant_httpd.conf ]
+then
+   rm -f /etc/httpd/conf/httpd.conf
+   ln -s /vagrant/serverConfiguration/vagrant_httpd.conf /etc/httpd/conf/httpd.conf
+fi
+
+# remove php.ini and link our custom file if a custom php.ini if it exists
 if [ -e /vagrant/serverConfiguration/php.ini ]
 then
    rm -f /etc/php.ini
    ln -s /vagrant/serverConfiguration/php.ini /etc/php.ini
 fi
+
+# remove mod_security.conf and link our custom file
+if [ -e /vagrant/serverConfiguration/mod_security.conf ]
+then
+   rm -f /etc/httpd/conf.d/mod_security.conf
+   ln -s /vagrant/serverConfiguration/mod_security.conf /etc/httpd/conf.d/mod_security.conf
+fi
+
+# remove my.cnf and link our custom file if a custom my.cnf exists
+# if [ -e /vagrant/serverConfiguration/my.cnf ]
+# then
+#    rm -f /etc/my.cnf
+#    ln -s /vagrant/serverConfiguration/my.cnf /etc/my.cnf
+# fi
+
+# create folder for the log files
+mkdir -p /vagrant/serverConfiguration/logs
+
+# create access log
+touch /vagrant/serverConfiguration/logs/access_log
+
+# create error log
+touch /vagrant/serverConfiguration/logs/error_log
 
 # Start and set apache
 sudo systemctl start httpd
@@ -89,6 +100,38 @@ echo -e "----Installed libnotify----\n\n"
 # Install git
 yum -y install git
 echo -e "----Installed Git----\n\n"
+
+# Install poppler-utils used by pdf-to-text package
+yum -y install poppler-utils
+echo -e "----Installed Poppler-Utils----\n\n"
+
+#install 3rd Party dependencies
+cd /vagrant/serverConfiguration/3rdParty
+
+# install support files for leptonica for image files
+yum -y install libjpeg-devel libpng-devel libtiff-devel
+
+tar -zxf /vagrant/serverConfiguration/3rdParty/leptonica-1.69.tar.gz --directory=/tmp
+tar -zxf /vagrant/serverConfiguration/3rdParty/tesseract-ocr-3.02.02.tar.gz --directory=/tmp
+tar -zxf /vagrant/serverConfiguration/3rdParty/tesseract-ocr-3.02.eng.tar.gz --directory=/tmp
+
+cd /tmp/leptonica-1.69
+./configure
+make
+make install
+echo -e "----Installed Leptonica----\n\n"
+
+cd /tmp/tesseract-ocr
+./autogen.sh
+./configure
+make
+make install
+
+cp /tmp/tesseract-ocr/tessdata/eng.* /usr/local/share/tessdata
+
+ln -s /usr/local/bin/tesseract /usr/bin/
+
+echo -e "----Installed Tesseract OCR----\n\n"
 
 # Install composer
 curl -sS https://getcomposer.org/installer | php
