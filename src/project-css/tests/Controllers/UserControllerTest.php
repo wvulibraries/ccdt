@@ -8,7 +8,7 @@
     private $admin;
     private $user;
 
-    public function setUp(){
+    public function setUp() {
          parent::setUp();
          Artisan::call('migrate');
          Artisan::call('db:seed');
@@ -26,8 +26,8 @@
     public function testDatabase()
     {
          // test database by checking if our user is in the users table
-         $this->seeInDatabase('users', ['id' => $this->admin->id]);
-         $this->seeInDatabase('users', ['id' => $this->user->id]);
+         $this->seeInDatabase('users', [ 'id' => $this->admin->id ]);
+         $this->seeInDatabase('users', [ 'id' => $this->user->id ]);
     }
 
     public function testUserIndexView(){
@@ -36,7 +36,7 @@
               ->assertResponseStatus(200);
     }
 
-    public function testNonAdminCannotManageUsers(){
+    public function testNonAdminCannotManageUsers() {
         // try to get to the user(s) page
          $this->actingAs($this->user)
               ->get('users')
@@ -44,7 +44,7 @@
               ->assertResponseStatus(302);
     }
 
-    public function testAdminCanManageUsers(){
+    public function testAdminCanManageUsers() {
          // try to get to the user(s) page
          $this->actingAs($this->admin)
               ->get('users')
@@ -52,38 +52,42 @@
               ->assertResponseStatus(200);
     }
 
-    public function testChangingUserToAdminAndBack(){
+    public function testChangingUserToAdminAndBack() {
         // While using a admin account try to promote non-admin user
-        $this->actingAs($this->admin)->post('user/promote', ['id' => $this->user->id, 'name' => $this->user->name]);
+        $this->actingAs($this->admin)
+             ->post('user/promote', [ 'id' => $this->user->id, 'name' => $this->user->name ]);
 
         //check if user was promoted to admin
         $user = User::find($this->user->id);
         $this->assertEquals('1', $user->isAdmin);
 
         // While using a admin account try to demote admin user previously promoted
-        $this->actingAs($this->admin)->post('user/demote', ['id' => $user->id, 'name' => $user->name]);
+        $this->actingAs($this->admin)
+             ->post('user/demote', [ 'id' => $user->id, 'name' => $user->name ]);
 
         //check if user was demoted to user
         $user = User::find($this->user->id);
         $this->assertEquals('0', $user->isAdmin);
     }
 
-    public function testFailedPromote(){
+    public function testFailedPromote() {
         // While using a admin account try to promote a unknown user
-        $this->actingAs($this->admin)->post('user/promote', ['id' => 3, 'name' => $this->user->name])
-                               ->assertResponseStatus(404);
+        $this->actingAs($this->admin)
+              ->post('user/promote', [ 'id' => 3, 'name' => $this->user->name ])
+              ->assertResponseStatus(404);
     }
 
-    public function testIncorrectNamePromote(){
+    public function testIncorrectNamePromote() {
         // While using a admin account try to promote a user but suppling a incorrect name
         $this->actingAs($this->admin)
-             ->post('user/promote', ['id' => $this->user->id, 'name' => 'incorrect name'])
+             ->post('user/promote', [ 'id' => $this->user->id, 'name' => 'incorrect name' ])
              ->assertSessionHasErrors();
     }
 
-    public function testIncorrectNameDemote(){
+    public function testIncorrectNameDemote() {
         // While using a admin account try to promote non-admin user
-        $this->actingAs($this->admin)->post('user/promote', ['id' => $this->user->id, 'name' => $this->user->name]);
+        $this->actingAs($this->admin)
+             ->post('user/promote', [ 'id' => $this->user->id, 'name' => $this->user->name ]);
 
         //check if user was promoted to admin
         $user = User::find($this->user->id);
@@ -91,26 +95,29 @@
 
         // While using a admin account try to demote user with invalid name
         $this->actingAs($this->admin)
-             ->post('user/demote', ['id' => $this->user->id, 'name' => 'invalid name'])
+             ->post('user/demote', [ 'id' => $this->user->id, 'name' => 'invalid name' ])
              ->assertSessionHasErrors();
     }
 
-    public function testIncorrectIdDemote(){
+    public function testIncorrectIdDemote() {
         // While using a admin account try to demote a unknown user
-        $this->actingAs($this->admin)->post('user/demote', ['id' => 3, 'name' => $this->user->name])
-                               ->assertResponseStatus(404);
+        $this->actingAs($this->admin)
+             ->post('user/demote', [ 'id' => 3, 'name' => $this->user->name ])
+             ->assertResponseStatus(404);
     }
 
-    public function testRestrictingUserAccessThenGivingItBack(){
+    public function testRestrictingUserAccessThenGivingItBack() {
         // While using a admin account try to restrict a users access
-        $this->actingAs($this->admin)->post('user/restrict', ['id' => $this->user->id, 'name' => $this->user->name]);
+        $this->actingAs($this->admin)
+             ->post('user/restrict', [ 'id' => $this->user->id, 'name' => $this->user->name ]);
 
         //check if user access was changed
         $user = User::find($this->user->id);
         $this->assertEquals(false, $user->hasAccess);
 
         // While using a admin account try to allow a users access
-        $this->actingAs($this->admin)->post('user/allow', ['id' => $this->user->id, 'name' => $this->user->name]);
+        $this->actingAs($this->admin)
+             ->post('user/allow', [ 'id' => $this->user->id, 'name' => $this->user->name ]);
 
         //check if user was enabled to user
         $user = User::find($user->id);

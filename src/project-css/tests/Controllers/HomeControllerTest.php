@@ -8,7 +8,7 @@
     private $userEmail;
     private $userPass;
 
-    public function setUp(){
+    public function setUp() {
       parent::setUp();
       Artisan::call('migrate');
       Artisan::call('db:seed');
@@ -22,26 +22,26 @@
       $this->userPass = "testing";
     }
 
-    protected function tearDown(){
+    protected function tearDown() {
       Artisan::call('migrate:reset');
       parent::tearDown();
     }
 
-    public function test_login_with_user(){
+    public function test_login_with_user() {
         // Type some valid values
         $this->visit('/login')
-             ->type($this->userEmail,'email')
-             ->type($this->userPass,'password')
+             ->type($this->userEmail, 'email')
+             ->type($this->userPass, 'password')
              ->press('Login')
              ->seePageIs('/home')
              ->see('Please kindly select the collection and table to view the records');
     }
 
-    public function test_login_with_admin(){
+    public function test_login_with_admin() {
         // Type some valid values
         $this->visit('/login')
-             ->type($this->adminEmail,'email')
-             ->type($this->adminPass,'password')
+             ->type($this->adminEmail, 'email')
+             ->type($this->adminPass, 'password')
              ->press('Login')
              ->seePageIs('/home')
              ->see('Your data. Your control.')
