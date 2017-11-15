@@ -50,9 +50,9 @@ class TableController extends Controller
     // Format the file names by truncating the dir
     foreach ($fltFleList as $key => $value) {
       // check if directory string exists in the path
-      if(str_contains($value,$this->strDir.'/')){
+      if (str_contains($value, $this->strDir.'/')) {
         // replace the string
-        $fltFleList[$key] = str_replace($this->strDir.'/', '', $value);
+        $fltFleList[ $key ] = str_replace($this->strDir.'/', '', $value);
       }
     }
 
@@ -63,13 +63,13 @@ class TableController extends Controller
     );
 
     // Check for the countflatfiles
-    if($collcntNms->where('isEnabled','1')->count()>0) {
+    if ($collcntNms->where('isEnabled','1')->count()>0) {
       // return the wizard page by passing the collections
       return view('admin/wizard')->with($wizrdData);
     }
 
     // return the wizard page by passing the collections and list of files
-    return view('admin/collection')->with('collcntNms', $collcntNms)->withErrors(['Please create active collection here first']);
+    return view('admin/collection')->with('collcntNms', $collcntNms)->withErrors([ 'Please create active collection here first' ]);
   }
 
   /**
@@ -117,7 +117,7 @@ class TableController extends Controller
     // Get the list of files in the directory
     $fltFleList = Storage::allFiles($this->strDir);
     // check the file name in the file list array
-    if (in_array($this->strDir.'/'.$thisFltFileNme,$fltFleList)) {
+    if (in_array($this->strDir.'/'.$thisFltFileNme, $fltFleList)) {
       return redirect()->route('tableIndex')->withErrors([ 'File already exists. Please select the file or rename and re-upload.' ]);
     }
 
@@ -176,7 +176,7 @@ class TableController extends Controller
     $thsFltFile = $request->fltFile;
     $fltFleAbsPth = $this->strDir.'/'.$thsFltFile;
     // validate the file
-    if (!Storage::has($fltFleAbsPth)){
+    if (!Storage::has($fltFleAbsPth)) {
       // if the file doesn't exist
       return redirect()->route('tableIndex')->withErrors([ 'The selected flat file does not exist' ]);
     }
@@ -238,12 +238,12 @@ class TableController extends Controller
     // Get the file type
     $fleMime = $fleInf->file($fltFleObj->getRealPath());
     // Check the mimetype
-    if(!str_is($fleMime,"text/plain")) {
+    if(!str_is($fleMime, "text/plain")) {
       // If the file isn't a text file return false
       return false;
     }
     // Check if the file is empty
-    if(!$this->isEmpty($fltFleObj)>0) {
+    if (!$this->isEmpty($fltFleObj)>0) {
       return false;
     }
 
@@ -290,9 +290,9 @@ class TableController extends Controller
     $len = 0;
 
     // Loop till EOF
-    while(!$fltFleObj->eof()) {
+    while (!$fltFleObj->eof()) {
       // Check if the file has at least one line
-      if($len>=1) {
+      if ($len>=1) {
         // Break here so that it's not reading huge files
         break;
       }
@@ -311,9 +311,9 @@ class TableController extends Controller
   */
   public function fltrTkns($tkns) {
     // Run through the files
-    foreach($tkns as $key => $tkn)  {
+    foreach ($tkns as $key => $tkn)  {
       // trim the token
-      $tkns[$key]=trim($tkn);
+      $tkns[ $key ] = trim($tkn);
     }
 
     // Return the filtered tokens
@@ -334,26 +334,26 @@ class TableController extends Controller
     // Define array
     $rules = array();
     // Add rule for each entry in request
-    for($i=0; $i<$kVal; $i++) {
+    for ($i=0; $i<$kVal; $i++) {
       // Rules for all names
       $curNme = 'col-'.$i.'-name';
-      $rules[$curNme] = 'required|alpha_dash';
+      $rules[ $curNme ] = 'required|alpha_dash';
       // Rules for all data type
       // $curDTyp = 'col-'.$i.'-data';
-      $rules[$curNme] = 'required|string';
+      $rules[ $curNme ] = 'required|string';
       // Rules for all data sizes
       $curDataSz = 'col-'.$i.'-size';
-      $rules[$curDataSz] ='required|string';
+      $rules[ $curDataSz ] ='required|string';
     }
     // Validate
     $this->validate($request, $rules);
 
     // 2. Create the table
-    Schema::connection('mysql')->create($tblNme,function(Blueprint $table) use($kVal,$request){
+    Schema::connection('mysql')->create($tblNme, function(Blueprint $table) use($kVal, $request){
       // Default primary key
       $table->increments('id');
       // Add all the dynamic columns
-      for($i=0; $i<$kVal; $i++) {
+      for ($i=0; $i<$kVal; $i++) {
         // Define current column name, type and size
         $curColNme = strval($request->{'col-'.$i.'-name'});
         $curColType = strval($request->{'col-'.$i.'-data'});
@@ -364,7 +364,7 @@ class TableController extends Controller
         if (str_is($curColType, 'string')) {
           // Check for the data type
           // Default
-          if( str_is($curColSze, 'default')) {
+          if (str_is($curColSze, 'default')) {
             // For String default is 30 characters
             $table->string($curColNme, 50)->default("Null");
           }
@@ -449,7 +449,7 @@ class TableController extends Controller
   **/
   public function load($isFrwded = False, $tblNme = "", $fltFle = "") {
     // Check if the request is forwarded
-    if($isFrwded) {
+    if ($isFrwded) {
       // Forward the file and table name
       $tblNms = Table::where('tblNme', $tblNme)->get();
       $fltFleList = array($fltFle);
@@ -482,7 +482,7 @@ class TableController extends Controller
       // check if directory string exists in the path
       if (str_contains($value, $this->strDir.'/')) {
         // replace the string
-        $fltFleList[$key] = str_replace($this->strDir.'/','',$value);
+        $fltFleList[ $key ] = str_replace($this->strDir.'/', '', $value);
       }
     }
 
@@ -540,7 +540,7 @@ class TableController extends Controller
       $prcssd = 0;
 
       // For each line
-      while($curFltFleObj->valid()) {
+      while ($curFltFleObj->valid()) {
         // Get the line
         $curLine = $curFltFleObj->current();
 
@@ -564,12 +564,12 @@ class TableController extends Controller
           // Compact them into one array with utf8 encoding
           for ($i = 0; $i<$orgCount; $i++) {
             // added iconv to strip out invalid characters
-            $curArry[strval($clmnLst[ $i ])] = utf8_encode($tkns[ $i ]);
+            $curArry[ strval($clmnLst[ $i ]) ] = utf8_encode($tkns[ $i ]);
           }
 
           // remove extra characters replacing them with spaces
           // also remove .. that is in the filenames
-          $cleanString = preg_replace('/[^A-Za-z0-9._ ]/', ' ', str_replace('..', '',$curLine));
+          $cleanString = preg_replace('/[^A-Za-z0-9._ ]/', ' ', str_replace('..', '', $curLine));
 
           // remove extra spaces and make string all lower case
           $cleanString = strtolower(preg_replace('/\s+/', ' ', $cleanString));
@@ -579,7 +579,7 @@ class TableController extends Controller
           //$srchArr = array_unique( $srchArr );
 
           // add srchindex
-          $curArry["srchindex"] = implode(" ", $srchArr);
+          $curArry[ "srchindex" ] = implode(" ", $srchArr);
 
           // Insert them into DB
           \DB::table($request->tblNme)->insert($curArry);

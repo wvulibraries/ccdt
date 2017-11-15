@@ -3,7 +3,7 @@
 
     use Illuminate\Support\Facades\Storage;
 
-    class UploadControllerTest extends TestCase{
+    class UploadControllerTest extends TestCase {
 
     private $admin;
     private $user;
@@ -35,21 +35,21 @@
             'clctnName' => 'collection1',
         ]);
 
-        $tblname = 'importtest' . mt_rand();
+        $tblname = 'importtest'.mt_rand();
 
         $this->visit('table/create')
-             ->type($tblname,'imprtTblNme')
-             ->type('1','colID')
-             ->attach('./storage/app/files/test/mlb_players.csv','fltFile')
+             ->type($tblname, 'imprtTblNme')
+             ->type('1', 'colID')
+             ->attach('./storage/app/files/test/mlb_players.csv', 'fltFile')
              ->press('Import')
              ->assertResponseStatus(200)
              ->see('Edit Schema')
-             ->submitForm('Submit', ['col-0-data' => 'string', 'col-0-size' => 'default',
+             ->submitForm('Submit', [ 'col-0-data' => 'string', 'col-0-size' => 'default',
                                      'col-1-data' => 'string', 'col-1-size' => 'default',
                                      'col-2-data' => 'string', 'col-2-size' => 'default',
                                      'col-3-data' => 'integer', 'col-3-size' => 'default',
                                      'col-4-data' => 'integer', 'col-4-size' => 'default',
-                                     'col-5-data' => 'integer', 'col-5-size' => 'default'])
+                                     'col-5-data' => 'integer', 'col-5-size' => 'default' ])
              ->assertResponseStatus(200)
              ->see('Load Data')
              ->press('Load Data')
@@ -60,7 +60,7 @@
          $table = App\Table::where('tblNme', '=', $tblname)->first();
 
          // While using a admin account try to disable a table
-         $this->actingAs($this->admin)->post('table/restrict', ['id' => $table->id]);
+         $this->actingAs($this->admin)->post('table/restrict', [ 'id' => $table->id ]);
          $table = App\Table::where('tblNme', '=', $tblname)->first();
          $this->assertEquals('0', $table->hasAccess);
 
@@ -90,23 +90,23 @@
             'clctnName' => 'collection1',
         ]);
 
-        $tblname = 'importtest' . mt_rand();
+        $tblname = 'importtest'.mt_rand();
 
-        $filestoattch = [];
+        $filestoattch = [ ];
 
         $this->visit('table/create')
-             ->type($tblname,'imprtTblNme')
-             ->type('1','colID')
-             ->attach('./storage/app/files/test/mlb_players.csv','fltFile')
+             ->type($tblname, 'imprtTblNme')
+             ->type('1', 'colID')
+             ->attach('./storage/app/files/test/mlb_players.csv', 'fltFile')
              ->press('Import')
              ->assertResponseStatus(200)
              ->see('Edit Schema')
-             ->submitForm('Submit', ['col-0-data' => 'string', 'col-0-size' => 'default',
+             ->submitForm('Submit', [ 'col-0-data' => 'string', 'col-0-size' => 'default',
                                      'col-1-data' => 'string', 'col-1-size' => 'default',
                                      'col-2-data' => 'string', 'col-2-size' => 'default',
                                      'col-3-data' => 'integer', 'col-3-size' => 'default',
                                      'col-4-data' => 'integer', 'col-4-size' => 'default',
-                                     'col-5-data' => 'integer', 'col-5-size' => 'default'])
+                                     'col-5-data' => 'integer', 'col-5-size' => 'default' ])
              ->assertResponseStatus(200)
              ->see('Load Data')
              ->press('Load Data')
@@ -119,8 +119,8 @@
              ->attach(array('./storage/app/files/test/test_upload.txt'),'attachments[]')
              ->press('Upload')
              ->assertResponseStatus(200)
-             ->see('Upload files to ' . $tblname . ' Table')
-             ->assertFileExists(storage_path('app/' . $tblname . '/test/test_upload.txt'));
+             ->see('Upload files to '.$tblname.' Table')
+             ->assertFileExists(storage_path('app/'.$tblname.'/test/test_upload.txt'));
 
         // The above upload should return 1 message one for a successful upload
         $messages = session()->get('messages');
@@ -130,13 +130,13 @@
         // since file already exists
         $this->visit('upload/1')
              ->assertResponseStatus(200)
-             ->see('Upload files to ' . $tblname . ' Table')
+             ->see('Upload files to '.$tblname.' Table')
              ->type('test', 'upFldNme')
-             ->attach(array('./storage/app/files/test/test_upload.txt'),'attachments[]')
+             ->attach(array('./storage/app/files/test/test_upload.txt'), 'attachments[]')
              ->press('Upload')
              ->assertResponseStatus(200)
-             ->see('Upload files to ' . $tblname . ' Table')
-             ->assertFileExists(storage_path('app/' . $tblname . '/test/test_upload.txt'));
+             ->see('Upload files to '.$tblname.' Table')
+             ->assertFileExists(storage_path('app/'.$tblname.'/test/test_upload.txt'));
 
         // The above upload should return 1 message letting user know that the file exists
         $messages = session()->get('messages');
@@ -144,7 +144,7 @@
 
         // cleanup remove test files
         Storage::delete('/flatfiles/mlb_players.csv');
-        Storage::delete('/' . $tblname . '/test/test_upload.txt');
+        Storage::delete('/'.$tblname.'/test/test_upload.txt');
 
         // cleanup remove directory for the test table
         Storage::deleteDirectory($tblname);

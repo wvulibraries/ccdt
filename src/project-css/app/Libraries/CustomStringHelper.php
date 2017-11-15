@@ -114,7 +114,7 @@ class CustomStringHelper {
             // preg_match_all will return a count if it is greater than
             // 0 we have matches against the SSN pattern and will return
             // a true value
-            if(preg_match_all($pattern, $fileContents, $matches)>0) {
+            if (preg_match_all($pattern, $fileContents, $matches)>0) {
                 return(true);
             }
 
