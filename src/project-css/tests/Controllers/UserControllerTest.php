@@ -30,7 +30,7 @@
          $this->seeInDatabase('users', [ 'id' => $this->user->id ]);
     }
 
-    public function testUserIndexView(){
+    public function testUserIndexView() {
          $this->actingAs($this->admin)
               ->get('/users')
               ->assertResponseStatus(200);

@@ -22,7 +22,7 @@ class UploadController extends Controller {
     public function index($curTable) {
         // Get the table entry in meta table "tables"
         $curTable = Table::find($curTable);
-        if(!$curTable->hasAccess) {
+        if (!$curTable->hasAccess) {
         return redirect()->route('home')->withErrors([ 'Table is disabled' ]);
         }
 
@@ -38,11 +38,11 @@ class UploadController extends Controller {
      */
     public function storeFiles(Request $request, $curTable) {
         // set messages array to empty
-        $messages = [];
+        $messages = [ ];
 
         // Get the table entry in meta table "tables"
         $curTable = Table::find($curTable);
-        if(!$curTable->hasAccess) {
+        if (!$curTable->hasAccess) {
           return redirect()->route('home')->withErrors([ 'Table is disabled' ]);
         }
 
@@ -52,7 +52,7 @@ class UploadController extends Controller {
 
         //If the array is not empty
         if ($files[ 0 ] != '') {
-          foreach($files as $file) {
+          foreach ($files as $file) {
             // Set the destination path
             $destinationPath = $curTable->tblNme.'/'.$upFldNme;
             Storage::makeDirectory($destinationPath);

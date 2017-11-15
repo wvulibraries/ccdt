@@ -50,7 +50,7 @@ class CollectionController extends Controller
     );
 
     // Validate the request before storing the data
-    $this->validate($request,$rules,$messages);
+    $this->validate($request, $rules, $messages);
 
     // Create the collection name
     $thisClctn = new Collection;
@@ -98,11 +98,11 @@ class CollectionController extends Controller
   public function disable(Request $request) {
     // Create the collection name
     $thisClctn = Collection::findorFail($request->id);
-    if(strcasecmp($thisClctn->clctnName, $request->clctnName) == 0) {
+    if (strcasecmp($thisClctn->clctnName, $request->clctnName) == 0) {
       // Get all the tables of this collection
       $thisClctnTbls = $thisClctn->tables()->get();
       // Update all the tables of this collection
-      foreach($thisClctnTbls as $tbl) {
+      foreach ($thisClctnTbls as $tbl) {
         $tbl->hasAccess = false;
         $tbl->save();
       }
@@ -128,7 +128,7 @@ class CollectionController extends Controller
     // Get all the tables of this collection
     $thisClctnTbls = $thisClctn->tables()->get();
     // Update all the tables of this collection
-    foreach($thisClctnTbls as $tbl) {
+    foreach ($thisClctnTbls as $tbl) {
       $tbl->hasAccess = true;
       $tbl->save();
     }

@@ -40,7 +40,7 @@ class DataViewController extends Controller {
 
       // Get the table entry in meta table "tables"
       $curTable = Table::find($curTable);
-      if(!$curTable->hasAccess) {
+      if (!$curTable->hasAccess) {
         return redirect()->route('home')->withErrors([ $this->tableDisabledErr ]);
       }
 
@@ -77,7 +77,7 @@ class DataViewController extends Controller {
     // Get the table entry in meta table "tables"
     $curTable = Table::find($curTable);
 
-    if(!$curTable->hasAccess) {
+    if (!$curTable->hasAccess) {
       return redirect()->route('home')->withErrors([ $this->tableDisabledErr ]);
     }
 
@@ -92,7 +92,7 @@ class DataViewController extends Controller {
                 ->get();
 
     // check for the number of records if their is none return with error message
-    if (count ($rcrds) == 0) {
+    if (count($rcrds) == 0) {
       return redirect()->route('home')->withErrors([ $this->noResultsErr ]);
     }
 
@@ -108,7 +108,7 @@ class DataViewController extends Controller {
 
   public function search(Request $request, $curTable, $search = NULL, $page = 1) {
     // test for the validity of curtable
-    if(!$this->isValidTable($curTable)) {
+    if (!$this->isValidTable($curTable)) {
       return redirect()->route('home')->withErrors([ $this->tableIdErr ]);
     }
 
@@ -134,7 +134,7 @@ class DataViewController extends Controller {
     $query = DB::table($curTable->tblNme)
             ->whereRaw("match(srchindex) against (? in boolean mode)", [ $srchStrng ])
             ->orderBy('score', 'desc')
-            ->offset($page-1 * $perPage)
+            ->offset($page - 1 * $perPage)
             ->limit($perPage);
 
     $rcrds = $query
@@ -160,7 +160,7 @@ class DataViewController extends Controller {
 
   public function view($curTable, $subfolder, $filename) {
     // test for the validity of curtable
-    if(!$this->isValidTable($curTable)) {
+    if (!$this->isValidTable($curTable)) {
       return redirect()->route('home')->withErrors([ $this->tableIdErr ]);
     }
 

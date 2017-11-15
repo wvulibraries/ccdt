@@ -63,7 +63,7 @@ class TableController extends Controller
     );
 
     // Check for the countflatfiles
-    if ($collcntNms->where('isEnabled','1')->count()>0) {
+    if ($collcntNms->where('isEnabled', '1')->count()>0) {
       // return the wizard page by passing the collections
       return view('admin/wizard')->with($wizrdData);
     }
@@ -225,7 +225,7 @@ class TableController extends Controller
   public function schema($fltFlePth) {
     // 1. Get the flatfile instance
     // Check if the file exists
-    if(!Storage::has($fltFlePth)) {
+    if (!Storage::has($fltFlePth)) {
       // If the file doesn't exists return with error
       return false;
     }
@@ -311,7 +311,7 @@ class TableController extends Controller
   */
   public function fltrTkns($tkns) {
     // Run through the files
-    foreach ($tkns as $key => $tkn)  {
+    foreach ($tkns as $key => $tkn) {
       // trim the token
       $tkns[ $key ] = trim($tkn);
     }
@@ -334,7 +334,7 @@ class TableController extends Controller
     // Define array
     $rules = array();
     // Add rule for each entry in request
-    for ($i=0; $i<$kVal; $i++) {
+    for ($i = 0; $i<$kVal; $i++) {
       // Rules for all names
       $curNme = 'col-'.$i.'-name';
       $rules[ $curNme ] = 'required|alpha_dash';
@@ -343,7 +343,7 @@ class TableController extends Controller
       $rules[ $curNme ] = 'required|string';
       // Rules for all data sizes
       $curDataSz = 'col-'.$i.'-size';
-      $rules[ $curDataSz ] ='required|string';
+      $rules[ $curDataSz ] = 'required|string';
     }
     // Validate
     $this->validate($request, $rules);
@@ -353,7 +353,7 @@ class TableController extends Controller
       // Default primary key
       $table->increments('id');
       // Add all the dynamic columns
-      for ($i=0; $i<$kVal; $i++) {
+      for ($i = 0; $i<$kVal; $i++) {
         // Define current column name, type and size
         $curColNme = strval($request->{'col-'.$i.'-name'});
         $curColType = strval($request->{'col-'.$i.'-data'});
@@ -575,7 +575,7 @@ class TableController extends Controller
           $cleanString = strtolower(preg_replace('/\s+/', ' ', $cleanString));
 
           // remove duplicate keywords in the srchindex
-          $srchArr = explode(" ", $cleanString );
+          $srchArr = explode(" ", $cleanString);
           //$srchArr = array_unique( $srchArr );
 
           // add srchindex

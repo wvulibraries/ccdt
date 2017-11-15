@@ -4,13 +4,13 @@
   use Illuminate\Support\Facades\Storage;
   use App\Http\Controllers\TableController;
 
-  class TableControllerTest extends TestCase{
+  class TableControllerTest extends TestCase {
 
     private $admin;
     private $user;
     private $collection;
 
-    public function setUp(){
+    public function setUp() {
          parent::setUp();
          Artisan::call('migrate');
          Artisan::call('db:seed');
@@ -30,7 +30,7 @@
       parent::tearDown();
     }
 
-    public function testNonAdminCannotCreateTable(){
+    public function testNonAdminCannotCreateTable() {
         // try to get to the user(s) page
         $this->actingAs($this->user)
             ->get('table')
@@ -38,23 +38,23 @@
             ->assertResponseStatus(302);
     }
 
-    public function testFileUploadAndTableCreate(){
-        $tblname = 'importtest' . mt_rand();
+    public function testFileUploadAndTableCreate() {
+        $tblname = 'importtest'.mt_rand();
         $this->actingAs($this->admin)
              ->visit('table/create')
-             ->type($tblname,'imprtTblNme')
-             ->type('1','colID')
-             ->attach('./storage/app/files/test/zillow.csv','fltFile')
+             ->type($tblname, 'imprtTblNme')
+             ->type('1', 'colID')
+             ->attach('./storage/app/files/test/zillow.csv', 'fltFile')
              ->press('Import')
              ->assertResponseStatus(200)
              ->see('Edit Schema')
-             ->submitForm('Submit', ['col-0-data' => 'integer', 'col-0-size' => 'default',
+             ->submitForm('Submit', [ 'col-0-data' => 'integer', 'col-0-size' => 'default',
                                      'col-1-data' => 'integer', 'col-1-size' => 'medium',
                                      'col-2-data' => 'integer', 'col-2-size' => 'big',
                                      'col-3-data' => 'string', 'col-3-size' => 'default',
                                      'col-4-data' => 'string', 'col-4-size' => 'medium',
                                      'col-5-data' => 'string', 'col-5-size' => 'big',
-                                     'col-6-data' => 'text', 'col-6-size' => 'default'])
+                                     'col-6-data' => 'text', 'col-6-size' => 'default' ])
              ->assertResponseStatus(200)
              ->see('Load Data')
              ->press('Load Data')
@@ -68,13 +68,13 @@
          Schema::drop($tblname);
     }
 
-    public function testInvalidFileTypeUpload(){
-        $tblname = 'importtest' . mt_rand();
+    public function testInvalidFileTypeUpload() {
+        $tblname = 'importtest'.mt_rand();
         $this->actingAs($this->admin)
              ->visit('table/create')
-             ->type($tblname,'imprtTblNme')
-             ->type('1','colID')
-             ->attach('./storage/app/files/test/images.png','fltFile')
+             ->type($tblname, 'imprtTblNme')
+             ->type('1', 'colID')
+             ->attach('./storage/app/files/test/images.png', 'fltFile')
              ->press('Import')
              ->assertResponseStatus(200)
              ->see('The flat file must be a file of type: text/plain.');
@@ -87,13 +87,13 @@
         Storage::delete('/flatfiles/images.png');
     }
 
-    public function testFileExistsUpload(){
-        $tblname = 'importtest' . mt_rand();
+    public function testFileExistsUpload() {
+        $tblname = 'importtest'.mt_rand();
         $this->actingAs($this->admin)
              ->visit('table/create')
-             ->type($tblname,'imprtTblNme')
-             ->type('1','colID')
-             ->attach('./storage/app/files/test/zillow.csv','fltFile')
+             ->type($tblname, 'imprtTblNme')
+             ->type('1', 'colID')
+             ->attach('./storage/app/files/test/zillow.csv', 'fltFile')
              ->press('Import')
              ->assertResponseStatus(200)
              ->see('File already exists. Please select the file or rename and re-upload.');
@@ -102,18 +102,18 @@
         Storage::deleteDirectory($tblname);
     }
 
-    public function testCheckFlatFiles(){
+    public function testCheckFlatFiles() {
         // test to see if 'zillow.csv' is available
         // using getFiles
         $filesArray = (new TableController)->getFiles('.');
-        $this->assertContains( 'files/test/zillow.csv', $filesArray );
+        $this->assertContains('files/test/zillow.csv', $filesArray);
     }
 
-    public function testSchema(){
+    public function testSchema() {
         if (File::exists(storage_path('/flatfiles/mlb_players.csv'))){
           // check for a valid file
           $result = (new TableController)->schema('/files/test/mlb_players.csv');
-          $this->assertEquals($result[0], 'Name');
+          $this->assertEquals($result[ 0 ], 'Name');
         }
 
         // passing a filename that doesn't exits should produce false result
@@ -129,20 +129,20 @@
         unlink($emptyFile);
     }
 
-    public function testSelectAndCreateTableThenDisable(){        // find admin user
-        $tblname = 'importtest' . mt_rand();
+    public function testSelectAndCreateTableThenDisable() {
+        $tblname = 'importtest'.mt_rand();
         $this->actingAs($this->admin)
              ->visit('table/create')
              ->submitForm('Select', ['slctTblNme' => $tblname, 'colID' => '1', 'fltFile' => 'zillow.csv'])
              ->assertResponseStatus(200)
              ->see('Edit Schema')
-             ->submitForm('Submit', ['col-0-data' => 'integer', 'col-0-size' => 'default',
+             ->submitForm('Submit', [ 'col-0-data' => 'integer', 'col-0-size' => 'default',
                                      'col-1-data' => 'string', 'col-1-size' => 'default',
                                      'col-2-data' => 'string', 'col-2-size' => 'medium',
                                      'col-3-data' => 'string', 'col-3-size' => 'big',
                                      'col-4-data' => 'text', 'col-4-size' => 'default',
                                      'col-5-data' => 'text', 'col-5-size' => 'medium',
-                                     'col-6-data' => 'text', 'col-6-size' => 'big'])
+                                     'col-6-data' => 'text', 'col-6-size' => 'big' ])
              ->assertResponseStatus(200)
              ->see('Load Data')
              ->press('Load Data')
@@ -154,7 +154,8 @@
         $table = App\Table::where('tblNme', '=', $tblname)->first();
 
         // While using a admin account try to disable a table
-        $this->actingAs($this->admin)->post('table/restrict', ['id' => $table->id]);
+        $this->actingAs($this->admin)
+             ->post('table/restrict', [ 'id' => $table->id ]);
         $table = App\Table::where('tblNme', '=', $tblname)->first();
         $this->assertEquals('0', $table->hasAccess);
 
@@ -168,7 +169,7 @@
         Schema::drop($tblname);
     }
 
-    public function testLoad(){
+    public function testLoad() {
         // calling load should return items one is the list of files
         // in the flatfile directory under Storage
         // we are testing that the array is present and valid

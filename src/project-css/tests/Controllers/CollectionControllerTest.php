@@ -8,7 +8,7 @@
     private $admin;
     private $user;
 
-    public function setUp(){
+    public function setUp() {
       parent::setUp();
       Artisan::call('migrate');
       Artisan::call('db:seed');

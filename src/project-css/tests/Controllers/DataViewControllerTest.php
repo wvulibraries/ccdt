@@ -3,12 +3,12 @@
 
   use App\Http\Controllers\DataViewController;
 
-  class DataViewControllerTest extends TestCase{
+  class DataViewControllerTest extends TestCase {
 
     private $admin;
     private $user;
 
-    public function setUp(){
+    public function setUp() {
            parent::setUp();
            Artisan::call('migrate');
            Artisan::call('db:seed');
@@ -18,12 +18,12 @@
            $this->user = App\User::where('name', '=', 'test')->first();
     }
 
-    protected function tearDown(){
+    protected function tearDown() {
            Artisan::call('migrate:reset');
            parent::tearDown();
     }
 
-    public function testIndex(){
+    public function testIndex() {
       //try to import a table without a collection
       $this->actingAs($this->admin)
            ->visit('table/create')
@@ -35,28 +35,28 @@
            'clctnName' => 'collection1',
       ]);
 
-      $tblname = 'importtest' . mt_rand();
+      $tblname = 'importtest'.mt_rand();
 
       $this->visit('table/create')
-           ->type($tblname,'imprtTblNme')
-           ->type('1','colID')
-           ->attach('./storage/app/files/test/mlb_players.csv','fltFile')
+           ->type($tblname, 'imprtTblNme')
+           ->type('1', 'colID')
+           ->attach('./storage/app/files/test/mlb_players.csv', 'fltFile')
            ->press('Import')
            ->assertResponseStatus(200)
            ->see('Edit Schema')
-           ->submitForm('Submit', ['col-0-data' => 'string', 'col-0-size' => 'default',
+           ->submitForm('Submit', [ 'col-0-data' => 'string', 'col-0-size' => 'default',
                                    'col-1-data' => 'string', 'col-1-size' => 'default',
                                    'col-2-data' => 'string', 'col-2-size' => 'default',
                                    'col-3-data' => 'integer', 'col-3-size' => 'default',
                                    'col-4-data' => 'integer', 'col-4-size' => 'default',
-                                   'col-5-data' => 'integer', 'col-5-size' => 'default'])
+                                   'col-5-data' => 'integer', 'col-5-size' => 'default' ])
            ->assertResponseStatus(200)
            ->see('Load Data')
            ->press('Load Data')
            ->see('Table(s)')
            ->assertResponseStatus(200)
            ->visit('data/1')
-           ->see($tblname . ' Records')
+           ->see($tblname.' Records')
            ->visit('data/1/1')
            ->assertResponseStatus(200)
            ->see('Adam Donachie');
@@ -71,7 +71,7 @@
       touch($filePath . '/' . $emptyFile);
 
       // While using a admin account try to disable a collection
-      $this->post('collection/disable', ['id' => $collection->id, 'clctnName' => $collection->clctnName])
+      $this->post('collection/disable', [ 'id' => $collection->id, 'clctnName' => $collection->clctnName ])
            // try to visit the disabled table
            ->visit('data/1')
            ->assertResponseStatus(200)
@@ -82,17 +82,17 @@
            ->see('Table is disabled');
 
       // while table is disabled try to view a file
-      $this->visit('data/1/view' . '/test/' . $emptyFile)
+      $this->visit('data/1/view'.'/test/'.$emptyFile)
            ->assertResponseStatus(200);
 
       // While using a admin account try to enable a collection
-      $this->post('collection/enable', ['id' => $collection->id, 'clctnName' => $collection->clctnName])
+      $this->post('collection/enable', [ 'id' => $collection->id, 'clctnName' => $collection->clctnName ])
            ->visit('data/1')
            ->assertResponseStatus(200);
 
       // search for a name this will go to the fulltext search
       $this->visit('data/1/1')
-           ->type('Adam Donachie','search')
+           ->type('Adam Donachie', 'search')
            ->press('Search')
            ->assertResponseStatus(200)
            ->see('Adam Donachie');
@@ -109,22 +109,22 @@
            ->see('Search Yeilded No Results');
 
       // try viewing emptyfile
-      $this->visit('data/1/view' . '/test/' . $emptyFile)
+      $this->visit('data/1/view'.'/test/'.$emptyFile)
            ->assertResponseStatus(200);
 
       // try with invalid table id
-      $this->visit('data/2/view' . '/test/' . $emptyFile)
+      $this->visit('data/2/view'.'/test/'.$emptyFile)
            ->see('Table id is invalid');
 
       $this->visit('upload/1')
            ->assertResponseStatus(200)
-           ->see('Upload files to ' . $tblname . ' Table')
+           ->see('Upload files to '.$tblname.' Table')
            ->type('test', 'upFldNme')
-           ->attach(array('./storage/app/files/test/test_upload.txt'),'attachments[]')
+           ->attach(array('./storage/app/files/test/test_upload.txt'), 'attachments[]')
            ->press('Upload')
            ->assertResponseStatus(200)
-           ->see('Upload files to ' . $tblname . ' Table')
-           ->assertFileExists(storage_path('app/' . $tblname . '/test/test_upload.txt'));
+           ->see('Upload files to '.$tblname.' Table')
+           ->assertFileExists(storage_path('app/'.$tblname.'/test/test_upload.txt'));
 
      $this->visit('data/1/view' . '/test/' . 'test_upload.txt')
           ->assertResponseStatus(200);
@@ -134,10 +134,10 @@
 
       // try to view a record without a authenticated user
       // they should be redirected to the Login page
-      $this->visit('data/1/view' . '/test/' . $emptyFile)
+      $this->visit('data/1/view'.'/test/'.$emptyFile)
            ->see('Login');
 
-      unlink($filePath . '/' . $emptyFile);
+      unlink($filePath.'/'.$emptyFile);
 
       // cleanup remove directory for the test table
       Storage::deleteDirectory($tblname);
@@ -149,7 +149,7 @@
       Schema::drop($tblname);
     }
 
-    public function testIndexWithInvalidTable(){
+    public function testIndexWithInvalidTable() {
       //try to import a table without a collection
       $this->actingAs($this->admin)
            ->visit('data/1')
@@ -161,7 +161,7 @@
            ->see("Table id is invalid");
     }
 
-    public function testImportWithNoRecords(){
+    public function testImportWithNoRecords() {
       // Generate Test Collection
       $collection = factory(App\Collection::class)->create([
           'clctnName' => 'collection1',
@@ -170,18 +170,18 @@
       $tblname = 'importtest' . mt_rand();
       $this->actingAs($this->admin)
            ->visit('table/create')
-           ->type($tblname,'imprtTblNme')
-           ->type('1','colID')
-           ->attach('./storage/app/files/test/header_only.csv','fltFile')
+           ->type($tblname, 'imprtTblNme')
+           ->type('1', 'colID')
+           ->attach('./storage/app/files/test/header_only.csv', 'fltFile')
            ->press('Import')
            ->assertResponseStatus(200)
            ->see('Edit Schema')
-           ->submitForm('Submit', ['col-0-data' => 'string', 'col-0-size' => 'default',
+           ->submitForm('Submit', [ 'col-0-data' => 'string', 'col-0-size' => 'default',
                                    'col-1-data' => 'string', 'col-1-size' => 'default',
                                    'col-2-data' => 'string', 'col-2-size' => 'default',
                                    'col-3-data' => 'integer', 'col-3-size' => 'default',
                                    'col-4-data' => 'integer', 'col-4-size' => 'default',
-                                   'col-5-data' => 'integer', 'col-5-size' => 'default'])
+                                   'col-5-data' => 'integer', 'col-5-size' => 'default' ])
            ->assertResponseStatus(200)
            ->see('Load Data')
            ->press('Load Data')
@@ -203,7 +203,7 @@
        Schema::drop($tblname);
     }
 
-    public function testInvalidTableId(){
+    public function testInvalidTableId() {
         // test to see if table id 99 is available
         // test should fail
         $this->assertFalse((new DataViewController)->isValidTable('99'));

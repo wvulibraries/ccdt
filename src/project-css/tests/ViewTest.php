@@ -59,8 +59,8 @@ class ViewTest extends TestCase
         // Go to login page and enter credentials
         // Type some valid values
         $this->visit('/login')
-             ->type($this->adminEmail,'email')
-             ->type($this->adminPass,'password')
+             ->type($this->adminEmail, 'email')
+             ->type($this->adminPass, 'password')
              ->press('Login')
              ->seePageIs('/home')
              ->see('Dashboard');

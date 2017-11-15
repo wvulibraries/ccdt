@@ -31,7 +31,7 @@ class AuthTest extends TestCase {
         $this->userPass = 'password123';
     }
 
-    protected function tearDown(){
+    protected function tearDown() {
         Artisan::call('migrate:reset');
         parent::tearDown();
     }
