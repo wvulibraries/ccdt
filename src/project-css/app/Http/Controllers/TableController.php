@@ -18,8 +18,7 @@ class TableController extends Controller
   /**
    * Create a new controller instance.
    */
-  public function __construct()
-  {
+  public function __construct() {
     // Protection to make sure this only accessible to admin
     $this->middleware('admin');
     // Storage directory
@@ -31,17 +30,17 @@ class TableController extends Controller
   /**
   * Show the table index page
   */
-  public function index(){
+  public function index() {
     // Get all the table records
     $tbls = Table::all();
     // return the index page
-    return view('admin/table')->with('tbls',$tbls);
+    return view('admin/table')->with('tbls', $tbls);
   }
 
   /**
   * Show the wizard page
   */
-  public function wizard(){
+  public function wizard() {
     // Get the collection names
     $collcntNms = Collection::all();
 
@@ -53,7 +52,7 @@ class TableController extends Controller
       // check if directory string exists in the path
       if(str_contains($value,$this->strDir.'/')){
         // replace the string
-        $fltFleList[$key] = str_replace($this->strDir.'/','',$value);
+        $fltFleList[$key] = str_replace($this->strDir.'/', '', $value);
       }
     }
 
@@ -64,13 +63,13 @@ class TableController extends Controller
     );
 
     // Check for the countflatfiles
-    if($collcntNms->where('isEnabled','1')->count()>0){
+    if($collcntNms->where('isEnabled','1')->count()>0) {
       // return the wizard page by passing the collections
       return view('admin/wizard')->with($wizrdData);
     }
 
     // return the wizard page by passing the collections and list of files
-    return view('admin/collection')->with('collcntNms',$collcntNms)->withErrors(['Please create active collection here first']);
+    return view('admin/collection')->with('collcntNms', $collcntNms)->withErrors(['Please create active collection here first']);
   }
 
   /**
@@ -79,7 +78,7 @@ class TableController extends Controller
   * 2. Store the file on to Storage Directory if uploaded
   * 3. Show the users schema for further verification
   */
-  public function import(Request $request){
+  public function import(Request $request) {
 
     // 1. Input the table name in the meta Directory
     //Rules for validation
@@ -105,7 +104,7 @@ class TableController extends Controller
     );
 
     // Validate the request before storing the data
-    $this->validate($request,$rules,$messages);
+    $this->validate($request, $rules, $messages);
 
     // Validate the file before upload
     // Get the file
@@ -118,27 +117,27 @@ class TableController extends Controller
     // Get the list of files in the directory
     $fltFleList = Storage::allFiles($this->strDir);
     // check the file name in the file list array
-    if(in_array($this->strDir.'/'.$thisFltFileNme,$fltFleList)){
-      return redirect()->route('tableIndex')->withErrors(['File already exists. Please select the file or rename and re-upload.']);
+    if (in_array($this->strDir.'/'.$thisFltFileNme,$fltFleList)) {
+      return redirect()->route('tableIndex')->withErrors([ 'File already exists. Please select the file or rename and re-upload.' ]);
     }
 
     // 2. Store the file on to Storage Directory if uploaded
     // Store in the directory inside storage/app
-    $thisFltFile->storeAs($this->strDir,$thisFltFileNme);
+    $thisFltFile->storeAs($this->strDir, $thisFltFileNme);
 
     // 3. Show the users schema for further verification
     $schema = $this->schema($this->strDir.'/'.$thisFltFileNme);
     // If the file isn't valid return with an error
-    if(!$schema){
+    if (!$schema) {
       Storage::delete($fltFleAbsPth);
-      return redirect()->route('tableIndex')->withErrors(['The selected flat file must be of type: text/plain','The selected flat file should not be empty','File is deleted for security reasons']);
+      return redirect()->route('tableIndex')->withErrors([ 'The selected flat file must be of type: text/plain', 'The selected flat file should not be empty', 'File is deleted for security reasons' ]);
     }
 
     // Return the view with filename and schema
-    return view('admin.schema')->with('schema',$schema)
-                               ->with('tblNme',$request->imprtTblNme)
-                               ->with('fltFile',$thisFltFileNme)
-                               ->with('collctnId',$request->colID);
+    return view('admin.schema')->with('schema', $schema)
+                               ->with('tblNme', $request->imprtTblNme)
+                               ->with('fltFile', $thisFltFileNme)
+                               ->with('collctnId', $request->colID);
   }
 
   /**
@@ -148,7 +147,7 @@ class TableController extends Controller
   * 2. Create the table with schema
   * 3. Show the users with the schema
   */
-  public function select(Request $request){
+  public function select(Request $request) {
     // 1. Get the file name and validate file, if not validated remove it
     //Rules for validation
     $rules = array(
@@ -171,30 +170,30 @@ class TableController extends Controller
     );
 
     // Validate the request before storing the data
-    $this->validate($request,$rules,$messages);
+    $this->validate($request, $rules, $messages);
 
     // Get the absolute file path
     $thsFltFile = $request->fltFile;
     $fltFleAbsPth = $this->strDir.'/'.$thsFltFile;
     // validate the file
-    if(!Storage::has($fltFleAbsPth)){
+    if (!Storage::has($fltFleAbsPth)){
       // if the file doesn't exist
-      return redirect()->route('tableIndex')->withErrors(['The selected flat file does not exist']);
+      return redirect()->route('tableIndex')->withErrors([ 'The selected flat file does not exist' ]);
     }
 
     // 2. Check for file validity and Create the table with schema
     $schema = $this->schema($fltFleAbsPth);
     // If the file isn't valid return with an error
-    if(!$schema){
+    if (!$schema) {
       Storage::delete($fltFleAbsPth);
-      return redirect()->route('tableIndex')->withErrors(['The selected flat file must be of type: text/plain','The selected flat file should not be empty','File is deleted for security reasons']);
+      return redirect()->route('tableIndex')->withErrors([ 'The selected flat file must be of type: text/plain', 'The selected flat file should not be empty', 'File is deleted for security reasons' ]);
     }
 
     // 3. Show the users with the schema
-    return view('admin.schema')->with('schema',$schema)
-                               ->with('tblNme',$request->slctTblNme)
-                               ->with('fltFile',$request->fltFile)
-                               ->with('collctnId',$request->colID);
+    return view('admin.schema')->with('schema', $schema)
+                               ->with('tblNme', $request->slctTblNme)
+                               ->with('fltFile', $request->fltFile)
+                               ->with('collctnId', $request->colID);
   }
 
   /**
@@ -202,7 +201,7 @@ class TableController extends Controller
   * @param string $tblNme
   * @param string $collctnId
   */
-  public function crteTblInCollctn($tblNme,$collctnId){
+  public function crteTblInCollctn($tblNme, $collctnId) {
     // declare a new table instance
     $thisTabl = new Table;
     // Assign the table name and collctn id
@@ -223,10 +222,10 @@ class TableController extends Controller
   * @param string $fltFlePth
   * @return boolean
   */
-  public function schema($fltFlePth){
+  public function schema($fltFlePth) {
     // 1. Get the flatfile instance
     // Check if the file exists
-    if(!Storage::has($fltFlePth)){
+    if(!Storage::has($fltFlePth)) {
       // If the file doesn't exists return with error
       return false;
     }
@@ -239,12 +238,12 @@ class TableController extends Controller
     // Get the file type
     $fleMime = $fleInf->file($fltFleObj->getRealPath());
     // Check the mimetype
-    if(!str_is($fleMime,"text/plain")){
+    if(!str_is($fleMime,"text/plain")) {
       // If the file isn't a text file return false
       return false;
     }
     // Check if the file is empty
-    if(!$this->isEmpty($fltFleObj)>0){
+    if(!$this->isEmpty($fltFleObj)>0) {
       return false;
     }
 
@@ -268,12 +267,12 @@ class TableController extends Controller
   /**
   * Method to tokenize the string for multiple lines
   */
-  public function tknze($line){
+  public function tknze($line) {
     // Tokenize the line
     // Define a pattern
     $pattern = '/[;,\t]/';
     // preg split
-    $tkns = preg_split($pattern,$line);
+    $tkns = preg_split($pattern, $line);
 
     // Return the array
     return $tkns;
@@ -283,7 +282,7 @@ class TableController extends Controller
   * Get the line numbers for a fileobject
   * @param \SplFileObject $fltFleObj
   */
-  public function isEmpty($fltFleObj){
+  public function isEmpty($fltFleObj) {
     // Before anytthing set to seek first line
     $fltFleObj->seek(0);
 
@@ -291,9 +290,9 @@ class TableController extends Controller
     $len = 0;
 
     // Loop till EOF
-    while(!$fltFleObj->eof()){
+    while(!$fltFleObj->eof()) {
       // Check if the file has at least one line
-      if($len>=1){
+      if($len>=1) {
         // Break here so that it's not reading huge files
         break;
       }
@@ -310,9 +309,9 @@ class TableController extends Controller
   /**
   * Method to check if the given tkns are null
   */
-  public function fltrTkns($tkns){
+  public function fltrTkns($tkns) {
     // Run through the files
-    foreach($tkns as $key => $tkn){
+    foreach($tkns as $key => $tkn)  {
       // trim the token
       $tkns[$key]=trim($tkn);
     }
@@ -324,7 +323,7 @@ class TableController extends Controller
   /**
   * Method to read input from the schema and start actual data import
   */
-  public function finalize(Request $request){
+  public function finalize(Request $request) {
     // 1. Get the number of columns, collctn id and table name before creating the table
     $kVal = intval($request->kCnt);
     $tblNme = strval($request->tblNme);
@@ -333,28 +332,28 @@ class TableController extends Controller
 
     // Before anything validate that all the data is strings
     // Define array
-    $rules=array();
+    $rules = array();
     // Add rule for each entry in request
-    for($i=0;$i<$kVal;$i++){
+    for($i=0; $i<$kVal; $i++) {
       // Rules for all names
       $curNme = 'col-'.$i.'-name';
-      $rules[$curNme]='required|alpha_dash';
+      $rules[$curNme] = 'required|alpha_dash';
       // Rules for all data type
       // $curDTyp = 'col-'.$i.'-data';
-      $rules[$curNme]='required|string';
+      $rules[$curNme] = 'required|string';
       // Rules for all data sizes
       $curDataSz = 'col-'.$i.'-size';
-      $rules[$curDataSz]='required|string';
+      $rules[$curDataSz] ='required|string';
     }
     // Validate
-    $this->validate($request,$rules);
+    $this->validate($request, $rules);
 
     // 2. Create the table
     Schema::connection('mysql')->create($tblNme,function(Blueprint $table) use($kVal,$request){
       // Default primary key
       $table->increments('id');
       // Add all the dynamic columns
-      for($i=0;$i<$kVal;$i++){
+      for($i=0; $i<$kVal; $i++) {
         // Define current column name, type and size
         $curColNme = strval($request->{'col-'.$i.'-name'});
         $curColType = strval($request->{'col-'.$i.'-data'});
@@ -362,60 +361,60 @@ class TableController extends Controller
 
         // Filter the data type and size and create the column
         // Check for Strings
-        if(str_is($curColType,'string')){
+        if (str_is($curColType, 'string')) {
           // Check for the data type
           // Default
-          if(str_is($curColSze,'default')){
+          if( str_is($curColSze, 'default')) {
             // For String default is 30 characters
-            $table->string($curColNme,50)->default("Null");
+            $table->string($curColNme, 50)->default("Null");
           }
           // Medium
-          if(str_is($curColSze,'medium')){
+          if (str_is($curColSze, 'medium')) {
             // For String medium is 150 characters
-            $table->string($curColNme,150)->default("Null");
+            $table->string($curColNme, 150)->default("Null");
           }
           // Big
-          if(str_is($curColSze,'big')){
+          if (str_is($curColSze, 'big')) {
             // For String big is 500 characters
-            $table->string($curColNme,500)->default("Null");
+            $table->string($curColNme, 500)->default("Null");
           }
         }
 
         // Check for Text data type
-        if(str_is($curColType,'text')){
+        if (str_is($curColType, 'text')) {
           // Check for the data type
           // Default
-          if(str_is($curColSze,'default')){
+          if (str_is($curColSze, 'default')) {
             // For text default is text type
             $table->text($curColNme);
           }
           // Medium
-          if(str_is($curColSze,'medium')){
+          if (str_is($curColSze, 'medium')) {
             // For text medium is mediumtext type
             $table->mediumText($curColNme);
           }
           // Big
-          if(str_is($curColSze,'big')){
+          if (str_is($curColSze, 'big')) {
             // For text big is longtext type
             $table->longText($curColNme);
           }
         }
 
         // Check for Integer
-        if(str_is($curColType,'integer')){
+        if (str_is($curColType, 'integer')) {
           // Check for the data type
           // Default
-          if(str_is($curColSze,'default')){
+          if (str_is($curColSze, 'default')) {
             // For Integer default integer type
             $table->integer($curColNme)->default(0);
           }
           // Medium
-          if(str_is($curColSze,'medium')){
+          if (str_is($curColSze, 'medium')) {
             // For Integer medium is medium integer
             $table->mediumInteger($curColNme)->default(0);
           }
           // Big
-          if(str_is($curColSze,'big')){
+          if (str_is($curColSze, 'big')) {
             // For Integer big is big integer
             $table->bigInteger($curColNme)->default(0);
           }
@@ -430,11 +429,11 @@ class TableController extends Controller
     });
 
     // modify table for fulltext search using the srchindex column
-    DB::connection()->getPdo()->exec('ALTER TABLE ' . $tblNme . ' ADD FULLTEXT fulltext_index (srchindex)');
+    DB::connection()->getPdo()->exec('ALTER TABLE '.$tblNme.' ADD FULLTEXT fulltext_index (srchindex)');
 
     // Finally create the table
     // Save the table upon the schema
-    $this->crteTblInCollctn($tblNme,$collctnId);
+    $this->crteTblInCollctn($tblNme, $collctnId);
 
     // create folder in storage that will contain any additional files associated to the table
     if (Storage::exists($tblNme) == FALSE) {
@@ -442,19 +441,19 @@ class TableController extends Controller
     }
 
     // Finally return the view to load data
-    return $this->load(True,$tblNme,$fltFile);
+    return $this->load(True, $tblNme, $fltFile);
   }
 
   /**
   * Method responsible to load the data into the given table
   **/
-  public function load($isFrwded=False,$tblNme="",$fltFle=""){
+  public function load($isFrwded = False, $tblNme = "", $fltFle = "") {
     // Check if the request is forwarded
-    if($isFrwded){
+    if($isFrwded) {
       // Forward the file and table name
-      $tblNms=Table::where('tblNme', $tblNme)->get();
-      $fltFleList=array($fltFle);
-    } else{
+      $tblNms = Table::where('tblNme', $tblNme)->get();
+      $fltFleList = array($fltFle);
+    } else {
       // Get all the tables
       $tblNms = Table::all();
       // Get the list of files in the directory
@@ -474,14 +473,14 @@ class TableController extends Controller
   /**
   * Method to format the storage files
   **/
-  public function getFiles($strDir){
+  public function getFiles($strDir) {
     // Get the list of files in the directory
     $fltFleList = Storage::allFiles($strDir);
 
     // Format the file names by truncating the dir
     foreach ($fltFleList as $key => $value) {
       // check if directory string exists in the path
-      if(str_contains($value,$this->strDir.'/')){
+      if (str_contains($value, $this->strDir.'/')) {
         // replace the string
         $fltFleList[$key] = str_replace($this->strDir.'/','',$value);
       }
@@ -494,7 +493,7 @@ class TableController extends Controller
   /**
   * Simple method to get the column listing
   **/
-  public function getColLst($tblNme){
+  public function getColLst($tblNme) {
     // Returns the column names as an array
     return Schema::getColumnListing($tblNme);
   }
@@ -508,7 +507,7 @@ class TableController extends Controller
   *   1. Validate
   *   2. Insert into database
   **/
-  public function worker(Request $request){
+  public function worker(Request $request) {
     // validate the file name and table name
     //Rules for validation
     $rules = array(
@@ -517,13 +516,13 @@ class TableController extends Controller
     );
 
     // Validate the request before storing the data
-    $this->validate($request,$rules);
+    $this->validate($request, $rules);
 
     // get all column names
     $clmnLst = $this->getColLst($request->tblNme);
 
     // remove the id and time stamps
-    $clmnLst = array_splice($clmnLst,1,count($clmnLst)-3);
+    $clmnLst = array_splice($clmnLst, 1, count($clmnLst) - 3);
 
     // 1. Read the file as spl object
     $fltFleNme = $request->fltFle;
@@ -533,7 +532,7 @@ class TableController extends Controller
     $curFltFleObj = new \SplFileObject(\storage_path()."/app/".$fltFleAbsPth);
 
     //Check for an empty file
-    if($this->isEmpty($curFltFleObj)>0){
+    if ($this->isEmpty($curFltFleObj)>0) {
       // Ignore the first line
       $curFltFleObj->seek(1);
 
@@ -541,7 +540,7 @@ class TableController extends Controller
       $prcssd = 0;
 
       // For each line
-      while($curFltFleObj->valid()){
+      while($curFltFleObj->valid()) {
         // Get the line
         $curLine = $curFltFleObj->current();
 
@@ -556,16 +555,16 @@ class TableController extends Controller
 
         // Size of both column array and data should be same
         // Count of tokens
-        $orgCount = count($clmnLst)-1;
+        $orgCount = count($clmnLst) - 1;
 
-        if(count($tkns)==$orgCount){
+        if (count($tkns) == $orgCount) {
           // Declae an array
           $curArry = array();
 
           // Compact them into one array with utf8 encoding
-          for($i=0;$i<$orgCount;$i++){
+          for ($i = 0; $i<$orgCount; $i++) {
             // added iconv to strip out invalid characters
-            $curArry[strval($clmnLst[$i])]=utf8_encode($tkns[$i]);
+            $curArry[strval($clmnLst[ $i ])] = utf8_encode($tkns[ $i ]);
           }
 
           // remove extra characters replacing them with spaces
@@ -576,18 +575,18 @@ class TableController extends Controller
           $cleanString = strtolower(preg_replace('/\s+/', ' ', $cleanString));
 
           // remove duplicate keywords in the srchindex
-          $srchArr = explode( " " , $cleanString );
+          $srchArr = explode(" ", $cleanString );
           //$srchArr = array_unique( $srchArr );
 
           // add srchindex
-          $curArry["srchindex"] = implode(" " , $srchArr);
+          $curArry["srchindex"] = implode(" ", $srchArr);
 
           // Insert them into DB
           \DB::table($request->tblNme)->insert($curArry);
         }
 
         // Update the counter
-        $prcssd+=1;
+        $prcssd += 1;
         $curFltFleObj->next();
       }
     }
@@ -598,7 +597,7 @@ class TableController extends Controller
   /**
   * Disable the given table
   */
-  public function restrict(Request $request){
+  public function restrict(Request $request) {
     // Create the collection name
     $thisTbl = Table::findorFail($request->id);
     $thisTbl->hasAccess = false;

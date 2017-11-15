@@ -45,7 +45,7 @@ class CustomStringHelper {
      * @return      array of strings
      */
     public function separateFiles($str) {
-        $filesArray = explode('^',$str);
+        $filesArray = explode('^', $str);
         return $filesArray;
     }
 
@@ -57,7 +57,7 @@ class CustomStringHelper {
      */
     public function getFilename($str) {
         // explode string
-        $tokens = explode('\\',$str);
+        $tokens = explode('\\', $str);
         // get filename from end of string
         $filename = end($tokens);
         // return filename
@@ -73,7 +73,7 @@ class CustomStringHelper {
      */
     public function getFolderName($str) {
         // explode string
-        $tokens = explode('\\',$str);
+        $tokens = explode('\\', $str);
         // get filename from end of string
         $filename = end($tokens);
         // get the last folder the file exists in
@@ -114,7 +114,7 @@ class CustomStringHelper {
             // preg_match_all will return a count if it is greater than
             // 0 we have matches against the SSN pattern and will return
             // a true value
-            if(preg_match_all($pattern, $fileContents, $matches) > 0) {
+            if(preg_match_all($pattern, $fileContents, $matches)>0) {
                 return(true);
             }
 

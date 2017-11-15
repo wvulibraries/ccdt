@@ -15,18 +15,18 @@ class TikaConvert {
         $this->tika_port = env('TIKA_PORT', 'localhost');
     }
 
-   /**
-    * checks if files exists in storage under the folder
-    * for the table
-    *
-    * @param       string $filename Input string
-    *              this should containe file path and filename
-    * @return
-    */
+    /**
+     * checks if files exists in storage under the folder
+     * for the table
+     *
+     * @param       string $filename Input string
+     *              this should containe file path and filename
+     * @return
+     */
     function convert($filename)
     {
         // verify that file exists
-        if(!$filename || !file_exists($filename)) {
+        if (!$filename || !file_exists($filename)) {
           return false;
         }
 
@@ -45,7 +45,7 @@ class TikaConvert {
 
         // this method doesn't use exec or temp files that need deleted
         // Set where to connect to
-        $ch = curl_init("http://" . $this->tika_host . ':' . $this->tika_port . "/tika");
+        $ch = curl_init("http://".$this->tika_host.':'.$this->tika_port."/tika");
         // Request will be a PUT
         curl_setopt($ch, CURLOPT_PUT, 1);
         $fh_res = fopen($filename, 'r');
@@ -54,7 +54,7 @@ class TikaConvert {
         curl_setopt($ch, CURLOPT_INFILESIZE, filesize($filename));
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         // Send the request
-        $fileContents = curl_exec ($ch);
+        $fileContents = curl_exec($ch);
         fclose($fh_res);
 
         return($fileContents);
