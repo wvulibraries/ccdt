@@ -13,7 +13,13 @@ use App\Libraries\TikaConvert;
 /**
 * The controller is responsible for showing the cards data
 */
-class DataViewController extends Controller{
+class DataViewController extends Controller {
+  // various error messages
+  public $tableIdErr = 'Table id is invalid';
+  public $tableDisabledErr = 'Table is disabled';
+  public $tableNoRecordsErr = 'Table does not have any records.';
+  public $invalidRecordIdErr = 'Invalid Record ID' ;
+  public $noResultsErr = 'Search Yeilded No Results' ;
 
   /**
    * Constructor that associates the middlewares
@@ -26,23 +32,23 @@ class DataViewController extends Controller{
   /**
   * Show the data from the selected table
   */
-  public function index($curTable){
+  public function index($curTable) {
       // test for the validity of curtable
-      if(!$this->isValidTable($curTable)){
-        return redirect()->route('home')->withErrors(['Table id is invalid']);
+      if(!$this->isValidTable($curTable)) {
+        return redirect()->route('home')->withErrors([ $this->tableIdErr ]);
       }
 
       // Get the table entry in meta table "tables"
       $curTable = Table::find($curTable);
       if(!$curTable->hasAccess){
-        return redirect()->route('home')->withErrors(['Table is disabled']);
+        return redirect()->route('home')->withErrors([ $this->tableDisabledErr ]);
       }
 
       // Get and return of table doesn't have any records
       $numOfRcrds = DB::table($curTable->tblNme)->count();
       // check for the number of records
       if ($numOfRcrds == 0){
-        return redirect()->route('home')->withErrors(['Table does not have any records.']);
+        return redirect()->route('home')->withErrors([ $this->tableNoRecordsErr ]);
       }
 
       // Get the records 30 at a time
@@ -52,32 +58,32 @@ class DataViewController extends Controller{
       $clmnNmes = DB::getSchemaBuilder()->getColumnListing($curTable->tblNme);
 
       // return the index page
-      return view('user.data')->with('rcrds',$rcrds)
-                              ->with('clmnNmes',$clmnNmes)
-                              ->with('tblNme',$curTable->tblNme)
-                              ->with('tblId',$curTable);
+      return view('user.data')->with('rcrds', $rcrds)
+                              ->with('clmnNmes', $clmnNmes)
+                              ->with('tblNme', $curTable->tblNme)
+                              ->with('tblId', $curTable);
 
   }
 
   /**
   * Show a record in the table
   */
-  public function show($curTable, $curId){
+  public function show($curTable, $curId) {
     // test for the validity of curtable
-    if(!$this->isValidTable($curTable)){
-      return redirect()->route('home')->withErrors(['Table id is invalid']);
+    if(!$this->isValidTable($curTable)) {
+      return redirect()->route('home')->withErrors([ $this->tableIdErr ]);
     }
 
     // Get the table entry in meta table "tables"
     $curTable = Table::find($curTable);
 
-    if(!$curTable->hasAccess){
-      return redirect()->route('home')->withErrors(['Table is disabled']);
+    if(!$curTable->hasAccess) {
+      return redirect()->route('home')->withErrors([ $this->tableDisabledErr ]);
     }
 
-    // Check if id
-    if (is_null($curId) || !is_numeric($curId)){
-      return redirect()->route('home')->withErrors(['Invalid ID']);
+    // Check if id is valid
+    if (is_null($curId) || !is_numeric($curId)) {
+      return redirect()->route('home')->withErrors([ $this->invalidRecordIdErr ]);
     }
 
     // query database for record
@@ -87,7 +93,7 @@ class DataViewController extends Controller{
 
     // check for the number of records if their is none return with error message
     if (count ($rcrds) == 0){
-      return redirect()->route('home')->withErrors(['Search Yeilded No Results']);
+      return redirect()->route('home')->withErrors([ $this->noResultsErr ]);
     }
 
     // retrieve the column names
@@ -103,13 +109,13 @@ class DataViewController extends Controller{
   public function search(Request $request, $curTable, $search = NULL, $page = 1){
     // test for the validity of curtable
     if(!$this->isValidTable($curTable)){
-      return redirect()->route('home')->withErrors(['Table id is invalid']);
+      return redirect()->route('home')->withErrors([ $this->tableIdErr ]);
     }
 
     // Get the table entry in meta table "tables"
     $curTable = Table::find($curTable);
     if(!$curTable->hasAccess){
-      return redirect()->route('home')->withErrors(['Table is disabled']);
+      return redirect()->route('home')->withErrors([ $this->tableDisabledErr ]);
     }
 
     if ($search == NULL){
@@ -155,14 +161,14 @@ class DataViewController extends Controller{
   public function view($curTable, $subfolder, $filename){
     // test for the validity of curtable
     if(!$this->isValidTable($curTable)){
-      return redirect()->route('home')->withErrors(['Table id is invalid']);
+      return redirect()->route('home')->withErrors([ $this->tableIdErr ]);
     }
 
     // Get the table entry in meta table "tables"
     $curTable = Table::find($curTable);
 
     if(!$curTable->hasAccess){
-      return redirect()->route('home')->withErrors(['Table is disabled']);
+      return redirect()->route('home')->withErrors([ $this->tableDisabledErr ]);
     }
 
     // retrieve the column names
@@ -200,12 +206,11 @@ class DataViewController extends Controller{
   * 2. Check for the non numeric values
   * 3. Check for the table id
   **/
-  public function isValidTable($curTable){
-    if (is_null($curTable) || !is_numeric($curTable)){
+  public function isValidTable($curTable) {
+    if (is_null($curTable) || !is_numeric($curTable)) {
       return false;
     } else {
-      $tableExists = Table::find($curTable) == null ? false : true;
-      return $tableExists;
+      return Table::find($curTable) == null ? false : true;
     }
   }
 
