@@ -18,8 +18,8 @@ class DataViewController extends Controller {
   public $tableIdErr = 'Table id is invalid';
   public $tableDisabledErr = 'Table is disabled';
   public $tableNoRecordsErr = 'Table does not have any records.';
-  public $invalidRecordIdErr = 'Invalid Record ID' ;
-  public $noResultsErr = 'Search Yeilded No Results' ;
+  public $invalidRecordIdErr = 'Invalid Record ID';
+  public $noResultsErr = 'Search Yeilded No Results';
 
   /**
    * Constructor that associates the middlewares
@@ -34,7 +34,7 @@ class DataViewController extends Controller {
   */
   public function index($curTable) {
       // test for the validity of curtable
-      if(!$this->isValidTable($curTable)) {
+      if (!$this->isValidTable($curTable)) {
         return redirect()->route('home')->withErrors([ $this->tableIdErr ]);
       }
 
@@ -47,7 +47,7 @@ class DataViewController extends Controller {
       // Get and return of table doesn't have any records
       $numOfRcrds = DB::table($curTable->tblNme)->count();
       // check for the number of records
-      if ($numOfRcrds == 0){
+      if ($numOfRcrds == 0) {
         return redirect()->route('home')->withErrors([ $this->tableNoRecordsErr ]);
       }
 
@@ -70,7 +70,7 @@ class DataViewController extends Controller {
   */
   public function show($curTable, $curId) {
     // test for the validity of curtable
-    if(!$this->isValidTable($curTable)) {
+    if (!$this->isValidTable($curTable)) {
       return redirect()->route('home')->withErrors([ $this->tableIdErr ]);
     }
 
@@ -92,7 +92,7 @@ class DataViewController extends Controller {
                 ->get();
 
     // check for the number of records if their is none return with error message
-    if (count ($rcrds) == 0){
+    if (count ($rcrds) == 0) {
       return redirect()->route('home')->withErrors([ $this->noResultsErr ]);
     }
 
@@ -100,25 +100,25 @@ class DataViewController extends Controller {
     $clmnNmes = DB::getSchemaBuilder()->getColumnListing($curTable->tblNme);
 
     // return the index page
-    return view('user.show')->with('rcrds',$rcrds)
-                            ->with('clmnNmes',$clmnNmes)
-                            ->with('tblNme',$curTable->tblNme)
-                            ->with('tblId',$curTable);
+    return view('user.show')->with('rcrds', $rcrds)
+                            ->with('clmnNmes', $clmnNmes)
+                            ->with('tblNme', $curTable->tblNme)
+                            ->with('tblId', $curTable);
   }
 
-  public function search(Request $request, $curTable, $search = NULL, $page = 1){
+  public function search(Request $request, $curTable, $search = NULL, $page = 1) {
     // test for the validity of curtable
-    if(!$this->isValidTable($curTable)){
+    if(!$this->isValidTable($curTable)) {
       return redirect()->route('home')->withErrors([ $this->tableIdErr ]);
     }
 
     // Get the table entry in meta table "tables"
     $curTable = Table::find($curTable);
-    if(!$curTable->hasAccess){
+    if(!$curTable->hasAccess) {
       return redirect()->route('home')->withErrors([ $this->tableDisabledErr ]);
     }
 
-    if ($search == NULL){
+    if ($search == NULL) {
       $search = $request->input('search');
     }
 
@@ -132,7 +132,7 @@ class DataViewController extends Controller {
 
     // query sorted by revelancy score
     $query = DB::table($curTable->tblNme)
-            ->whereRaw("match(srchindex) against (? in boolean mode)", [$srchStrng])
+            ->whereRaw("match(srchindex) against (? in boolean mode)", [ $srchStrng ])
             ->orderBy('score', 'desc')
             ->offset($page-1 * $perPage)
             ->limit($perPage);
@@ -174,9 +174,9 @@ class DataViewController extends Controller {
     // retrieve the column names
     $clmnNmes = DB::getSchemaBuilder()->getColumnListing($curTable->tblNme);
 
-    $source = storage_path('app/' . $curTable->tblNme . '/' . $subfolder . '/' . $filename);
+    $source = storage_path('app/'.$curTable->tblNme.'/'.$subfolder.'/'.$filename);
 
-    $fileMimeType = Storage::getMimeType($curTable->tblNme . '/' . $subfolder . '/' . $filename);
+    $fileMimeType = Storage::getMimeType($curTable->tblNme.'/'.$subfolder.'/'.$filename);
 
     $matches = "/[^a-zA-Z0-9\s\,\.\-\n\r\t@\/\_\(\)]/";
 
@@ -194,7 +194,7 @@ class DataViewController extends Controller {
        default:
              // download file if we cannot determine what kind of file it is.
              return Response::make(file_get_contents($source), 200, [
-                'Content-Type' => Storage::getMimeType($curTable->tblNme . '/' . $subfolder . '/' . $filename),
+                'Content-Type' => Storage::getMimeType($curTable->tblNme.'/'.$subfolder.'/'.$filename),
                 'Content-Disposition' => 'inline; filename="'.$filename.'"'
             ]);
     }
