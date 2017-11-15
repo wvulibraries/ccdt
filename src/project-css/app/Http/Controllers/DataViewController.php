@@ -24,7 +24,7 @@ class DataViewController extends Controller {
   /**
    * Constructor that associates the middlewares
    */
-  public function __construct(){
+  public function __construct() {
     // Middleware to check for authenticated
     $this->middleware('auth');
   }
@@ -40,7 +40,7 @@ class DataViewController extends Controller {
 
       // Get the table entry in meta table "tables"
       $curTable = Table::find($curTable);
-      if(!$curTable->hasAccess){
+      if(!$curTable->hasAccess) {
         return redirect()->route('home')->withErrors([ $this->tableDisabledErr ]);
       }
 
@@ -138,7 +138,7 @@ class DataViewController extends Controller {
             ->limit($perPage);
 
     $rcrds = $query
-            ->get(['*', DB::raw("MATCH (srchindex) AGAINST ('".$srchStrng."') AS score")]);
+            ->get([ '*', DB::raw("MATCH (srchindex) AGAINST ('".$srchStrng."') AS score") ]);
 
     $rcrdsCount = count($rcrds);
 
@@ -155,19 +155,19 @@ class DataViewController extends Controller {
                               ->with('search', $srchStrng)
                               ->with('page', $page)
                               ->with('lastPage', $lastPage)
-                              ->with('morepages', $page < $lastPage);
+                              ->with('morepages', $page<$lastPage);
   }
 
-  public function view($curTable, $subfolder, $filename){
+  public function view($curTable, $subfolder, $filename) {
     // test for the validity of curtable
-    if(!$this->isValidTable($curTable)){
+    if(!$this->isValidTable($curTable)) {
       return redirect()->route('home')->withErrors([ $this->tableIdErr ]);
     }
 
     // Get the table entry in meta table "tables"
     $curTable = Table::find($curTable);
 
-    if(!$curTable->hasAccess){
+    if(!$curTable->hasAccess) {
       return redirect()->route('home')->withErrors([ $this->tableDisabledErr ]);
     }
 
@@ -188,7 +188,7 @@ class DataViewController extends Controller {
        case 'application/msword':
        case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
        case 'text/rtf':
-             $fileContents = preg_replace($matches,"", (new tikaConvert)->convert($source));
+             $fileContents = preg_replace($matches, "", (new tikaConvert)->convert($source));
              return Response::make((new customStringHelper)->ssnRedact($fileContents));
              break;
        default:
