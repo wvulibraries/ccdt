@@ -16,7 +16,7 @@
 | Home Page
 |--------------------------------------------------------------------------
 */
-Route::get('/', function () {
+Route::get('/', function() {
     return view('welcome');
 });
 
@@ -39,7 +39,7 @@ Route::get('home', 'HomeController@index')->name('home');
 | Help Page
 |--------------------------------------------------------------------------
 */
-Route::get('help', function () {
+Route::get('help', function() {
     return view('help');
 });
 
@@ -49,7 +49,7 @@ Route::get('help', function () {
 |--------------------------------------------------------------------------
 */
 Route::get('collection', 'CollectionController@index')->name('collectionIndex');
-Route::group(['prefix' => 'collection'], function(){
+Route::group(['prefix' => 'collection'], function() {
   Route::post('create', 'CollectionController@create');
   Route::post('edit', 'CollectionController@edit');
   Route::post('disable', 'CollectionController@disable');
@@ -62,16 +62,16 @@ Route::group(['prefix' => 'collection'], function(){
 |--------------------------------------------------------------------------
 */
 Route::get('table', 'TableController@index')->name('tableIndex');
-Route::group(['prefix' => 'table'], function(){
+Route::group(['prefix' => 'table'], function() {
   Route::get('create', 'TableController@wizard');
   Route::post('create/import', 'TableController@import');
   Route::post('create/select', 'TableController@select');
   // Forward route in case for error
-  Route::get('create/select','TableController@wizard');
+  Route::get('create/select', 'TableController@wizard');
   Route::post('create/finalize', 'TableController@finalize');
-  Route::get('load','TableController@load');
-  Route::post('load/worker','TableController@worker');
-  Route::post('load/status','TableController@status');
+  Route::get('load', 'TableController@load');
+  Route::post('load/worker', 'TableController@worker');
+  Route::post('load/status', 'TableController@status');
   Route::post('restrict', 'TableController@restrict');
 });
 
@@ -81,7 +81,7 @@ Route::group(['prefix' => 'table'], function(){
 |--------------------------------------------------------------------------
 */
 Route::get('users', 'UserController@index')->name('userIndex');
-Route::group(['prefix' => 'user'], function(){
+Route::group(['prefix' => 'user'], function() {
   Route::post('restrict', 'UserController@restrict');
   Route::post('allow', 'UserController@allow');
   Route::post('promote', 'UserController@promote');
@@ -94,16 +94,16 @@ Route::group(['prefix' => 'user'], function(){
 | Controller for the collection records
 |--------------------------------------------------------------------------
 */
-Route::get('data/{curTable}','DataViewController@index')->name('dataIndex');
-Route::get('data/{curTable}/{id}','DataViewController@show')->name('dataShow');
-Route::post('data/{curTable}','DataViewController@search')->name('dataSearch');
-Route::get('data/{curTable}/{search}/{page}','DataViewController@search')->name('dataSearch');
-Route::get('data/{curTable}/view/{subfolder}/{filename}','DataViewController@view')->name('dataFileView');
+Route::get('data/{curTable}', 'DataViewController@index')->name('dataIndex');
+Route::get('data/{curTable}/{id}', 'DataViewController@show')->name('dataShow');
+Route::post('data/{curTable}', 'DataViewController@search')->name('dataSearch');
+Route::get('data/{curTable}/{search}/{page}', 'DataViewController@search')->name('dataSearch');
+Route::get('data/{curTable}/view/{subfolder}/{filename}', 'DataViewController@view')->name('dataFileView');
 
 /*
 |--------------------------------------------------------------------------
 | Controller for managing file uploads to tables
 |--------------------------------------------------------------------------
 */
-Route::get('upload/{curTable}','UploadController@index');
+Route::get('upload/{curTable}', 'UploadController@index');
 Route::post('upload/{curTable}', 'UploadController@storeFiles');
