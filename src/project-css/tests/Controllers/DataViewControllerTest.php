@@ -1,8 +1,8 @@
 <?php
   # app/tests/controllers/DataViewControllerTest.php
 
-  use App\Http\Controllers\DataViewController;
   use Illuminate\Support\Facades\Storage;
+  use App\Http\Controllers\DataViewController;
 
   class DataViewControllerTest extends TestCase{
 

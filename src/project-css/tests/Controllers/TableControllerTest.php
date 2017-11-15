@@ -2,6 +2,7 @@
   # app/tests/controllers/TableControllerTest.php
 
   use Illuminate\Support\Facades\Storage;
+  use App\Http\Controllers\TableController;
 
   class TableControllerTest extends TestCase{
 
