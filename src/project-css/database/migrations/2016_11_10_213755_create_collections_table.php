@@ -13,7 +13,7 @@ class CreateCollectionsTable extends Migration
      */
     public function up()
     {
-        Schema::create('collections', function (Blueprint $table) {
+        Schema::create('collections', function(Blueprint $table) {
             $table->increments('id');
             $table->string('clctnName', 191)->unique();
             $table->boolean('isEnabled')->default(true);

@@ -11,7 +11,7 @@
 |
 */
 
-$factory->define(App\User::class, function (Faker\Generator $faker) {
+$factory->define(App\User::class, function(Faker\Generator $faker) {
     static $password;
 
     return [
@@ -22,7 +22,7 @@ $factory->define(App\User::class, function (Faker\Generator $faker) {
     ];
 });
 
-$factory->define(App\Collection::class, function (Faker\Generator $faker) {
+$factory->define(App\Collection::class, function(Faker\Generator $faker) {
     return [
         'clctnName' => $faker->name,
     ];

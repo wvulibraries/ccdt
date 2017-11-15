@@ -1,11 +1,5 @@
 <?php
 
-use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Foundation\Testing\WithoutMiddleware;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
-
 use App\Libraries\CustomStringHelper;
 
 class CustomStringHelperTest extends TestCase
@@ -57,8 +51,8 @@ class CustomStringHelperTest extends TestCase
         // check array that is returned from separateFiles to verify that the entries are correct
         $input = '..\documents\BlobExport\indivletters\114561.txt^..\documents\BlobExport\indivletters\114562.txt';
         $output = $this->stringHelper->separateFiles($input);
-        $this->assertEquals('..\documents\BlobExport\indivletters\114561.txt', $output[0]);
-        $this->assertEquals('..\documents\BlobExport\indivletters\114562.txt', $output[1]);
+        $this->assertEquals('..\documents\BlobExport\indivletters\114561.txt', $output[ 0 ]);
+        $this->assertEquals('..\documents\BlobExport\indivletters\114562.txt', $output[ 1 ]);
     }
 
     public function testfileExists() {
@@ -71,14 +65,14 @@ class CustomStringHelperTest extends TestCase
         mkdir($path);
         mkdir($path . '/' . $folder);
         // create empty file
-        touch($path . '/' . $folder . '/' . $filename, time() - (60 * 60 * 24 * 5));
+        touch($path.'/'.$folder.'/'.$filename, time() - (60 * 60 * 24 * 5));
 
         // check that file exists using our function
-        $this->assertTrue($this->stringHelper->fileExists('testtable1', $folder . '/' . $filename));
+        $this->assertTrue($this->stringHelper->fileExists('testtable1', $folder.'/'.$filename));
 
         // cleanup delete folders and file that we created
-        unlink($path . '/' . $folder . '/' . $filename);
-        rmdir($path . '/' . $folder);
+        unlink($path.'/'.$folder.'/'.$filename);
+        rmdir($path.'/'.$folder);
         rmdir($path);
     }
 
@@ -89,16 +83,16 @@ class CustomStringHelperTest extends TestCase
         // create fake table storage
         $path = './storage/app/testtable1';
         mkdir($path);
-        mkdir($path . '/' . $folder);
+        mkdir($path.'/'.$folder);
         // create empty file
-        touch($path . '/' . $folder . '/' . $filename, time() - (60 * 60 * 24 * 5));
+        touch($path.'/'.$folder.'/'.$filename, time() - (60 * 60 * 24 * 5));
 
         // check that file exists using our function
         $this->assertTrue($this->stringHelper->fileExistsInFolder('testtable1', $this->singlefilewithpath));
 
         // cleanup delete folders and file that we created
-        unlink($path . '/' . $folder . '/' . $filename);
-        rmdir($path . '/' . $folder);
+        unlink($path.'/'.$folder.'/'.$filename);
+        rmdir($path.'/'.$folder);
         rmdir($path);
     }
 
@@ -107,7 +101,7 @@ class CustomStringHelperTest extends TestCase
         $filename = $this->stringHelper->getFilename($this->singlefilewithpath);
 
         // check that file doesn't exists using our function
-        $this->assertFalse($this->stringHelper->fileExists('testtable1', $folder . '/' . $filename));
+        $this->assertFalse($this->stringHelper->fileExists('testtable1', $folder.'/'.$filename));
     }
 
     public function testfileDoesNotExistsInFolder() {
@@ -119,11 +113,11 @@ class CustomStringHelperTest extends TestCase
     }
 
 
-    public function testCheckForSSN(){
+    public function testCheckForSSN() {
         $this->assertTrue($this->stringHelper->ssnExists(file_get_contents('./storage/app/files/test/fake_socials.txt')));
     }
 
-    public function testRedactSSN(){
+    public function testRedactSSN() {
         // test should remove ssn from file and then ssnExists should report false that it exists
         $contents = $this->stringHelper->ssnRedact(file_get_contents('./storage/app/files/test/fake_socials.txt'));
         $this->assertFalse($this->stringHelper->ssnExists($contents));

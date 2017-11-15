@@ -4,7 +4,7 @@ use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
-class AuthTest extends TestCase{
+class AuthTest extends TestCase {
     use DatabaseMigrations;
 
     protected $user;
@@ -15,7 +15,7 @@ class AuthTest extends TestCase{
     private $userEmail;
     private $userPass;
 
-    public function setUp(){
+    public function setUp() {
         parent::setUp();
         Artisan::call('migrate');
         Artisan::call('db:seed');
@@ -41,44 +41,44 @@ class AuthTest extends TestCase{
      *
      * @return void
      */
-    public function testAdminCreateUser(){
-      // Go to login page and enter credentials
+    public function testAdminCreateUser() {
+        // Go to login page and enter credentials
 
-      // Type some valid values
-      $this->visit('/login')
-           ->type($this->adminEmail,'email')
-           ->type($this->adminPass,'password')
-           ->press('Login');
+        // Type some valid values
+        $this->visit('/login')
+             ->type($this->adminEmail, 'email')
+             ->type($this->adminPass, 'password')
+             ->press('Login');
 
-      // Type some valid values
-      $this->visit('/register')
-           ->type($this->userName,'name')
-           ->type($this->userEmail,'email')
-           ->type($this->userPass,'password')
-           ->type($this->userPass,'password_confirmation')
-           ->press('Register')
-           ->seePageIs('/users');
-    }
-
-    /** @test */
-    public function testWrongLoginCredentials(){
-        $this->visit(route('login'))
+        // Type some valid values
+        $this->visit('/register')
+             ->type($this->userName, 'name')
              ->type($this->userEmail, 'email')
-             ->type('invalid-password', 'password')
-             ->press('Login')
-             ->see('These credentials do not match our records.');
+             ->type($this->userPass, 'password')
+             ->type($this->userPass, 'password_confirmation')
+             ->press('Register')
+             ->seePageIs('/users');
     }
 
     /** @test */
-    public function testForgotPasswordWithIncorrectEmail(){
+    public function testWrongLoginCredentials() {
+        $this->visit(route('login'))
+               ->type($this->userEmail, 'email')
+               ->type('invalid-password', 'password')
+               ->press('Login')
+               ->see('These credentials do not match our records.');
+    }
+
+    /** @test */
+    public function testForgotPasswordWithIncorrectEmail() {
         $this->visit('/password/reset')
-             ->see('Reset Password')
-             ->type('test', 'email')
-             ->press('Send Password Reset Link')
-             ->see('The email must be a valid email address.')
-             ->type('test@nowhere.com', 'email')
-             ->press('Send Password Reset Link')
-             ->see("We can't find a user with that e-mail address.");
+               ->see('Reset Password')
+               ->type('test', 'email')
+               ->press('Send Password Reset Link')
+               ->see('The email must be a valid email address.')
+               ->type('test@nowhere.com', 'email')
+               ->press('Send Password Reset Link')
+               ->see("We can't find a user with that e-mail address.");
     }
 
     /** @test */
@@ -98,7 +98,7 @@ class AuthTest extends TestCase{
     //     var_dump($response);
     // }
 
-    public function testUserRedirectedToDashboard(){
+    public function testUserRedirectedToDashboard() {
         // Generate Test User
         $user = factory(App\User::class)->create([
             'email' => $this->userEmail,
@@ -106,12 +106,12 @@ class AuthTest extends TestCase{
         ]);
 
         $this->actingAs($user)
-              ->visit(route('login'))
-              ->seePageIs(route('home'));
+                ->visit(route('login'))
+                ->seePageIs(route('home'));
     }
 
     /** @test */
-    public function testUserRedirectedToLoginPage(){
+    public function testUserRedirectedToLoginPage() {
         $this->visit(route('home'));
         $this->seePageIs(route('login'));
     }
