@@ -1,26 +1,21 @@
 <?php
-  # app/tests/controllers/UploadControllerTest.php
+    # app/tests/controllers/UploadControllerTest.php
 
-  use App\Http\Controllers\UploadController;
-  use Illuminate\Http\UploadedFile;
-  use Illuminate\Support\Facades\Storage;
-  use Illuminate\Foundation\Testing\WithoutMiddleware;
-  use Illuminate\Foundation\Testing\DatabaseMigrations;
-  use Illuminate\Foundation\Testing\DatabaseTransactions;
+    use Illuminate\Support\Facades\Storage;
 
-  class UploadControllerTest extends TestCase{
+    class UploadControllerTest extends TestCase{
 
     private $admin;
     private $user;
 
     public function setUp() {
-      parent::setUp();
-      Artisan::call('migrate');
-      Artisan::call('db:seed');
+        parent::setUp();
+        Artisan::call('migrate');
+        Artisan::call('db:seed');
 
-      // find admin and test user accounts
-      $this->admin = App\User::where('name', '=', 'admin')->first();
-      $this->user = App\User::where('name', '=', 'test')->first();
+        // find admin and test user accounts
+        $this->admin = App\User::where('name', '=', 'admin')->first();
+        $this->user = App\User::where('name', '=', 'test')->first();
     }
 
     protected function tearDown() {

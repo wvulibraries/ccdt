@@ -63,7 +63,7 @@ class CustomStringHelperTest extends TestCase
         // create fake table storage
         $path = './storage/app/testtable1';
         mkdir($path);
-        mkdir($path . '/' . $folder);
+        mkdir($path.'/'.$folder);
         // create empty file
         touch($path.'/'.$folder.'/'.$filename, time() - (60 * 60 * 24 * 5));
 

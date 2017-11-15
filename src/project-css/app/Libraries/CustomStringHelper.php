@@ -22,7 +22,7 @@ class CustomStringHelper {
      * @return      boolean
      */
     public function fileExists($tblNme, $str) {
-        return \Storage::exists($tblNme . '/' . $str);
+        return \Storage::exists($tblNme.'/'.$str);
     }
 
     /**
@@ -35,7 +35,7 @@ class CustomStringHelper {
      * @return      boolean
      */
     public function fileExistsInFolder($tblNme, $str) {
-        return \Storage::exists($tblNme . '/' . $this->getFolderName($str) . '/' . $this->getFilename($str));
+        return \Storage::exists($tblNme.'/'.$this->getFolderName($str).'/'.$this->getFilename($str));
     }
 
     /**

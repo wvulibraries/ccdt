@@ -63,22 +63,22 @@ class AuthTest extends TestCase {
     /** @test */
     public function testWrongLoginCredentials() {
         $this->visit(route('login'))
-               ->type($this->userEmail, 'email')
-               ->type('invalid-password', 'password')
-               ->press('Login')
-               ->see('These credentials do not match our records.');
+             ->type($this->userEmail, 'email')
+             ->type('invalid-password', 'password')
+             ->press('Login')
+             ->see('These credentials do not match our records.');
     }
 
     /** @test */
     public function testForgotPasswordWithIncorrectEmail() {
         $this->visit('/password/reset')
-               ->see('Reset Password')
-               ->type('test', 'email')
-               ->press('Send Password Reset Link')
-               ->see('The email must be a valid email address.')
-               ->type('test@nowhere.com', 'email')
-               ->press('Send Password Reset Link')
-               ->see("We can't find a user with that e-mail address.");
+             ->see('Reset Password')
+             ->type('test', 'email')
+             ->press('Send Password Reset Link')
+             ->see('The email must be a valid email address.')
+             ->type('test@nowhere.com', 'email')
+             ->press('Send Password Reset Link')
+             ->see("We can't find a user with that e-mail address.");
     }
 
     /** @test */
