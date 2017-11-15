@@ -238,7 +238,7 @@ class TableController extends Controller
     // Get the file type
     $fleMime = $fleInf->file($fltFleObj->getRealPath());
     // Check the mimetype
-    if(!str_is($fleMime, "text/plain")) {
+    if (!str_is($fleMime, "text/plain")) {
       // If the file isn't a text file return false
       return false;
     }

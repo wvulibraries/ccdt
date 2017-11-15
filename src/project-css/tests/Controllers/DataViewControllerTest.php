@@ -66,9 +66,9 @@
 
       //create empty file to test view file
       $emptyFile = 'empty.csv';
-      $filePath = './storage/app/' . $tblname . '/test';
+      $filePath = './storage/app/'.$tblname.'/test';
       mkdir($filePath);
-      touch($filePath . '/' . $emptyFile);
+      touch($filePath.'/'.$emptyFile);
 
       // While using a admin account try to disable a collection
       $this->post('collection/disable', [ 'id' => $collection->id, 'clctnName' => $collection->clctnName ])
@@ -126,7 +126,7 @@
            ->see('Upload files to '.$tblname.' Table')
            ->assertFileExists(storage_path('app/'.$tblname.'/test/test_upload.txt'));
 
-     $this->visit('data/1/view' . '/test/' . 'test_upload.txt')
+     $this->visit('data/1/view'.'/test/'.'test_upload.txt')
           ->assertResponseStatus(200);
 
       // logout user
@@ -167,7 +167,7 @@
           'clctnName' => 'collection1',
       ]);
 
-      $tblname = 'importtest' . mt_rand();
+      $tblname = 'importtest'.mt_rand();
       $this->actingAs($this->admin)
            ->visit('table/create')
            ->type($tblname, 'imprtTblNme')

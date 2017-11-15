@@ -114,7 +114,7 @@ class DataViewController extends Controller {
 
     // Get the table entry in meta table "tables"
     $curTable = Table::find($curTable);
-    if(!$curTable->hasAccess) {
+    if (!$curTable->hasAccess) {
       return redirect()->route('home')->withErrors([ $this->tableDisabledErr ]);
     }
 
@@ -167,7 +167,7 @@ class DataViewController extends Controller {
     // Get the table entry in meta table "tables"
     $curTable = Table::find($curTable);
 
-    if(!$curTable->hasAccess) {
+    if (!$curTable->hasAccess) {
       return redirect()->route('home')->withErrors([ $this->tableDisabledErr ]);
     }
 

@@ -110,7 +110,7 @@
     }
 
     public function testSchema() {
-        if (File::exists(storage_path('/flatfiles/mlb_players.csv'))){
+        if (File::exists(storage_path('/flatfiles/mlb_players.csv'))) {
           // check for a valid file
           $result = (new TableController)->schema('/files/test/mlb_players.csv');
           $this->assertEquals($result[ 0 ], 'Name');
@@ -133,7 +133,7 @@
         $tblname = 'importtest'.mt_rand();
         $this->actingAs($this->admin)
              ->visit('table/create')
-             ->submitForm('Select', ['slctTblNme' => $tblname, 'colID' => '1', 'fltFile' => 'zillow.csv'])
+             ->submitForm('Select', [ 'slctTblNme' => $tblname, 'colID' => '1', 'fltFile' => 'zillow.csv' ])
              ->assertResponseStatus(200)
              ->see('Edit Schema')
              ->submitForm('Submit', [ 'col-0-data' => 'integer', 'col-0-size' => 'default',
