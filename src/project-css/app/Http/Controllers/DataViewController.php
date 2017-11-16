@@ -26,38 +26,38 @@ class DataViewController extends Controller {
     public function __construct() {
     // Middleware to check for authenticated
     $this->middleware('auth');
-  }
+    }
 
-  /**
-  * Show the data from the selected table
-  */
-  public function index($curTable) {
-      // Get the table entry in meta table "tables"
-      $curTable = Table::find($curTable);
-      if (!$curTable->hasAccess) {
-        return redirect()->route('home')->withErrors([ $this->tableDisabledErr ]);
-      }
+    /**
+    * Show the data from the selected table
+    */
+    public function index($curTable) {
+        // Get the table entry in meta table "tables"
+        $curTable = Table::find($curTable);
+        if (!$curTable->hasAccess) {
+          return redirect()->route('home')->withErrors([ $this->tableDisabledErr ]);
+        }
 
-      // Get and return of table doesn't have any records
-      $numOfRcrds = DB::table($curTable->tblNme)->count();
-      // check for the number of records
-      if ($numOfRcrds == 0) {
-        return redirect()->route('home')->withErrors([ $this->tableNoRecordsErr ]);
-      }
+        // Get and return of table doesn't have any records
+        $numOfRcrds = DB::table($curTable->tblNme)->count();
+        // check for the number of records
+        if ($numOfRcrds == 0) {
+          return redirect()->route('home')->withErrors([ $this->tableNoRecordsErr ]);
+        }
 
-      // Get the records 30 at a time
-      $rcrds = DB::table($curTable->tblNme)->paginate(30);
+        // Get the records 30 at a time
+        $rcrds = DB::table($curTable->tblNme)->paginate(30);
 
-      // retrieve the column names
-      $clmnNmes = DB::getSchemaBuilder()->getColumnListing($curTable->tblNme);
+        // retrieve the column names
+        $clmnNmes = DB::getSchemaBuilder()->getColumnListing($curTable->tblNme);
 
-      // return the index page
-      return view('user.data')->with('rcrds', $rcrds)
-                              ->with('clmnNmes', $clmnNmes)
-                              ->with('tblNme', $curTable->tblNme)
-                              ->with('tblId', $curTable);
+        // return the index page
+        return view('user.data')->with('rcrds', $rcrds)
+                                ->with('clmnNmes', $clmnNmes)
+                                ->with('tblNme', $curTable->tblNme)
+                                ->with('tblId', $curTable);
 
-  }
+    }
 
   /**
   * Show a record in the table
