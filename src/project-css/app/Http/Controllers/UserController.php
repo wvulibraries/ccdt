@@ -57,7 +57,7 @@ class UserController extends Controller {
   public function promote(Request $request) {
     // Create the collection name
     $thisUsr = User::findorFail($request->id);
-    if(strcasecmp($thisUsr->name, $request->name) == 0){
+    if (strcasecmp($thisUsr->name, $request->name) == 0){
       $thisUsr->isAdmin = true;
       $thisUsr->save();
       return redirect()->route('userIndex');

@@ -11,8 +11,8 @@ use App\Libraries\CustomStringHelper;
 use App\Libraries\TikaConvert;
 
 /**
-* The controller is responsible for showing the cards data
-*/
+ * The controller is responsible for showing the cards data
+ */
 class DataViewController extends Controller {
     // various error messages
     public $tableDisabledErr = 'Table is disabled';
@@ -29,13 +29,13 @@ class DataViewController extends Controller {
     }
 
     /**
-    * Show the data from the selected table
-    */
+     * Show the data from the selected table
+     */
     public function index($curTable) {
         // Get the table entry in meta table "tables"
         $curTable = Table::find($curTable);
         if (!$curTable->hasAccess) {
-          return redirect()->route('home')->withErrors([ $this->tableDisabledErr ]);
+            return redirect()->route('home')->withErrors([ $this->tableDisabledErr ]);
         }
 
         // Get and return of table doesn't have any records
@@ -60,8 +60,8 @@ class DataViewController extends Controller {
     }
 
   /**
-  * Show a record in the table
-  */
+   * Show a record in the table
+   */
   public function show($curTable, $curId) {
     // Get the table entry in meta table "tables"
     $curTable = Table::find($curTable);

@@ -31,7 +31,7 @@ class TikaConvert {
         }
 
         // verify that tika server is accepting connections
-        if(!$this->serverOpen()) {
+        if (!$this->serverOpen()) {
           return false;
         }
 
