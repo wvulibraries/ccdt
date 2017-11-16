@@ -91,19 +91,30 @@ Route::group(['prefix' => 'user'], function() {
 
 /*
 |--------------------------------------------------------------------------
-| Controller for the collection records
+| checktableid middleware group for checking for a valid table id
 |--------------------------------------------------------------------------
 */
-Route::get('data/{curTable}', 'DataViewController@index')->name('dataIndex')->middleware('checktableid');
-Route::get('data/{curTable}/{id}', 'DataViewController@show')->name('dataShow')->middleware('checktableid');
-Route::post('data/{curTable}', 'DataViewController@search')->name('dataSearch')->middleware('checktableid');
-Route::get('data/{curTable}/{search}/{page}', 'DataViewController@search')->name('dataSearch')->middleware('checktableid');
-Route::get('data/{curTable}/view/{subfolder}/{filename}', 'DataViewController@view')->name('dataFileView')->middleware('checktableid');
+Route::group(['middleware' => ['checktableid']], function() {
+  /*
+  |--------------------------------------------------------------------------
+  | Controller for managing data views
+  |--------------------------------------------------------------------------
+  */
+  Route::group(['prefix' => 'data'], function() {
+    Route::get('{curTable}', 'DataViewController@index')->name('dataIndex');
+    Route::get('{curTable}/{id}', 'DataViewController@show')->name('dataShow');
+    Route::post('{curTable}', 'DataViewController@search')->name('dataSearch');
+    Route::get('{curTable}/{search}/{page}', 'DataViewController@search')->name('dataSearch');
+    Route::get('{curTable}/view/{subfolder}/{filename}', 'DataViewController@view')->name('dataFileView');
+  });
 
-/*
-|--------------------------------------------------------------------------
-| Controller for managing file uploads to tables
-|--------------------------------------------------------------------------
-*/
-Route::get('upload/{curTable}', 'UploadController@index')->middleware('checktableid');
-Route::post('upload/{curTable}', 'UploadController@storeFiles')->middleware('checktableid');
+  /*
+  |--------------------------------------------------------------------------
+  | Controller for managing file uploads to tables
+  |--------------------------------------------------------------------------
+  */
+  Route::group(['prefix' => 'upload'], function() {
+    Route::get('{curTable}', 'UploadController@index');
+    Route::post('{curTable}', 'UploadController@storeFiles');
+  });
+});
