@@ -14,16 +14,16 @@ use App\Libraries\TikaConvert;
 * The controller is responsible for showing the cards data
 */
 class DataViewController extends Controller {
-  // various error messages
-  public $tableDisabledErr = 'Table is disabled';
-  public $tableNoRecordsErr = 'Table does not have any records.';
-  public $invalidRecordIdErr = 'Invalid Record ID';
-  public $noResultsErr = 'Search Yeilded No Results';
+    // various error messages
+    public $tableDisabledErr = 'Table is disabled';
+    public $tableNoRecordsErr = 'Table does not have any records.';
+    public $invalidRecordIdErr = 'Invalid Record ID';
+    public $noResultsErr = 'Search Yeilded No Results';
 
-  /**
-   * Constructor that associates the middlewares
-   */
-  public function __construct() {
+    /**
+     * Constructor that associates the middlewares
+     */
+    public function __construct() {
     // Middleware to check for authenticated
     $this->middleware('auth');
   }
@@ -164,13 +164,13 @@ class DataViewController extends Controller {
         case 'message/rfc822':
              return Response::make((new customStringHelper)->ssnRedact(file_get_contents($source)));
              break;
-       case 'application/msword':
-       case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
-       case 'text/rtf':
+        case 'application/msword':
+        case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
+        case 'text/rtf':
              $fileContents = preg_replace($matches, "", (new tikaConvert)->convert($source));
              return Response::make((new customStringHelper)->ssnRedact($fileContents));
              break;
-       default:
+        default:
              // download file if we cannot determine what kind of file it is.
              return Response::make(file_get_contents($source), 200, [
                 'Content-Type' => Storage::getMimeType($curTable->tblNme.'/'.$subfolder.'/'.$filename),
