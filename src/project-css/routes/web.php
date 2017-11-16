@@ -100,7 +100,7 @@ Route::group([ 'middleware' => [ 'checktableid' ] ], function() {
   | Controller for managing data views
   |--------------------------------------------------------------------------
   */
-  Route::group([' prefix' => 'data' ], function() {
+  Route::group([ 'prefix' => 'data' ], function() {
     Route::get('{curTable}', 'DataViewController@index')->name('dataIndex');
     Route::get('{curTable}/{id}', 'DataViewController@show')->name('dataShow');
     Route::post('{curTable}', 'DataViewController@search')->name('dataSearch');
