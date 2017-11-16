@@ -15,7 +15,6 @@ use App\Libraries\TikaConvert;
 */
 class DataViewController extends Controller {
   // various error messages
-  public $tableIdErr = 'Table id is invalid';
   public $tableDisabledErr = 'Table is disabled';
   public $tableNoRecordsErr = 'Table does not have any records.';
   public $invalidRecordIdErr = 'Invalid Record ID';
@@ -33,11 +32,6 @@ class DataViewController extends Controller {
   * Show the data from the selected table
   */
   public function index($curTable) {
-      // test for the validity of curtable
-      if (!$this->isValidTable($curTable)) {
-        return redirect()->route('home')->withErrors([ $this->tableIdErr ]);
-      }
-
       // Get the table entry in meta table "tables"
       $curTable = Table::find($curTable);
       if (!$curTable->hasAccess) {
@@ -69,11 +63,6 @@ class DataViewController extends Controller {
   * Show a record in the table
   */
   public function show($curTable, $curId) {
-    // test for the validity of curtable
-    if (!$this->isValidTable($curTable)) {
-      return redirect()->route('home')->withErrors([ $this->tableIdErr ]);
-    }
-
     // Get the table entry in meta table "tables"
     $curTable = Table::find($curTable);
 
@@ -107,11 +96,6 @@ class DataViewController extends Controller {
   }
 
   public function search(Request $request, $curTable, $search = NULL, $page = 1) {
-    // test for the validity of curtable
-    if (!$this->isValidTable($curTable)) {
-      return redirect()->route('home')->withErrors([ $this->tableIdErr ]);
-    }
-
     // Get the table entry in meta table "tables"
     $curTable = Table::find($curTable);
     if (!$curTable->hasAccess) {
@@ -159,11 +143,6 @@ class DataViewController extends Controller {
   }
 
   public function view($curTable, $subfolder, $filename) {
-    // test for the validity of curtable
-    if (!$this->isValidTable($curTable)) {
-      return redirect()->route('home')->withErrors([ $this->tableIdErr ]);
-    }
-
     // Get the table entry in meta table "tables"
     $curTable = Table::find($curTable);
 
@@ -197,20 +176,6 @@ class DataViewController extends Controller {
                 'Content-Type' => Storage::getMimeType($curTable->tblNme.'/'.$subfolder.'/'.$filename),
                 'Content-Disposition' => 'inline; filename="'.$filename.'"'
             ]);
-    }
-  }
-
-  /**
-  * The function will check if the passed id is valid using:
-  * 1. Check for the null values
-  * 2. Check for the non numeric values
-  * 3. Check for the table id
-  **/
-  public function isValidTable($curTable) {
-    if (is_null($curTable) || !is_numeric($curTable)) {
-      return false;
-    } else {
-      return Table::find($curTable) == null ? false : true;
     }
   }
 

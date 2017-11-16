@@ -94,16 +94,16 @@ Route::group(['prefix' => 'user'], function() {
 | Controller for the collection records
 |--------------------------------------------------------------------------
 */
-Route::get('data/{curTable}', 'DataViewController@index')->name('dataIndex');
-Route::get('data/{curTable}/{id}', 'DataViewController@show')->name('dataShow');
-Route::post('data/{curTable}', 'DataViewController@search')->name('dataSearch');
-Route::get('data/{curTable}/{search}/{page}', 'DataViewController@search')->name('dataSearch');
-Route::get('data/{curTable}/view/{subfolder}/{filename}', 'DataViewController@view')->name('dataFileView');
+Route::get('data/{curTable}', 'DataViewController@index')->name('dataIndex')->middleware('checktableid');
+Route::get('data/{curTable}/{id}', 'DataViewController@show')->name('dataShow')->middleware('checktableid');
+Route::post('data/{curTable}', 'DataViewController@search')->name('dataSearch')->middleware('checktableid');
+Route::get('data/{curTable}/{search}/{page}', 'DataViewController@search')->name('dataSearch')->middleware('checktableid');
+Route::get('data/{curTable}/view/{subfolder}/{filename}', 'DataViewController@view')->name('dataFileView')->middleware('checktableid');
 
 /*
 |--------------------------------------------------------------------------
 | Controller for managing file uploads to tables
 |--------------------------------------------------------------------------
 */
-Route::get('upload/{curTable}', 'UploadController@index');
-Route::post('upload/{curTable}', 'UploadController@storeFiles');
+Route::get('upload/{curTable}', 'UploadController@index')->middleware('checktableid');
+Route::post('upload/{curTable}', 'UploadController@storeFiles')->middleware('checktableid');
