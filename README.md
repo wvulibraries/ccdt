@@ -18,9 +18,10 @@
 
 Feel free to share ideas/bugs/questions using [issues](https://github.com/wvulibraries/rockefeller-css/issues)
 
-**Author**
+**Author(s)**
 
 [Ajay Kavui](http://pseudoaj.com) ([@pseudoaj](https://github.com/pseudoaj))
+[Tracy McCormick](http://tracyamccormick.com) ([@trmccormick](https://github.com/trmccormick))
 
 **Team**
 
