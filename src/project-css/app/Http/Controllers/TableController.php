@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\FileImport;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
@@ -499,6 +502,25 @@ class TableController extends Controller
   }
 
   /**
+  * Store takes a requested file import and adds it to the job queue for later processing
+  **/
+  public function store(Request $request) {
+    // set messages array to empty
+    $messages = [ ];
+
+    Log::info('File Import has been requested for table ' . $request->tblNme . ' using flat file ' . $request->fltFle);
+    // add job to queue
+    $this->dispatch(new FileImport($request->tblNme, $request->fltFle));
+    $message = [
+      'content'  =>  $request->fltFle.' Has been queued for import to ' . $request->tblNme,
+      'level'    =>  'success',
+    ];
+    array_push($messages, $message);
+    session()->flash('messages', $messages);
+    return redirect()->route('tableIndex');
+  }
+
+  /**
   * Worker employs following algorithm:
   * validate the file name and table name
   * get all the column names from table name
@@ -508,6 +530,8 @@ class TableController extends Controller
   *   2. Insert into database
   **/
   public function worker(Request $request) {
+    Log::info('File Import starting for tbl name ' . $request->tblNme . 'flt file ' . $request->fltFle);
+
     // validate the file name and table name
     //Rules for validation
     $rules = array(
@@ -583,6 +607,95 @@ class TableController extends Controller
 
           // Insert them into DB
           \DB::table($request->tblNme)->insert($curArry);
+        }
+
+        // Update the counter
+        $prcssd += 1;
+        $curFltFleObj->next();
+      }
+    }
+
+    return redirect()->route('tableIndex');
+  }
+
+  public function process($tblNme, $fltFle) {
+    Log::info('File Import starting for tbl name ' . $tblNme . 'flt file ' . $fltFle);
+
+    // validate the file name and table name
+    //Rules for validation
+    // $rules = array(
+    //   'fltFle' => 'required|string',
+    //   'tblNme' => 'required|string'
+    // );
+
+    // Validate the request before storing the data
+    //$this->validate($request, $rules);
+
+    // get all column names
+    $clmnLst = $this->getColLst($tblNme);
+
+    // remove the id and time stamps
+    $clmnLst = array_splice($clmnLst, 1, count($clmnLst) - 3);
+
+    // 1. Read the file as spl object
+    $fltFleNme = $fltFle;
+    $fltFleAbsPth = $this->strDir.'/'.$fltFleNme;
+
+    // Create an instance for the file
+    $curFltFleObj = new \SplFileObject(\storage_path()."/app/".$fltFleAbsPth);
+
+    //Check for an empty file
+    if ($this->isEmpty($curFltFleObj)>0) {
+      // Ignore the first line
+      $curFltFleObj->seek(1);
+
+      // Counter for processed
+      $prcssd = 0;
+
+      // For each line
+      while ($curFltFleObj->valid()) {
+        // Get the line
+        $curLine = $curFltFleObj->current();
+
+        // Strip out Quotes that are sometimes seen in csv files around each item
+        $curLine = str_replace('"', "", $curLine);
+
+        // Tokenize the line
+        $tkns = $this->tknze($curLine);
+
+        // Validate the tokens and filter them
+        $tkns = $this->fltrTkns($tkns);
+
+        // Size of both column array and data should be same
+        // Count of tokens
+        $orgCount = count($clmnLst) - 1;
+
+        if (count($tkns) == $orgCount) {
+          // Declae an array
+          $curArry = array();
+
+          // Compact them into one array with utf8 encoding
+          for ($i = 0; $i<$orgCount; $i++) {
+            // added iconv to strip out invalid characters
+            $curArry[ strval($clmnLst[ $i ]) ] = utf8_encode($tkns[ $i ]);
+          }
+
+          // remove extra characters replacing them with spaces
+          // also remove .. that is in the filenames
+          $cleanString = preg_replace('/[^A-Za-z0-9._ ]/', ' ', str_replace('..', '', $curLine));
+
+          // remove extra spaces and make string all lower case
+          $cleanString = strtolower(preg_replace('/\s+/', ' ', $cleanString));
+
+          // remove duplicate keywords in the srchindex
+          $srchArr = explode(" ", $cleanString);
+          //$srchArr = array_unique( $srchArr );
+
+          // add srchindex
+          $curArry[ "srchindex" ] = implode(" ", $srchArr);
+
+          // Insert them into DB
+          \DB::table($tblNme)->insert($curArry);
         }
 
         // Update the counter
