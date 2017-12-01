@@ -1,19 +1,34 @@
 FROM php:7.0.4-fpm
 
+ENV	VERSION='8'
+
 RUN apt-get update && apt-get install -y libmcrypt-dev \
     mysql-client libmagickwand-dev --no-install-recommends \
     && pecl install imagick xdebug\
     && docker-php-ext-enable imagick xdebug\
     && docker-php-ext-install mcrypt pdo_mysql mbstring zip
 
-# added for rockefeller-css dependencies
-RUN apt-get install -y --fix-missing poppler-utils
-RUN apt-get install -y ghostscript libjpeg-dev libpng12-dev libtiff-dev
+# added for rockefeller-css dependencies used for pdf to text
+# RUN apt-get install -y --fix-missing poppler-utils
+# RUN apt-get install -y ghostscript libjpeg-dev libpng12-dev libtiff-dev
+# needed for running the job queue listener
 # RUN apt-get install -y supervisor
+RUN apt-get install -y git
+
+# Install nodejs LTS
+RUN curl -sL https://deb.nodesource.com/setup_${VERSION}.x | bash - \
+	&& apt -y install build-essential \
+	&& apt -y install nodejs \
+	&& npm i -g npm
 
 # composer needed for development most likely can be removed during production
 RUN curl -sS https://getcomposer.org/installer | php && mv composer.phar /usr/local/bin/composer
 
 ADD ./serverConfiguration/php.ini /usr/local/etc/php/
+# ADD ./serverConfiguration/supervisord.conf /etc/supervisor/
+# ADD ./serverConfiguration/laravel-worker.conf /etc/supervisor/conf.d/
+
+# expose 9001 for seeing the Supervisor status
+# EXPOSE 9001
 
 WORKDIR /var/www

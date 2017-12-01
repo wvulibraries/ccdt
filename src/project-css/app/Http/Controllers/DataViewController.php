@@ -24,8 +24,8 @@ class DataViewController extends Controller {
      * Constructor that associates the middlewares
      */
     public function __construct() {
-    // Middleware to check for authenticated
-    $this->middleware('auth');
+        // Middleware to check for authenticated
+        $this->middleware('auth');
     }
 
     /**
@@ -142,6 +142,13 @@ class DataViewController extends Controller {
                               ->with('morepages', $page<$lastPage);
   }
 
+
+  /**
+   * view checks the file type and if its plain text or a word document it
+   * will run ssnRedact to replace a US style social security number with
+   * ###-##-####. Any other files the user will be able to download and then
+   * view with a local application.
+   */
   public function view($curTable, $subfolder, $filename) {
     // Get the table entry in meta table "tables"
     $curTable = Table::find($curTable);
