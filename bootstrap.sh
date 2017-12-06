@@ -61,10 +61,10 @@ then
 fi
 
 # remove my.cnf and link our custom file if a custom my.cnf exists
-# if [ -e /vagrant/serverConfiguration/my.cnf ]
+# if [ -e /vagrant/serverConfiguration/vagrant.my.cnf ]
 # then
 #    rm -f /etc/my.cnf
-#    ln -s /vagrant/serverConfiguration/my.cnf /etc/my.cnf
+#    ln -s /vagrant/serverConfiguration/vagrant.my.cnf /etc/my.cnf
 # fi
 
 # create folder for the log files

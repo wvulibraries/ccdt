@@ -592,6 +592,32 @@ class TableController extends Controller
     return($tkns1);
   }
 
+  public function createSrchIndex($curLine) {
+    // remove extra characters replacing them with spaces
+    // also remove .. that is in the filenames
+    $cleanString = preg_replace('/[^A-Za-z0-9._ ]/', ' ', str_replace('..', '', $curLine));
+
+    // remove extra spaces and make string all lower case
+    $cleanString = strtolower(preg_replace('/\s+/', ' ', $cleanString));
+
+    // remove duplicate keywords in the srchindex
+    $srchArr = explode(' ', $cleanString);
+
+    // remove any items less than 2 characters
+    // as fulltext searches need at least 2 characters
+    $counter=0;
+    foreach ($srchArr as $value) {
+      if (strlen($value) < 2) {
+        unset($srchArr[$counter]);
+      }
+     $counter++;
+    }
+
+    // remove duplicate keywords from the srchIndex
+    $srchArr = array_unique( $srchArr );
+    return(implode(' ', $srchArr));
+  }
+
   /**
   * Process employs following algorithm:
   * validate the file name and table name
@@ -636,7 +662,7 @@ class TableController extends Controller
       // Counter for processed
       $prcssd = 0;
       // Counter for failed
-      $failed = 0;
+      //$failed = 0;
 
       // set last ErrRow to null
       $lastErrRow = NULL;
@@ -661,32 +687,22 @@ class TableController extends Controller
 
         $tknCount = count($tkns);
 
+        $valid_tkn_count = ($tknCount == $orgCount);
+
         // if lastErrRow is the previous row try to combine the lines
-        if (($tknCount != $orgCount) && ($lastErrRow == $prcssd-1)) {
-          if ($savedTkns != NULL) {
+        if (($valid_tkn_count == false) && ($lastErrRow == $prcssd-1) && ($savedTkns != NULL)) {
             $tkns = $this->mergeLines($savedTkns, $tkns);
             $tknCount = count($tkns);
-          }
+            $valid_tkn_count = ($tknCount == $orgCount);
+
+            // clear last error since we did a merge
+            $lastErrRow = NULL;
+            $savedTkns = NULL;
         }
 
         try {
-          // throw a exception if the $tknCount and $orgCount don't match
-          if ($tknCount != $orgCount) {
-            $lastErrRow = $prcssd;
-            if ($savedTkns == NULL) {
-              $savedTkns = $tkns;
-            }
-            else {
-              $tkns = $this->mergeLines($savedTkns, $tkns);
-            }
-            $failed++;
-            throw new \Exception("Invalid Field Count - detected " . $tknCount . " expected " . $orgCount . " Line #" . $prcssd . " Line Contents " . $curLine);
-          }
-          else {
-            // clear last error
-            $lastErrRow = NULL;
-            $savedTkns = NULL;
-
+          // throw a exception if we do not have a valid token count
+          if ($valid_tkn_count) {
             // Declae an array
             $curArry = array();
 
@@ -695,40 +711,24 @@ class TableController extends Controller
               $curArry[ strval($clmnLst[ $i ]) ] = utf8_encode($tkns[ $i ]);
             }
 
-            // remove extra characters replacing them with spaces
-            // also remove .. that is in the filenames
-            $cleanString = preg_replace('/[^A-Za-z0-9._ ]/', ' ', str_replace('..', '', $curLine));
-
-            // remove extra spaces and make string all lower case
-            $cleanString = strtolower(preg_replace('/\s+/', ' ', $cleanString));
-
-            // remove duplicate keywords in the srchindex
-            $srchArr = explode(' ', $cleanString);
-
-            // remove any items less than 3 characters
-            // as fulltext searches need at least 3 characters
-            $counter=0;
-            foreach ($srchArr as $value) {
-              if (strlen($value) < 3) {
-                unset($srchArr[$counter]);
-              }
-             $counter++;
-            }
-
-            $srchArr = array_unique( $srchArr );
-
             // add srchindex
-            $curArry[ 'srchindex' ] = implode(' ', $srchArr);
+            $curArry[ 'srchindex' ] = $this->createSrchIndex($curLine);
 
             // Insert them into DB
             \DB::table($tblNme)->insert($curArry);
+          }
+          else {
+            // save the last row position and the Tokenized row
+            $lastErrRow = $prcssd;
+            $savedTkns = $tkns;
+            // throw an exception since we cannot save the row
+            throw new \Exception("Invalid Field Count - detected " . $tknCount . " expected " . $orgCount . " Line #" . $prcssd . " Line Contents " . $curLine);
           }
         }
 
         //catch exception
         catch(\Exception $e) {
           Log::info($e->getMessage());
-          $failed += 1;
         }
 
         // Update the counter
@@ -736,12 +736,12 @@ class TableController extends Controller
         $curFltFleObj->next();
       }
 
-      if ($failed > 0) {
-        Log::info('Import incomplete. ' .  $failed . ' rows failed due to field count mismatch. Expected ' . $prcssd-1);
-      }
-      else {
-        Log::info('File Import Completed for tbl name ' . $tblNme . ' imported ' . $prcssd-1 . ' Record(s)');
-      }
+      // if ($failed > 0) {
+      //   Log::info('Import incomplete. ' .  $failed . ' rows failed due to field count mismatch. Expected ' . $prcssd-1);
+      // }
+      // else {
+      //   Log::info('File Import Completed for tbl name ' . $tblNme . ' imported ' . $prcssd-1 . ' Record(s)');
+      // }
     }
   }
 
