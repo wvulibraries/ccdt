@@ -36,7 +36,7 @@
                       </br>{{$filesArray[$arrayPos]}}
 
                       @if ($strhelper->fileExistsInFolder($tblNme, $filesArray[$arrayPos]))
-                        <a href="{{ url('/data', ['curTable' => $tblId, 'view' => 'view', 'subfolder' => $strhelper->getFolderName($filesArray[$arrayPos]), 'filename' => $strhelper->getFilename($filesArray[$arrayPos])])}}">
+                        <a href="{{ url('/data', ['curTable' => $tblId, 'recId' => $curId, 'view' => 'view', 'subfolder' => $strhelper->getFolderName($filesArray[$arrayPos]), 'filename' => $strhelper->getFilename($filesArray[$arrayPos])])}}">
                           <span> View</span>
                         </a>
                       @endif
@@ -49,7 +49,7 @@
                 <h4><b>{{$clmnNme}}</b>: {{$rcrd->$clmnNme}}
 
                 @if ($strhelper->fileExistsInFolder($tblNme, $rcrd->$clmnNme))
-                  <a href="{{ url('/data', ['curTable' => $tblId, 'view' => 'view', 'subfolder' => $strhelper->getFolderName($rcrd->$clmnNme), 'filename' => $strhelper->getFilename($rcrd->$clmnNme)])}}">
+                  <a href="{{ url('/data', ['curTable' => $tblId, 'recId' => $curId, 'view' => 'view', 'subfolder' => $strhelper->getFolderName($rcrd->$clmnNme), 'filename' => $strhelper->getFilename($rcrd->$clmnNme)])}}">
                     <span> View</span>
                   </a>
                 @endif
@@ -63,6 +63,11 @@
           @endif
         @endforeach
       @endforeach
+
+      <div class="col-xs-12 col-sm-12 col-md-12">
+          <a href="{{ url('/data', [$tblId]) }}" class="btn btn-primary">Return To Table</a>
+      </div>
+
    </div>
 </div>
 

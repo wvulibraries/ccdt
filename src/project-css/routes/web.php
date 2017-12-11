@@ -106,7 +106,7 @@ Route::group([ 'middleware' => [ 'checktableid' ] ], function() {
     Route::get('{curTable}/{id}', 'DataViewController@show')->name('dataShow');
     Route::post('{curTable}', 'DataViewController@search')->name('dataSearch');
     Route::get('{curTable}/{search}/{page}', 'DataViewController@search')->name('dataSearch');
-    Route::get('{curTable}/view/{subfolder}/{filename}', 'DataViewController@view')->name('dataFileView');
+    Route::get('{curTable}/{recId}/view/{subfolder}/{filename}', 'DataViewController@view')->name('dataFileView');
   });
 
   /*

@@ -313,33 +313,6 @@ class TableController extends Controller
     }
 
   /**
-  * Determines delimiter used for a specific line
-  */
-  public function getLineDelimiter($line) {
-    $delimiters = array(
-      ',',
-      '\t',
-      ';',
-      '|',
-      ':'
-    );
-    $results = array();
-    foreach ($delimiters as $delimiter) {
-        $regExp = '/['.$delimiter.']/';
-        $fields = preg_split($regExp, $line);
-        if(count($fields) > 1){
-            if(!empty($results[$delimiter])) {
-                $results[$delimiter]++;
-            } else {
-                $results[$delimiter] = 1;
-            }
-        }
-    }
-    $results = array_keys($results, max($results));
-    return $results[0];
-  }
-
-  /**
   * Get the line numbers for a fileobject
   * @param \SplFileObject $fltFleObj
   */
@@ -586,10 +559,11 @@ class TableController extends Controller
     $numItem = count($tkns1) - 1;
     $tkns1[$numItem] = $tkns1[$numItem] . ' ' . $tkns2[0];
     unset($tkns2[0]);
-    if (count($tkns2) > 0) {
-      return(array_merge($tkns1, $tkns2));
-    }
-    return($tkns1);
+    return( (count($tkns2) > 0) ? array_merge($tkns1, $tkns2) : $tkns1 );
+    // if (count($tkns2) > 0) {
+    //   return(array_merge($tkns1, $tkns2));
+    // }
+    // return($tkns1);
   }
 
   public function createSrchIndex($curLine) {
