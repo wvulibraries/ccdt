@@ -82,7 +82,7 @@
            ->see('Table is disabled');
 
       // while table is disabled try to view a file
-      $this->visit('data/1/view'.'/test/'.$emptyFile)
+      $this->visit('data/1/1/view'.'/test/'.$emptyFile)
            ->assertResponseStatus(200);
 
       // While using a admin account try to enable a collection
@@ -109,11 +109,11 @@
            ->see('Search Yeilded No Results');
 
       // try viewing emptyfile
-      $this->visit('data/1/view'.'/test/'.$emptyFile)
+      $this->visit('data/1/1/view'.'/test/'.$emptyFile)
            ->assertResponseStatus(200);
 
       // try with invalid table id
-      $this->visit('data/2/view'.'/test/'.$emptyFile)
+      $this->visit('data/2/1/view'.'/test/'.$emptyFile)
            ->see('Table id is invalid');
 
       $this->visit('upload/1')
@@ -126,15 +126,15 @@
            ->see('Upload files to '.$tblname.' Table')
            ->assertFileExists(storage_path('app/'.$tblname.'/test/test_upload.txt'));
 
-     $this->visit('data/1/view'.'/test/'.'test_upload.txt')
+     $this->visit('data/1/1/view'.'/test/'.'test_upload.txt')
           ->assertResponseStatus(200);
 
       // logout user
       Auth::logout();
 
-      // try to view a record without a authenticated user
+      // try to view a file without a authenticated user
       // they should be redirected to the Login page
-      $this->visit('data/1/view'.'/test/'.$emptyFile)
+      $this->visit('data/1/1/view'.'/test/'.$emptyFile)
            ->see('Login');
 
       unlink($filePath.'/'.$emptyFile);
