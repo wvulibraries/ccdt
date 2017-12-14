@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Jobs\FileImport;
-
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -271,11 +270,12 @@ class TableController extends Controller
 
   /**
   * Method to tokenize the string for multiple lines
+  * @param string $line
   */
   public function tknze($line, $delimiter) {
     // Tokenize the line
     // Define a pattern
-    $pattern = '/[' . $delimiter . ']/';
+    $pattern = '/['.$delimiter.']/';
 
     // preg split
     $tkns = preg_split($pattern, $line);
@@ -284,6 +284,9 @@ class TableController extends Controller
     return $tkns;
   }
 
+  /**
+  * @param string $file
+  */
   public function getFileDelimiter($file, $checkLines = 2) {
         $file = new \SplFileObject($file);
         $delimiters = array(
@@ -295,23 +298,23 @@ class TableController extends Controller
         );
         $results = array();
         $i = 0;
-        while($file->valid() && $i <= $checkLines) {
+        while ($file->valid() && $i<=$checkLines) {
             $line = $file->fgets();
             foreach ($delimiters as $delimiter) {
                 $regExp = '/['.$delimiter.']/';
                 $fields = preg_split($regExp, $line);
-                if(count($fields) > 1){
-                    if(!empty($results[$delimiter])) {
-                        $results[$delimiter]++;
+                if (count($fields)>1) {
+                    if(!empty($results[ $delimiter ])) {
+                        $results[ $delimiter ]++;
                     } else {
-                        $results[$delimiter] = 1;
+                        $results[ $delimiter ] = 1;
                     }
                 }
             }
            $i++;
         }
         $results = array_keys($results, max($results));
-        return $results[0];
+        return $results[ 0 ];
     }
 
   /**
@@ -551,7 +554,7 @@ class TableController extends Controller
     // set messages array to empty
     $messages = [ ];
 
-    Log::info('File Import has been requested for table ' . $request->tblNme . ' using flat file ' . $request->fltFle);
+    Log::info('File Import has been requested for table '.$request->tblNme .' using flat file '.$request->fltFle);
     // add job to queue
     $this->dispatch(new FileImport($request->tblNme, $request->fltFle));
     $message = [
@@ -581,7 +584,7 @@ class TableController extends Controller
    * if their is insufficent items we will save the tkns and the row position
    * so we can attempt a merge later.
    * @param string $curLine current line read from the file
-   * @param string $delmiter type of delmiter that is used in the file
+   * @param string $delimiter type of delmiter that is used in the file
    * @param integer $orgCount current number of fields expected
    * @param integer $prcssd current position in the file
    * @return string
@@ -596,13 +599,9 @@ class TableController extends Controller
     // Validate the tokens and filter them
     $tkns = $this->fltrTkns($tkns);
 
-    // Count of tokens
-    $tknCount = count($tkns);
-
     // if lastErrRow is the previous row try to combine the lines
-    if (($tknCount != $orgCount) && ($this->lastErrRow == $prcssd-1) && ($this->savedTkns != NULL)) {
+    if ((count($tkns) != $orgCount) && ($this->lastErrRow == $prcssd - 1) && ($this->savedTkns != NULL)) {
         $tkns = $this->mergeLines($this->savedTkns, $tkns);
-        $tknCount = count($tkns);
 
         // clear last saved line since we did a merge
         $lastErrRow = NULL;
@@ -610,7 +609,7 @@ class TableController extends Controller
     }
 
     // if invalid tokenCount save the tkns and last row position
-    if ($tknCount != $orgCount) {
+    if (count($tkns) != $orgCount) {
       // save the last row position and the Tokenized row
       $this->lastErrRow = $prcssd;
       $this->savedTkns = $tkns;
@@ -639,21 +638,25 @@ class TableController extends Controller
     // as fulltext searches need at least 2 characters
     $counter=0;
     foreach ($srchArr as $value) {
-      if (strlen($value) < 2) {
-        unset($srchArr[$counter]);
+      if (strlen($value)<2) {
+        unset($srchArr[ $counter ]);
       }
      $counter++;
     }
 
     // remove duplicate keywords from the srchIndex
-    $srchArr = array_unique( $srchArr );
+    $srchArr = array_unique($srchArr);
     return(implode(' ', $srchArr));
   }
 
+  /**
+  * @param string $tkns
+  * @param integer $orgCount
+  * @param string $tblNme
+  * @param array $clmnLst
+  */
   public function insertRecord($tkns, $orgCount, $tblNme, $clmnLst) {
-    $tknCount = count($tkns);
-
-    if ($tknCount == $orgCount) {
+    if (count($tkns) == $orgCount) {
       // Declae an array
       $curArry = array();
 
@@ -668,7 +671,7 @@ class TableController extends Controller
       // Insert them into DB
       \DB::table($tblNme)->insert($curArry);
     } else {
-      throw new \Exception("Invalid Field Count - detected " . $tknCount . " expected " . $orgCount);
+      throw new \Exception("Invalid Field Count - detected ".count($tkns)." expected " . $orgCount);
     }
   }
 
@@ -706,10 +709,6 @@ class TableController extends Controller
 
       // Counter for processed
       $prcssd = 0;
-
-      // set last ErrRow to null
-      $lastErrRow = NULL;
-      $savedTkns = NULL;
 
       // For each line
       while ($curFltFleObj->valid()) {

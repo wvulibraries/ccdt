@@ -26,10 +26,5 @@ RUN npm install --global gulp-cli
 RUN curl -sS https://getcomposer.org/installer | php && mv composer.phar /usr/local/bin/composer
 
 ADD ./serverConfiguration/php.ini /usr/local/etc/php/
-# ADD ./serverConfiguration/supervisord.conf /etc/supervisor/
-# ADD ./serverConfiguration/laravel-worker.conf /etc/supervisor/conf.d/
-
-# expose 9001 for seeing the Supervisor status
-# EXPOSE 9001
 
 WORKDIR /var/www
