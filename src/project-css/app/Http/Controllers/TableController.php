@@ -574,6 +574,18 @@ class TableController extends Controller
     return( (count($tkns2) > 0) ? array_merge($tkns1, $tkns2) : $tkns1 );
   }
 
+  /**
+   * takes a string and prepares it to be used inserted as a new record
+   * if we do not find enough items in the line we will check and see if
+   * the previous line was saved and merge them and check the count again.
+   * if their is insufficent items we will save the tkns and the row position
+   * so we can attempt a merge later.
+   * @param string $curLine current line read from the file
+   * @param string $delmiter type of delmiter that is used in the file
+   * @param integer $orgCount current number of fields expected
+   * @param integer $prcssd current position in the file
+   * @return string
+   */
   public function prepareLine($curLine, $delimiter, $orgCount, $prcssd) {
     // Strip out Quotes that are sometimes seen in csv files around each item
     $curLine = str_replace('"', "", $curLine);
@@ -587,10 +599,8 @@ class TableController extends Controller
     // Count of tokens
     $tknCount = count($tkns);
 
-    $valid_tkn_count = ($tknCount == $orgCount);
-
     // if lastErrRow is the previous row try to combine the lines
-    if (($valid_tkn_count == false) && ($this->lastErrRow == $prcssd-1) && ($this->savedTkns != NULL)) {
+    if (($tknCount != $orgCount) && ($this->lastErrRow == $prcssd-1) && ($this->savedTkns != NULL)) {
         $tkns = $this->mergeLines($this->savedTkns, $tkns);
         $tknCount = count($tkns);
 
@@ -609,6 +619,11 @@ class TableController extends Controller
     return ($tkns);
   }
 
+  /**
+   * takes a string and prepares it to be used as a search index for fulltext search
+   * @param string $curLine
+   * @return string
+   */
   public function createSrchIndex($curLine) {
     // remove extra characters replacing them with spaces
     // also remove .. that is in the filenames
@@ -672,7 +687,7 @@ class TableController extends Controller
     // remove the id and time stamps
     $clmnLst = array_splice($clmnLst, 1, count($clmnLst) - 3);
 
-    // Count of tokens
+    // determine number of fields without the srchIndex
     $orgCount = count($clmnLst) - 1;
 
     // 1. Read the file as spl object
