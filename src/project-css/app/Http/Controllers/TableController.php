@@ -260,7 +260,7 @@ class TableController extends Controller
     $hdr = str_replace('"', "", $hdr);
 
     // Tokenize the line
-    $tkns = $this->tknze($hdr, $this->getFileDelimiter(\storage_path()."/app/".$fltFlePth, 5));
+    $tkns = $this->tknze($hdr, $this->detectDelimiter(\storage_path()."/app/".$fltFlePth));
     // Validate the tokens and filter them
     $tkns = $this->fltrTkns($tkns);
 
@@ -284,38 +284,28 @@ class TableController extends Controller
     return $tkns;
   }
 
-  /**
-  * @param string $file
-  */
-  public function getFileDelimiter($file, $checkLines = 2) {
-        $file = new \SplFileObject($file);
-        $delimiters = array(
-          ',',
-          '\t',
-          ';',
-          '|',
-          ':'
-        );
-        $results = array();
-        $i = 0;
-        while ($file->valid() && $i<=$checkLines) {
-            $line = $file->fgets();
-            foreach ($delimiters as $delimiter) {
-                $regExp = '/['.$delimiter.']/';
-                $fields = preg_split($regExp, $line);
-                if (count($fields)>1) {
-                    if(!empty($results[ $delimiter ])) {
-                        $results[ $delimiter ]++;
-                    } else {
-                        $results[ $delimiter ] = 1;
-                    }
-                }
-            }
-           $i++;
-        }
-        $results = array_keys($results, max($results));
-        return $results[ 0 ];
-    }
+   /*
+   * @param string $csvFile Path to the CSV file
+   * @return string Delimiter
+   */
+   public function detectDelimiter($csvFile)
+   {
+       $delimiters = array(
+           ';' => 0,
+           ',' => 0,
+           "\t" => 0,
+           "|" => 0
+       );
+
+       $handle = fopen($csvFile, "r");
+       $firstLine = fgets($handle);
+       fclose($handle);
+       foreach ($delimiters as $delimiter => &$count) {
+           $count = count(str_getcsv($firstLine, $delimiter));
+       }
+
+       return array_search(max($delimiters), $delimiters);
+   }
 
   /**
   * Get the line numbers for a fileobject
@@ -701,7 +691,7 @@ class TableController extends Controller
     // Create an instance for the file
     $curFltFleObj = new \SplFileObject($fltFleFullPth);
 
-    $delimiter = $this->getFileDelimiter($fltFleFullPth, 5);
+    $delimiter = $this->detectDelimiter($fltFleFullPth);
 
     //Check for an empty file
     if ($this->isEmpty($curFltFleObj)>0) {
