@@ -608,11 +608,12 @@ class TableController extends Controller
         $savedTkns = NULL;
     }
 
-    // if invalid tokenCount save the tkns and last row position
+    // if token count doesn't match what is exptected save the tkns and last row position
     if (count($tkns) != $orgCount) {
       // save the last row position and the Tokenized row
       $this->lastErrRow = $prcssd;
       $this->savedTkns = $tkns;
+      return (false);
     }
 
     return ($tkns);
@@ -717,12 +718,15 @@ class TableController extends Controller
 
         $tkns = $this->prepareLine($curLine, $delimiter, $orgCount, $prcssd);
 
-        try {
-          $this->insertRecord($tkns, $orgCount, $tblNme, $clmnLst);
-        }
-        //catch exception
-        catch(\Exception $e) {
-          Log::info($e->getMessage() . " Line #" . $prcssd . " Line Contents " . $curLine);
+
+        if ($tkns != false) {
+          try {
+            $this->insertRecord($tkns, $orgCount, $tblNme, $clmnLst);
+          }
+          //catch exception
+          catch(\Exception $e) {
+            Log::info($e->getMessage() . " Line #" . $prcssd . " Line Contents " . $curLine);
+          }
         }
 
         // Update the counter
