@@ -17,6 +17,8 @@ class TableController extends Controller
 {
   private $strDir;
   private $extraClmns;
+  public $lastErrRow;
+  public $savedTkns;
 
   /**
    * Create a new controller instance.
@@ -536,6 +538,16 @@ class TableController extends Controller
   * Store takes a requested file import and adds it to the job queue for later processing
   **/
   public function store(Request $request) {
+    // validate the file name and table name
+    // Rules for validation
+    $rules = array(
+      'fltFle' => 'required|string',
+      'tblNme' => 'required|string'
+    );
+
+    // Validate the request before storing the job
+    $this->validate($request, $rules);
+
     // set messages array to empty
     $messages = [ ];
 
@@ -560,10 +572,41 @@ class TableController extends Controller
     $tkns1[$numItem] = $tkns1[$numItem] . ' ' . $tkns2[0];
     unset($tkns2[0]);
     return( (count($tkns2) > 0) ? array_merge($tkns1, $tkns2) : $tkns1 );
-    // if (count($tkns2) > 0) {
-    //   return(array_merge($tkns1, $tkns2));
-    // }
-    // return($tkns1);
+  }
+
+  public function prepareLine($curLine, $delimiter, $orgCount, $prcssd) {
+    // Strip out Quotes that are sometimes seen in csv files around each item
+    $curLine = str_replace('"', "", $curLine);
+
+    // Tokenize the line
+    $tkns = $this->tknze($curLine, $delimiter);
+
+    // Validate the tokens and filter them
+    $tkns = $this->fltrTkns($tkns);
+
+    // Count of tokens
+    $tknCount = count($tkns);
+
+    $valid_tkn_count = ($tknCount == $orgCount);
+
+    // if lastErrRow is the previous row try to combine the lines
+    if (($valid_tkn_count == false) && ($this->lastErrRow == $prcssd-1) && ($this->savedTkns != NULL)) {
+        $tkns = $this->mergeLines($this->savedTkns, $tkns);
+        $tknCount = count($tkns);
+
+        // clear last saved line since we did a merge
+        $lastErrRow = NULL;
+        $savedTkns = NULL;
+    }
+
+    // if invalid tokenCount save the tkns and last row position
+    if ($tknCount != $orgCount) {
+      // save the last row position and the Tokenized row
+      $this->lastErrRow = $prcssd;
+      $this->savedTkns = $tkns;
+    }
+
+    return ($tkns);
   }
 
   public function createSrchIndex($curLine) {
@@ -592,34 +635,47 @@ class TableController extends Controller
     return(implode(' ', $srchArr));
   }
 
+  public function insertRecord($tkns, $orgCount, $tblNme, $clmnLst) {
+    $tknCount = count($tkns);
+
+    if ($tknCount == $orgCount) {
+      // Declae an array
+      $curArry = array();
+
+      // Compact them into one array with utf8 encoding
+      for ($i = 0; $i<$orgCount; $i++) {
+        $curArry[ strval($clmnLst[ $i ]) ] = utf8_encode($tkns[ $i ]);
+      }
+
+      // add srchindex
+      $curArry[ 'srchindex' ] = $this->createSrchIndex(implode(" ", $tkns));
+
+      // Insert them into DB
+      \DB::table($tblNme)->insert($curArry);
+    } else {
+      throw new \Exception("Invalid Field Count - detected " . $tknCount . " expected " . $orgCount);
+    }
+  }
+
   /**
   * Process employs following algorithm:
-  * validate the file name and table name
   * get all the column names from table name
   * 1. Read the file as spl object
   * 2. For each line
   *   1. Validate
   *   2. Insert into database
   **/
-  public function process($tblNme, $fltFle) {
-    // validate the file name and table name
-    //Rules for validation
-    // $rules = array(
-    //   'fltFle' => 'required|string',
-    //   'tblNme' => 'required|string'
-    // );
-
-    // Validate the request before storing the data
-    //$this->validate($request, $rules);
-
+  public function process($tblNme, $fltFleNme) {
     // get all column names
     $clmnLst = $this->getColLst($tblNme);
 
     // remove the id and time stamps
     $clmnLst = array_splice($clmnLst, 1, count($clmnLst) - 3);
 
+    // Count of tokens
+    $orgCount = count($clmnLst) - 1;
+
     // 1. Read the file as spl object
-    $fltFleNme = $fltFle;
     $fltFleAbsPth = $this->strDir.'/'.$fltFleNme;
     $fltFleFullPth = storage_path('app/'.$fltFleAbsPth);
 
@@ -635,8 +691,6 @@ class TableController extends Controller
 
       // Counter for processed
       $prcssd = 0;
-      // Counter for failed
-      //$failed = 0;
 
       // set last ErrRow to null
       $lastErrRow = NULL;
@@ -647,62 +701,14 @@ class TableController extends Controller
         // Get the line
         $curLine = $curFltFleObj->current();
 
-        // Strip out Quotes that are sometimes seen in csv files around each item
-        $curLine = str_replace('"', "", $curLine);
-
-        // Tokenize the line
-        $tkns = $this->tknze($curLine, $delimiter);
-
-        // Validate the tokens and filter them
-        $tkns = $this->fltrTkns($tkns);
-
-        // Count of tokens
-        $orgCount = count($clmnLst) - 1;
-
-        $tknCount = count($tkns);
-
-        $valid_tkn_count = ($tknCount == $orgCount);
-
-        // if lastErrRow is the previous row try to combine the lines
-        if (($valid_tkn_count == false) && ($lastErrRow == $prcssd-1) && ($savedTkns != NULL)) {
-            $tkns = $this->mergeLines($savedTkns, $tkns);
-            $tknCount = count($tkns);
-            $valid_tkn_count = ($tknCount == $orgCount);
-
-            // clear last error since we did a merge
-            $lastErrRow = NULL;
-            $savedTkns = NULL;
-        }
+        $tkns = $this->prepareLine($curLine, $delimiter, $orgCount, $prcssd);
 
         try {
-          // throw a exception if we do not have a valid token count
-          if ($valid_tkn_count) {
-            // Declae an array
-            $curArry = array();
-
-            // Compact them into one array with utf8 encoding
-            for ($i = 0; $i<$orgCount; $i++) {
-              $curArry[ strval($clmnLst[ $i ]) ] = utf8_encode($tkns[ $i ]);
-            }
-
-            // add srchindex
-            $curArry[ 'srchindex' ] = $this->createSrchIndex($curLine);
-
-            // Insert them into DB
-            \DB::table($tblNme)->insert($curArry);
-          }
-          else {
-            // save the last row position and the Tokenized row
-            $lastErrRow = $prcssd;
-            $savedTkns = $tkns;
-            // throw an exception since we cannot save the row
-            throw new \Exception("Invalid Field Count - detected " . $tknCount . " expected " . $orgCount . " Line #" . $prcssd . " Line Contents " . $curLine);
-          }
+          $this->insertRecord($tkns, $orgCount, $tblNme, $clmnLst);
         }
-
         //catch exception
         catch(\Exception $e) {
-          Log::info($e->getMessage());
+          Log::info($e->getMessage() . " Line #" . $prcssd . " Line Contents " . $curLine);
         }
 
         // Update the counter
@@ -710,12 +716,6 @@ class TableController extends Controller
         $curFltFleObj->next();
       }
 
-      // if ($failed > 0) {
-      //   Log::info('Import incomplete. ' .  $failed . ' rows failed due to field count mismatch. Expected ' . $prcssd-1);
-      // }
-      // else {
-      //   Log::info('File Import Completed for tbl name ' . $tblNme . ' imported ' . $prcssd-1 . ' Record(s)');
-      // }
     }
   }
 

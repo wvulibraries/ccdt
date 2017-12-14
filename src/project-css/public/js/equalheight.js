@@ -1,13 +1,48 @@
-function equalHeight(group) {
-   tallest = 0;
-   group.each(function() {
-      thisHeight = $(this).height();
-      if(thisHeight > tallest) {
-         tallest = thisHeight;
+var equalheight = function(container){
+
+	var currentTallest = 0,
+	currentRowStart    = 0,
+	rowDivs            = new Array(),
+	$el,
+	topPosition        = 0;
+
+	$(container).each(function() {
+
+		$el = $(this);
+		$($el).height('auto')
+		topPostion = $el.position().top;
+
+    if (currentRowStart != topPostion) {
+      for (currentDiv = 0 ; currentDiv < rowDivs.length ; currentDiv++) {
+        rowDivs[currentDiv].height(currentTallest);
       }
-   });
-   group.height(tallest);
+      rowDivs.length  = 0; // empty the array
+      currentRowStart = topPostion;
+      currentTallest  = $el.height();
+      rowDivs.push($el);
+    }
+    else {
+      rowDivs.push($el);
+      currentTallest = (currentTallest < $el.height()) ? ($el.height()) : (currentTallest);
+    }
+
+    for (currentDiv = 0 ; currentDiv < rowDivs.length ; currentDiv++) {
+      rowDivs[currentDiv].height(currentTallest);
+    }
+    });
 }
-$(document).ready(function() {
-   equalHeight($(".dataCard"));
-});
+
+  $(window).bind('load resize', function(e) {
+    // do the initial equal heights on load, but images may not be included
+    if($('.dataCard').length){
+      equalheight('.dataCard');
+    }
+  });
+
+  $(document).on("ready", function() {
+    setTimeout(function(){
+      $.isReady = false;
+      $(window).trigger('resize');
+      $.ready();
+    }, 1000);
+  });
