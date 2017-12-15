@@ -19,6 +19,7 @@ class DataViewController extends Controller {
     public $tableNoRecordsErr = 'Table does not have any records.';
     public $invalidRecordIdErr = 'Invalid Record ID';
     public $noResultsErr = 'Search Yeilded No Results';
+    public $invalidTableErr = 'Invalid Table ID';
 
     /**
      * Constructor that associates the middlewares
@@ -193,6 +194,15 @@ class DataViewController extends Controller {
                 'Content-Disposition' => 'inline; filename="'.$filename.'"'
             ]);
     }
+  }
+
+  public function isValidTable($tblId) {
+    // Get the table entry in meta table "tables"
+    $curTable = Table::find($tblId);
+    if ($curTable != NULL) {
+      return (true);
+    }
+    return (false);
   }
 
 }

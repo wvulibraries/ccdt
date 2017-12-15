@@ -78,7 +78,6 @@ class CustomStringHelper {
         $filename = end($tokens);
         // get the last folder the file exists in
         $subfolder = prev($tokens);
-        //return folder name
         return $subfolder;
     }
 
@@ -135,6 +134,17 @@ class CustomStringHelper {
             return (preg_replace($pattern, $redacted, $fileContents));
         }
         return($fileContents);
+    }
+
+    public function checkForFilenames($string, $extension) {
+      $foundFiles = [];
+      $pieces = explode("/", $string);
+      foreach ($pieces as $value) {
+        if (strpos($value, '.'.$extension) !== false) {
+          array_push($foundFiles, $value);
+        }
+      }
+      return ($foundFiles);
     }
 
 }

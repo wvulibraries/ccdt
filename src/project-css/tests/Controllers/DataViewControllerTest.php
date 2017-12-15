@@ -7,6 +7,7 @@
 
     private $admin;
     private $user;
+    private $collection;
 
     public function setUp() {
            parent::setUp();
@@ -16,6 +17,10 @@
            // find admin and test user accounts
            $this->admin = App\User::where('name', '=', 'admin')->first();
            $this->user = App\User::where('name', '=', 'test')->first();
+
+           $this->collection = factory(App\Collection::class)->create([
+                'clctnName' => 'collection1',
+           ]);
     }
 
     protected function tearDown() {
@@ -24,20 +29,11 @@
     }
 
     public function testIndex() {
-      //try to import a table without a collection
-      $this->actingAs($this->admin)
-           ->visit('table/create')
-           ->see('Please create active collection here first')
-           ->assertResponseStatus(200);
-
-      // Generate Test Collection
-      $collection = factory(App\Collection::class)->create([
-           'clctnName' => 'collection1',
-      ]);
 
       $tblname = 'importtest'.mt_rand();
 
-      $this->visit('table/create')
+      $this->actingAs($this->admin)
+           ->visit('table/create')
            ->type($tblname, 'imprtTblNme')
            ->type('1', 'colID')
            ->attach('./storage/app/files/test/mlb_players.csv', 'fltFile')
@@ -71,7 +67,7 @@
       touch($filePath.'/'.$emptyFile);
 
       // While using a admin account try to disable a collection
-      $this->post('collection/disable', [ 'id' => $collection->id, 'clctnName' => $collection->clctnName ])
+      $this->post('collection/disable', [ 'id' => $this->collection->id, 'clctnName' => $this->collection->clctnName ])
            // try to visit the disabled table
            ->visit('data/1')
            ->assertResponseStatus(200)
@@ -86,7 +82,7 @@
            ->assertResponseStatus(200);
 
       // While using a admin account try to enable a collection
-      $this->post('collection/enable', [ 'id' => $collection->id, 'clctnName' => $collection->clctnName ])
+      $this->post('collection/enable', [ 'id' => $this->collection->id, 'clctnName' => $this->collection->clctnName ])
            ->visit('data/1')
            ->assertResponseStatus(200);
 
@@ -163,9 +159,9 @@
 
     public function testImportWithNoRecords() {
       // Generate Test Collection
-      $collection = factory(App\Collection::class)->create([
-          'clctnName' => 'collection1',
-      ]);
+      // $collection = factory(App\Collection::class)->create([
+      //     'clctnName' => 'collection1',
+      // ]);
 
       $tblname = 'importtest'.mt_rand();
       $this->actingAs($this->admin)
