@@ -19,13 +19,14 @@ class DataViewController extends Controller {
     public $tableNoRecordsErr = 'Table does not have any records.';
     public $invalidRecordIdErr = 'Invalid Record ID';
     public $noResultsErr = 'Search Yeilded No Results';
+    public $invalidTableErr = 'Invalid Table ID';
 
     /**
      * Constructor that associates the middlewares
      */
     public function __construct() {
-    // Middleware to check for authenticated
-    $this->middleware('auth');
+        // Middleware to check for authenticated
+        $this->middleware('auth');
     }
 
     /**
@@ -92,7 +93,8 @@ class DataViewController extends Controller {
     return view('user.show')->with('rcrds', $rcrds)
                             ->with('clmnNmes', $clmnNmes)
                             ->with('tblNme', $curTable->tblNme)
-                            ->with('tblId', $curTable);
+                            ->with('tblId', $curTable)
+                            ->with('curId', $curId);
   }
 
   public function search(Request $request, $curTable, $search = NULL, $page = 1) {
@@ -142,7 +144,14 @@ class DataViewController extends Controller {
                               ->with('morepages', $page<$lastPage);
   }
 
-  public function view($curTable, $subfolder, $filename) {
+
+  /**
+   * view checks the file type and if its plain text or a word document it
+   * will run ssnRedact to replace a US style social security number with
+   * ###-##-####. Any other files the user will be able to download and then
+   * view with a local application.
+   */
+  public function view($curTable, $recId, $subfolder, $filename) {
     // Get the table entry in meta table "tables"
     $curTable = Table::find($curTable);
 
@@ -162,13 +171,21 @@ class DataViewController extends Controller {
     switch ($fileMimeType) {
         case 'text/plain':
         case 'message/rfc822':
-             return Response::make((new customStringHelper)->ssnRedact(file_get_contents($source)));
+             $fileContents = Response::make((new customStringHelper)->ssnRedact(file_get_contents($source)));
+             return view('user.fileviewer')->with('fileContents', $fileContents)
+                                           ->with('tblNme', $curTable->tblNme)
+                                           ->with('tblId', $curTable)
+                                           ->with('recId', $recId);
              break;
         case 'application/msword':
         case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
         case 'text/rtf':
              $fileContents = preg_replace($matches, "", (new tikaConvert)->convert($source));
-             return Response::make((new customStringHelper)->ssnRedact($fileContents));
+             $fileContents = Response::make((new customStringHelper)->ssnRedact($fileContents));
+             return view('user.fileviewer')->with('fileContents', $fileContents)
+                                           ->with('tblNme', $curTable->tblNme)
+                                           ->with('tblId', $curTable)
+                                           ->with('recId', $recId);
              break;
         default:
              // download file if we cannot determine what kind of file it is.
@@ -177,6 +194,15 @@ class DataViewController extends Controller {
                 'Content-Disposition' => 'inline; filename="'.$filename.'"'
             ]);
     }
+  }
+
+  public function isValidTable($tblId) {
+    // Get the table entry in meta table "tables"
+    $curTable = Table::find($tblId);
+    if ($curTable != NULL) {
+      return (true);
+    }
+    return (false);
   }
 
 }

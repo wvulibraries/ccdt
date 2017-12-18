@@ -1,4 +1,5 @@
 @charset "UTF-8";
+/*==========  Mobile First Method  ==========*/
 /*!
  * Bootstrap v3.3.7 (http://getbootstrap.com)
  * Copyright 2011-2016 Twitter, Inc.
@@ -7669,6 +7670,14 @@ button.close {
   }
 }
 
+html {
+  box-sizing: border-box;
+}
+
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
 html,
 body {
   height: 100%;
@@ -7724,36 +7733,6 @@ button .btn {
   font-family: 'Muli', 'Helvetica', 'Arial', 'sans-serif';
   text-transform: uppercase;
   letter-spacing: 2px;
-}
-
-.navbar-default {
-  background-color: #FFF;
-  font-size: 16px;
-  border-top: 7px solid #337ab7;
-}
-
-.navbar-default .navbar-brand,
-.navbar-default .navbar-brand:hover,
-.navbar-default .navbar-brand:focus {
-  color: #337ab7;
-}
-
-.navbar-default .navbar-nav > li > a {
-  color: #337ab7;
-}
-
-.navbar-default .navbar-nav > .active > a,
-.navbar-default .navbar-nav > .active > a:hover,
-.navbar-default .navbar-nav > .active > a:focus {
-  color: #337ab7;
-}
-
-.navbar-default .navbar-text {
-  color: #337ab7;
-}
-
-.navbar-default .navbar-brand {
-  font-size: 36px;
 }
 
 .jumbotron {
@@ -7861,37 +7840,44 @@ button .btn {
   border-top: 7px solid #337ab7;
 }
 
-footer {
-  height: 50px;
-  width: 100%;
+.smallIcon {
   float: left;
-  left: 0;
-  background: #EEE;
-  padding: 10px;
+  color: #337ab7;
 }
 
-footer .builtBy {
-  color: #aaa;
+.formPanel {
+  border-radius: 0px;
+  text-align: center;
+}
+
+.alrtArea {
+  border-radius: 0px;
+  margin-bottom: 40px;
+}
+
+.modal-content {
+  border-radius: 0px;
+}
+
+.dsbld {
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+.tblList {
+  font-size: 18px;
   font-weight: bold;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  width: 16%;
-  min-width: 250px;
-  float: right;
-  text-align: right;
 }
 
-footer .built, footer .by {
-  font-weight: 300;
+.headerTron {
+  background: transparent;
 }
 
-footer .wvu {
-  color: #002855;
-}
-
-footer .libs {
-  color: #EAAA00;
-  margin-left: -6px;
+.headingBanner {
+  min-height: 250px;
+  margin-top: -20px;
+  background-color: #EEE;
+  background-image: url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.75' fill-rule='evenodd'%3E%3Ccircle cx='3' cy='3' r='3'/%3E%3Ccircle cx='13' cy='13' r='3'/%3E%3C/g%3E%3C/svg%3E");
 }
 
 .headingWrapper {
@@ -7924,7 +7910,7 @@ footer .libs {
   text-align: center;
 }
 
-.dashCard var {
+.dashCard .var, .dashCard var {
   display: block;
   font-size: 48px;
   line-height: 48px;
@@ -7940,32 +7926,10 @@ footer .libs {
   margin-top: 10px;
 }
 
-.dashCardHeading {
+.dashCard .dashCardHeading {
   margin-bottom: 15px;
   font-size: 24px;
   border-bottom: 1px solid #000000;
-}
-
-.searchBarWrapper {
-  margin-top: -20px;
-  padding: 20px;
-  margin-bottom: -20px;
-  background-color: #EEE;
-}
-
-.smallIcon {
-  float: left;
-  color: #337ab7;
-}
-
-.formPanel {
-  border-radius: 0px;
-  text-align: center;
-}
-
-.alrtArea {
-  border-radius: 0px;
-  margin-bottom: 40px;
 }
 
 .colCard {
@@ -8015,31 +7979,6 @@ footer .libs {
   transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
-.modal-content {
-  border-radius: 0px;
-}
-
-.dsbld {
-  opacity: 0.4;
-  pointer-events: none;
-}
-
-.tblList {
-  font-size: 18px;
-  font-weight: bold;
-}
-
-.headerTron {
-  background: transparent;
-}
-
-.headingBanner {
-  min-height: 250px;
-  margin-top: -20px;
-  background-color: #EEE;
-  background-image: url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.75' fill-rule='evenodd'%3E%3Ccircle cx='3' cy='3' r='3'/%3E%3Ccircle cx='13' cy='13' r='3'/%3E%3C/g%3E%3C/svg%3E");
-}
-
 .well.dashCard.btn-circle {
   margin-top: 20px;
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
@@ -8059,15 +7998,95 @@ footer .libs {
 }
 
 .dataCard {
-  display: inline-block;
+  display: block;
+  float: left;
   font-size: 16px;
-  width: 100%;
   min-height: 75px;
   background-color: #EEE;
   padding: 15px;
+  width: 100%;
   margin-bottom: 20px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
   transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  word-wrap: break-word;
+}
+
+.dataCard span {
+  display: block;
+  width: 100%;
+}
+
+@media (min-width: 768px) {
+  .dataCard {
+    width: calc(50% - 20px) !important;
+    margin-right: 20px;
+  }
+  .dataCard:nth-of-type(2n) {
+    margin-right: 0;
+  }
+}
+
+@media (min-width: tablet) {
+  .dataCard {
+    width: calc(50% - 20px) !important;
+    margin-right: 20px;
+  }
+  .dataCard:nth-of-type(2n) {
+    margin-right: 0;
+  }
+}
+
+@media (min-width: 992px) {
+  .dataCard {
+    width: calc(33% - 20px) !important;
+    margin-right: 20px;
+  }
+  .dataCard:nth-of-type(2n) {
+    margin-right: 20px;
+  }
+  .dataCard:nth-of-type(3n) {
+    margin-right: 0;
+  }
+}
+
+@media (min-width: laptop) {
+  .dataCard {
+    width: calc(33% - 20px) !important;
+    margin-right: 20px;
+  }
+  .dataCard:nth-of-type(2n) {
+    margin-right: 20px;
+  }
+  .dataCard:nth-of-type(3n) {
+    margin-right: 0;
+  }
+}
+
+.searchBarWrapper {
+  margin-top: -20px;
+  padding: 20px;
+  margin-bottom: -20px;
+  background-color: #EEE;
+}
+
+.progress-bar {
+  float: left;
+  display: block;
+  background: #eee;
+  padding: 20px;
+  width: 100%;
+  text-align: center;
+  display: none !important;
+}
+
+.progress-bar span {
+  width: 100%;
+  display: block;
+  margin: 20px 0;
+}
+
+.progress-bar progress {
+  width: 100%;
 }
 
 div.helpTable {
@@ -8168,6 +8187,39 @@ div.helpTable {
 
 .divTableBody {
   display: table-row-group;
+}
+
+footer {
+  height: 50px;
+  width: 100%;
+  float: left;
+  left: 0;
+  background: #EEE;
+  padding: 10px;
+}
+
+footer .builtBy {
+  color: #aaa;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  width: 16%;
+  min-width: 250px;
+  float: right;
+  text-align: right;
+}
+
+footer .built, footer .by {
+  font-weight: 300;
+}
+
+footer .wvu {
+  color: #002855;
+}
+
+footer .libs {
+  color: #EAAA00;
+  margin-left: -6px;
 }
 
 /*# sourceMappingURL=app.css.map */

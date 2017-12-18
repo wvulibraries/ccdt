@@ -37,7 +37,7 @@
               @if(count($curCllctn->tables)>0)
                 @foreach($curCllctn->tables as $curTabl)
                 <a href="{{ url('/data',['tableId' => $curTabl->id]) }}">
-                  <div class="col-xs-12 col-sm-6 col-md-3">
+                  <div class="col-xs-4">
                     <div class="well dashCard">
                       <div class="dashCardHeading">
                         <span class="glyphicon glyphicon-duplicate visible-xs visible-sm smallIcon"></span>

@@ -71,6 +71,7 @@ Route::group([ 'prefix' => 'table' ], function() {
   Route::post('create/finalize', 'TableController@finalize');
   Route::get('load', 'TableController@load');
   Route::post('load/worker', 'TableController@worker');
+  Route::post('load/store', 'TableController@store');
   Route::post('load/status', 'TableController@status');
   Route::post('restrict', 'TableController@restrict');
 });
@@ -105,7 +106,7 @@ Route::group([ 'middleware' => [ 'checktableid' ] ], function() {
     Route::get('{curTable}/{id}', 'DataViewController@show')->name('dataShow');
     Route::post('{curTable}', 'DataViewController@search')->name('dataSearch');
     Route::get('{curTable}/{search}/{page}', 'DataViewController@search')->name('dataSearch');
-    Route::get('{curTable}/view/{subfolder}/{filename}', 'DataViewController@view')->name('dataFileView');
+    Route::get('{curTable}/{recId}/view/{subfolder}/{filename}', 'DataViewController@view')->name('dataFileView');
   });
 
   /*

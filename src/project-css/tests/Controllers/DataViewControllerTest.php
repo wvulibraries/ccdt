@@ -7,6 +7,7 @@
 
     private $admin;
     private $user;
+    private $collection;
 
     public function setUp() {
            parent::setUp();
@@ -16,6 +17,10 @@
            // find admin and test user accounts
            $this->admin = App\User::where('name', '=', 'admin')->first();
            $this->user = App\User::where('name', '=', 'test')->first();
+
+           $this->collection = factory(App\Collection::class)->create([
+                'clctnName' => 'collection1',
+           ]);
     }
 
     protected function tearDown() {
@@ -24,20 +29,11 @@
     }
 
     public function testIndex() {
-      //try to import a table without a collection
-      $this->actingAs($this->admin)
-           ->visit('table/create')
-           ->see('Please create active collection here first')
-           ->assertResponseStatus(200);
-
-      // Generate Test Collection
-      $collection = factory(App\Collection::class)->create([
-           'clctnName' => 'collection1',
-      ]);
 
       $tblname = 'importtest'.mt_rand();
 
-      $this->visit('table/create')
+      $this->actingAs($this->admin)
+           ->visit('table/create')
            ->type($tblname, 'imprtTblNme')
            ->type('1', 'colID')
            ->attach('./storage/app/files/test/mlb_players.csv', 'fltFile')
@@ -71,7 +67,7 @@
       touch($filePath.'/'.$emptyFile);
 
       // While using a admin account try to disable a collection
-      $this->post('collection/disable', [ 'id' => $collection->id, 'clctnName' => $collection->clctnName ])
+      $this->post('collection/disable', [ 'id' => $this->collection->id, 'clctnName' => $this->collection->clctnName ])
            // try to visit the disabled table
            ->visit('data/1')
            ->assertResponseStatus(200)
@@ -82,11 +78,11 @@
            ->see('Table is disabled');
 
       // while table is disabled try to view a file
-      $this->visit('data/1/view'.'/test/'.$emptyFile)
+      $this->visit('data/1/1/view'.'/test/'.$emptyFile)
            ->assertResponseStatus(200);
 
       // While using a admin account try to enable a collection
-      $this->post('collection/enable', [ 'id' => $collection->id, 'clctnName' => $collection->clctnName ])
+      $this->post('collection/enable', [ 'id' => $this->collection->id, 'clctnName' => $this->collection->clctnName ])
            ->visit('data/1')
            ->assertResponseStatus(200);
 
@@ -109,11 +105,11 @@
            ->see('Search Yeilded No Results');
 
       // try viewing emptyfile
-      $this->visit('data/1/view'.'/test/'.$emptyFile)
+      $this->visit('data/1/1/view'.'/test/'.$emptyFile)
            ->assertResponseStatus(200);
 
       // try with invalid table id
-      $this->visit('data/2/view'.'/test/'.$emptyFile)
+      $this->visit('data/2/1/view'.'/test/'.$emptyFile)
            ->see('Table id is invalid');
 
       $this->visit('upload/1')
@@ -126,15 +122,15 @@
            ->see('Upload files to '.$tblname.' Table')
            ->assertFileExists(storage_path('app/'.$tblname.'/test/test_upload.txt'));
 
-     $this->visit('data/1/view'.'/test/'.'test_upload.txt')
+     $this->visit('data/1/1/view'.'/test/'.'test_upload.txt')
           ->assertResponseStatus(200);
 
       // logout user
       Auth::logout();
 
-      // try to view a record without a authenticated user
+      // try to view a file without a authenticated user
       // they should be redirected to the Login page
-      $this->visit('data/1/view'.'/test/'.$emptyFile)
+      $this->visit('data/1/1/view'.'/test/'.$emptyFile)
            ->see('Login');
 
       unlink($filePath.'/'.$emptyFile);
@@ -163,9 +159,9 @@
 
     public function testImportWithNoRecords() {
       // Generate Test Collection
-      $collection = factory(App\Collection::class)->create([
-          'clctnName' => 'collection1',
-      ]);
+      // $collection = factory(App\Collection::class)->create([
+      //     'clctnName' => 'collection1',
+      // ]);
 
       $tblname = 'importtest'.mt_rand();
       $this->actingAs($this->admin)
@@ -203,11 +199,11 @@
        Schema::drop($tblname);
     }
 
-    // public function testInvalidTableId() {
-    //     // test to see if table id 99 is available
-    //     // test should fail
-    //     $this->assertFalse((new DataViewController)->isValidTable('99'));
-    // }
+    public function testInvalidTableId() {
+        // test to see if table id 99 is available
+        // test should fail
+        $this->assertFalse((new DataViewController)->isValidTable('99'));
+    }
 
   }
 ?>

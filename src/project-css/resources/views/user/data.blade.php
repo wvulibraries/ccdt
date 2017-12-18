@@ -48,20 +48,19 @@
           <!-- </div> -->
         </div>
       </div>
-
+    </div>
       <!-- Separation -->
       <hr/>
+      <div class="container">
 
       @foreach($rcrds as $key => $rcrd)
-      <div class="col-xs-12 col-sm-4 col-md-4">
+      <div class="dataCard">
         <a href="{{ url('/data', [$tblId, $rcrd->id]) }}">
-          <div class="dataCard">
-              @foreach($clmnNmes as $key => $clmnNme)
-                @if($key < 5)
-                  <h4><b>{{$clmnNme}}</b>: {{$rcrd->$clmnNme}}</h4>
-                @endif
-              @endforeach
-          </div>
+            @foreach($clmnNmes as $key => $clmnNme)
+              @if($key < 5)
+                <span class="card-items"><b>{{$clmnNme}}</b>: {{$rcrd->$clmnNme}}</span>
+              @endif
+            @endforeach
         </a>
       </div>
       @endforeach

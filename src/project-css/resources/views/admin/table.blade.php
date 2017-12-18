@@ -14,6 +14,8 @@
 <!-- Separation -->
 <hr/>
 
+@include('admin/messages')
+
 <!-- Create -->
 <div class="tableWrapper">
   <div class="container">

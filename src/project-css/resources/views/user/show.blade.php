@@ -36,7 +36,7 @@
                       </br>{{$filesArray[$arrayPos]}}
 
                       @if ($strhelper->fileExistsInFolder($tblNme, $filesArray[$arrayPos]))
-                        <a href="{{ url('/data', ['curTable' => $tblId, 'view' => 'view', 'subfolder' => $strhelper->getFolderName($filesArray[$arrayPos]), 'filename' => $strhelper->getFilename($filesArray[$arrayPos])])}}">
+                        <a href="{{ url('/data', ['curTable' => $tblId, 'recId' => $curId, 'view' => 'view', 'subfolder' => $strhelper->getFolderName($filesArray[$arrayPos]), 'filename' => $strhelper->getFilename($filesArray[$arrayPos])])}}">
                           <span> View</span>
                         </a>
                       @endif
@@ -49,10 +49,35 @@
                 <h4><b>{{$clmnNme}}</b>: {{$rcrd->$clmnNme}}
 
                 @if ($strhelper->fileExistsInFolder($tblNme, $rcrd->$clmnNme))
-                  <a href="{{ url('/data', ['curTable' => $tblId, 'view' => 'view', 'subfolder' => $strhelper->getFolderName($rcrd->$clmnNme), 'filename' => $strhelper->getFilename($rcrd->$clmnNme)])}}">
+                  <a href="{{ url('/data', ['curTable' => $tblId, 'recId' => $curId, 'view' => 'view', 'subfolder' => $strhelper->getFolderName($rcrd->$clmnNme), 'filename' => $strhelper->getFilename($rcrd->$clmnNme)])}}">
                     <span> View</span>
                   </a>
                 @endif
+                </h4>
+              </div>
+            @endif
+          <!-- string contains / may indicate a file path -->
+          @elseif ((strpos($rcrd->$clmnNme, '/') !== FALSE) && (strpos($clmnNme, 'index') == false))
+            <div class="col-xs-12 col-sm-12 col-md-12">
+              <h4><b>{{$clmnNme}}</b>: {{$rcrd->$clmnNme}}</h4>
+            </div>
+
+            @php
+              $filesArray = $strhelper->checkForFilenames($rcrd->$clmnNme)
+            @endphp
+
+            @if (count($filesArray) > 0)
+              <div class="col-xs-12 col-sm-12 col-md-12">
+                <h4><b>Filename(s) detected in {{$clmnNme}}</b>:
+                  @for ($arrayPos = 0; $arrayPos < count($filesArray); $arrayPos++)
+                    </br>{{$filesArray[$arrayPos]}}
+
+                    @if ($strhelper->fileExists($tblNme, 'formletters/'.$filesArray[$arrayPos].'.txt'))
+                      <a href="{{ url('/data', ['curTable' => $tblId, 'recId' => $curId, 'view' => 'view', 'subfolder' => 'formletters', 'filename' => $filesArray[$arrayPos].'.txt'])}}">
+                        <span> View</span>
+                      </a>
+                    @endif
+                  @endfor
                 </h4>
               </div>
             @endif
@@ -63,6 +88,11 @@
           @endif
         @endforeach
       @endforeach
+
+      <div class="col-xs-12 col-sm-12 col-md-12">
+          <a href="{{ url('/data', [$tblId]) }}" class="btn btn-primary">Return To Table</a>
+      </div>
+
    </div>
 </div>
 

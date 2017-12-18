@@ -14,7 +14,7 @@ services:
     app:
         build:
             context: ./
-            dockerfile: serverConfiguration/deploy/app.docker
+            dockerfile: serverConfiguration/deploy/dev.app.docker
         container_name: rockefellercss_php
         volumes:
             - ./src/project-css/:/var/www
@@ -38,6 +38,7 @@ services:
         volumes:
             - ./serverConfiguration/mysql_data:/var/lib/mysql
             - ./conf/setup-docker.sql:/docker-entrypoint-initdb.d/setup-docker.sql
+            - ./serverConfiguration/docker.my.cnf:/etc/mysql/my.cnf
         ports:
             - "3306:3306"
     tika:

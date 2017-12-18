@@ -15,12 +15,12 @@ var elixir = require('laravel-elixir');
 
 elixir(mix => {
     // Bootstrap the JS and CSS
-    mix.sass('app.scss')
-       .webpack('app.js');
+    mix.sass('app.scss').webpack('app.js');
 
     // Copy the fonts for glyphicons
     mix.copy('node_modules/bootstrap-sass/assets/fonts/bootstrap/','public/fonts/bootstrap');
 
+    mix.version('css/app.css');
     //Run phpunit
     //mix.phpUnit();
 });

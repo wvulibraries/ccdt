@@ -2,6 +2,7 @@
 
 <!-- Heading -->
 @section('content')
+
 <div class="headingWrapper">
   <!-- Heading -->
   <div class="container adminHeading">
@@ -19,7 +20,7 @@
 <div class="frmWrappr">
   <div class="container">
     <div class="panel-body">
-      <form class="form-horizontal" role="form" method="POST" action="{{url('table/load/worker')}}">
+      <form class="form-horizontal" role="form" method="POST" action="{{url('table/load/store')}}">
         <!-- CSRF Fields -->
         {{ csrf_field() }}
         <!-- Select Table -->
@@ -59,10 +60,17 @@
                     Load Data
                 </button>
             </div>
+
+            <div class="progress-bar">
+              <span class="progress-message"> Please wait while we import your file into the database</span>
+              <progress value="0" max="100"> </progress>
+            </div>
+
         </div>
 
       </form>
     </div>
   </div>
+
 </div>
 @endsection

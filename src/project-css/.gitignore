@@ -1,12 +1,15 @@
-/node_modules
-/public/storage
-/vendor
-/.idea
-Homestead.json
-Homestead.yaml
+.git
+.idea
 .env
-composer.lock
+node_modules
+vendor
+storage/framework/cache/**
+storage/framework/sessions/**
+storage/framework/views/**
+# Homestead.json
+# Homestead.yaml
+# composer.lock
 .DS_Store
 .log
-/resources/views/vendor
+# /resources/views/vendor
 /coverage
