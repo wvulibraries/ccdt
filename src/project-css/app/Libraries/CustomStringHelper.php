@@ -136,12 +136,29 @@ class CustomStringHelper {
         return($fileContents);
     }
 
-    public function checkForFilenames($string, $extension) {
+    /*
+    * @param string $string
+    * @return array with filenames
+    */
+    public function checkForFilenames($string) {
+      $fileExtensions = array(
+          'txt',
+          'doc',
+          "docx",
+          "pdf",
+          "xls",
+          "xlsx",
+          "ppt",
+          "pptx",
+          "jpg"
+      );
       $foundFiles = [];
       $pieces = explode("/", $string);
-      foreach ($pieces as $value) {
-        if (strpos($value, '.'.$extension) !== false) {
-          array_push($foundFiles, $value);
+      foreach ($fileExtensions as $extension) {
+        foreach ($pieces as $value) {
+          if (strpos($value, '.'.$extension) !== false) {
+            array_push($foundFiles, $value);
+          }
         }
       }
       return ($foundFiles);

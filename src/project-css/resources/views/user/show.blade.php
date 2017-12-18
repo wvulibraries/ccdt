@@ -63,12 +63,12 @@
             </div>
 
             @php
-              $filesArray = $strhelper->checkForFilenames($rcrd->$clmnNme, 'doc')
+              $filesArray = $strhelper->checkForFilenames($rcrd->$clmnNme)
             @endphp
 
             @if (count($filesArray) > 0)
               <div class="col-xs-12 col-sm-12 col-md-12">
-                <h4><b>Filename(s) detected</b>:
+                <h4><b>Filename(s) detected in {{$clmnNme}}</b>:
                   @for ($arrayPos = 0; $arrayPos < count($filesArray); $arrayPos++)
                     </br>{{$filesArray[$arrayPos]}}
 
