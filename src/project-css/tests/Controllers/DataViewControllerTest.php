@@ -199,11 +199,11 @@
        Schema::drop($tblname);
     }
 
-    // public function testInvalidTableId() {
-    //     // test to see if table id 99 is available
-    //     // test should fail
-    //     $this->assertFalse((new DataViewController)->isValidTable('99'));
-    // }
+    public function testInvalidTableId() {
+        // test to see if table id 99 is available
+        // test should fail
+        $this->assertFalse((new DataViewController)->isValidTable('99'));
+    }
 
   }
 ?>
