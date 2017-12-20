@@ -23,7 +23,7 @@ class UploadController extends Controller {
         // Get the table entry in meta table "tables"
         $curTable = Table::find($curTable);
         if (!$curTable->hasAccess) {
-        return redirect()->route('home')->withErrors([ 'Table is disabled' ]);
+          return redirect()->route('home')->withErrors([ 'Table is disabled' ]);
         }
 
         // return the index page
@@ -42,9 +42,12 @@ class UploadController extends Controller {
 
         // Get the table entry in meta table "tables"
         $curTable = Table::find($curTable);
-        if (!$curTable->hasAccess) {
-          return redirect()->route('home')->withErrors([ 'Table is disabled' ]);
-        }
+        // ToDo - Add ability to enable or disable specific tables in a collection
+        // currently the only way to disable a table is to disable the entire collection
+        // the check below isn't necessary now since we are checking for valid access at another points
+        // if (!$curTable->hasAccess) {
+        //   return redirect()->route('home')->withErrors([ 'Table is disabled' ]);
+        // }
 
         // Request the file input named 'attachments'
         $files = $request->file('attachments');
@@ -77,7 +80,7 @@ class UploadController extends Controller {
           return view('admin/upload')->with('tblNme', $curTable->tblNme)
                                      ->with('tblId', $curTable);
         }
-        return(false);
+        //return(false);
     }
 
 }

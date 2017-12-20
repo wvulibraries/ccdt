@@ -518,6 +518,141 @@ class TableController extends Controller
     // Validate the request before storing the data
     $this->validate($request, $rules);
 
+    // set messages array to empty
+    $messages = [ ];
+
+    Log::info('File Import has been requested for table '.$request->tblNme .' using flat file '.$request->fltFle);
+    // add job to queue
+    $this->dispatch(new FileImport($request->tblNme, $request->fltFle));
+    $message = [
+      'content'  =>  $request->fltFle.' has been queued for import to ' . $request->tblNme . ' table. It will be available shortly.',
+      'level'    =>  'success',
+    ];
+    array_push($messages, $message);
+    session()->flash('messages', $messages);
+    return redirect()->route('tableIndex');
+  }
+
+  // if 2 lines are read that do not contain enough fields we will attempt to
+  // merge them to get the required number of Fields we assume that the last array
+  // item in $tkns1 is continued in the first item of $tkns2 so they will be
+  // combined.
+  public function mergeLines($tkns1, $tkns2) {
+    $numItem = count($tkns1) - 1;
+    $tkns1[$numItem] = $tkns1[$numItem] . ' ' . $tkns2[0];
+    unset($tkns2[0]);
+    return( (count($tkns2) > 0) ? array_merge($tkns1, $tkns2) : $tkns1 );
+  }
+
+  /**
+   * takes a string and prepares it to be used inserted as a new record
+   * if we do not find enough items in the line we will check and see if
+   * the previous line was saved and merge them and check the count again.
+   * if their is insufficent items we will save the tkns and the row position
+   * so we can attempt a merge later.
+   * @param string $curLine current line read from the file
+   * @param string $delimiter type of delmiter that is used in the file
+   * @param integer $orgCount current number of fields expected
+   * @param integer $prcssd current position in the file
+   * @return string
+   */
+  public function prepareLine($curLine, $delimiter, $orgCount, $prcssd) {
+    // Strip out Quotes that are sometimes seen in csv files around each item
+    $curLine = str_replace('"', "", $curLine);
+
+    // Tokenize the line
+    $tkns = $this->tknze($curLine, $delimiter);
+
+    // Validate the tokens and filter them
+    $tkns = $this->fltrTkns($tkns);
+
+    // if lastErrRow is the previous row try to combine the lines
+    if ((count($tkns) != $orgCount) && ($this->lastErrRow == $prcssd - 1) && ($this->savedTkns != NULL)) {
+        $tkns = $this->mergeLines($this->savedTkns, $tkns);
+
+        // clear last saved line since we did a merge
+        $lastErrRow = NULL;
+        $savedTkns = NULL;
+    }
+
+    // if token count doesn't match what is expected save the tkns and last row position
+    if (count($tkns) != $orgCount) {
+      Log::info("Save Failed Line #" . $prcssd . " Line Contents " . $curLine . " token mismatch. " . count($tkns) . " found ");
+      // save the last row position and the Tokenized row
+      $this->lastErrRow = $prcssd;
+      $this->savedTkns = $tkns;
+      return (false);
+    }
+
+    return ($tkns);
+  }
+
+  /**
+   * takes a string and prepares it to be used as a search index for fulltext search
+   * @param string $curLine
+   * @return string
+   */
+  public function createSrchIndex($curLine) {
+    // remove extra characters replacing them with spaces
+    // also remove .. that is in the filenames
+    $cleanString = preg_replace('/[^A-Za-z0-9._ ]/', ' ', str_replace('..', '', $curLine));
+
+    // remove extra spaces and make string all lower case
+    $cleanString = strtolower(preg_replace('/\s+/', ' ', $cleanString));
+
+    // remove duplicate keywords in the srchindex
+    $srchArr = explode(' ', $cleanString);
+
+    // remove any items less than 2 characters
+    // as fulltext searches need at least 2 characters
+    $counter=0;
+    foreach ($srchArr as $value) {
+      if (strlen($value)<2) {
+        unset($srchArr[ $counter ]);
+      }
+     $counter++;
+    }
+
+    // remove duplicate keywords from the srchIndex
+    $srchArr = array_unique($srchArr);
+    return(implode(' ', $srchArr));
+  }
+
+  /**
+  * @param string $tkns
+  * @param integer $orgCount
+  * @param string $tblNme
+  * @param array $clmnLst
+  */
+  public function insertRecord($tkns, $orgCount, $tblNme, $clmnLst) {
+    if (count($tkns) == $orgCount) {
+      // Declae an array
+      $curArry = array();
+
+      // Compact them into one array with utf8 encoding
+      for ($i = 0; $i<$orgCount; $i++) {
+        $curArry[ strval($clmnLst[ $i ]) ] = utf8_encode($tkns[ $i ]);
+      }
+
+      // add srchindex
+      $curArry[ 'srchindex' ] = $this->createSrchIndex(implode(" ", $tkns));
+
+      // Insert them into DB
+      \DB::table($tblNme)->insert($curArry);
+    } else {
+      throw new \Exception("Invalid Field Count - detected ".count($tkns)." expected " . $orgCount);
+    }
+  }
+
+  /**
+  * Process employs following algorithm:
+  * get all the column names from table name
+  * 1. Read the file as spl object
+  * 2. For each line
+  *   1. Validate
+  *   2. Insert into database
+  **/
+  public function process($tblNme, $fltFleNme) {
     // get all column names
     $clmnLst = $this->getColLst($request->tblNme);
 

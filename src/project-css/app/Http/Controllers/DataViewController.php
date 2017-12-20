@@ -71,9 +71,9 @@ class DataViewController extends Controller {
     }
 
     // Check if id is valid
-    if (is_null($curId) || !is_numeric($curId)) {
-      return redirect()->route('home')->withErrors([ $this->invalidRecordIdErr ]);
-    }
+    // if (is_null($curId) || !is_numeric($curId)) {
+    //   return redirect()->route('home')->withErrors([ $this->invalidRecordIdErr ]);
+    // }
 
     // query database for record
     $rcrds = DB::table($curTable->tblNme)
@@ -98,9 +98,12 @@ class DataViewController extends Controller {
   public function search(Request $request, $curTable, $search = NULL, $page = 1) {
     // Get the table entry in meta table "tables"
     $curTable = Table::find($curTable);
-    if (!$curTable->hasAccess) {
-      return redirect()->route('home')->withErrors([ $this->tableDisabledErr ]);
-    }
+    // ToDo - Add ability to enable or disable specific tables in a collection
+    // currently the only way to disable a table is to disable the entire collection
+    // the check below isn't necessary now since we are checking for valid access at another points
+    // if (!$curTable->hasAccess) {
+    //   return redirect()->route('home')->withErrors([ $this->tableDisabledErr ]);
+    // }
 
     if ($search == NULL) {
       $search = $request->input('search');
@@ -160,15 +163,19 @@ class DataViewController extends Controller {
     $matches = "/[^a-zA-Z0-9\s\,\.\-\n\r\t@\/\_\(\)]/";
 
     switch ($fileMimeType) {
-        case 'text/plain':
-        case 'message/rfc822':
-             return Response::make((new customStringHelper)->ssnRedact(file_get_contents($source)));
-             break;
         case 'application/msword':
         case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
         case 'text/rtf':
              $fileContents = preg_replace($matches, "", (new tikaConvert)->convert($source));
-             return Response::make((new customStringHelper)->ssnRedact($fileContents));
+        case 'text':
+        case 'text/plain':
+        case 'text/html':
+        case 'message/rfc822':
+             $fileContents = Response::make((new customStringHelper)->ssnRedact(file_get_contents($source)));
+             return view('user.fileviewer')->with('fileContents', $fileContents)
+                                           ->with('tblNme', $curTable->tblNme)
+                                           ->with('tblId', $curTable)
+                                           ->with('recId', $recId);
              break;
         default:
              // download file if we cannot determine what kind of file it is.

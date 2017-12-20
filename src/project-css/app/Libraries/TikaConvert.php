@@ -15,9 +15,15 @@ class TikaConvert {
         $this->tika_port = env('TIKA_PORT', 'localhost');
     }
 
+    function setTikaHost($host) {
+        $this->tika_host = $host;
+    }
+
+    function setTikaPort($port) {
+      $this->tika_port = $port;
+    }
+
     /**
-     * checks if files exists in storage under the folder
-     * for the table
      *
      * @param       string $filename Input string
      *              this should containe file path and filename

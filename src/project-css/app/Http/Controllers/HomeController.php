@@ -24,37 +24,37 @@ class HomeController extends Controller {
         // Check if the user is admin
         // Page for a normal user
         if (!(Auth::user()->isAdmin)) {
-        // Get the required variables
-        // Collections
-        $cllctns = Collection::all();
+            // Get the required variables
+            // Collections
+            $cllctns = Collection::all();
 
-        // Compact them into one array
-        $vwVars = array(
-            'cllctns' => $cllctns,
-        );
+            // Compact them into one array
+            $vwVars = array(
+                'cllctns' => $cllctns,
+            );
 
-        // Return the view
-        return view('user/index')->with($vwVars);
-        }
+            // Return the view
+            return view('user/index')->with($vwVars);
+            }
 
-        // Page for a admin user
+            // Page for a admin user
         else {
-        // Get the count of variables
-        $cllctCnt = Collection::all()->count();
-        $usrCnt = User::where('isAdmin', false)->count();
-        $admnCnt = User::where('isAdmin', true)->count();
-        $tblCnt = Table::all()->count();
+            // Get the count of variables
+            $cllctCnt = Collection::all()->count();
+            $usrCnt = User::where('isAdmin', false)->count();
+            $admnCnt = User::where('isAdmin', true)->count();
+            $tblCnt = Table::all()->count();
 
-        // Compact them into array
-        $stats = array(
-            'cllctCnt' => $cllctCnt,
-            'usrCnt' => $usrCnt,
-            'admnCnt' => $admnCnt,
-            'tblCnt' => $tblCnt,
-        );
+            // Compact them into array
+            $stats = array(
+                'cllctCnt' => $cllctCnt,
+                'usrCnt' => $usrCnt,
+                'admnCnt' => $admnCnt,
+                'tblCnt' => $tblCnt,
+            );
 
-        //Return the view
-        return view('admin/index')->with($stats);
+            //Return the view
+            return view('admin/index')->with($stats);
         }
     }
 }
