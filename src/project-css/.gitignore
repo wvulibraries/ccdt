@@ -10,3 +10,4 @@ composer.lock
 .log
 /resources/views/vendor
 /coverage
+nohup.out
