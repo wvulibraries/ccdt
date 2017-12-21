@@ -19,9 +19,26 @@ class tikaConvertTest extends TestCase
         parent::tearDown();
     }
 
-    public function testConvert() {
+    public function testConvertValidFile() {
         $contents = $this->tikaConvert->convert($this->singlefilewithpath);
         $this->assertTrue(strpos($contents, 'testing') !== false);
     }
 
+    public function testConvertInvalidFile() {
+        $contents = $this->tikaConvert->convert('invalid.doc');
+        $this->assertTrue(strpos($contents, 'testing') == false);
+    }
+
+    public function testInvalidTikaSettings() {
+        $this->tikaConvert->setTikaHost('localhost');
+        $this->tikaConvert->setTikaPort('9997');
+        $this->assertFalse($this->tikaConvert->serverOpen());
+    }
+
+    public function testConvertWithInvalidTikaSettings() {
+        $this->tikaConvert->setTikaHost('localhost');
+        $this->tikaConvert->setTikaPort('9997');
+        $contents = $this->tikaConvert->convert($this->singlefilewithpath);
+        $this->assertTrue(strpos($contents, 'testing') == false);
+    }
 }

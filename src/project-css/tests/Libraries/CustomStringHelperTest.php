@@ -123,4 +123,14 @@ class CustomStringHelperTest extends TestCase
         $this->assertFalse($this->stringHelper->ssnExists($contents));
     }
 
+    public function testCheckForFilenames() {
+        // test should detect filenames included in the string that has mixed other data with the filenames
+        // in the original data the path doesn't match what is in the local file dump and the files are located
+        // in formletters with the addition of .txt to the filenames.
+        $contents = 'this is a sample entry to mimic what is seen in the real database this was created on 12-18-17TAM Example logged in 12/18/2017TAM Document created: #171218PMH_A0001 12/18/2017TAM Letter logged out 12/18/2017/public/form/crime/crime_01.doc/public/form/civil_rights/cr_01.doc/public/form/child_youth/cy_01.doc//public/form/education/ed_03.doc/public/form/civil_rights/cr_02.doc/form/social_security/sos_01.doc/public/form/foreign_affairs/foir_01.doc/public/form/miscellaneous/misc_01.doc';
+        $listArray = $this->stringHelper->checkForFilenames($contents);
+        //the first position of the array should contain the string 'cr_01.doc'
+        $this->assertTrue(strcmp('crime_01.doc', $listArray[0]) == 0);
+    }
+
 }
