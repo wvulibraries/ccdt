@@ -70,7 +70,7 @@
                                          'col-24-data' => 'string', 'col-24-size' => 'default',
                                          'col-25-data' => 'string', 'col-25-size' => 'default',
                                          'col-26-data' => 'string', 'col-26-size' => 'default',
-                                         'col-27-data' => 'string', 'col-27-size' => 'default',
+                                         'col-27-data' => 'string', 'col-27-size' => 'medium',
                                          'col-28-data' => 'string', 'col-28-size' => 'big',
                                          'col-29-data' => 'text', 'col-29-size' => 'big',
                                          'col-30-data' => 'text', 'col-30-size' => 'big',
