@@ -50,10 +50,10 @@ Route::get('help', function() {
 */
 Route::get('collection', 'CollectionController@index')->name('collectionIndex');
 Route::group([ 'prefix' => 'collection' ], function() {
-  Route::post('create', 'CollectionController@create');
-  Route::post('edit', 'CollectionController@edit');
-  Route::post('disable', 'CollectionController@disable');
-  Route::post('enable', 'CollectionController@enable');
+    Route::post('create', 'CollectionController@create');
+    Route::post('edit', 'CollectionController@edit');
+    Route::post('disable', 'CollectionController@disable');
+    Route::post('enable', 'CollectionController@enable');
 });
 
 /*
@@ -63,17 +63,17 @@ Route::group([ 'prefix' => 'collection' ], function() {
 */
 Route::get('table', 'TableController@index')->name('tableIndex');
 Route::group([ 'prefix' => 'table' ], function() {
-  Route::get('create', 'TableController@wizard');
-  Route::post('create/import', 'TableController@import');
-  Route::post('create/select', 'TableController@select');
-  // Forward route in case for error
-  Route::get('create/select', 'TableController@wizard');
-  Route::post('create/finalize', 'TableController@finalize');
-  Route::get('load', 'TableController@load');
-  Route::post('load/worker', 'TableController@worker');
-  Route::post('load/store', 'TableController@store');
-  Route::post('load/status', 'TableController@status');
-  Route::post('restrict', 'TableController@restrict');
+    Route::get('create', 'TableController@wizard');
+    Route::post('create/import', 'TableController@import');
+    Route::post('create/select', 'TableController@select');
+    // Forward route in case for error
+    Route::get('create/select', 'TableController@wizard');
+    Route::post('create/finalize', 'TableController@finalize');
+    Route::get('load', 'TableController@load');
+    Route::post('load/worker', 'TableController@worker');
+    Route::post('load/store', 'TableController@store');
+    Route::post('load/status', 'TableController@status');
+    Route::post('restrict', 'TableController@restrict');
 });
 
 /*
@@ -83,11 +83,11 @@ Route::group([ 'prefix' => 'table' ], function() {
 */
 Route::get('users', 'UserController@index')->name('userIndex');
 Route::group([ 'prefix' => 'user' ], function() {
-  Route::post('restrict', 'UserController@restrict');
-  Route::post('allow', 'UserController@allow');
-  Route::post('promote', 'UserController@promote');
-  Route::post('demote', 'UserController@demote');
-  Route::post('reset', 'UserController@reset');
+    Route::post('restrict', 'UserController@restrict');
+    Route::post('allow', 'UserController@allow');
+    Route::post('promote', 'UserController@promote');
+    Route::post('demote', 'UserController@demote');
+    Route::post('reset', 'UserController@reset');
 });
 
 /*
@@ -102,11 +102,11 @@ Route::group([ 'middleware' => [ 'checktableid' ] ], function() {
   |--------------------------------------------------------------------------
   */
   Route::group([ 'prefix' => 'data' ], function() {
-    Route::get('{curTable}', 'DataViewController@index')->name('dataIndex');
-    Route::get('{curTable}/{id}', 'DataViewController@show')->name('dataShow');
-    Route::post('{curTable}', 'DataViewController@search')->name('dataSearch');
-    Route::get('{curTable}/{search}/{page}', 'DataViewController@search')->name('dataSearch');
-    Route::get('{curTable}/{recId}/view/{subfolder}/{filename}', 'DataViewController@view')->name('dataFileView');
+      Route::get('{curTable}', 'DataViewController@index')->name('dataIndex');
+      Route::get('{curTable}/{id}', 'DataViewController@show')->name('dataShow');
+      Route::post('{curTable}', 'DataViewController@search')->name('dataSearch');
+      Route::get('{curTable}/{search}/{page}', 'DataViewController@search')->name('dataSearch');
+      Route::get('{curTable}/{recId}/view/{subfolder}/{filename}', 'DataViewController@view')->name('dataFileView');
   });
 
   /*
@@ -115,7 +115,7 @@ Route::group([ 'middleware' => [ 'checktableid' ] ], function() {
   |--------------------------------------------------------------------------
   */
   Route::group([ 'prefix' => 'upload' ], function() {
-    Route::get('{curTable}', 'UploadController@index');
-    Route::post('{curTable}', 'UploadController@storeFiles');
+      Route::get('{curTable}', 'UploadController@index');
+      Route::post('{curTable}', 'UploadController@storeFiles');
   });
 });
