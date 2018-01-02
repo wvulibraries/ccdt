@@ -594,8 +594,8 @@ class TableController extends Controller
         $tkns = $this->mergeLines($this->savedTkns, $tkns);
 
         // clear last saved line since we did a merge
-        $lastErrRow = NULL;
-        $savedTkns = NULL;
+        $this->lastErrRow = NULL;
+        $this->savedTkns = NULL;
     }
 
     // if token count doesn't match what is exptected save the tkns and last row position

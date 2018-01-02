@@ -176,7 +176,6 @@ class DataViewController extends Controller {
                                            ->with('tblNme', $curTable->tblNme)
                                            ->with('tblId', $curTable)
                                            ->with('recId', $recId);
-             break;
         case 'application/msword':
         case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
         case 'text/rtf':
@@ -186,7 +185,6 @@ class DataViewController extends Controller {
                                            ->with('tblNme', $curTable->tblNme)
                                            ->with('tblId', $curTable)
                                            ->with('recId', $recId);
-             break;
         default:
              // download file if we cannot determine what kind of file it is.
              return Response::make(file_get_contents($source), 200, [
