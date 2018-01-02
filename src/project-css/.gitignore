@@ -13,3 +13,4 @@ storage/framework/views/**
 .log
 # /resources/views/vendor
 /coverage
+nohup.out
