@@ -604,7 +604,7 @@ class TableController extends Controller
           // save the last row position and the Tokenized row
           $this->lastErrRow = $prcssd;
           $this->savedTkns = $tkns;
-          return (false);
+          return (NULL);
         }
 
         return ($tkns);
@@ -710,7 +710,7 @@ class TableController extends Controller
           $tkns = $this->prepareLine($curLine, $delimiter, $orgCount, $prcssd);
 
 
-          if ($tkns != false) {
+          if ($tkns != NULL) {
             try {
               $this->insertRecord($tkns, $orgCount, $tblNme, $clmnLst);
             }

@@ -33,4 +33,9 @@ class FileImport implements ShouldQueue
         $TableController = (new TableController);
         $TableController->process($this->tblNme, $this->fltFle);
     }
+
+    // public function failed(Exception $exception)
+    // {
+    //
+    // }
 }

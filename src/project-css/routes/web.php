@@ -118,4 +118,13 @@ Route::group([ 'middleware' => [ 'checktableid' ] ], function() {
       Route::get('{curTable}', 'UploadController@index');
       Route::post('{curTable}', 'UploadController@storeFiles');
   });
+
 });
+
+/*
+|--------------------------------------------------------------------------
+| Admin Controller for various admin functions
+|--------------------------------------------------------------------------
+*/
+Route::get('admin/jobs', 'AdminController@jobs');
+Route::get('admin/failedjobs', 'AdminController@failedjobs');
