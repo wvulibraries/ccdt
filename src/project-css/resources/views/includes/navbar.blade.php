@@ -38,8 +38,8 @@
                   <ul class="dropdown-menu" role="menu">
                       @if (Auth::user()->isAdmin)
                         <li>
-                            <li><a href="{{ url('/admin/jobs') }}">View Pending Job(s)</a></li>
-                            <li><a href="{{ url('/admin/failedjobs') }}">View Failed Job(s)</a></li>
+                            <li><a href="{{ url('/admin/jobs/pending') }}">View Pending Job(s)</a></li>
+                            <li><a href="{{ url('/admin/jobs/failed') }}">View Failed Job(s)</a></li>
                         </li>
                       @endif
                       <li>

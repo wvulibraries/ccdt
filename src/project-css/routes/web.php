@@ -126,5 +126,11 @@ Route::group([ 'middleware' => [ 'checktableid' ] ], function() {
 | Admin Controller for various admin functions
 |--------------------------------------------------------------------------
 */
-Route::get('admin/jobs', 'AdminController@jobs');
-Route::get('admin/failedjobs', 'AdminController@failedjobs');
+Route::group([ 'prefix' => 'admin/jobs' ], function() {
+    Route::get('pending', 'JobsController@pending');
+    Route::get('failed', 'JobsController@failed');
+    Route::get('retry/{id}', 'JobsController@retry');
+    Route::get('retryall', 'JobsController@retryAll');
+    Route::get('forget/{id}', 'JobsController@forget');
+    Route::get('flush', 'JobsController@flush');
+});
