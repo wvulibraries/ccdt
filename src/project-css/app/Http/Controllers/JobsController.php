@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 class JobsController extends Controller
 {
     public function __construct() {
-      // Protection to make sure this only accessible to admin
+      // Protection to make sure this is only accessible to admin
       $this->middleware('admin');
     }
     /**
@@ -44,8 +44,16 @@ class JobsController extends Controller
     }
 
     public function retryAll() {
-        $queueRetry = \Artisan::call('queue:retry all');
-        \Log::info($queueRetry);
+        $jobArray = \DB::table('failed_jobs')->get();
+        foreach ($jobArray as $job) {
+          if (is_numeric($job->id)) {
+            $queueRetry = \Artisan::call('queue:retry', ['id' => [$job->id]]);
+            \Log::info($queueRetry);
+          }
+        }
+        // 
+        // $queueRetry = \Artisan::call('queue:retry-all');
+        // \Log::info($queueRetry);
         return $this->failed();
     }
 
@@ -58,7 +66,7 @@ class JobsController extends Controller
     }
 
     public function flush() {
-        $queueFlush = \Artisan::call('queue:flush', ['id' => [$id]]);
+        $queueFlush = \Artisan::call('queue:flush');
         \Log::info($queueFlush);
         return $this->failed();
     }

@@ -23,7 +23,7 @@ class TableController extends Controller
      * Create a new controller instance.
      */
     public function __construct() {
-      // Protection to make sure this only accessible to admin
+      // Protection to make sure this is only accessible to admin
       $this->middleware('admin');
       // Storage directory
       $this->strDir = 'flatfiles';
