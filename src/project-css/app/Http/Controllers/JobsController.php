@@ -36,27 +36,31 @@ class JobsController extends Controller
     }
 
     public function retry($id) {
-      if (is_numeric($id)) {
-        shell_exec('php artisan queue:retry '.$id);
-      }
-      return $this->failed();
+        if (is_numeric($id)) {
+          $queueRetry = \Artisan::call('queue:retry', ['id' => [$id]]);
+          \Log::info($queueRetry);
+        }
+        return $this->failed();
     }
 
     public function retryAll() {
-      shell_exec('php artisan queue:retry all');
-      return $this->failed();
+        $queueRetry = \Artisan::call('queue:retry all');
+        \Log::info($queueRetry);
+        return $this->failed();
     }
 
     public function forget($id) {
-      if (is_numeric($id)) {
-        shell_exec('php artisan queue:forget '.$id);
-      }
-      return $this->failed();
+        if (is_numeric($id)) {
+          $queueForget = \Artisan::call('queue:forget', ['id' => [$id]]);
+          \Log::info($queueForget);
+        }
+        return $this->failed();
     }
 
     public function flush() {
-      shell_exec('php artisan queue:flush');
-      return $this->failed();
+        $queueFlush = \Artisan::call('queue:flush', ['id' => [$id]]);
+        \Log::info($queueFlush);
+        return $this->failed();
     }
 
 }

@@ -15,8 +15,7 @@
 <!-- Separation -->
 <hr/>
 
-<!-- Display controls and cards here -->
-<div class="usrWrapper">
+<div class="jobsWrapper">
   <div class="container">
       @if($JobCount == 0 )
        <span class="text-center">
@@ -37,9 +36,10 @@
             <th>{{$job->id}}</th>
             <th>{{$job->queue}}</th>
             <th>{{$job->attempts}}</th>
-            <th>{{$job->reserved_at}}</th>
-            <th>{{$job->available_at}}</th>
-            <th>{{$job->created_at}}</th>
+            {{-- -18000 is the offset for EST time zone --}}
+            <th><?php if ($job->reserved_at > 0) { echo gmdate("F j Y, g:i a", $job->reserved_at-18000); }?></th>
+            <th><?php if ($job->available_at > 0) { echo gmdate("F j Y, g:i a", $job->available_at-18000); }?></th>
+            <th><?php if ($job->created_at > 0) { echo gmdate("F j Y, g:i a", $job->created_at-18000); }?></th>
           </tr>
         @endforeach
         </table>

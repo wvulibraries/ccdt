@@ -15,32 +15,38 @@
 <!-- Separation -->
 <hr/>
 
-<!-- Display controls and cards here -->
-<div class="usrWrapper">
+<div class="jobsWrapper">
   <div class="container">
     @if($JobCount == 0 )
      <span class="text-center">
       <p>No Failed Job(s).</p>
      </span>
     @else
-    <table class="table">
-      <tr>
-        <th>id</th>
-        <th>connection</th>
-        <th>queue</th>
-        <th>exception</th>
-        <th>failed_at</th>
-      </tr>
-      @foreach($FailedJobs as $job)
-      <tr>
-        <th>{{$job->id}}</th>
-        <th>{{$job->connection}}</th>
-        <th>{{$job->queue}}</th>
-        <th>{{$job->exception}}</th>
-        <th>{{$job->failed_at}}</th>
-      </tr>
-      @endforeach
-    </table>
+      <table class="table">
+        <tr>
+          <th>id</th>
+          <th>connection</th>
+          <th>queue</th>
+          <th>exception</th>
+          <th>failed_at</th>
+          <th></th>
+          <th></th>
+        </tr>
+        @foreach($FailedJobs as $job)
+        <tr>
+          <th>{{$job->id}}</th>
+          <th>{{$job->connection}}</th>
+          <th>{{$job->queue}}</th>
+          <th>{{ str_limit($job->exception, $limit = 100, $end = '...') }}</th>
+          {{-- -18000 is the offset for EST time zone --}}
+          <th><?php if ($job->failed_at > 0) { echo $job->failed_at; }?></th>
+          <th><a href="{{ url('admin/jobs/retry', [$job->id]) }}" class="btn btn-primary">Retry Job</a></th>
+          <th><a href="{{ url('admin/jobs/forget', [$job->id]) }}" class="btn btn-primary">Delete Job</a></th>
+        </tr>
+        @endforeach
+      </table>
+      <a href="{{ url('admin/jobs/retryall') }}" class="btn btn-primary">Retry All Job(s)</a>
+      <a href="{{ url('admin/jobs/flush') }}" class="btn btn-primary">Remove All Job(s)</a>
     @endif
   </div>
 </div>
