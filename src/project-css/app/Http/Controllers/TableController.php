@@ -694,8 +694,10 @@ class TableController extends Controller
 
       $delimiter = $this->detectDelimiter($fltFleFullPth);
 
-      //Check for records past the first row that contains the field names
-      if ($this->isEmpty($curFltFleObj)>1) {
+      //Check for an empty file 
+      if ($this->isEmpty($curFltFleObj)>0) {
+
+
         // Ignore the first line
         $curFltFleObj->seek(1);
 
@@ -726,7 +728,7 @@ class TableController extends Controller
         }
       }
       else {
-        throw new \Exception("No Records to Import in File.");
+        throw new \Exception("Cannot Import a Empty File.");
       }
     }
 
