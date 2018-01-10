@@ -51,9 +51,6 @@ class JobsController extends Controller
             \Log::info($queueRetry);
           }
         }
-        // 
-        // $queueRetry = \Artisan::call('queue:retry-all');
-        // \Log::info($queueRetry);
         return $this->failed();
     }
 
