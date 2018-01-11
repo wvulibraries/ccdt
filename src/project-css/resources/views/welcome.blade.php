@@ -11,7 +11,7 @@
       <!-- Link cards -->
       <div class="qckLnksWrppr">
         <!-- header -->
-        <h3>Made with <span style="color:red" class="glyphicon glyphicon-heart"></span> for open source.</h3>
+        <h2>Made with <span style="color:red" class="glyphicon glyphicon-heart"></span> for open source.</h2>
         <!-- Row -->
         <div class="row">
           <!-- cards -->
@@ -21,7 +21,8 @@
               <div class="well dashCard btn-circle">
                 <!-- heading -->
                 <div class="dashCardHeading">
-                  <span class="glyphicon glyphicon-blackboard visible-xs visible-sm smallIcon"></span><label>Presentation</label>
+                  <span class="glyphicon glyphicon-blackboard visible-xs visible-sm smallIcon"></span>
+                  <span class="navigation-cards"> Presentation </span>
                 </div>
                 <!-- Icon -->
                 <div class="icon hidden-xs hidden-sm">
@@ -35,7 +36,8 @@
               <div class="well dashCard btn-circle">
                 <!-- heading -->
                 <div class="dashCardHeading">
-                  <span class="glyphicon glyphicon-console visible-xs visible-sm smallIcon"></span><label>Source</label>
+                  <span class="glyphicon glyphicon-console visible-xs visible-sm smallIcon"></span>
+                  <span class="navigation-cards"> Source </span>
                 </div>
                 <!-- Icon -->
                 <div class="icon hidden-xs hidden-sm">
@@ -49,7 +51,8 @@
               <div class="well dashCard btn-circle">
                 <!-- heading -->
                 <div class="dashCardHeading">
-                  <span class="glyphicon glyphicon-book visible-xs visible-sm smallIcon"></span><label>Documentation</label>
+                  <span class="glyphicon glyphicon-book visible-xs visible-sm smallIcon"></span>
+                  <span class="navigation-cards"> Documentation </span>
                 </div>
                 <!-- Icon -->
                 <div class="icon hidden-xs hidden-sm">
@@ -63,7 +66,8 @@
               <div class="well dashCard btn-circle">
                 <!-- heading -->
                 <div class="dashCardHeading">
-                  <span class="glyphicon glyphicon-comment visible-xs visible-sm smallIcon"></span><label>Contact</label>
+                  <span class="glyphicon glyphicon-comment visible-xs visible-sm smallIcon"></span>
+                  <span class="navigation-cards"> Contact </span>
                 </div>
                 <!-- Icon -->
                 <div class="icon hidden-xs hidden-sm">

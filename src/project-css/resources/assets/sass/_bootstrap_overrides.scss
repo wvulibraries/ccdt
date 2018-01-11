@@ -68,6 +68,8 @@ button .btn {
 .jumbotron{
   @include clearfix;
   color: $brand-primary;
+  H1 { color: $heading-color; }
+  p { color: $subheading-color; }
   background-color: $footer-background;
 }
 

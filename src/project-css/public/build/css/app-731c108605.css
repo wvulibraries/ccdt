@@ -7749,6 +7749,14 @@ button .btn {
   clear: both;
 }
 
+.jumbotron H1 {
+  color: #0033A0;
+}
+
+.jumbotron p {
+  color: #2C2A29;
+}
+
 .css-sidebar {
   border-right: 2px solid #EEE;
 }
@@ -7930,6 +7938,12 @@ button .btn {
   margin-bottom: 15px;
   font-size: 24px;
   border-bottom: 1px solid #000000;
+}
+
+.dashCard .navigation-cards {
+  color: #002855;
+  font-size: 1.2em;
+  display: block;
 }
 
 .colCard {
@@ -8199,7 +8213,7 @@ footer {
 }
 
 footer .builtBy {
-  color: #aaa;
+  color: #4e4e4e;
   font-weight: bold;
   text-transform: uppercase;
   letter-spacing: 1px;
@@ -8218,7 +8232,7 @@ footer .wvu {
 }
 
 footer .libs {
-  color: #EAAA00;
+  color: #ED8B00;
   margin-left: -6px;
 }
 
