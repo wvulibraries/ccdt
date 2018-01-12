@@ -2,6 +2,7 @@
 
 <!-- Content -->
 @section('content')
+
     <!-- header -->
     @include('includes.header')
 
