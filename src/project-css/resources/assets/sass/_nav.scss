@@ -1,28 +1,30 @@
+$navbar-brand-primary: $blue;
+
 .navbar-default{
     background-color: #FFF;
     font-size: 16px;
     //background-color: $footer-background;
-    border-top: 7px solid $brand-primary;
+    border-top: 7px solid $navbar-brand-primary;
 }
 
 .navbar-default .navbar-brand,
 .navbar-default .navbar-brand:hover,
 .navbar-default .navbar-brand:focus {
-    color: $brand-primary;
+    color: $navbar-brand-primary;
 }
 
 .navbar-default .navbar-nav > li > a {
-    color: $brand-primary;
+    color: $navbar-brand-primary;
 }
 
 .navbar-default .navbar-nav > .active > a,
 .navbar-default .navbar-nav > .active > a:hover,
 .navbar-default .navbar-nav > .active > a:focus {
-    color: $brand-primary;
+    color: $navbar-brand-primary;
 }
 
 .navbar-default .navbar-text {
-    color: $brand-primary;
+    color: $navbar-brand-primary;
 }
 
 .navbar-default .navbar-brand{
