@@ -6,7 +6,7 @@
   <!-- Heading -->
   <div class="container adminHeading">
     <span class="text-center">
-      <h2><a href="{{ url('/upload', $tblId) }}">Upload Linked File(s)</a></h2>
+      <h1><a href="{{ url('/upload', $tblId) }}">Upload Linked File(s)</a></h1>
       <p>Please upload files that will be linked to this table.</p>
     </span>
   </div>

@@ -6,7 +6,7 @@
   <!-- Heading -->
   <div class="container adminHeading">
     <span class="text-center">
-      <h2><a href="{{ url('collection') }}">Collection(s)</a></h2>
+      <h1><a href="{{ url('collection') }}">Collection(s)</a></h1>
       <p>Create, import and manage collections here.</p>
     </span>
   </div>

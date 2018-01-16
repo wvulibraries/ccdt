@@ -7,7 +7,7 @@
   <!-- Heading -->
   <div class="container adminHeading">
     <span class="text-center">
-      <h2><a href="{{ url('table/load') }}">Load Data</a></h2>
+      <h1><a href="{{ url('table/load') }}">Load Data</a></h1>
       <p>Additional options to ensure the data is handled just the way you want.</p>
     </span>
   </div>

@@ -6,7 +6,7 @@
   <!-- Heading -->
   <div class="container adminHeading">
     <span class="text-center">
-      <h2><a href="{{ url('/home') }}">Dashboard</a></h2>
+      <h1><a href="{{ url('/home') }}">Dashboard</a></h1>
       <p>Your data. Your control.</p>
     </span>
   </div>

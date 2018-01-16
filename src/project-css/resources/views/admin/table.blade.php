@@ -6,7 +6,7 @@
   <!-- Heading -->
   <div class="container adminHeading">
     <span class="text-center">
-      <h2><a href="{{ url('table') }}">Table(s)</a></h2>
+      <h1><a href="{{ url('table') }}">Table(s)</a></h1>
     </span>
   </div>
 </div>
@@ -27,7 +27,7 @@
           <div class="icon hidden-xs hidden-sm">
             <span class="glyphicon glyphicon-plus"></span>
           </div>
-          <h4>Create Table(s)</h4>
+          <span>Create Table(s)</span>
         </div>
       </div>
     </a>
@@ -38,7 +38,7 @@
           <div class="icon hidden-xs hidden-sm">
             <span class="glyphicon glyphicon-import"></span>
           </div>
-          <h4>Load Data</h4>
+          <span>Load Data</span>
         </div>
       </div>
     </a>
