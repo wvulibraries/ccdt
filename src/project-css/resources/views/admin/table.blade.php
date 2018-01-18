@@ -21,61 +21,51 @@
   <div class="container">
 
     <!-- Head Table Cards -->
-    <a href="{{url('table/create')}}" data-toggle="modal">
-      <div class="col-xs-6 col-sm-6 col-md-6">
-        <div class="colHeadCard">
-          <div class="icon hidden-xs hidden-sm">
-            <span class="glyphicon glyphicon-plus"></span>
+    <div class="row">
+      <a href="{{url('table/create')}}" data-toggle="modal" class="col-xs-6 col-sm-6 col-md-6">
+          <div class="well text-center">
+            <div class="icon hidden-xs hidden-sm">
+              <span class="glyphicon glyphicon-plus"></span>
+            </div>
+            <span class="title">Create Table(s)</span>
           </div>
-          <span>Create Table(s)</span>
-        </div>
-      </div>
-    </a>
+      </a>
 
-    <a href="{{url('table/load')}}" data-toggle="modal">
-      <div class="col-xs-6 col-sm-6 col-md-6">
-        <div class="colHeadCard">
-          <div class="icon hidden-xs hidden-sm">
-            <span class="glyphicon glyphicon-import"></span>
+      <a href="{{url('table/load')}}" data-toggle="modal" class="col-xs-6 col-sm-6 col-md-6">
+          <div class="well text-center">
+            <div class="icon hidden-xs hidden-sm">
+              <span class="glyphicon glyphicon-import"></span>
+            </div>
+            <span class="title">Load Data</span>
           </div>
-          <span>Load Data</span>
-        </div>
-      </div>
-    </a>
+      </a>
+    </div>
 
     <!-- Show existing tables -->
     @foreach($tbls as $key=>$tbl)
       <!-- Check for the access -->
       @if($tbl->hasAccess)
       <!-- Show the tables -->
-        <div class="col-xs-12 col-sm-12 col-md-12">
-          <div class="colCard">
-            <!-- Display the collection name -->
-            <div class="col-xs-6 col-sm-4 col-md-4">
-              <p class="colCardName"><b>{{$key+1}}.</b> <b>{{$tbl->tblNme}}</b> belongs to <b>{{$tbl->collection->clctnName}}</b></p>
-            </div>
-            <!-- Options for the collection -->
-            <div class="col-xs-6 col-sm-8 col-md-8">
-              <!-- Option 1 Add tables -->
-              <div class="colCardOpts">
-                <a href="{{ url('/data',['tableId' => $tbl->id]) }}">
-                  <div class="icon hidden-xs hidden-sm">
-                    <span class="glyphicon glyphicon-cd"></span>
-                  </div>
-                  <p>{{DB::table($tbl->tblNme)->count()}} Records</p>
-                </a>
-              </div>
-              <div class="colCardOpts">
-                <a href="{{ url('/upload',['tableId' => $tbl->id]) }}">
-                  <div class="icon hidden-xs hidden-sm">
-                    <span class="glyphicon glyphicon-upload"></span>
-                  </div>
-                  <p>Upload Linked Files</p>
-                </a>
-              </div>
-            </div>
-          </div>
+      <div class="row table-list">
+        <div class="table-item col-xs-12 col-sm-8 col-md-8 well">
+            <p>
+              <b>{{$key+1}}.</b>
+              <b>{{$tbl->tblNme}}</b> belongs to
+              <b>{{$tbl->collection->clctnName}}</b>
+            </p>
         </div>
+
+        <a href="{{ url('/data',['tableId' => $tbl->id]) }}" class="table-item col-xs-12 col-sm-2 col-md-2 well dashCard">
+          <span class="glyphicon glyphicon-cd"></span>
+          <div>{{DB::table($tbl->tblNme)->count()}} </div>
+          <div> Records </div>
+        </a>
+
+        <a href="{{ url('/upload',['tableId' => $tbl->id]) }}" class="table-item col-xs-12 col-sm-2 col-md-2 well dashCard">
+          <span class="glyphicon glyphicon-upload"></span>
+          <div><br/> Upload Files</div>
+        </a>
+      </div>
       @endif
     @endforeach
 

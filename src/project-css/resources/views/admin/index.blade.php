@@ -30,7 +30,7 @@
           </div>
           <div class="desc hidden-xs">
             <var>{{$usrCnt}}</var>
-            <span class="text-muted"> User(s) </span>
+            <span> User(s) </span>
           </div>
         </div>
       </div>
@@ -47,7 +47,7 @@
           </div>
           <div class="desc hidden-xs">
             <var>{{$cllctCnt}}</var>
-            <span class="text-muted"> Collection(s) </span>
+            <span> Collection(s) </span>
           </div>
         </div>
       </div>
@@ -64,7 +64,7 @@
           </div>
           <div class="desc hidden-xs">
             <var>{{$tblCnt}}</var>
-            <span class="text-muted"> Source </span>
+            <span> Source </span>
           </div>
         </div>
       </div>
@@ -80,7 +80,7 @@
         </div>
         <div class="desc hidden-xs">
           <var>{{$admnCnt}}</var>
-          <span class="text-muted"> Admin(s) </span>
+          <span> Admin(s) </span>
         </div>
       </div>
     </div>
