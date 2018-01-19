@@ -604,7 +604,7 @@ class TableController extends Controller
           // save the last row position and the Tokenized row
           $this->lastErrRow = $prcssd;
           $this->savedTkns = $tkns;
-          return (NULL);
+          return (false);
         }
 
         return ($tkns);
@@ -694,7 +694,7 @@ class TableController extends Controller
 
       $delimiter = $this->detectDelimiter($fltFleFullPth);
 
-      //Check for an empty file 
+      //Check for an empty file
       if ($this->isEmpty($curFltFleObj)>0) {
 
 

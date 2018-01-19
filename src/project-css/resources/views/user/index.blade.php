@@ -6,7 +6,7 @@
   <!-- Heading -->
   <div class="container adminHeading">
     <span class="text-center">
-      <h2><a href="{{ url('/home') }}">Dashboard</a></h2>
+      <h1><a href="{{ url('/home') }}">Dashboard</a></h1>
       <p>Please kindly select the collection and table to view the records</p>
     </span>
   </div>
@@ -25,10 +25,8 @@
           <div class="collctnTblWrppr">
 
             <div class="cllctnCntr">
-              <h3>
-                <span class="cllcntIcn"><i class="glyphicon glyphicon-book"></i></span>
+                <span class="cllcntIcn glyphicon glyphicon-book"></span>
                 <span class="cllcntHdr">{{$curCllctn->clctnName}}</span>
-              </h3>
             </div>
 
             <hr/>
@@ -37,18 +35,18 @@
               @if(count($curCllctn->tables)>0)
                 @foreach($curCllctn->tables as $curTabl)
                 <a href="{{ url('/data',['tableId' => $curTabl->id]) }}">
-                  <div class="col-xs-4">
+                  <div class="col-xs-12 col-sm-6 col-md-3">
                     <div class="well dashCard">
                       <div class="dashCardHeading">
                         <span class="glyphicon glyphicon-duplicate visible-xs visible-sm smallIcon"></span>
-                        <label>{{$curTabl->tblNme}}</label>
+                        <span class="navigation-cards"> {{$curTabl->tblNme}} </span>
                       </div>
                       <div class="icon hidden-xs hidden-sm">
-                        <i class="glyphicon glyphicon-duplicate"></i>
+                        <span class="glyphicon glyphicon-duplicate"></span>
                       </div>
                       <div class="desc hidden-xs">
                         <var>{{DB::table($curTabl->tblNme)->count()}}</var>
-                        <label class="text-muted">Record(s)</label>
+                        <span> Record(s) </span>
                       </div>
                     </div>
                   </div>

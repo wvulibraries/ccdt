@@ -107,7 +107,7 @@
            $this->actingAs($this->admin)
                 ->visit('table')
                 ->assertResponseStatus(200)
-                ->see('3 Records');
+                ->see('3');
 
            $this->actingAs($this->admin)
                 ->visit('data/1')
@@ -310,7 +310,7 @@
            $this->actingAs($this->admin)
                 ->visit('table')
                 ->assertResponseStatus(200)
-                ->see('0 Records');
+                ->see('0');
 
            // visit a table with no records
            $this->visit('data/1')
