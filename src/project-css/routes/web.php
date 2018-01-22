@@ -118,4 +118,19 @@ Route::group([ 'middleware' => [ 'checktableid' ] ], function() {
       Route::get('{curTable}', 'UploadController@index');
       Route::post('{curTable}', 'UploadController@storeFiles');
   });
+
+});
+
+/*
+|--------------------------------------------------------------------------
+| Admin Controller for various admin functions
+|--------------------------------------------------------------------------
+*/
+Route::group([ 'prefix' => 'admin/jobs' ], function() {
+    Route::get('pending', 'JobsController@pending');
+    Route::get('failed', 'JobsController@failed');
+    Route::get('retry/{id}', 'JobsController@retry');
+    Route::get('retryall', 'JobsController@retryAll');
+    Route::get('forget/{id}', 'JobsController@forget');
+    Route::get('flush', 'JobsController@flush');
 });

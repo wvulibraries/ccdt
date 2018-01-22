@@ -18,27 +18,27 @@ class UserController extends Controller {
     * Show the collection index page
     */
     public function index() {
-    // Get all the users
-    $usrs = User::all();
-    // Sent the current authenticated user
-    $AuthUsr = Auth::user();
-    // check if the user is admin
-    return view('admin/users')->with('usrs', $usrs)->with('AuthUsr', $AuthUsr);
+        // Get all the users
+        $usrs = User::all();
+        // Sent the current authenticated user
+        $AuthUsr = Auth::user();
+        // check if the user is admin
+        return view('admin/users')->with('usrs', $usrs)->with('AuthUsr', $AuthUsr);
     }
 
-  /**
-  * Restrict the access for the user
-  */
-  public function restrict(Request $request) {
-    // Find the user
-    $thisUsr = User::findorFail($request->id);
-    // Set the permissions
-    $thisUsr->hasAccess = false;
-    // Save the user
-    $thisUsr->save();
-    // Redirect back
-    return redirect()->route('userIndex');
-  }
+    /**
+    * Restrict the access for the user
+    */
+    public function restrict(Request $request) {
+        // Find the user
+        $thisUsr = User::findorFail($request->id);
+        // Set the permissions
+        $thisUsr->hasAccess = false;
+        // Save the user
+        $thisUsr->save();
+        // Redirect back
+        return redirect()->route('userIndex');
+    }
 
   /**
   * Edit the database entry into the database

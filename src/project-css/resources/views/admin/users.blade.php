@@ -6,7 +6,7 @@
   <!-- Heading -->
   <div class="container adminHeading">
     <span class="text-center">
-      <h2><a href="{{ url('users') }}">User(s)</a></h2>
+      <h1><a href="{{ url('users') }}">User(s)</a></h1>
       <p>Create, view and manage users here.</p>
     </span>
   </div>
@@ -34,7 +34,7 @@
     @foreach($usrs as $usr)
 
       @if($usr->isAdmin)
-      <!-- Checks if the admin is not youz -->
+      <!-- Checks if the admin is not yours -->
       @if(!($AuthUsr->id==$usr->id))
       <div class="col-xs-12 col-sm-12 col-md-12">
 
@@ -73,7 +73,7 @@
                 <p>Remove Admin</p>
               </a>
             </div>
-            
+
           </div>
 
         </div>

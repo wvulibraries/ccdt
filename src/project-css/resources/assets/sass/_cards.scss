@@ -21,7 +21,7 @@
 
   .var, var {
     display: block;
-    font-size: 48px;
+    font-size: 42px;
     line-height: 48px;
     font-style: normal;
   }
@@ -39,6 +39,12 @@
     margin-bottom: 15px;
     font-size: 24px;
     border-bottom: 1px solid #000000;
+  }
+
+  .navigation-cards {
+    color: $blue;
+    font-size:1.2em;
+    display:block;
   }
 }
 
@@ -74,6 +80,7 @@
 .colCardOpts {
     display: inline-block;
     margin: 2px;
+    p { color: $blue; }
 }
 
 .dsbldColCard {
@@ -106,6 +113,7 @@
 
 .cllctnCntr{
   color: $brand-primary;
+  font-size: 1.5em;
 }
 
 .dataCard{
@@ -116,6 +124,7 @@
 
   font-size: 16px;
   min-height: 75px;
+
   background-color: #EEE;
   padding: 15px;
 
@@ -127,7 +136,7 @@
   word-wrap: break-word;
 
   span { display:block; width:100%;}
-
+  .card-items { color: $blue;}
 
   @include breakpoint(tablet){
     width:calc(50% - #{$margin}) !important;
@@ -141,4 +150,12 @@
     &:nth-of-type(2n){ margin-right:$margin; }
     &:nth-of-type(3n){ margin-right:0; }
   }
+}
+
+.table-list { margin-left:0; margin-right:0 }
+
+.table-list .table-item {
+  span.glyphicon { font-size: 2em; }
+  font-size:1em;
+  height:112px;
 }

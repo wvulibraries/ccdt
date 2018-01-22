@@ -23,7 +23,7 @@ class TableController extends Controller
      * Create a new controller instance.
      */
     public function __construct() {
-      // Protection to make sure this only accessible to admin
+      // Protection to make sure this is only accessible to admin
       $this->middleware('admin');
       // Storage directory
       $this->strDir = 'flatfiles';
@@ -696,6 +696,8 @@ class TableController extends Controller
 
       //Check for an empty file
       if ($this->isEmpty($curFltFleObj)>0) {
+
+
         // Ignore the first line
         $curFltFleObj->seek(1);
 
@@ -710,7 +712,7 @@ class TableController extends Controller
           $tkns = $this->prepareLine($curLine, $delimiter, $orgCount, $prcssd);
 
 
-          if ($tkns != false) {
+          if ($tkns != NULL) {
             try {
               $this->insertRecord($tkns, $orgCount, $tblNme, $clmnLst);
             }
@@ -724,7 +726,9 @@ class TableController extends Controller
           $prcssd += 1;
           $curFltFleObj->next();
         }
-
+      }
+      else {
+        throw new \Exception("Cannot Import a Empty File.");
       }
     }
 

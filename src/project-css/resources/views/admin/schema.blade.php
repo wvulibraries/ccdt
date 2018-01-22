@@ -6,7 +6,7 @@
   <!-- Heading -->
   <div class="container adminHeading">
     <span class="text-center">
-      <h2><a href="{{ url('table/schema') }}">Edit Schema</a></h2>
+      <h1><a href="{{ url('table/schema') }}">Edit Schema</a></h1>
       <p>Please create the schema that fits your database schema. Usually Correspondence data are included with a readme file which can be used to create the schema</p>
     </span>
   </div>

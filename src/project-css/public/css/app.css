@@ -7749,6 +7749,14 @@ button .btn {
   clear: both;
 }
 
+.jumbotron H1 {
+  color: #0033A0;
+}
+
+.jumbotron p {
+  color: #2C2A29;
+}
+
 .css-sidebar {
   border-right: 2px solid #EEE;
 }
@@ -7880,12 +7888,18 @@ button .btn {
   background-image: url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.75' fill-rule='evenodd'%3E%3Ccircle cx='3' cy='3' r='3'/%3E%3Ccircle cx='13' cy='13' r='3'/%3E%3C/g%3E%3C/svg%3E");
 }
 
+.title {
+  font-size: 20px;
+  color: #002855;
+  float: center;
+}
+
 .headingWrapper {
   background-color: #EEE;
-  margin-top: -20px;
-  margin-bottom: -20px;
+  margin-top: -10px;
+  margin-bottom: -10px;
   padding: 20px;
-  min-height: 15vh;
+  min-height: 10vh;
 }
 
 .cardsWrapper {
@@ -7912,7 +7926,7 @@ button .btn {
 
 .dashCard .var, .dashCard var {
   display: block;
-  font-size: 48px;
+  font-size: 42px;
   line-height: 48px;
   font-style: normal;
 }
@@ -7930,6 +7944,12 @@ button .btn {
   margin-bottom: 15px;
   font-size: 24px;
   border-bottom: 1px solid #000000;
+}
+
+.dashCard .navigation-cards {
+  color: #002855;
+  font-size: 1.2em;
+  display: block;
 }
 
 .colCard {
@@ -7965,6 +7985,10 @@ button .btn {
   margin: 2px;
 }
 
+.colCardOpts p {
+  color: #002855;
+}
+
 .dsbldColCard {
   text-align: center;
   opacity: 0.4;
@@ -7995,6 +8019,7 @@ button .btn {
 
 .cllctnCntr {
   color: #337ab7;
+  font-size: 1.5em;
 }
 
 .dataCard {
@@ -8014,6 +8039,10 @@ button .btn {
 .dataCard span {
   display: block;
   width: 100%;
+}
+
+.dataCard .card-items {
+  color: #002855;
 }
 
 @media (min-width: 768px) {
@@ -8060,6 +8089,20 @@ button .btn {
   .dataCard:nth-of-type(3n) {
     margin-right: 0;
   }
+}
+
+.table-list {
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.table-list .table-item {
+  font-size: 1em;
+  height: 112px;
+}
+
+.table-list .table-item span.glyphicon {
+  font-size: 2em;
 }
 
 .searchBarWrapper {
@@ -8199,7 +8242,7 @@ footer {
 }
 
 footer .builtBy {
-  color: #aaa;
+  color: #4e4e4e;
   font-weight: bold;
   text-transform: uppercase;
   letter-spacing: 1px;
@@ -8218,8 +8261,38 @@ footer .wvu {
 }
 
 footer .libs {
-  color: #EAAA00;
+  color: #ED8B00;
   margin-left: -6px;
+}
+
+.navbar-default {
+  background-color: #FFF;
+  font-size: 16px;
+  border-top: 7px solid #002855;
+}
+
+.navbar-default .navbar-brand,
+.navbar-default .navbar-brand:hover,
+.navbar-default .navbar-brand:focus {
+  color: #002855;
+}
+
+.navbar-default .navbar-nav > li > a {
+  color: #002855;
+}
+
+.navbar-default .navbar-nav > .active > a,
+.navbar-default .navbar-nav > .active > a:hover,
+.navbar-default .navbar-nav > .active > a:focus {
+  color: #002855;
+}
+
+.navbar-default .navbar-text {
+  color: #002855;
+}
+
+.navbar-default .navbar-brand {
+  font-size: 36px;
 }
 
 /*# sourceMappingURL=app.css.map */
