@@ -17,7 +17,7 @@
 
 <!-- Wizard Form -->
 <div class="container">
-  <h3 class="text-center">Step1: Select or Import</h3>
+  <h2 class="text-center">Step1: Select or Import</h2>
   <!-- Separator -->
   <hr/>
     <div class="row">
@@ -88,11 +88,11 @@
                                 </div>
                             </div>
                             <!-- Select Collection Name -->
-                            <div class="form-group{{ $errors->has('colID') ? ' has-error' : '' }}">
-                                <label for="colID" class="col-md-4 control-label">Select Collection</label>
+                            <div class="form-group{{ $errors->has('colID2') ? ' has-error' : '' }}">
+                                <label for="colID2" class="col-md-4 control-label">Select Collection</label>
 
                                 <div class="col-md-6">
-                                  <select id="colID" type="text" class="form-control" name="colID" value="{{ old('colID') }}" required autofocus>
+                                  <select id="colID2" type="text" class="form-control" name="colID2" value="{{ old('colID2') }}" required autofocus>
                                     @foreach($collcntNms as $collcntNm)
                                       @if($collcntNm->isEnabled)
                                         <option value="{{$collcntNm->id}}">{{$collcntNm->clctnName}}</option>
@@ -103,10 +103,10 @@
                             </div>
                             <!-- Choose File -->
                             <div class="form-group{{ $errors->has('fltFile') ? ' has-error' : '' }}">
-                                <label for="fltFile" class="col-md-4 control-label">Import</label>
+                                <label for="fltFile2" class="col-md-4 control-label">Import</label>
 
                                 <div class="col-md-6">
-                                  <select id="fltFile" type="text" class="form-control" name="fltFile" value="{{ old('fltFile') }}" required autofocus>
+                                  <select id="fltFile2" type="text" class="form-control" name="fltFile2" value="{{ old('fltFile2') }}" required autofocus>
                                     @foreach($fltFleList as $fltFile)
                                       @if($fltFile)
                                         <option value="{{$fltFile}}">{{$fltFile}}</option>

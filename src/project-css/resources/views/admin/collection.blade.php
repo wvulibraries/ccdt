@@ -138,7 +138,7 @@
                   <div class="form-group{{ $errors->has('clctnName') ? ' has-error' : '' }}">
 
                       <div class="col-md-6">
-                          <label for="clctnName"> Collection Name </label>
+                          <span for="clctnName"> Collection Name </span>
                           <input id="clctnName" type="text" class="form-control" name="clctnName" required autofocus>
                       </div>
                       <div class="col-md-3">
@@ -178,7 +178,7 @@
             <div class="colCardOpts">
               <a href="#" data-toggle="modal" data-target="#enblCllctn{{$collcntNm->id}}">
                 <div class="icon hidden-xs hidden-sm">
-                  <span class="glyphicon glyphicon-fire"></span>
+                  <span class="glyphicon glyphicon-fire" aria-hidden="true"></span>
                 </div>
                 <p>Enable</p>
               </a>
