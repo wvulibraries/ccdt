@@ -22,11 +22,11 @@
       <div class="col-xs-12 col-sm-6 col-md-3">
         <div class="well dashCard">
           <div class="dashCardHeading">
-            <span class="glyphicon glyphicon-user visible-xs visible-sm smallIcon"></span>
+            <span class="glyphicon glyphicon-user visible-xs visible-sm smallIcon" aria-hidden="true"></span>
             <span class="navigation-cards"> User(s) </span>
           </div>
           <div class="icon hidden-xs hidden-sm">
-            <span class="glyphicon glyphicon-user"></span>
+            <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
           </div>
           <div class="desc hidden-xs">
             <var>{{$usrCnt}}</var>
@@ -39,11 +39,11 @@
       <div class="col-xs-12 col-sm-6 col-md-3">
         <div class="well dashCard">
           <div class="dashCardHeading">
-            <span class="glyphicon glyphicon-book visible-xs visible-sm smallIcon"></span>
+            <span class="glyphicon glyphicon-book visible-xs visible-sm smallIcon" aria-hidden="true"></span>
             <span class="navigation-cards"> Collection(s) </span>
           </div>
           <div class="icon hidden-xs hidden-sm">
-            <span class="glyphicon glyphicon-book"></span>
+            <span class="glyphicon glyphicon-book" aria-hidden="true"></span>
           </div>
           <div class="desc hidden-xs">
             <var>{{$cllctCnt}}</var>
@@ -56,11 +56,11 @@
       <div class="col-xs-12 col-sm-6 col-md-3">
         <div class="well dashCard">
           <div class="dashCardHeading">
-            <span class="glyphicon glyphicon-duplicate visible-xs visible-sm smallIcon"></span>
+            <span class="glyphicon glyphicon-duplicate visible-xs visible-sm smallIcon" aria-hidden="true"></span>
             <span class="navigation-cards"> Table(s) </span>
           </div>
           <div class="icon hidden-xs hidden-sm">
-            <span class="glyphicon glyphicon-duplicate"></span>
+            <span class="glyphicon glyphicon-duplicate" aria-hidden="true"></span>
           </div>
           <div class="desc hidden-xs">
             <var>{{$tblCnt}}</var>
@@ -72,11 +72,11 @@
     <div class="col-xs-12 col-sm-6 col-md-3">
       <div class="well dashCard">
         <div class="dashCardHeading">
-          <span class="glyphicon glyphicon-cog visible-xs visible-sm smallIcon"></span>
+          <span class="glyphicon glyphicon-cog visible-xs visible-sm smallIcon" aria-hidden="true"></span>
           <span class="navigation-cards"> Admin(s) </span>
         </div>
         <div class="icon hidden-xs hidden-sm">
-          <span class="glyphicon glyphicon-cog"></span>
+          <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
         </div>
         <div class="desc hidden-xs">
           <var>{{$admnCnt}}</var>

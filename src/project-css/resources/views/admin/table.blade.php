@@ -25,7 +25,7 @@
       <a href="{{url('table/create')}}" data-toggle="modal" class="col-xs-6 col-sm-6 col-md-6">
           <div class="well text-center">
             <div class="icon hidden-xs hidden-sm">
-              <span class="glyphicon glyphicon-plus"></span>
+              <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
             </div>
             <span class="title">Create Table(s)</span>
           </div>
@@ -34,7 +34,7 @@
       <a href="{{url('table/load')}}" data-toggle="modal" class="col-xs-6 col-sm-6 col-md-6">
           <div class="well text-center">
             <div class="icon hidden-xs hidden-sm">
-              <span class="glyphicon glyphicon-import"></span>
+              <span class="glyphicon glyphicon-import" aria-hidden="true"></span>
             </div>
             <span class="title">Load Data</span>
           </div>
@@ -56,13 +56,13 @@
         </div>
 
         <a href="{{ url('/data',['tableId' => $tbl->id]) }}" class="table-item col-xs-12 col-sm-2 col-md-2 well dashCard">
-          <span class="glyphicon glyphicon-cd"></span>
+          <span class="glyphicon glyphicon-cd" aria-hidden="true"></span>
           <div>{{DB::table($tbl->tblNme)->count()}} </div>
           <div> Records </div>
         </a>
 
         <a href="{{ url('/upload',['tableId' => $tbl->id]) }}" class="table-item col-xs-12 col-sm-2 col-md-2 well dashCard">
-          <span class="glyphicon glyphicon-upload"></span>
+          <span class="glyphicon glyphicon-upload" aria-hidden="true"></span>
           <div><br/> Upload Files</div>
         </a>
       </div>

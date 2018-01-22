@@ -24,9 +24,9 @@
       <div class="col-xs-12 col-sm-12 col-md-12">
         <div class="colHeadCard">
           <div class="icon hidden-xs hidden-sm">
-            <span class="glyphicon glyphicon-plus"></span>
+            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
           </div>
-          <h4>Create Collection(s)</h4>
+          <span class="title">Create Collection(s)</span>
         </div>
       </div>
     </a>
@@ -46,25 +46,25 @@
             <div class="colCardOpts">
               <a href="{{url('table/create')}}">
                 <div class="icon hidden-xs hidden-sm">
-                  <span class="glyphicon glyphicon-plus"></span>
+                  <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                 </div>
                 <p>Add Tables</p>
               </a>
             </div>
-            <!-- Option 3 Edit Collection -->
+            <!-- Option 2 Edit Collection -->
             <div class="colCardOpts">
               <a href="#" data-toggle="modal" data-target="#editCllctn{{$collcntNm->id}}">
                 <div class="icon hidden-xs hidden-sm">
-                  <span class="glyphicon glyphicon-pencil"></span>
+                  <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
                 </div>
                 <p>Edit</p>
               </a>
             </div>
-            <!-- Option 4 Disable Collection -->
+            <!-- Option 3 Disable Collection -->
             <div class="colCardOpts">
               <a href="#" data-toggle="modal" data-target="#dsbleCllctn{{$collcntNm->id}}">
                 <div class="icon hidden-xs hidden-sm">
-                  <span class="glyphicon glyphicon-trash"></span>
+                  <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
                 </div>
                 <p>Disable</p>
               </a>
@@ -83,7 +83,7 @@
           <div class="modal-content">
             <div class="modal-header">
               <button type="button" class="close" data-dismiss="modal">&times;</button>
-              <h3 class="modal-title">Edit Collection</h3>
+              <span class="modal-title">Edit Collection</span>
             </div>
 
             <div class="modal-body">
@@ -93,7 +93,7 @@
                   <input id="id" name="id" type="hidden" value="{{$collcntNm->id}}" />
 
                   <div class="form-group{{ $errors->has('clctnName') ? ' has-error' : '' }}">
-                      <label for="clctnName" class="col-md-3 control-label">Collection Name</label>
+                      <span for="clctnName" class="col-md-3 control-label">Collection Name</span>
 
                       <div class="col-md-6">
                           <input id="clctnName" type="text" class="form-control" name="clctnName" value="{{$collcntNm->clctnName}}" required autofocus>
@@ -123,7 +123,7 @@
           <div class="modal-content">
             <div class="modal-header">
               <button type="button" class="close" data-dismiss="modal">&times;</button>
-              <h3 class="modal-title">Disable Collection</h3>
+              <span class="modal-title">Disable Collection</span>
             </div>
 
             <div class="modal-body">
@@ -196,7 +196,7 @@
           <div class="modal-content">
             <div class="modal-header">
               <button type="button" class="close" data-dismiss="modal">&times;</button>
-              <h3 class="modal-title">Enable Collection</h3>
+              <span class="modal-title">Enable Collection</span>
             </div>
 
             <div class="modal-body">
@@ -239,7 +239,7 @@
         <div class="modal-content">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal">&times;</button>
-            <h3 class="modal-title">Create Collection(s)</h3>
+            <span class="modal-title">Create Collection(s)</span>
           </div>
 
           <div class="modal-body">
