@@ -359,7 +359,7 @@
               <form class="form-horizontal" role="form" method="POST" action="{{ url('user/promote') }}">
                   {{ csrf_field() }}
 
-                  <input id="id" name="id" type="hidden" value="{{$usr->id}}" />
+                  <input id="id_{{$key}}" name="id" type="hidden" value="{{$usr->id}}" />
 
                   <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
                       <label for="name_{{$key}}" class="col-md-4 control-label">username</label>
