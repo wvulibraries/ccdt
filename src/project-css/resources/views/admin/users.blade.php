@@ -26,12 +26,12 @@
           <div class="icon hidden-xs hidden-sm">
             <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
           </div>
-          <h4>Create User(s)</h4>
+          <h2>Create User(s)</h2>
         </div>
       </div>
     </a>
 
-    @foreach($usrs as $usr)
+    @foreach($usrs as $key => $usr)
 
       @if($usr->isAdmin)
       <!-- Checks if the admin is not yours -->
@@ -99,7 +99,7 @@
               <form class="form-horizontal" role="form" method="POST" action="{{ url('user/allow') }}">
                   {{ csrf_field() }}
 
-                  <input id="id" name="id" type="hidden" value="{{$usr->id}}" />
+                  <input id="id_{{$key}}" name=id_{{$key}}" type="hidden" value="{{$usr->id}}" />
 
                   <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
                     <div class="modal-footer">
@@ -139,7 +139,7 @@
               <form class="form-horizontal" role="form" method="POST" action="{{ url('user/restrict') }}">
                   {{ csrf_field() }}
 
-                  <input id="id" name="id" type="hidden" value="{{$usr->id}}" />
+                  <input id="id_{{$key}}" name="id" type="hidden" value="{{$usr->id}}" />
 
                   <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
                     <div class="modal-footer">
@@ -185,7 +185,8 @@
                   <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
 
                       <div class="col-md-6">
-                          <input id="name" type="text" class="form-control" name="name" required autofocus>
+                          <label for="name_{{$key}}"> Confirm Username </label>
+                          <input id="name_{{$key}}" type="text" class="form-control" name="name" required autofocus>
                       </div>
                       <div class="col-md-3">
                           <button type="submit" class="btn btn-primary">
@@ -210,7 +211,7 @@
 
     @endforeach
 
-    @foreach($usrs as $usr)
+    @foreach($usrs as $key => $usr)
 
       @if(!($usr->isAdmin))
 
@@ -361,9 +362,9 @@
                   <input id="id" name="id" type="hidden" value="{{$usr->id}}" />
 
                   <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
-
+                      <label for="name_{{$key}}" class="col-md-4 control-label">username</label>
                       <div class="col-md-6">
-                          <input id="name" type="text" class="form-control" name="name" required autofocus>
+                          <input id="name_{{$key}}" type="text" class="form-control" name="name" required autofocus>
                       </div>
                       <div class="col-md-3">
                           <button type="submit" class="btn btn-primary">
