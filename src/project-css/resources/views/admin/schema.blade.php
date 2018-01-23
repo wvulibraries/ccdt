@@ -24,13 +24,13 @@
         <!-- CSRF Fields -->
         {{ csrf_field() }}
         <!-- Form group for the column name -->
-        <label for="kCnt"> Collection Count </label>
+        <label class="hidden" for="kCnt"> Collection Count </label>
         <input id="kCnt" type="hidden" class="form-control" name="kCnt" value="{{count($schema)}}">
-        <label for="tblNme"> Table Name </label>
+        <label class="hidden" for="tblNme"> Table Name </label>
         <input id="tblNme" type="hidden" class="form-control" name="tblNme" value="{{$tblNme}}">
-        <label for="collctnId"> Collection ID </label>
+        <label class="hidden" for="collctnId"> Collection ID </label>
         <input id="collctnId" type="hidden" class="form-control" name="collctnId" value="{{$collctnId}}">
-        <label for="fltFile"> FlatFile </label>
+        <label class="hidden" for="fltFile"> FlatFile </label>
         <input id="fltFile" type="hidden" class="form-control" name="fltFile" value="{{$fltFile}}">
         <!-- Heading for the table -->
         <thead>
