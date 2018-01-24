@@ -3,7 +3,7 @@ services:
     web:
         build:
             context: ./
-            dockerfile: serverConfiguration/deploy/web.docker
+            dockerfile: serverConfiguration/deploy/dev.web.docker
         container_name: nginx
         volumes:
             - ./src/project-css/:/var/www

@@ -134,7 +134,7 @@
 
             <div class="modal-body">
               <p>
-                Are you sure you want to restrict access to <b>{{$usr->name}}</b> user?
+                Are you sure you want to restrict access to <strong>{{$usr->name}}</strong> user?
               </p>
               <form class="form-horizontal" role="form" method="POST" action="{{ url('user/restrict') }}">
                   {{ csrf_field() }}
@@ -175,7 +175,7 @@
 
             <div class="modal-body">
               <p>
-                Are you sure you want to remove <b>{{$usr->name}}</b> as admin? Please enter user name below to confirm.
+                Are you sure you want to remove <strong>{{$usr->name}}</strong> as admin? Please enter user name below to confirm.
               </p>
               <form class="form-horizontal" role="form" method="POST" action="{{ url('user/demote') }}">
                   {{ csrf_field() }}
@@ -273,7 +273,7 @@
 
             <div class="modal-body">
               <p>
-                Are you sure you want to Allow access to <b>{{$usr->name}}</b> user?
+                Are you sure you want to Allow access to <strong>{{$usr->name}}</strong> user?
               </p>
               <form class="form-horizontal" role="form" method="POST" action="{{ url('user/allow') }}">
                   {{ csrf_field() }}
@@ -313,7 +313,7 @@
 
             <div class="modal-body">
               <p>
-                Are you sure you want to restrict access to <b>{{$usr->name}}</b> user?
+                Are you sure you want to restrict access to <strong>{{$usr->name}}</strong> user?
               </p>
               <form class="form-horizontal" role="form" method="POST" action="{{ url('user/restrict') }}">
                   {{ csrf_field() }}
@@ -354,7 +354,7 @@
 
             <div class="modal-body">
               <p>
-                Are you sure you want to promote <b>{{$usr->name}}</b> as admin? Please enter user name below to confirm.
+                Are you sure you want to promote <strong>{{$usr->name}}</strong> as admin? Please enter user name below to confirm.
               </p>
               <form class="form-horizontal" role="form" method="POST" action="{{ url('user/promote') }}">
                   {{ csrf_field() }}

@@ -49,9 +49,9 @@
       <div class="row table-list">
         <div class="table-item col-xs-12 col-sm-8 col-md-8 well">
             <p>
-              <b>{{$key+1}}.</b>
-              <b>{{$tbl->tblNme}}</b> belongs to
-              <b>{{$tbl->collection->clctnName}}</b>
+              <strong>{{$key+1}}.</strong>
+              <strong>{{$tbl->tblNme}}</strong> belongs to
+              <strong>{{$tbl->collection->clctnName}}</strong>
             </p>
         </div>
 

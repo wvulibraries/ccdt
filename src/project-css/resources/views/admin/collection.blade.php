@@ -128,7 +128,7 @@
 
             <div class="modal-body">
               <p>
-                Are you sure you want to disable <b>{{$collcntNm->clctnName}}</b> collection? All the tables associated with this collection will be disabled as well. Please enter collection name below to confirm.
+                Are you sure you want to disable <strong>{{$collcntNm->clctnName}}</strong> collection? All the tables associated with this collection will be disabled as well. Please enter collection name below to confirm.
               </p>
               <form class="form-horizontal" role="form" method="POST" action="{{ url('collection/disable') }}">
                   {{ csrf_field() }}
@@ -201,7 +201,7 @@
 
             <div class="modal-body">
               <p>
-                Are you sure you want to enable <b>{{$collcntNm->clctnName}}</b> collection?
+                Are you sure you want to enable <strong>{{$collcntNm->clctnName}}</strong> collection?
               </p>
               <form class="form-horizontal" role="form" method="POST" action="{{ url('collection/enable') }}">
                   {{ csrf_field() }}
