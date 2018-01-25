@@ -42,7 +42,7 @@
     </div>
 
     <!-- Show existing tables -->
-    @foreach($tbls as $key=>$tbl)
+    @foreach($tbls as $key => $tbl)
       <!-- Check for the access -->
       @if($tbl->hasAccess)
       <!-- Show the tables -->

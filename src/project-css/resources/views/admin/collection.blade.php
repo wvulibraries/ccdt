@@ -31,7 +31,7 @@
       </div>
     </a>
 
-    @foreach($collcntNms as $collcntNm)
+    @foreach($collcntNms as $key => $collcntNm)
       <!-- Show the currently enabled cololections -->
       @if($collcntNm->isEnabled)
       <div class="col-xs-12 col-sm-12 col-md-12">
@@ -90,13 +90,13 @@
               <form class="form-horizontal" role="form" method="POST" action="{{ url('collection/edit') }}">
                   {{ csrf_field() }}
 
-                  <input id="id" name="id" type="hidden" value="{{$collcntNm->id}}" />
+                  <input id="clctnEditId" name="id" type="hidden" value="{{$collcntNm->id}}" />
 
                   <div class="form-group{{ $errors->has('clctnName') ? ' has-error' : '' }}">
-                      <span for="clctnName" class="col-md-3 control-label">Collection Name</span>
 
                       <div class="col-md-6">
-                          <input id="clctnName" type="text" class="form-control" name="clctnName" value="{{$collcntNm->clctnName}}" required autofocus>
+                          <span for="clctnEditName_{{$key}}" class="col-md-3 control-label">Collection Name</span>
+                          <input id="clctnEditName_{{$key}}" type="text" class="form-control" name="clctnName" value="{{$collcntNm->clctnName}}" required autofocus>
                       </div>
                       <div class="col-md-3">
                           <button type="submit" class="btn btn-primary">
@@ -132,14 +132,14 @@
               </p>
               <form class="form-horizontal" role="form" method="POST" action="{{ url('collection/disable') }}">
                   {{ csrf_field() }}
-                  <label for="id"> Collection ID </label>
-                  <input id="id" name="id" type="hidden" value="{{$collcntNm->id}}" />
+                  <label for="clctnDisableId"> Collection ID </label>
+                  <input id="clctnDisableId" name="id" type="hidden" value="{{$collcntNm->id}}" />
 
                   <div class="form-group{{ $errors->has('clctnName') ? ' has-error' : '' }}">
 
                       <div class="col-md-6">
-                          <span for="clctnName"> Collection Name </span>
-                          <input id="clctnName" type="text" class="form-control" name="clctnName" required autofocus>
+                          <span for="clctnDisableName_{{$key}}"> Collection Name </span>
+                          <input id="clctnDisableName_{{$key}}" type="text" class="form-control" name="clctnName" required autofocus>
                       </div>
                       <div class="col-md-3">
                           <button type="submit" class="btn btn-primary">
@@ -163,7 +163,7 @@
 
     <!-- Disabled collections are shown here -->
     <!-- Iterate to show the existing collection -->
-    @foreach($collcntNms as $collcntNm)
+    @foreach($collcntNms as $key => $collcntNm)
       <!-- Show the currently enabled cololections -->
       @if(!($collcntNm->isEnabled))
       <div class="col-xs-12 col-sm-12 col-md-12">
@@ -205,8 +205,8 @@
               </p>
               <form class="form-horizontal" role="form" method="POST" action="{{ url('collection/enable') }}">
                   {{ csrf_field() }}
-                  <label for="id" class="col-md-3 control-label">Collection ID</label>
-                  <input id="id" name="id" type="hidden" value="{{$collcntNm->id}}" />
+                  <label for="enblCllctnId" class="col-md-3 control-label">Collection ID</label>
+                  <input id="enblCllctnId" name="id" type="hidden" value="{{$collcntNm->id}}" />
 
                   <div class="form-group{{ $errors->has('clctnName') ? ' has-error' : '' }}">
                     <div class="modal-footer">
@@ -247,10 +247,10 @@
                 {{ csrf_field() }}
 
                 <div class="form-group{{ $errors->has('clctnName') ? ' has-error' : '' }}">
-                    <label for="clctnName" class="col-md-3 control-label">Collection Name</label>
 
                     <div class="col-md-6">
-                        <input id="clctnName" type="text" class="form-control" name="clctnName" required autofocus>
+                        <label for="clctnCreateName" class="col-md-3 control-label">Collection Name</label>
+                        <input id="clctnCreateName" type="text" class="form-control" name="clctnName" required autofocus>
                     </div>
                     <div class="col-md-3">
                         <button type="submit" class="btn btn-primary">

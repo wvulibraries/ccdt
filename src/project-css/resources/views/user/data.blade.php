@@ -54,7 +54,7 @@
         <a href="{{ url('/data', [$tblId, $rcrd->id]) }}">
             @foreach($clmnNmes as $key => $clmnNme)
               @if($key < 5)
-                <span class="card-items"><b>{{$clmnNme}}</b>: {{$rcrd->$clmnNme}}</span>
+                <span class="card-items"><strong>{{$clmnNme}}</strong>: {{$rcrd->$clmnNme}}</span>
               @endif
             @endforeach
         </a>
