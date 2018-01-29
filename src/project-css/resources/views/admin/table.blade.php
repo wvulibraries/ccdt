@@ -4,7 +4,7 @@
 @section('content')
 <div class="headingWrapper">
   <!-- Heading -->
-  <div class="container adminHeading">
+  <div class="container adminHeading" role="banner">
     <span class="text-center">
       <h1><a href="{{ url('table') }}">Table(s)</a></h1>
     </span>
@@ -18,7 +18,7 @@
 
 <!-- Create -->
 <div class="tableWrapper">
-  <div class="container">
+  <div class="container" role="main">
 
     <!-- Head Table Cards -->
     <div class="row">
@@ -46,7 +46,7 @@
       <!-- Check for the access -->
       @if($tbl->hasAccess)
       <!-- Show the tables -->
-      <div class="row table-list">
+      <div class="row table-list" id="{{$tbl->tblNme}}">
         <div class="table-item col-xs-12 col-sm-8 col-md-8 well">
             <p>
               <strong>{{$key+1}}.</strong>
@@ -61,7 +61,7 @@
           <div> Records </div>
         </a>
 
-        <a href="{{ url('/upload',['tableId' => $tbl->id]) }}" class="table-item col-xs-12 col-sm-2 col-md-2 well dashCard">
+        <a href="{{ url('/upload',['tableId' => $tbl->id]) }}" aria-labelledby="{{$tbl->tblNme}}" class="table-item col-xs-12 col-sm-2 col-md-2 well dashCard">
           <span class="glyphicon glyphicon-upload" aria-hidden="true"></span>
           <div><br/> Upload Files</div>
         </a>

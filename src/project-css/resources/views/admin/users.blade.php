@@ -4,7 +4,7 @@
 @section('content')
 <div class="headingWrapper">
   <!-- Heading -->
-  <div class="container adminHeading">
+  <div class="container adminHeading" role="banner">
     <span class="text-center">
       <h1><a href="{{ url('users') }}">User(s)</a></h1>
       <p>Create, view and manage users here.</p>
@@ -17,7 +17,7 @@
 
 <!-- Display controls and cards here -->
 <div class="usrWrapper">
-  <div class="container">
+  <div class="container" role="main">
 
     <!-- Header Cards -->
     <a href="{{ url('/register') }}">
@@ -94,12 +94,12 @@
 
             <div class="modal-body">
               <p>
-                Are you sure you want to Allow access to <b>{{$usr->name}}</b> user?
+                Are you sure you want to Allow access to <strong>{{$usr->name}}</strong> user?
               </p>
               <form class="form-horizontal" role="form" method="POST" action="{{ url('user/allow') }}">
                   {{ csrf_field() }}
 
-                  <input id="id_{{$key}}" name=id_{{$key}}" type="hidden" value="{{$usr->id}}" />
+                  <input id="id_{{$key}}" name="userAllowId" type="hidden" value="{{$usr->id}}" />
 
                   <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
                     <div class="modal-footer">
@@ -139,7 +139,7 @@
               <form class="form-horizontal" role="form" method="POST" action="{{ url('user/restrict') }}">
                   {{ csrf_field() }}
 
-                  <input id="id_{{$key}}" name="id" type="hidden" value="{{$usr->id}}" />
+                  <input id="id_{{$key}}" name="userRestrictId" type="hidden" value="{{$usr->id}}" />
 
                   <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
                     <div class="modal-footer">
@@ -177,10 +177,10 @@
               <p>
                 Are you sure you want to remove <strong>{{$usr->name}}</strong> as admin? Please enter user name below to confirm.
               </p>
-              <form class="form-horizontal" role="form" method="POST" action="{{ url('user/demote') }}">
+              <form class="form-horizontal" name="userDemote" role="form" method="POST" action="{{ url('user/demote') }}">
                   {{ csrf_field() }}
 
-                  <input id="id" name="id" type="hidden" value="{{$usr->id}}" />
+                  <input id="id_{{$key}}" name="userDemoteId" type="hidden" value="{{$usr->id}}" />
 
                   <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
 
@@ -275,10 +275,10 @@
               <p>
                 Are you sure you want to Allow access to <strong>{{$usr->name}}</strong> user?
               </p>
-              <form class="form-horizontal" role="form" method="POST" action="{{ url('user/allow') }}">
+              <form class="form-horizontal" name="userAllow" role="form" method="POST" action="{{ url('user/allow') }}">
                   {{ csrf_field() }}
 
-                  <input id="id" name="id" type="hidden" value="{{$usr->id}}" />
+                  <input id="id_{{$key}}" name="userAllowId" type="hidden" value="{{$usr->id}}" />
 
                   <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
                     <div class="modal-footer">
@@ -315,10 +315,10 @@
               <p>
                 Are you sure you want to restrict access to <strong>{{$usr->name}}</strong> user?
               </p>
-              <form class="form-horizontal" role="form" method="POST" action="{{ url('user/restrict') }}">
+              <form class="form-horizontal" name="userRestrict" role="form" method="POST" action="{{ url('user/restrict') }}">
                   {{ csrf_field() }}
 
-                  <input id="id" name="id" type="hidden" value="{{$usr->id}}" />
+                  <input id="id_{{$key}}" name="userRestrictId" type="hidden" value="{{$usr->id}}" />
 
                   <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
                     <div class="modal-footer">
@@ -356,10 +356,10 @@
               <p>
                 Are you sure you want to promote <strong>{{$usr->name}}</strong> as admin? Please enter user name below to confirm.
               </p>
-              <form class="form-horizontal" role="form" method="POST" action="{{ url('user/promote') }}">
+              <form class="form-horizontal" name="userPromote" role="form" method="POST" action="{{ url('user/promote') }}">
                   {{ csrf_field() }}
 
-                  <input id="id_{{$key}}" name="id" type="hidden" value="{{$usr->id}}" />
+                  <input id="id_{{$key}}" name="userPromoteId" type="hidden" value="{{$usr->id}}" />
 
                   <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
                       <label for="name_{{$key}}" class="col-md-4 control-label">username</label>

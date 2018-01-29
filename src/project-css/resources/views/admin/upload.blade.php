@@ -4,7 +4,7 @@
 @section('content')
 <div class="headingWrapper">
   <!-- Heading -->
-  <div class="container adminHeading">
+  <div class="container adminHeading" name="adminHeading" role="banner">
     <span class="text-center">
       <h1><a href="{{ url('/upload', $tblId) }}">Upload Linked File(s)</a></h1>
       <p>Please upload files that will be linked to this table.</p>
@@ -18,7 +18,7 @@
 @include('admin/messages')
 
 <!-- Upload Form -->
-<div class="container">
+<div class="container" role="main">
 
     <div class="row">
         <div class="col-xs-12 col-sm-12 col-md-12">

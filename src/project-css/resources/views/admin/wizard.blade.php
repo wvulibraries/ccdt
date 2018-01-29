@@ -4,7 +4,7 @@
 @section('content')
 <div class="headingWrapper">
   <!-- Heading -->
-  <div class="container adminHeading">
+  <div class="container adminHeading" role="banner">
     <span class="text-center">
       <h1><a href="{{ url('table/create') }}">Create Table(s) Wizard</a></h1>
       <p>Please upload the flat file using the import option or use select if you have already copied the file.</p>
@@ -16,7 +16,7 @@
 <hr/>
 
 <!-- Wizard Form -->
-<div class="container">
+<div class="container" role="main">
   <h2 class="text-center">Step1: Select or Import</h2>
   <!-- Separator -->
   <hr/>
@@ -27,7 +27,7 @@
                 <div class="panel-heading"><a data-toggle="collapse" href="#imprtPnlBdy"><h3>Import from flat file</h3></a></div>
                 <div id="imprtPnlBdy" class="panel-collapse collapse">
                   <div class="panel-body">
-                      <form class="form-horizontal" role="form" method="POST" enctype="multipart/form-data" action="{{ url('/table/create/import') }}">
+                      <form class="form-horizontal" name="uploadFltFile" role="form" method="POST" enctype="multipart/form-data" action="{{ url('/table/create/import') }}">
                           {{ csrf_field() }}
                           <!-- Table name -->
                           <div class="form-group{{ $errors->has('imprtTblNme') ? ' has-error' : '' }}">
@@ -77,7 +77,7 @@
                   <div class="panel-heading"><a data-toggle="collapse" href="#slctPnlBdy"><h3>Select from directory</h3></a></div>
                   <div id="slctPnlBdy" class="panel-collapse collapse">
                     <div class="panel-body">
-                        <form class="form-horizontal" role="form" method="POST" action="{{ url('/table/create/select') }}">
+                        <form class="form-horizontal" name="selectFltFile" role="form" method="POST" action="{{ url('/table/create/select') }}">
                             {{ csrf_field() }}
                             <!-- Table name -->
                             <div class="form-group{{ $errors->has('slctTblNme') ? ' has-error' : '' }}">

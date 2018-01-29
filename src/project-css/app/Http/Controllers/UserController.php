@@ -31,7 +31,7 @@ class UserController extends Controller {
     */
     public function restrict(Request $request) {
         // Find the user
-        $thisUsr = User::findorFail($request->id);
+        $thisUsr = User::findorFail($request->userRestrictId);
         // Set the permissions
         $thisUsr->hasAccess = false;
         // Save the user
@@ -45,7 +45,7 @@ class UserController extends Controller {
   */
   public function allow(Request $request) {
     // Create the collection name
-    $thisUsr = User::findorFail($request->id);
+    $thisUsr = User::findorFail($request->userAllowId);
     $thisUsr->hasAccess = true;
     $thisUsr->save();
     return redirect()->route('userIndex');
@@ -56,7 +56,7 @@ class UserController extends Controller {
   */
   public function promote(Request $request) {
     // Create the collection name
-    $thisUsr = User::findorFail($request->id);
+    $thisUsr = User::findorFail($request->userPromoteId);
     if (strcasecmp($thisUsr->name, $request->name) == 0) {
       $thisUsr->isAdmin = true;
       $thisUsr->save();
@@ -72,7 +72,7 @@ class UserController extends Controller {
   */
   public function demote(Request $request) {
     // Create the collection name
-    $thisUsr = User::findorFail($request->id);
+    $thisUsr = User::findorFail($request->userDemoteId);
     if (strcasecmp($thisUsr->name, $request->name) == 0) {
       $thisUsr->isAdmin = false;
       $thisUsr->save();
