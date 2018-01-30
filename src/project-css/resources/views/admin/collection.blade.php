@@ -4,7 +4,7 @@
 @section('content')
 <div class="headingWrapper">
   <!-- Heading -->
-  <div class="container adminHeading">
+  <div class="container adminHeading" role="banner">
     <span class="text-center">
       <h1><a href="{{ url('collection') }}">Collection(s)</a></h1>
       <p>Create, import and manage collections here.</p>
@@ -16,7 +16,7 @@
 <hr/>
 
 <!-- Create or select option -->
-<div class="collectionWrapper">
+<div class="collectionWrapper" role="main">
   <div class="container">
 
     <!-- Head Collection Card -->
@@ -90,13 +90,13 @@
               <form class="form-horizontal" role="form" method="POST" action="{{ url('collection/edit') }}">
                   {{ csrf_field() }}
 
-                  <input id="clctnEditId" name="id" type="hidden" value="{{$collcntNm->id}}" />
+                  <input id="clctnEditId_{{$key}}" name="id" type="hidden" value="{{$collcntNm->id}}" />
 
                   <div class="form-group{{ $errors->has('clctnName') ? ' has-error' : '' }}">
 
                       <div class="col-md-6">
                           <span for="clctnEditName_{{$key}}" class="col-md-3 control-label">Collection Name</span>
-                          <input id="clctnEditName_{{$key}}" type="text" class="form-control" name="clctnName" value="{{$collcntNm->clctnName}}" required autofocus>
+                          <input id="clctnEditName_{{$key}}" type="text" aria-label="Enter Collection Name" class="form-control" name="clctnName" value="{{$collcntNm->clctnName}}" required autofocus>
                       </div>
                       <div class="col-md-3">
                           <button type="submit" class="btn btn-primary">
@@ -132,14 +132,14 @@
               </p>
               <form class="form-horizontal" role="form" method="POST" action="{{ url('collection/disable') }}">
                   {{ csrf_field() }}
-                  <label for="clctnDisableId"> Collection ID </label>
-                  <input id="clctnDisableId" name="id" type="hidden" value="{{$collcntNm->id}}" />
+                  <label for="clctnDisableId_{{$key}}"> Collection ID </label>
+                  <input id="clctnDisableId_{{$key}}" name="id" type="hidden" value="{{$collcntNm->id}}" />
 
                   <div class="form-group{{ $errors->has('clctnName') ? ' has-error' : '' }}">
 
                       <div class="col-md-6">
                           <span for="clctnDisableName_{{$key}}"> Collection Name </span>
-                          <input id="clctnDisableName_{{$key}}" type="text" class="form-control" name="clctnName" required autofocus>
+                          <input id="clctnDisableName_{{$key}}" type="text" aria-label="Enter Collection Name" class="form-control" name="clctnName" required autofocus>
                       </div>
                       <div class="col-md-3">
                           <button type="submit" class="btn btn-primary">

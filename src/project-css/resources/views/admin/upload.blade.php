@@ -15,10 +15,10 @@
 <!-- Separation -->
 <hr/>
 
-@include('admin/messages')
-
 <!-- Upload Form -->
 <div class="container" role="main">
+  
+    @include('admin/messages')
 
     <div class="row">
         <div class="col-xs-12 col-sm-12 col-md-12">

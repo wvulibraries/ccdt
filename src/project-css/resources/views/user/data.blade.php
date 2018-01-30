@@ -5,7 +5,7 @@
 @section('content')
 <div class="headingWrapper">
   <!-- Heading -->
-  <div class="container adminHeading">
+  <div class="container adminHeading" name="adminHeading" role="banner">
     <span class="text-center">
       <h1><a href="{{ url('/data',$tblId) }}">{{$tblNme}} Records</a></h1>
       <p>Browse through the records or search here.</p>
@@ -19,7 +19,7 @@
 <!-- Separation -->
 <hr/>
 
-<div class="dataWrppr">
+<div class="dataWrppr" role="main">
 
     <div class="container">
       <div class="col-xs-12 col-sm-12 col-md-12">

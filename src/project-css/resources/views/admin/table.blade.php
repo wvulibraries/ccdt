@@ -14,11 +14,11 @@
 <!-- Separation -->
 <hr/>
 
-@include('admin/messages')
-
 <!-- Create -->
 <div class="tableWrapper">
   <div class="container" role="main">
+
+    @include('admin/messages')
 
     <!-- Head Table Cards -->
     <div class="row">
