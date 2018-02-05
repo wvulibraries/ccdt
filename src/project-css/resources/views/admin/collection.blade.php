@@ -87,7 +87,7 @@
             </div>
 
             <div class="modal-body">
-              <form class="form-horizontal" role="form" method="POST" action="{{ url('collection/edit') }}">
+              <form class="form-horizontal" name="clctnEdit" aria-label="clctnEdit{{$collcntNm->clctnName}}" role="form" method="POST" action="{{ url('collection/edit') }}">
                   {{ csrf_field() }}
 
                   <input id="clctnEditId_{{$key}}" name="id" type="hidden" value="{{$collcntNm->id}}" />
@@ -130,7 +130,7 @@
               <p>
                 Are you sure you want to disable <strong>{{$collcntNm->clctnName}}</strong> collection? All the tables associated with this collection will be disabled as well. Please enter collection name below to confirm.
               </p>
-              <form class="form-horizontal" role="form" method="POST" action="{{ url('collection/disable') }}">
+              <form class="form-horizontal" name="clctnDisable" aria-label="clctnDisable{{$collcntNm->clctnName}}" role="form" method="POST" action="{{ url('collection/disable') }}">
                   {{ csrf_field() }}
                   <label for="clctnDisableId_{{$key}}"> Collection ID </label>
                   <input id="clctnDisableId_{{$key}}" name="id" type="hidden" value="{{$collcntNm->id}}" />
@@ -203,7 +203,7 @@
               <p>
                 Are you sure you want to enable <strong>{{$collcntNm->clctnName}}</strong> collection?
               </p>
-              <form class="form-horizontal" role="form" method="POST" action="{{ url('collection/enable') }}">
+              <form class="form-horizontal" name="clctnEnable" aria-label="clctnEnable{{$collcntNm->clctnName}}" role="form" method="POST" action="{{ url('collection/enable') }}">
                   {{ csrf_field() }}
                   <label for="enblCllctnId" class="col-md-3 control-label">Collection ID</label>
                   <input id="enblCllctnId" name="id" type="hidden" value="{{$collcntNm->id}}" />
@@ -243,7 +243,7 @@
           </div>
 
           <div class="modal-body">
-            <form class="form-horizontal" role="form" method="POST" action="{{ url('collection/create') }}">
+            <form class="form-horizontal" name="clctnCreate" aria-label="clctnCreate" role="form" method="POST" action="{{ url('collection/create') }}">
                 {{ csrf_field() }}
 
                 <div class="form-group{{ $errors->has('clctnName') ? ' has-error' : '' }}">

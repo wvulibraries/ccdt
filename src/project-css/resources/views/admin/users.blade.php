@@ -82,11 +82,8 @@
                 </a>
               @endif
             </div>
-
           </div>
-
         </div>
-
       </div>
 
       <!-- Modals -->
@@ -105,10 +102,10 @@
               <p>
                 Are you sure you want to Allow access to <strong>{{$usr->name}}</strong> user?
               </p>
-              <form class="form-horizontal" name="userAllow" aria-label="AllowUserAccess" role="form" method="POST" action="{{ url('user/allow') }}">
+              <form class="form-horizontal" name="userAllow" aria-label="AllowUserAccess{{$usr->name}}" role="form" method="POST" action="{{ url('user/allow') }}">
                   {{ csrf_field() }}
 
-                  <input id="id_{{$key}}" name="userAllowId" type="hidden" value="{{$usr->id}}" />
+                  <input id="userAllowId_{{$key}}" name="userAllowId" type="hidden" value="{{$usr->id}}" />
 
                   <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
                     <div class="modal-footer">
@@ -145,10 +142,10 @@
               <p>
                 Are you sure you want to restrict access to <strong>{{$usr->name}}</strong> user?
               </p>
-              <form class="form-horizontal" name="userRestrict" aria-label="RestrictUserAccess" role="form" method="POST" action="{{ url('user/restrict') }}">
+              <form class="form-horizontal" name="userRestrict" aria-label="RestrictUserAccess_{{$usr->name}}" role="form" method="POST" action="{{ url('user/restrict') }}">
                   {{ csrf_field() }}
 
-                  <input id="id_{{$key}}" name="userRestrictId" type="hidden" value="{{$usr->id}}" />
+                  <input id="userRestrictId_{{$key}}" name="userRestrictId" type="hidden" value="{{$usr->id}}" />
 
                   <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
                     <div class="modal-footer">
@@ -186,16 +183,16 @@
               <p>
                 Are you sure you want to remove <strong>{{$usr->name}}</strong> as admin? Please enter user name below to confirm.
               </p>
-              <form class="form-horizontal" name="userDemote" aria-label="DemoteAdminToUser" role="form" method="POST" action="{{ url('user/demote') }}">
+              <form class="form-horizontal" name="userDemote" aria-label="DemoteAdminToUser_{{$usr->name}}" role="form" method="POST" action="{{ url('user/demote') }}">
                   {{ csrf_field() }}
 
-                  <input id="id_{{$key}}" name="userDemoteId" type="hidden" value="{{$usr->id}}" />
+                  <input id="userDemoteId_{{$key}}" name="userDemoteId" type="hidden" value="{{$usr->id}}" />
 
                   <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
 
                       <div class="col-md-6">
-                          <label for="name_{{$key}}"> Confirm Username </label>
-                          <input id="name_{{$key}}" type="text" class="form-control" name="name" required autofocus>
+                          <label for="userDemoteName_{{$key}}"> Confirm Username </label>
+                          <input id="userDemoteName_{{$key}}" type="text" class="form-control" name="name" required autofocus>
                       </div>
                       <div class="col-md-3">
                           <button type="submit" class="btn btn-primary">
@@ -229,15 +226,15 @@
               <p>
                 Are you sure you want to promote <strong>{{$usr->name}}</strong> as admin? Please enter user name below to confirm.
               </p>
-              <form class="form-horizontal" name="userPromote" aria-label="PromoteUserToAdmin" role="form" method="POST" action="{{ url('user/promote') }}">
+              <form class="form-horizontal" name="userPromote" aria-label="PromoteUserToAdmin_{{$usr->name}}" role="form" method="POST" action="{{ url('user/promote') }}">
                   {{ csrf_field() }}
 
                   <input id="userPromoteId_{{$key}}" name="userPromoteId" type="hidden" value="{{$usr->id}}" />
 
                   <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
-                      <label for="name_{{$key}}" class="col-md-4 control-label">username</label>
+                      <label for="userPromoteName_{{$key}}" class="col-md-4 control-label">username</label>
                       <div class="col-md-6">
-                          <input id="name_{{$key}}" type="text" class="form-control" name="name" required autofocus>
+                          <input id="userPromoteName_{{$key}}" type="text" class="form-control" name="name" required autofocus>
                       </div>
                       <div class="col-md-3">
                           <button type="submit" class="btn btn-primary">

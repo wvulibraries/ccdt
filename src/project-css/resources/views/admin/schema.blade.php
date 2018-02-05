@@ -4,7 +4,7 @@
 @section('content')
 <div class="headingWrapper">
   <!-- Heading -->
-  <div class="container adminHeading">
+  <div class="container adminHeading" role="banner">
     <span class="text-center">
       <h1><a href="{{ url('table/schema') }}">Edit Schema</a></h1>
       <p>Please create the schema that fits your database schema. Usually Correspondence data are included with a readme file which can be used to create the schema</p>
@@ -16,9 +16,9 @@
 <hr/>
 
 <!-- Form to show the schema -->
-<div class="container schemaWrapper">
+<div class="container schemaWrapper" role="main">
   <div class="table-responsive">
-    <table class="table">
+    <table class="table" role="table">
       <!-- Form to submit the final schema -->
       <form class="form-horizontal" role="form" method="POST" action="{{url('table/create/finalize')}}">
         <!-- CSRF Fields -->

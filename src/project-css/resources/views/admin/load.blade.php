@@ -5,7 +5,7 @@
 
 <div class="headingWrapper">
   <!-- Heading -->
-  <div class="container adminHeading">
+  <div class="container adminHeading" name="adminHeading" role="banner">
     <span class="text-center">
       <h1><a href="{{ url('table/load') }}">Load Data</a></h1>
       <p>Additional options to ensure the data is handled just the way you want.</p>
