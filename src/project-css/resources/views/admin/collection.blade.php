@@ -4,7 +4,7 @@
 @section('content')
 <div class="headingWrapper">
   <!-- Heading -->
-  <div class="container adminHeading">
+  <div class="container adminHeading" role="banner">
     <span class="text-center">
       <h1><a href="{{ url('collection') }}">Collection(s)</a></h1>
       <p>Create, import and manage collections here.</p>
@@ -16,7 +16,7 @@
 <hr/>
 
 <!-- Create or select option -->
-<div class="collectionWrapper">
+<div class="collectionWrapper" role="main">
   <div class="container">
 
     <!-- Head Collection Card -->
@@ -24,14 +24,14 @@
       <div class="col-xs-12 col-sm-12 col-md-12">
         <div class="colHeadCard">
           <div class="icon hidden-xs hidden-sm">
-            <span class="glyphicon glyphicon-plus"></span>
+            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
           </div>
-          <h4>Create Collection(s)</h4>
+          <span class="title">Create Collection(s)</span>
         </div>
       </div>
     </a>
 
-    @foreach($collcntNms as $collcntNm)
+    @foreach($collcntNms as $key => $collcntNm)
       <!-- Show the currently enabled cololections -->
       @if($collcntNm->isEnabled)
       <div class="col-xs-12 col-sm-12 col-md-12">
@@ -46,25 +46,25 @@
             <div class="colCardOpts">
               <a href="{{url('table/create')}}">
                 <div class="icon hidden-xs hidden-sm">
-                  <span class="glyphicon glyphicon-plus"></span>
+                  <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                 </div>
                 <p>Add Tables</p>
               </a>
             </div>
-            <!-- Option 3 Edit Collection -->
+            <!-- Option 2 Edit Collection -->
             <div class="colCardOpts">
               <a href="#" data-toggle="modal" data-target="#editCllctn{{$collcntNm->id}}">
                 <div class="icon hidden-xs hidden-sm">
-                  <span class="glyphicon glyphicon-pencil"></span>
+                  <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
                 </div>
                 <p>Edit</p>
               </a>
             </div>
-            <!-- Option 4 Disable Collection -->
+            <!-- Option 3 Disable Collection -->
             <div class="colCardOpts">
               <a href="#" data-toggle="modal" data-target="#dsbleCllctn{{$collcntNm->id}}">
                 <div class="icon hidden-xs hidden-sm">
-                  <span class="glyphicon glyphicon-trash"></span>
+                  <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
                 </div>
                 <p>Disable</p>
               </a>
@@ -83,20 +83,20 @@
           <div class="modal-content">
             <div class="modal-header">
               <button type="button" class="close" data-dismiss="modal">&times;</button>
-              <h3 class="modal-title">Edit Collection</h3>
+              <span class="modal-title">Edit Collection</span>
             </div>
 
             <div class="modal-body">
-              <form class="form-horizontal" role="form" method="POST" action="{{ url('collection/edit') }}">
+              <form class="form-horizontal" name="clctnEdit" aria-label="clctnEdit{{$collcntNm->clctnName}}" role="form" method="POST" action="{{ url('collection/edit') }}">
                   {{ csrf_field() }}
 
-                  <input id="id" name="id" type="hidden" value="{{$collcntNm->id}}" />
+                  <input id="clctnEditId_{{$key}}" name="id" type="hidden" value="{{$collcntNm->id}}" />
 
                   <div class="form-group{{ $errors->has('clctnName') ? ' has-error' : '' }}">
-                      <label for="clctnName" class="col-md-3 control-label">Collection Name</label>
 
                       <div class="col-md-6">
-                          <input id="clctnName" type="text" class="form-control" name="clctnName" value="{{$collcntNm->clctnName}}" required autofocus>
+                          <span for="clctnEditName_{{$key}}" class="col-md-3 control-label">Collection Name</span>
+                          <input id="clctnEditName_{{$key}}" type="text" aria-label="Enter Collection Name" class="form-control" name="clctnName" value="{{$collcntNm->clctnName}}" required autofocus>
                       </div>
                       <div class="col-md-3">
                           <button type="submit" class="btn btn-primary">
@@ -123,23 +123,23 @@
           <div class="modal-content">
             <div class="modal-header">
               <button type="button" class="close" data-dismiss="modal">&times;</button>
-              <h3 class="modal-title">Disable Collection</h3>
+              <span class="modal-title">Disable Collection</span>
             </div>
 
             <div class="modal-body">
               <p>
-                Are you sure you want to disable <b>{{$collcntNm->clctnName}}</b> collection? All the tables associated with this collection will be disabled as well. Please enter collection name below to confirm.
+                Are you sure you want to disable <strong>{{$collcntNm->clctnName}}</strong> collection? All the tables associated with this collection will be disabled as well. Please enter collection name below to confirm.
               </p>
-              <form class="form-horizontal" role="form" method="POST" action="{{ url('collection/disable') }}">
+              <form class="form-horizontal" name="clctnDisable" aria-label="clctnDisable{{$collcntNm->clctnName}}" role="form" method="POST" action="{{ url('collection/disable') }}">
                   {{ csrf_field() }}
-                  <label for="id"> Collection ID </label>
-                  <input id="id" name="id" type="hidden" value="{{$collcntNm->id}}" />
+                  <label for="clctnDisableId_{{$key}}"> Collection ID </label>
+                  <input id="clctnDisableId_{{$key}}" name="id" type="hidden" value="{{$collcntNm->id}}" />
 
                   <div class="form-group{{ $errors->has('clctnName') ? ' has-error' : '' }}">
 
                       <div class="col-md-6">
-                          <label for="clctnName"> Collection Name </label>
-                          <input id="clctnName" type="text" class="form-control" name="clctnName" required autofocus>
+                          <span for="clctnDisableName_{{$key}}"> Collection Name </span>
+                          <input id="clctnDisableName_{{$key}}" type="text" aria-label="Enter Collection Name" class="form-control" name="clctnName" required autofocus>
                       </div>
                       <div class="col-md-3">
                           <button type="submit" class="btn btn-primary">
@@ -163,7 +163,7 @@
 
     <!-- Disabled collections are shown here -->
     <!-- Iterate to show the existing collection -->
-    @foreach($collcntNms as $collcntNm)
+    @foreach($collcntNms as $key => $collcntNm)
       <!-- Show the currently enabled cololections -->
       @if(!($collcntNm->isEnabled))
       <div class="col-xs-12 col-sm-12 col-md-12">
@@ -178,7 +178,7 @@
             <div class="colCardOpts">
               <a href="#" data-toggle="modal" data-target="#enblCllctn{{$collcntNm->id}}">
                 <div class="icon hidden-xs hidden-sm">
-                  <span class="glyphicon glyphicon-fire"></span>
+                  <span class="glyphicon glyphicon-fire" aria-hidden="true"></span>
                 </div>
                 <p>Enable</p>
               </a>
@@ -196,17 +196,17 @@
           <div class="modal-content">
             <div class="modal-header">
               <button type="button" class="close" data-dismiss="modal">&times;</button>
-              <h3 class="modal-title">Enable Collection</h3>
+              <span class="modal-title">Enable Collection</span>
             </div>
 
             <div class="modal-body">
               <p>
-                Are you sure you want to enable <b>{{$collcntNm->clctnName}}</b> collection?
+                Are you sure you want to enable <strong>{{$collcntNm->clctnName}}</strong> collection?
               </p>
-              <form class="form-horizontal" role="form" method="POST" action="{{ url('collection/enable') }}">
+              <form class="form-horizontal" name="clctnEnable" aria-label="clctnEnable{{$collcntNm->clctnName}}" role="form" method="POST" action="{{ url('collection/enable') }}">
                   {{ csrf_field() }}
-                  <label for="id" class="col-md-3 control-label">Collection ID</label>
-                  <input id="id" name="id" type="hidden" value="{{$collcntNm->id}}" />
+                  <label for="enblCllctnId" class="col-md-3 control-label">Collection ID</label>
+                  <input id="enblCllctnId" name="id" type="hidden" value="{{$collcntNm->id}}" />
 
                   <div class="form-group{{ $errors->has('clctnName') ? ' has-error' : '' }}">
                     <div class="modal-footer">
@@ -239,18 +239,18 @@
         <div class="modal-content">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal">&times;</button>
-            <h3 class="modal-title">Create Collection(s)</h3>
+            <span class="modal-title">Create Collection(s)</span>
           </div>
 
           <div class="modal-body">
-            <form class="form-horizontal" role="form" method="POST" action="{{ url('collection/create') }}">
+            <form class="form-horizontal" name="clctnCreate" aria-label="clctnCreate" role="form" method="POST" action="{{ url('collection/create') }}">
                 {{ csrf_field() }}
 
                 <div class="form-group{{ $errors->has('clctnName') ? ' has-error' : '' }}">
-                    <label for="clctnName" class="col-md-3 control-label">Collection Name</label>
 
                     <div class="col-md-6">
-                        <input id="clctnName" type="text" class="form-control" name="clctnName" required autofocus>
+                        <label for="clctnCreateName" class="col-md-3 control-label">Collection Name</label>
+                        <input id="clctnCreateName" type="text" class="form-control" name="clctnName" required autofocus>
                     </div>
                     <div class="col-md-3">
                         <button type="submit" class="btn btn-primary">

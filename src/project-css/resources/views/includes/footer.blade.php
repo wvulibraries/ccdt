@@ -1,5 +1,5 @@
 <!-- Footer -->
-<footer class="navbar-fixed-bottom">
+<footer class="navbar-fixed-bottom" role="contentinfo">
   <div class="container-fluid">
     <div class="row">
       <div class="builtBy">

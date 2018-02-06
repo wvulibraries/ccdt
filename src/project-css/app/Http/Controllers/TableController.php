@@ -156,8 +156,8 @@ class TableController extends Controller
       //Rules for validation
       $rules = array(
         'slctTblNme' => 'required|unique:tables,tblNme|max:30|min:6|alpha_num',
-        'colID' => 'required|Integer',
-        'fltFile' => 'required|string',
+        'colID2' => 'required|Integer',
+        'fltFile2' => 'required|string',
       );
 
       //Customize the error messages
@@ -167,17 +167,17 @@ class TableController extends Controller
         'slctTblNme.max' => 'The table name cannot exceed 30 characters',
         'slctTblNme.min' => 'The table name should be 6 characters or more',
         'slctTblNme.alpha_num' => 'The table name can only have alphabets or numbers without spaces',
-        'colID.required' => 'Please select a collection',
-        'colID.Integer' => 'Please select an existing collection',
-        'fltFile.required' => 'Please select a valid flat file',
-        'fltFile.string' => 'Please select a valid flat file',
+        'colID2.required' => 'Please select a collection',
+        'colID2.Integer' => 'Please select an existing collection',
+        'fltFile2.required' => 'Please select a valid flat file',
+        'fltFile2.string' => 'Please select a valid flat file',
       );
 
       // Validate the request before storing the data
       $this->validate($request, $rules, $messages);
 
       // Get the absolute file path
-      $thsFltFile = $request->fltFile;
+      $thsFltFile = $request->fltFile2;
       $fltFleAbsPth = $this->strDir.'/'.$thsFltFile;
       // validate the file
       if (!Storage::has($fltFleAbsPth)) {
@@ -196,8 +196,8 @@ class TableController extends Controller
       // 3. Show the users with the schema
       return view('admin.schema')->with('schema', $schema)
                                  ->with('tblNme', $request->slctTblNme)
-                                 ->with('fltFile', $request->fltFile)
-                                 ->with('collctnId', $request->colID);
+                                 ->with('fltFile', $request->fltFile2)
+                                 ->with('collctnId', $request->colID2);
     }
 
     /**

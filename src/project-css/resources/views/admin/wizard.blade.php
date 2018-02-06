@@ -4,7 +4,7 @@
 @section('content')
 <div class="headingWrapper">
   <!-- Heading -->
-  <div class="container adminHeading">
+  <div class="container adminHeading" role="banner">
     <span class="text-center">
       <h1><a href="{{ url('table/create') }}">Create Table(s) Wizard</a></h1>
       <p>Please upload the flat file using the import option or use select if you have already copied the file.</p>
@@ -16,8 +16,8 @@
 <hr/>
 
 <!-- Wizard Form -->
-<div class="container">
-  <h3 class="text-center">Step1: Select or Import</h3>
+<div class="container" role="main">
+  <h2 class="text-center">Step1: Select or Import</h2>
   <!-- Separator -->
   <hr/>
     <div class="row">
@@ -27,7 +27,7 @@
                 <div class="panel-heading"><a data-toggle="collapse" href="#imprtPnlBdy"><h3>Import from flat file</h3></a></div>
                 <div id="imprtPnlBdy" class="panel-collapse collapse">
                   <div class="panel-body">
-                      <form class="form-horizontal" role="form" method="POST" enctype="multipart/form-data" action="{{ url('/table/create/import') }}">
+                      <form class="form-horizontal" name="uploadFltFile" aria-label="uploadFltFile" role="form" method="POST" enctype="multipart/form-data" action="{{ url('/table/create/import') }}">
                           {{ csrf_field() }}
                           <!-- Table name -->
                           <div class="form-group{{ $errors->has('imprtTblNme') ? ' has-error' : '' }}">
@@ -77,7 +77,7 @@
                   <div class="panel-heading"><a data-toggle="collapse" href="#slctPnlBdy"><h3>Select from directory</h3></a></div>
                   <div id="slctPnlBdy" class="panel-collapse collapse">
                     <div class="panel-body">
-                        <form class="form-horizontal" role="form" method="POST" action="{{ url('/table/create/select') }}">
+                        <form class="form-horizontal" name="selectFltFile" aria-label="selectFltFile" role="form" method="POST" action="{{ url('/table/create/select') }}">
                             {{ csrf_field() }}
                             <!-- Table name -->
                             <div class="form-group{{ $errors->has('slctTblNme') ? ' has-error' : '' }}">
@@ -88,11 +88,11 @@
                                 </div>
                             </div>
                             <!-- Select Collection Name -->
-                            <div class="form-group{{ $errors->has('colID') ? ' has-error' : '' }}">
-                                <label for="colID" class="col-md-4 control-label">Select Collection</label>
+                            <div class="form-group{{ $errors->has('colID2') ? ' has-error' : '' }}">
+                                <label for="colID2" class="col-md-4 control-label">Select Collection</label>
 
                                 <div class="col-md-6">
-                                  <select id="colID" type="text" class="form-control" name="colID" value="{{ old('colID') }}" required autofocus>
+                                  <select id="colID2" type="text" class="form-control" name="colID2" value="{{ old('colID2') }}" required autofocus>
                                     @foreach($collcntNms as $collcntNm)
                                       @if($collcntNm->isEnabled)
                                         <option value="{{$collcntNm->id}}">{{$collcntNm->clctnName}}</option>
@@ -103,10 +103,10 @@
                             </div>
                             <!-- Choose File -->
                             <div class="form-group{{ $errors->has('fltFile') ? ' has-error' : '' }}">
-                                <label for="fltFile" class="col-md-4 control-label">Import</label>
+                                <label for="fltFile2" class="col-md-4 control-label">Import</label>
 
                                 <div class="col-md-6">
-                                  <select id="fltFile" type="text" class="form-control" name="fltFile" value="{{ old('fltFile') }}" required autofocus>
+                                  <select id="fltFile2" type="text" class="form-control" name="fltFile2" value="{{ old('fltFile2') }}" required autofocus>
                                     @foreach($fltFleList as $fltFile)
                                       @if($fltFile)
                                         <option value="{{$fltFile}}">{{$fltFile}}</option>

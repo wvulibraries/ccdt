@@ -4,7 +4,7 @@
 @section('content')
 <div class="headingWrapper">
   <!-- Heading -->
-  <div class="container adminHeading">
+  <div class="container adminHeading" role="banner">
     <span class="text-center">
       <h1><a href="{{ url('users') }}">User(s)</a></h1>
       <p>Create, view and manage users here.</p>
@@ -17,23 +17,22 @@
 
 <!-- Display controls and cards here -->
 <div class="usrWrapper">
-  <div class="container">
+  <div class="container" role="main">
 
     <!-- Header Cards -->
     <a href="{{ url('/register') }}">
       <div class="col-xs-12 col-sm-12 col-md-12">
         <div class="colHeadCard">
           <div class="icon hidden-xs hidden-sm">
-            <span class="glyphicon glyphicon-plus"></span>
+            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
           </div>
-          <h4>Create User(s)</h4>
+          <h2>Create User(s)</h2>
         </div>
       </div>
     </a>
 
-    @foreach($usrs as $usr)
+    @foreach($usrs as $key => $usr)
 
-      @if($usr->isAdmin)
       <!-- Checks if the admin is not yours -->
       @if(!($AuthUsr->id==$usr->id))
       <div class="col-xs-12 col-sm-12 col-md-12">
@@ -49,40 +48,47 @@
             <!-- Option 1 Add tables -->
             <div class="colCardOpts">
               @if($usr->hasAccess)
-              <a href="#" data-toggle="modal" data-target="#rstrctAccsCllctn{{$usr->id}}">
+              <a href="#" data-toggle="modal" data-target="#restrictUserAccess{{$usr->id}}">
                 <div class="icon hidden-xs hidden-sm">
-                  <span class="glyphicon glyphicon-eye-close"></span>
+                  <span class="glyphicon glyphicon-eye-close" aria-hidden="true"></span>
                 </div>
                 <p>Restrict Access</p>
               </a>
               @else
-              <a href="#" data-toggle="modal" data-target="#allwAccsCllctn{{$usr->id}}">
+              <a href="#" data-toggle="modal" data-target="#allowUserAccess{{$usr->id}}">
                 <div class="icon hidden-xs hidden-sm">
-                  <span class="glyphicon glyphicon-eye-open"></span>
+                  <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
                 </div>
                 <p>Allow Access</p>
               </a>
               @endif
             </div>
+
             <!-- Option 2 Remove admin -->
             <div class="colCardOpts">
+              @if($usr->isAdmin)
               <a href="#" data-toggle="modal" data-target="#removeAdmin{{$usr->id}}">
                 <div class="icon hidden-xs hidden-sm">
-                  <span class="glyphicon glyphicon-thumbs-down"></span>
+                  <span class="glyphicon glyphicon-thumbs-down" aria-hidden="true"></span>
                 </div>
                 <p>Remove Admin</p>
               </a>
+              @else
+                <a href="#" data-toggle="modal" data-target="#makeAdmin{{$usr->id}}">
+                  <div class="icon hidden-xs hidden-sm">
+                    <span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span>
+                  </div>
+                  <p>Make Admin</p>
+                </a>
+              @endif
             </div>
-
           </div>
-
         </div>
-
       </div>
 
       <!-- Modals -->
-      <!-- Restrict Access to Collection -->
-      <div id="allwAccsCllctn{{$usr->id}}" class="modal fade" role="dialog">
+      <!-- Restrict User Access -->
+      <div id="allowUserAccess{{$usr->id}}" class="modal fade" role="dialog">
         <div class="modal-dialog">
 
           <!-- Modal content-->
@@ -94,12 +100,12 @@
 
             <div class="modal-body">
               <p>
-                Are you sure you want to Allow access to <b>{{$usr->name}}</b> user?
+                Are you sure you want to Allow access to <strong>{{$usr->name}}</strong> user?
               </p>
-              <form class="form-horizontal" role="form" method="POST" action="{{ url('user/allow') }}">
+              <form class="form-horizontal" name="userAllow" aria-label="AllowUserAccess{{$usr->name}}" role="form" method="POST" action="{{ url('user/allow') }}">
                   {{ csrf_field() }}
 
-                  <input id="id" name="id" type="hidden" value="{{$usr->id}}" />
+                  <input id="userAllowId_{{$key}}" name="userAllowId" type="hidden" value="{{$usr->id}}" />
 
                   <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
                     <div class="modal-footer">
@@ -122,7 +128,7 @@
         </div>
       </div>
 
-      <div id="rstrctAccsCllctn{{$usr->id}}" class="modal fade" role="dialog">
+      <div id="restrictUserAccess{{$usr->id}}" class="modal fade" role="dialog">
         <div class="modal-dialog">
 
           <!-- Modal content-->
@@ -134,12 +140,12 @@
 
             <div class="modal-body">
               <p>
-                Are you sure you want to restrict access to <b>{{$usr->name}}</b> user?
+                Are you sure you want to restrict access to <strong>{{$usr->name}}</strong> user?
               </p>
-              <form class="form-horizontal" role="form" method="POST" action="{{ url('user/restrict') }}">
+              <form class="form-horizontal" name="userRestrict" aria-label="RestrictUserAccess_{{$usr->name}}" role="form" method="POST" action="{{ url('user/restrict') }}">
                   {{ csrf_field() }}
 
-                  <input id="id" name="id" type="hidden" value="{{$usr->id}}" />
+                  <input id="userRestrictId_{{$key}}" name="userRestrictId" type="hidden" value="{{$usr->id}}" />
 
                   <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
                     <div class="modal-footer">
@@ -175,17 +181,18 @@
 
             <div class="modal-body">
               <p>
-                Are you sure you want to remove <b>{{$usr->name}}</b> as admin? Please enter user name below to confirm.
+                Are you sure you want to remove <strong>{{$usr->name}}</strong> as admin? Please enter user name below to confirm.
               </p>
-              <form class="form-horizontal" role="form" method="POST" action="{{ url('user/demote') }}">
+              <form class="form-horizontal" name="userDemote" aria-label="DemoteAdminToUser_{{$usr->name}}" role="form" method="POST" action="{{ url('user/demote') }}">
                   {{ csrf_field() }}
 
-                  <input id="id" name="id" type="hidden" value="{{$usr->id}}" />
+                  <input id="userDemoteId_{{$key}}" name="userDemoteId" type="hidden" value="{{$usr->id}}" />
 
                   <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
 
                       <div class="col-md-6">
-                          <input id="name" type="text" class="form-control" name="name" required autofocus>
+                          <label for="userDemoteName_{{$key}}"> Confirm Username </label>
+                          <input id="userDemoteName_{{$key}}" type="text" class="form-control" name="name" required autofocus>
                       </div>
                       <div class="col-md-3">
                           <button type="submit" class="btn btn-primary">
@@ -198,142 +205,6 @@
 
             <div class="modal-footer">
               <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
-            </div>
-          </div>
-
-        </div>
-      </div>
-
-      @endif
-
-      @endif
-
-    @endforeach
-
-    @foreach($usrs as $usr)
-
-      @if(!($usr->isAdmin))
-
-      <div class="col-xs-12 col-sm-12 col-md-12">
-
-        <div class="colCard usr">
-
-          <!-- Display the user name -->
-          <div class="col-xs-6 col-sm-4 col-md-4">
-            <p class="colCardName">{{$usr->name}}</p>
-          </div>
-          <!-- Options for the users -->
-          <div class="col-xs-6 col-sm-8 col-md-8">
-            <!-- Option 1 Add tables -->
-            <div class="colCardOpts">
-              @if($usr->hasAccess)
-              <a href="#" data-toggle="modal" data-target="#rstrctAccsCllctn{{$usr->id}}">
-                <div class="icon hidden-xs hidden-sm">
-                  <span class="glyphicon glyphicon-eye-close"></span>
-                </div>
-                <p>Restrict Access</p>
-              </a>
-              @else
-              <a href="#" data-toggle="modal" data-target="#allwAccsCllctn{{$usr->id}}">
-                <div class="icon hidden-xs hidden-sm">
-                  <span class="glyphicon glyphicon-eye-open"></span>
-                </div>
-                <p>Allow Access</p>
-              </a>
-              @endif
-            </div>
-            <!-- Option 2 -->
-            <div class="colCardOpts">
-              <a href="#" data-toggle="modal" data-target="#makeAdmin{{$usr->id}}">
-                <div class="icon hidden-xs hidden-sm">
-                  <span class="glyphicon glyphicon-thumbs-up"></span>
-                </div>
-                <p>Make Admin</p>
-              </a>
-            </div>
-
-          </div>
-
-        </div>
-
-      </div>
-
-      <!-- Modals -->
-      <!-- Restrict Access to Collection -->
-      <div id="allwAccsCllctn{{$usr->id}}" class="modal fade" role="dialog">
-        <div class="modal-dialog">
-
-          <!-- Modal content-->
-          <div class="modal-content">
-            <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal">&times;</button>
-              <h3 class="modal-title">Allow Access to User</h3>
-            </div>
-
-            <div class="modal-body">
-              <p>
-                Are you sure you want to Allow access to <b>{{$usr->name}}</b> user?
-              </p>
-              <form class="form-horizontal" role="form" method="POST" action="{{ url('user/allow') }}">
-                  {{ csrf_field() }}
-
-                  <input id="id" name="id" type="hidden" value="{{$usr->id}}" />
-
-                  <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
-                    <div class="modal-footer">
-                      <div class="col-md-offset-8 col-md-2">
-                            <button type="submit" class="btn btn-primary">
-                                Confirm
-                            </button>
-                          </div>
-                          <div class="col-md-2">
-                            <button type="button" class="btn btn-primary" data-dismiss="modal">
-                              Close
-                            </button>
-                        </div>
-                    </div>
-                  </div>
-              </form>
-            </div>
-          </div>
-
-        </div>
-      </div>
-
-      <div id="rstrctAccsCllctn{{$usr->id}}" class="modal fade" role="dialog">
-        <div class="modal-dialog">
-
-          <!-- Modal content-->
-          <div class="modal-content">
-            <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal">&times;</button>
-              <h3 class="modal-title">Restrict Access to User</h3>
-            </div>
-
-            <div class="modal-body">
-              <p>
-                Are you sure you want to restrict access to <b>{{$usr->name}}</b> user?
-              </p>
-              <form class="form-horizontal" role="form" method="POST" action="{{ url('user/restrict') }}">
-                  {{ csrf_field() }}
-
-                  <input id="id" name="id" type="hidden" value="{{$usr->id}}" />
-
-                  <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
-                    <div class="modal-footer">
-                      <div class="col-md-offset-8 col-md-2">
-                            <button type="submit" class="btn btn-primary">
-                                Confirm
-                            </button>
-                          </div>
-                          <div class="col-md-2">
-                            <button type="button" class="btn btn-primary" data-dismiss="modal">
-                              Close
-                            </button>
-                        </div>
-                    </div>
-                  </div>
-              </form>
             </div>
           </div>
 
@@ -353,17 +224,17 @@
 
             <div class="modal-body">
               <p>
-                Are you sure you want to promote <b>{{$usr->name}}</b> as admin? Please enter user name below to confirm.
+                Are you sure you want to promote <strong>{{$usr->name}}</strong> as admin? Please enter user name below to confirm.
               </p>
-              <form class="form-horizontal" role="form" method="POST" action="{{ url('user/promote') }}">
+              <form class="form-horizontal" name="userPromote" aria-label="PromoteUserToAdmin_{{$usr->name}}" role="form" method="POST" action="{{ url('user/promote') }}">
                   {{ csrf_field() }}
 
-                  <input id="id" name="id" type="hidden" value="{{$usr->id}}" />
+                  <input id="userPromoteId_{{$key}}" name="userPromoteId" type="hidden" value="{{$usr->id}}" />
 
                   <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
-
+                      <label for="userPromoteName_{{$key}}" class="col-md-4 control-label">username</label>
                       <div class="col-md-6">
-                          <input id="name" type="text" class="form-control" name="name" required autofocus>
+                          <input id="userPromoteName_{{$key}}" type="text" class="form-control" name="name" required autofocus>
                       </div>
                       <div class="col-md-3">
                           <button type="submit" class="btn btn-primary">

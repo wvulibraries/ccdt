@@ -12,7 +12,7 @@
 <hr/>
 
 <div class="dataWrppr">
-    <div class="container">
+    <div class="container" role="main">
 
       <!-- Separation -->
       <hr/>
@@ -31,7 +31,7 @@
 
               @if (count($filesArray) > 0)
                 <div class="col-xs-12 col-sm-12 col-md-12">
-                  <h4><b>{{$clmnNme}}</b>:
+                  <h4><strong>{{$clmnNme}}</strong>:
                     @for ($arrayPos = 0; $arrayPos < count($filesArray); $arrayPos++)
                       </br>{{$filesArray[$arrayPos]}}
 
@@ -46,7 +46,7 @@
               @endif
             @else
               <div class="col-xs-12 col-sm-12 col-md-12">
-                <h4><b>{{$clmnNme}}</b>: {{$rcrd->$clmnNme}}
+                <h4><strong>{{$clmnNme}}</strong>: {{$rcrd->$clmnNme}}
 
                 @if ($strhelper->fileExistsInFolder($tblNme, $rcrd->$clmnNme))
                   <a href="{{ url('/data', ['curTable' => $tblId, 'recId' => $curId, 'view' => 'view', 'subfolder' => $strhelper->getFolderName($rcrd->$clmnNme), 'filename' => $strhelper->getFilename($rcrd->$clmnNme)])}}">
@@ -59,7 +59,7 @@
           <!-- string contains / may indicate a file path -->
           @elseif ((strpos($rcrd->$clmnNme, '/') !== FALSE) && (strpos($clmnNme, 'index') == false))
             <div class="col-xs-12 col-sm-12 col-md-12">
-              <h4><b>{{$clmnNme}}</b>: {{$rcrd->$clmnNme}}</h4>
+              <h4><strong>{{$clmnNme}}</strong>: {{$rcrd->$clmnNme}}</h4>
             </div>
 
             @php
@@ -68,7 +68,7 @@
 
             @if (count($filesArray) > 0)
               <div class="col-xs-12 col-sm-12 col-md-12">
-                <h4><b>Filename(s) detected in {{$clmnNme}}</b>:
+                <h4><strong>Filename(s) detected in {{$clmnNme}}</strong>:
                   @for ($arrayPos = 0; $arrayPos < count($filesArray); $arrayPos++)
                     </br>{{$filesArray[$arrayPos]}}
 
@@ -83,7 +83,7 @@
             @endif
           @else
             <div class="col-xs-12 col-sm-12 col-md-12">
-              <h4><b>{{$clmnNme}}</b>: {{$rcrd->$clmnNme}}</h4>
+              <h4><strong>{{$clmnNme}}</strong>: {{$rcrd->$clmnNme}}</h4>
             </div>
           @endif
         @endforeach

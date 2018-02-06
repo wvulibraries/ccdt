@@ -3,7 +3,7 @@ services:
     web:
         build:
             context: ./
-            dockerfile: serverConfiguration/deploy/web.docker
+            dockerfile: serverConfiguration/deploy/dev.web.docker
         container_name: nginx
         volumes:
             - ./src/project-css/:/var/www
@@ -38,7 +38,7 @@ services:
         volumes:
             - ./serverConfiguration/mysql_data:/var/lib/mysql
             - ./conf/setup-docker.sql:/docker-entrypoint-initdb.d/setup-docker.sql
-            - ./serverConfiguration/docker.my.cnf:/etc/mysql/my.cnf
+            - ./serverConfiguration/my.cnf:/etc/mysql/my.cnf
         ports:
             - "3306:3306"
     tika:

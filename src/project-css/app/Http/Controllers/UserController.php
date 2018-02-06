@@ -31,7 +31,7 @@ class UserController extends Controller {
     */
     public function restrict(Request $request) {
         // Find the user
-        $thisUsr = User::findorFail($request->id);
+        $thisUsr = User::findorFail($request->userRestrictId);
         // Set the permissions
         $thisUsr->hasAccess = false;
         // Save the user
@@ -40,47 +40,47 @@ class UserController extends Controller {
         return redirect()->route('userIndex');
     }
 
-  /**
-  * Edit the database entry into the database
-  */
-  public function allow(Request $request) {
-    // Create the collection name
-    $thisUsr = User::findorFail($request->id);
-    $thisUsr->hasAccess = true;
-    $thisUsr->save();
-    return redirect()->route('userIndex');
-  }
-
-  /**
-  * Make an user as admin
-  */
-  public function promote(Request $request) {
-    // Create the collection name
-    $thisUsr = User::findorFail($request->id);
-    if (strcasecmp($thisUsr->name, $request->name) == 0) {
-      $thisUsr->isAdmin = true;
+    /**
+    * Edit the database entry into the database
+    */
+    public function allow(Request $request) {
+      // Create the collection name
+      $thisUsr = User::findorFail($request->userAllowId);
+      $thisUsr->hasAccess = true;
       $thisUsr->save();
       return redirect()->route('userIndex');
     }
 
-    // Error message
-    return redirect()->route('userIndex')->withErrors("Failed to Promote User to Admin. User wasn't found.");
-  }
+    /**
+    * Make an user as admin
+    */
+    public function promote(Request $request) {
+      // Create the collection name
+      $thisUsr = User::findorFail($request->userPromoteId);
+      if (strcasecmp($thisUsr->name, $request->name) == 0) {
+        $thisUsr->isAdmin = true;
+        $thisUsr->save();
+        return redirect()->route('userIndex');
+      }
 
-  /**
-  * Make an user as admin
-  */
-  public function demote(Request $request) {
-    // Create the collection name
-    $thisUsr = User::findorFail($request->id);
-    if (strcasecmp($thisUsr->name, $request->name) == 0) {
-      $thisUsr->isAdmin = false;
-      $thisUsr->save();
-      return redirect()->route('userIndex');
+      // Error message
+      return redirect()->route('userIndex')->withErrors("Failed to Promote User to Admin. User wasn't found.");
     }
 
-    // Error message
-    return redirect()->route('userIndex')->withErrors("Failed to Demote Admin to User. Admin wasn't found.");
-  }
+    /**
+    * Make an user as admin
+    */
+    public function demote(Request $request) {
+      // Create the collection name
+      $thisUsr = User::findorFail($request->userDemoteId);
+      if (strcasecmp($thisUsr->name, $request->name) == 0) {
+        $thisUsr->isAdmin = false;
+        $thisUsr->save();
+        return redirect()->route('userIndex');
+      }
+
+      // Error message
+      return redirect()->route('userIndex')->withErrors("Failed to Demote Admin to User. Admin wasn't found.");
+    }
 
 }
