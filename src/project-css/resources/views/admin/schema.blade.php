@@ -18,7 +18,8 @@
 <!-- Form to show the schema -->
 <div class="container schemaWrapper" role="main">
   <div class="table-responsive">
-    <table class="table" role="table">
+    <table id="table" name="table" class="table" role="table">
+      <caption class="hidden">Schema Table</caption>
       <!-- Form to submit the final schema -->
       <form class="form-horizontal" role="form" method="POST" action="{{url('table/create/finalize')}}">
         <!-- CSRF Fields -->
@@ -49,14 +50,13 @@
               <td>
                 <!-- Show the columns for edit -->
                 <div class="form-group{{ $errors->has('col-'.$key.'-name') ? ' has-error' : '' }}">
-                  <!-- <label for="col-{{$key}}-name"> Collection {{$key}} </label> -->
-                  <input id="col-{{$key}}-name" type="text" class="form-control" name="col-{{$key}}-name" value="{{$col}}" required autofocus>
+                  <input id="col-{{$key}}-name" aria-label="{{$col}}" type="text" class="form-control" name="col-{{$key}}-name" value="{{$col}}" required autofocus>
                 </div>
               </td>
               <td>
                 <!-- Show the data type to choose from -->
                 <div class="form-group{{$errors->has('col-'.$key.'-data') ? ' has-error' : ''}}">
-                  <select id="col-{{$key}}-data" type="text" class="form-control" name="col-{{$key}}-data" required autofocus>
+                  <select id="col-{{$key}}-data" aria-label="{{$col}} Data Type" type="text" class="form-control" name="col-{{$key}}-data" required autofocus>
                     <option value="integer">Integer</option>
                     <option selected="selected" value="string">String</option>
                     <option value="text">Text</option>
@@ -66,7 +66,7 @@
               <td>
                 <!-- Show the data size to choose from -->
                 <div class="form-group{{$errors->has('col-'.$key.'-size') ? ' has-error' : ''}}">
-                  <select id="col-{{$key}}-size" type="text" class="form-control" name="col-{{$key}}-size" required autofocus>
+                  <select id="col-{{$key}}-size" aria-label="{{$col}} Data Size" type="text" class="form-control" name="col-{{$key}}-size" required autofocus>
                     <option value="default">Default</option>
                     <option value="medium">Medium</option>
                     <option value="big">Big</option>
