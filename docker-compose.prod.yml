@@ -1,0 +1,43 @@
+version: '2'
+services:
+    web:
+        build:
+            context: ./
+            dockerfile: serverConfiguration/deploy/prod.web.docker
+        container_name: nginx
+        volumes:
+          - ./serverConfiguration/certs:/etc/letsencrypt
+        ports:
+          - 80:80
+          - 443:443
+    app:
+        build:
+            context: ./
+            dockerfile: serverConfiguration/deploy/prod.app.docker
+        container_name: rockefellercss_php
+        volumes:
+            - ./src/project-css/storage/:/var/www/storage
+        env_file: ./src/project-css/.env.prod
+        environment:
+            - "DB_HOST=database"
+            - "TIKA_HOST=tika_service"
+        #    - "REDIS_PORT=6379"
+        #    - "REDIS_HOST=cache"
+    database:
+        image: mysql:5.7.16
+        command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+        environment:
+           - "MYSQL_ROOT_PASSWORD=mountaineer"
+           - "MYSQL_USER=mountaineer"
+           - "MYSQL_PASSWORD=mountaineer"
+        volumes:
+            - ./serverConfiguration/mysql_data:/var/lib/mysql
+            - ./conf/setup-docker.sql:/docker-entrypoint-initdb.d/setup-docker.sql
+            - ./serverConfiguration/my.cnf:/etc/mysql/my.cnf
+        ports:
+            - "3306:3306"
+    tika:
+        image: trmccormick/tika
+        container_name: tika_service
+        ports:
+            - "9998:9998"

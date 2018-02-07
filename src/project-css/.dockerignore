@@ -1,0 +1,17 @@
+.git
+.idea
+.env
+node_modules
+vendor
+storage/framework/cache/**
+storage/framework/sessions/**
+storage/framework/views/**
+storage/app/files/test/**
+storage/app/flatfiles/**
+storage/app/import1/**
+storage/app/import2/**
+storage/app/import3/**
+storage/app/import4/**
+storage/app/import5/**
+storage/app/import6/**
+storage/app/import7/**
