@@ -1,0 +1,7 @@
+.git
+.idea
+.env
+.DS_Store
+.travis.yml
+.gitignore
+.scrutinizer.yml

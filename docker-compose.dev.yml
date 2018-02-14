@@ -3,23 +3,28 @@ services:
     web:
         build:
             context: ./
-            dockerfile: serverConfiguration/deploy/prod.web.docker
+            dockerfile: serverConfiguration/deploy/dev.web.docker
         container_name: nginx
         volumes:
-          - ./serverConfiguration/certs:/etc/letsencrypt
+            - ./src/project-css/:/var/www
         ports:
-          - 80:80
-          - 443:443
+            - "8080:80"
+        links:
+            - app
     app:
         build:
             context: ./
-            dockerfile: serverConfiguration/deploy/prod.app.docker
+            dockerfile: serverConfiguration/deploy/dev.app.docker
         container_name: rockefellercss_php
         volumes:
-            - ./src/project-css/storage/:/var/www/storage
-        env_file: ./src/project-css/.env.prod
+            - ./src/project-css/:/var/www
+        links:
+            - database
+            - tika
         environment:
+            - "DB_PORT=3306"
             - "DB_HOST=database"
+            - "TIKA_PORT=9998"
             - "TIKA_HOST=tika_service"
         #    - "REDIS_PORT=6379"
         #    - "REDIS_HOST=cache"
@@ -32,7 +37,7 @@ services:
            - "MYSQL_PASSWORD=mountaineer"
         volumes:
             - ./serverConfiguration/mysql_data:/var/lib/mysql
-            - ./conf/setup-docker.sql:/docker-entrypoint-initdb.d/setup-docker.sql
+            - ./conf/setup-docker.sql:/docker-entrypoint-initdb.d/setup.sql
             - ./serverConfiguration/my.cnf:/etc/mysql/my.cnf
         ports:
             - "3306:3306"
@@ -41,3 +46,7 @@ services:
         container_name: tika_service
         ports:
             - "9998:9998"
+    #cache:
+    #    image: redis:3.0
+    #    ports:
+    #        - "63791:6379"
