@@ -2,6 +2,8 @@
 
 namespace App\Libraries;
 
+use Illuminate\Support\Facades\DB;
+
 class CustomStringHelper {
     /**
      * Custom String Helper
@@ -82,6 +84,16 @@ class CustomStringHelper {
     }
 
     /**
+     * @param string $str
+     * @return string
+     */
+    function db_esc_like_raw($str)
+    {
+        $ret = str_replace([ '%', '_' ], [ '\%', '\_' ], DB::getPdo()->quote($str));
+        return $ret && strlen($ret) >= 2 ? substr($ret, 1, count($ret)-2) : $ret;
+    }
+
+    /**
      * Tries to clean search string of extra spaces also uses strip_tags and
      * mysql_real_escape_string to safeguard AGAINST sql injection. Also
      * replaces ? that is sometimes used as a wildcard and replaces it with a *
@@ -91,7 +103,7 @@ class CustomStringHelper {
     public function cleanSearchString($search) {
         $str = trim($search);
         $str = strip_tags($str);
-        $str = mysql_real_escape_string($str);
+        $str = $this->db_esc_like_raw($str);
         //replace ? with * for wildcard searches
         $str = str_replace('?', '*', $str);
 
