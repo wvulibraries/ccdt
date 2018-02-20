@@ -1,25 +1,17 @@
 version: '2'
 services:
-    web:
-        build:
-            context: ./
-            dockerfile: serverConfiguration/deploy/prod.web.docker
-        container_name: nginx
-        volumes:
-          - ./serverConfiguration/certs:/etc/letsencrypt
-        ports:
-          - 80:80
-          - 443:443 
-    app:
-        build:
-            context: ./
-            dockerfile: serverConfiguration/deploy/prod.app.docker
-        container_name: rockefellercss_php
-        volumes:
-            - ./src/project-css/storage/:/var/www/storage
-        env_file: ./src/project-css/.env.prod
-        ports:
-          - "9001:9000"
+    # uncomment web section when testing production setup
+    # server install uses local nginx 
+    # web:
+    #     build:
+    #         context: ./
+    #         dockerfile: serverConfiguration/deploy/prod.web.docker
+    #     container_name: nginx
+    #     volumes:
+    #       - ./serverConfiguration/certs:/etc/letsencrypt
+    #     ports:
+    #       - 80:80
+    #       - 443:443
     database:
         image: mysql:5.7.16
         command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
@@ -35,3 +27,13 @@ services:
         container_name: tika_service
         ports:
             - "9998:9998"
+    app:
+        build:
+            context: ./
+            dockerfile: serverConfiguration/deploy/prod.app.docker
+        container_name: rockefellercss_php
+        volumes:
+            - ./src/project-css/storage/:/var/www/storage
+        env_file: ./src/project-css/.env.prod
+        ports:
+          - "9001:9000"
