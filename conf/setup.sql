@@ -8,7 +8,4 @@ CREATE DATABASE IF NOT EXISTS css_testing
   DEFAULT COLLATE utf8mb4_unicode_ci;
 
 # Give Access to Vagrant Box
-GRANT ALL PRIVILEGES ON *.* TO 'mountaineer'@'localhost';
-
-# Set the password
-SET PASSWORD for 'mountaineer'@'localhost' =PASSWORD('mountaineer');
+GRANT ALL PRIVILEGES ON *.* TO 'mountaineer'@'%';
