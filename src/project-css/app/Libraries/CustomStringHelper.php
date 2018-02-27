@@ -101,14 +101,14 @@ class CustomStringHelper {
      * @return      string
      */
     public function cleanSearchString($search) {
-        $str = trim($search);
-        $str = strip_tags($str);
-        $str = $this->db_esc_like_raw($str);
-        //replace ? with * for wildcard searches
-        $str = str_replace('?', '*', $str);
+        // remove all special chars from string
+       $str = filter_var($search, FILTER_SANITIZE_STRING);
 
-        //return string as lowercase
-        return strtolower($str);
+       $str = trim($str);
+       $str = strip_tags($str);
+       $str = $this->db_esc_like_raw($str);
+
+       return strtolower($str);
     }
 
     /**

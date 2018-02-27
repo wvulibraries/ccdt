@@ -20,6 +20,7 @@ class DataViewController extends Controller {
     public $invalidRecordIdErr = 'Invalid Record ID';
     public $noResultsErr = 'Search Yeilded No Results';
     public $invalidTableErr = 'Invalid Table ID';
+    public $invalidSearchStrErr = 'Invalid Search String';
 
     /**
      * Constructor that associates the middlewares
@@ -74,7 +75,7 @@ class DataViewController extends Controller {
 
         // Check if id is valid
         if (is_null($curId) || !is_numeric($curId)) {
-           return redirect()->route('home')->withErrors([ $this->invalidRecordIdErr ]);
+           return redirect()->back()->withErrors([ $this->invalidRecordIdErr ]);
         }
 
         // query database for record
@@ -84,7 +85,7 @@ class DataViewController extends Controller {
 
         // check for the number of records if their is none return with error message
         if (count($rcrds) == 0) {
-           return redirect()->route('home')->withErrors([ $this->noResultsErr ]);
+           return redirect()->back()->withErrors([ $this->noResultsErr ]);
         }
 
         // retrieve the column names
@@ -102,7 +103,7 @@ class DataViewController extends Controller {
         // Get the table entry in meta table "tables"
         $curTable = Table::find($curTable);
         if (!$curTable->hasAccess) {
-           return redirect()->route('home')->withErrors([ $this->tableDisabledErr ]);
+           return redirect()->back()->withErrors([ $this->tableDisabledErr ]);
         }
 
         if ($search == NULL) {
@@ -117,15 +118,24 @@ class DataViewController extends Controller {
         // retrieve the column names
         $clmnNmes = DB::getSchemaBuilder()->getColumnListing($curTable->tblNme);
 
-        // query sorted by revelancy score
-        $query = DB::table($curTable->tblNme)
-                ->whereRaw("match(srchindex) against (? in boolean mode)", [ $srchStrng ])
-                ->orderBy('score', 'desc')
-                ->offset($page - 1 * $perPage)
-                ->limit($perPage);
+        try {
+          // query sorted by revelancy score
+          $query = DB::table($curTable->tblNme)
+                  ->whereRaw("match(srchindex) against (? in boolean mode)", [ $srchStrng ])
+                  ->orderBy('score', 'desc')
+                  ->offset($page - 1 * $perPage)
+                  ->limit($perPage);
+        } catch(\Illuminate\Database\QueryException $ex){
+            return redirect()->back()->withErrors([ $this->$invalidSearchStrErr ]);
+        }
 
-        $rcrds = $query
-                ->get([ '*', DB::raw("MATCH (srchindex) AGAINST ('".$srchStrng."') AS score") ]);
+        try {
+          $rcrds = $query
+                  ->get([ '*', DB::raw("match(srchindex) against (?) as score", [ $srchStrng ])]);
+            // Closures include ->first(), ->get(), ->pluck(), etc.
+        } catch(\Illuminate\Database\QueryException $ex){
+            return redirect()->back()->withErrors([ $this->$invalidSearchStrErr ]);
+        }
 
         $rcrdsCount = count($rcrds);
 

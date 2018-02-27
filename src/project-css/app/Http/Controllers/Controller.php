@@ -10,4 +10,12 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
+
+    /**
+     * Constructor that associates the middlewares
+     */
+    // public function __construct() {
+    //     // Middleware to check for authenticated
+    //     $this->middleware('verifyCsrd');
+    // }
 }
