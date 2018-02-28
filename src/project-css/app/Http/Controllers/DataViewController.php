@@ -119,22 +119,19 @@ class DataViewController extends Controller {
         $clmnNmes = DB::getSchemaBuilder()->getColumnListing($curTable->tblNme);
 
         try {
-          // query sorted by revelancy score
           $query = DB::table($curTable->tblNme)
-                  ->whereRaw("match(srchindex) against (? in boolean mode)", [ $srchStrng ])
+                  ->whereRaw("match(srchindex) against (? in boolean mode)", [ $srchStrng, $srchStrng ])
                   ->orderBy('score', 'desc')
                   ->offset($page - 1 * $perPage)
                   ->limit($perPage);
         } catch(\Illuminate\Database\QueryException $ex){
-            return redirect()->back()->withErrors([ $this->$invalidSearchStrErr ]);
+          return redirect()->back()->withErrors([ $this->invalidSearchStrErr ]);
         }
 
         try {
-          $rcrds = $query
-                  ->get([ '*', DB::raw("match(srchindex) against (?) as score", [ $srchStrng ])]);
-            // Closures include ->first(), ->get(), ->pluck(), etc.
+          $rcrds = $query->get([ '*', DB::raw("MATCH (srchindex) AGAINST (?) AS score")]);
         } catch(\Illuminate\Database\QueryException $ex){
-            return redirect()->back()->withErrors([ $this->$invalidSearchStrErr ]);
+          return redirect()->back()->withErrors([ $this->invalidSearchStrErr ]);
         }
 
         $rcrdsCount = count($rcrds);
@@ -144,6 +141,14 @@ class DataViewController extends Controller {
         // so we set $lastPage to $page + 1
         $lastPage = ($rcrdsCount == $perPage) ? $page + 1 : $page;
 
+        if ($rcrdsCount == 0) {
+          return view('user.search')->with('tblId', $curTable)
+                                    ->with('tblNme', $curTable->tblNme)
+                                    ->with('page', $page)
+                                    ->with('lastPage', $lastPage)
+                                    ->with('rcrds', $rcrds)
+                                    ->withErrors([ $this->noResultsErr ]);
+        }
 
         return view('user.search')->with('rcrds', $rcrds)
                                   ->with('clmnNmes', $clmnNmes)

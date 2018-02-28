@@ -93,6 +93,23 @@ class CustomStringHelper {
         return $ret && strlen($ret) >= 2 ? substr($ret, 1, count($ret)-2) : $ret;
     }
 
+    function filter_search($str) {
+      // remove excess whitespace
+      $str = str_replace('  ', ' ', $str);
+      // replace '--' with ' -'
+      $str = str_replace('--', ' -', $str);
+      // add spaces in front of + and -
+      $str = str_replace('+', ' +', $str);
+      $str = str_replace('-', ' -', $str);
+
+      $removeItems = array('\\', '/', '%', '+ ', '- ', '+*', '-*');
+      $str = str_replace($removeItems, "", $str);
+
+      // remove trailing + - that doesn't have text after
+      $str = rtrim($str, "+");
+      return rtrim($str, "-");
+    }
+
     /**
      * Tries to clean search string of extra spaces also uses strip_tags and
      * mysql_real_escape_string to safeguard AGAINST sql injection. Also
@@ -100,14 +117,17 @@ class CustomStringHelper {
      * @param       string  $search    Input string
      * @return      string
      */
-    public function cleanSearchString($search) {
-        // remove all special chars from string
-       $str = filter_var($search, FILTER_SANITIZE_STRING);
-
+    public function cleanSearchString($str) {
+       $str = $this->db_esc_like_raw($str);
+      //replace ? with * for wildcard searches
+       $str = str_replace('?', '*', $str);
        $str = trim($str);
        $str = strip_tags($str);
-       $str = $this->db_esc_like_raw($str);
-
+       $str = addslashes($str);
+       //$str = htmlspecialchars($str);
+       $str = $this->filter_search($str);
+       // echo $str;
+       // die();
        return strtolower($str);
     }
 
