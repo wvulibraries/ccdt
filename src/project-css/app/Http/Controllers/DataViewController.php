@@ -20,6 +20,7 @@ class DataViewController extends Controller {
     public $invalidRecordIdErr = 'Invalid Record ID';
     public $noResultsErr = 'Search Yeilded No Results';
     public $invalidTableErr = 'Invalid Table ID';
+    public $invalidSearchStrErr = 'Invalid Search String';
 
     /**
      * Constructor that associates the middlewares
@@ -65,16 +66,17 @@ class DataViewController extends Controller {
      * Show a record in the table
      */
     public function show($curTable, $curId) {
-        // Get the table entry in meta table "tables"
-        $curTable = Table::find($curTable);
+      // Check if id is valid
+        if (is_null($curId) || !is_numeric($curId)) {
+           return redirect()->back()->withErrors([ $this->invalidRecordIdErr ]);
+        }
+        else {
+          // Get the table entry in meta table "tables"
+          $curTable = Table::find($curTable);
+        }
 
         if (!$curTable->hasAccess) {
            return redirect()->route('home')->withErrors([ $this->tableDisabledErr ]);
-        }
-
-        // Check if id is valid
-        if (is_null($curId) || !is_numeric($curId)) {
-           return redirect()->route('home')->withErrors([ $this->invalidRecordIdErr ]);
         }
 
         // query database for record
@@ -84,7 +86,7 @@ class DataViewController extends Controller {
 
         // check for the number of records if their is none return with error message
         if (count($rcrds) == 0) {
-           return redirect()->route('home')->withErrors([ $this->noResultsErr ]);
+           return redirect()->back()->withErrors([ $this->noResultsErr ]);
         }
 
         // retrieve the column names
@@ -102,7 +104,7 @@ class DataViewController extends Controller {
         // Get the table entry in meta table "tables"
         $curTable = Table::find($curTable);
         if (!$curTable->hasAccess) {
-           return redirect()->route('home')->withErrors([ $this->tableDisabledErr ]);
+           return redirect()->back()->withErrors([ $this->tableDisabledErr ]);
         }
 
         if ($search == NULL) {
@@ -117,15 +119,13 @@ class DataViewController extends Controller {
         // retrieve the column names
         $clmnNmes = DB::getSchemaBuilder()->getColumnListing($curTable->tblNme);
 
-        // query sorted by revelancy score
         $query = DB::table($curTable->tblNme)
-                ->whereRaw("match(srchindex) against (? in boolean mode)", [ $srchStrng ])
+                ->whereRaw("match(srchindex) against (? in boolean mode)", [ $srchStrng, $srchStrng ])
                 ->orderBy('score', 'desc')
                 ->offset($page - 1 * $perPage)
                 ->limit($perPage);
 
-        $rcrds = $query
-                ->get([ '*', DB::raw("MATCH (srchindex) AGAINST ('".$srchStrng."') AS score") ]);
+        $rcrds = $query->get([ '*', DB::raw("MATCH (srchindex) AGAINST (?) AS score")]);
 
         $rcrdsCount = count($rcrds);
 
@@ -134,6 +134,14 @@ class DataViewController extends Controller {
         // so we set $lastPage to $page + 1
         $lastPage = ($rcrdsCount == $perPage) ? $page + 1 : $page;
 
+        if ($rcrdsCount == 0) {
+          return view('user.search')->with('tblId', $curTable)
+                                    ->with('tblNme', $curTable->tblNme)
+                                    ->with('page', $page)
+                                    ->with('lastPage', $lastPage)
+                                    ->with('rcrds', $rcrds)
+                                    ->withErrors([ $this->noResultsErr ]);
+        }
 
         return view('user.search')->with('rcrds', $rcrds)
                                   ->with('clmnNmes', $clmnNmes)

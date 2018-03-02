@@ -151,6 +151,31 @@
            Schema::drop($tblname);
     }
 
+    public function testSearchNoResults() {
+           $tblname = 'importtest'.mt_rand();
+           $path = './storage/app/files/test/';
+           $file = 'test.dat';
+
+           $this->createTestTable($tblname, $path, $file);
+
+           //search for a name this will go to the fulltext search
+           $this->actingAs($this->admin)
+                ->visit('data/1')
+                ->type('NoResults', 'search')
+                ->press('Search')
+                ->assertResponseStatus(200)
+                ->see('Search Yeilded No Results');
+
+           // cleanup remove directory for the test table
+           Storage::deleteDirectory($tblname);
+
+           // cleanup remove header_only.csv from upload folder
+           Storage::delete('/flatfiles/'.$file);
+
+           // drop table after Testing
+           Schema::drop($tblname);
+    }
+
     public function testInvalidId() {
            $tblname = 'importtest'.mt_rand();
            $path = './storage/app/files/test/';
@@ -257,6 +282,12 @@
                 ->assertResponseStatus(200)
                 ->see('Table is disabled');
 
+           //while table is disabled try to force a Search
+           $request = new \Illuminate\Http\Request();
+           $response = (new DataViewController)->search($request, "1", "-------", "1");
+           $errors = $response->getSession()->get('errors', new Illuminate\Support\MessageBag)->all();
+           $this->assertEquals($errors[0], "Table is disabled");
+
            //While using a admin account try to enable a collection
            $this->post('collection/enable', [ 'id' => $this->collection->id, 'clctnName' => $this->collection->clctnName ])
                 ->visit('data/1')
@@ -331,6 +362,14 @@
            // test to see if table id 99 is available
            // test should fail
            $this->assertFalse((new DataViewController)->isValidTable('99'));
+    }
+
+    public function testNullShow() {
+           // test to see if passing null for both table id and record produces a error response
+           $response = (new DataViewController)->show(null, null);
+           $errors = $response->getSession()->get('errors', new Illuminate\Support\MessageBag)->all();
+           $this->assertEquals($errors[0], "Invalid Record ID");
+           //var_dump($errors);
     }
 
   }

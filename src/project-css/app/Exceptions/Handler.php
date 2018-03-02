@@ -45,6 +45,16 @@ class Handler extends ExceptionHandler {
         if ($exception instanceof TokenMismatchException) {
             return redirect('/login')->withErrors('Your session has expired. Please try again.');
         }
+        if ($this->isHttpException($exception)){
+          // to get status code ie 404, 503, 500
+           $status = $exception->getStatusCode();
+
+           if (view()->exists("errors.{$status}")) {
+               return response()->view("errors.{$status}", ['exception' => $exception], $status, $exception->getHeaders());
+           } else {
+               return $this->convertExceptionToResponse($exception);
+           }
+        }
         return parent::render($request, $exception);
     }
 
