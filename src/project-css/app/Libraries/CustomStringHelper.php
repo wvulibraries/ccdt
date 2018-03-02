@@ -87,10 +87,27 @@ class CustomStringHelper {
      * @param string $str
      * @return string
      */
-    function db_esc_like_raw($str)
+    private function db_esc_like_raw($str)
     {
         $ret = str_replace([ '%', '_' ], [ '\%', '\_' ], DB::getPdo()->quote($str));
         return $ret && strlen($ret) >= 2 ? substr($ret, 1, count($ret)-2) : $ret;
+    }
+
+    private function filter_search($str) {
+      // remove excess whitespace
+      $str = str_replace('  ', ' ', $str);
+      // replace '--' with ' -'
+      $str = str_replace('--', ' -', $str);
+      // add spaces in front of + and -
+      $str = str_replace('+', ' +', $str);
+      $str = str_replace('-', ' -', $str);
+
+      $removeItems = array('\\', '/', '%', '+ ', '- ', '+*', '-*');
+      $str = str_replace($removeItems, "", $str);
+
+      // remove trailing + - that doesn't have text after
+      $str = rtrim($str, "+");
+      return rtrim($str, "-");
     }
 
     /**
@@ -100,15 +117,18 @@ class CustomStringHelper {
      * @param       string  $search    Input string
      * @return      string
      */
-    public function cleanSearchString($search) {
-        $str = trim($search);
-        $str = strip_tags($str);
-        $str = $this->db_esc_like_raw($str);
-        //replace ? with * for wildcard searches
-        $str = str_replace('?', '*', $str);
-
-        //return string as lowercase
-        return strtolower($str);
+    public function cleanSearchString($str) {
+       $str = $this->db_esc_like_raw($str);
+      //replace ? with * for wildcard searches
+       $str = str_replace('?', '*', $str);
+       $str = trim($str);
+       $str = strip_tags($str);
+       $str = addslashes($str);
+       $str = $this->db_esc_like_raw($str);
+       $str = $this->filter_search($str);
+       // echo $str;
+       // die();
+       return strtolower($str);
     }
 
     /**

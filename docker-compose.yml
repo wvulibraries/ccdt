@@ -1,7 +1,7 @@
 version: '2'
 services:
     # uncomment web section when testing production setup
-    # server install uses local nginx 
+    # server install uses local nginx
     # web:
     #     build:
     #         context: ./
@@ -33,7 +33,10 @@ services:
             dockerfile: serverConfiguration/deploy/prod.app.docker
         container_name: rockefellercss_php
         volumes:
+        # uncomment when using
             - ./src/project-css/storage/:/var/www/storage
+        # used on production server
+        #- /data/storage::/var/www/storage
         env_file: ./src/project-css/.env.prod
         ports:
           - "9001:9000"
