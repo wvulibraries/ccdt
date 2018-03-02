@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Collection;
-use App\User;
-use App\Table;
+use App\Models\Collection;
+use App\Models\User;
+use App\Models\Table;
 use Auth;
 
 class HomeController extends Controller {

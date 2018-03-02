@@ -9,8 +9,8 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
-use App\Table;
-use App\Collection;
+use App\Models\Table;
+use App\Models\Collection;
 
 class TableController extends Controller
 {

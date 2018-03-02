@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -11,6 +11,6 @@ class Collection extends Model
   */
   public function tables() {
     // Establish the relationship
-    return $this->hasMany('App\Table');
+    return $this->hasMany('App\Models\Table');
   }
 }

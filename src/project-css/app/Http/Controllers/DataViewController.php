@@ -6,7 +6,7 @@ use Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
-use App\Table;
+use App\Models\Table;
 use App\Libraries\CustomStringHelper;
 use App\Libraries\TikaConvert;
 

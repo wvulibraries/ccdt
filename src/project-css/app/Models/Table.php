@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -11,6 +11,6 @@ class Table extends Model
     */
     public function collection() {
       // Allow querying the collections
-      return $this->belongsTo('App\Collection');
+      return $this->belongsTo('App\Models\Collection');
     }
 }

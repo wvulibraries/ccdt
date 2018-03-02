@@ -34,9 +34,9 @@ services:
         container_name: rockefellercss_php
         volumes:
         # uncomment when using
-            - ./src/project-css/storage/:/var/www/storage
+            - ./src/project-css/storage:/var/www/storage
         # used on production server
-        #- /data/storage::/var/www/storage
+        #- /data/storage:/var/www/storage
         env_file: ./src/project-css/.env.prod
         ports:
           - "9001:9000"

@@ -3,7 +3,7 @@
 namespace App\Http\Middleware;
 
 use Closure;
-use App\Table;
+use App\Models\Table;
 
 class CheckTableId
 {
