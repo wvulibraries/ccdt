@@ -42,9 +42,6 @@ class UploadController extends Controller {
 
         // Get the table entry in meta table "tables"
         $curTable = Table::find($curTable);
-        if (!$curTable->hasAccess) {
-          return redirect()->route('home')->withErrors([ 'Table is disabled' ]);
-        }
 
         // Request the file input named 'attachments'
         $files = $request->file('attachments');

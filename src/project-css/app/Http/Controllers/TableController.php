@@ -662,9 +662,7 @@ class TableController extends Controller
 
         // Insert them into DB
         \DB::table($tblNme)->insert($curArry);
-      } else {
-        throw new \Exception("Invalid Field Count - detected ".count($tkns)." expected ".$orgCount);
-      }
+       }
     }
 
     /**
@@ -713,13 +711,7 @@ class TableController extends Controller
 
 
           if ($tkns != NULL) {
-            try {
-              $this->insertRecord($tkns, $orgCount, $tblNme, $clmnLst);
-            }
-            //catch exception
-            catch(\Exception $e) {
-              Log::info($e->getMessage() . " Line #" . $prcssd . " Line Contents " . $curLine);
-            }
+            $this->insertRecord($tkns, $orgCount, $tblNme, $clmnLst);
           }
 
           // Update the counter

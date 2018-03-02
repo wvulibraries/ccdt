@@ -87,13 +87,13 @@ class CustomStringHelper {
      * @param string $str
      * @return string
      */
-    function db_esc_like_raw($str)
+    private function db_esc_like_raw($str)
     {
         $ret = str_replace([ '%', '_' ], [ '\%', '\_' ], DB::getPdo()->quote($str));
         return $ret && strlen($ret) >= 2 ? substr($ret, 1, count($ret)-2) : $ret;
     }
 
-    function filter_search($str) {
+    private function filter_search($str) {
       // remove excess whitespace
       $str = str_replace('  ', ' ', $str);
       // replace '--' with ' -'
@@ -124,7 +124,7 @@ class CustomStringHelper {
        $str = trim($str);
        $str = strip_tags($str);
        $str = addslashes($str);
-       //$str = htmlspecialchars($str);
+       $str = $this->db_esc_like_raw($str);
        $str = $this->filter_search($str);
        // echo $str;
        // die();

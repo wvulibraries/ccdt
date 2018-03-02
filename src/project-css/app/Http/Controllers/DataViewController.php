@@ -66,16 +66,17 @@ class DataViewController extends Controller {
      * Show a record in the table
      */
     public function show($curTable, $curId) {
-        // Get the table entry in meta table "tables"
-        $curTable = Table::find($curTable);
+      // Check if id is valid
+        if (is_null($curId) || !is_numeric($curId)) {
+           return redirect()->back()->withErrors([ $this->invalidRecordIdErr ]);
+        }
+        else {
+          // Get the table entry in meta table "tables"
+          $curTable = Table::find($curTable);
+        }
 
         if (!$curTable->hasAccess) {
            return redirect()->route('home')->withErrors([ $this->tableDisabledErr ]);
-        }
-
-        // Check if id is valid
-        if (is_null($curId) || !is_numeric($curId)) {
-           return redirect()->back()->withErrors([ $this->invalidRecordIdErr ]);
         }
 
         // query database for record
@@ -118,21 +119,13 @@ class DataViewController extends Controller {
         // retrieve the column names
         $clmnNmes = DB::getSchemaBuilder()->getColumnListing($curTable->tblNme);
 
-        try {
-          $query = DB::table($curTable->tblNme)
-                  ->whereRaw("match(srchindex) against (? in boolean mode)", [ $srchStrng, $srchStrng ])
-                  ->orderBy('score', 'desc')
-                  ->offset($page - 1 * $perPage)
-                  ->limit($perPage);
-        } catch(\Illuminate\Database\QueryException $ex){
-          return redirect()->back()->withErrors([ $this->invalidSearchStrErr ]);
-        }
+        $query = DB::table($curTable->tblNme)
+                ->whereRaw("match(srchindex) against (? in boolean mode)", [ $srchStrng, $srchStrng ])
+                ->orderBy('score', 'desc')
+                ->offset($page - 1 * $perPage)
+                ->limit($perPage);
 
-        try {
-          $rcrds = $query->get([ '*', DB::raw("MATCH (srchindex) AGAINST (?) AS score")]);
-        } catch(\Illuminate\Database\QueryException $ex){
-          return redirect()->back()->withErrors([ $this->invalidSearchStrErr ]);
-        }
+        $rcrds = $query->get([ '*', DB::raw("MATCH (srchindex) AGAINST (?) AS score")]);
 
         $rcrdsCount = count($rcrds);
 
