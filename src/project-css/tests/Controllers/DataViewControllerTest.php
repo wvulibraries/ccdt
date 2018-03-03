@@ -2,6 +2,9 @@
   # app/tests/controllers/DataViewControllerTest.php
 
   use App\Http\Controllers\DataViewController;
+  use App\Models\User;
+  use App\Models\Collection;
+  use App\Models\Table;
 
   class DataViewControllerTest extends TestCase {
 
@@ -14,8 +17,8 @@
            Artisan::call('db:seed');
 
            // find admin and test user accounts
-           $this->admin = App\User::where('name', '=', 'admin')->first();
-           $this->user = App\User::where('name', '=', 'test')->first();
+           $this->admin = User::where('name', '=', 'admin')->first();
+           $this->user = User::where('name', '=', 'test')->first();
     }
 
     protected function tearDown() {
@@ -24,7 +27,7 @@
     }
 
     public function createCollection($name) {
-           $this->collection = factory(App\Collection::class)->create([
+           $this->collection = factory(Collection::class)->create([
                 'clctnName' => $name,
            ]);
     }

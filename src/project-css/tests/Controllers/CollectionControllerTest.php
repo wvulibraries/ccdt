@@ -1,6 +1,10 @@
 <?php
   # app/tests/controllers/CollectionControllerTest.php
 
+  use App\Models\User;
+  use App\Models\Collection;
+  use App\Models\Table;
+
   class CollectionControllerTest extends TestCase {
 
     private $adminEmail;
@@ -18,8 +22,8 @@
       $this->adminPass = "testing";
 
       // find admin and test user accounts
-      $this->admin = App\User::where('name', '=', 'admin')->first();
-      $this->user = App\User::where('name', '=', 'test')->first();
+      $this->admin = User::where('name', '=', 'admin')->first();
+      $this->user = User::where('name', '=', 'test')->first();
     }
 
     protected function tearDown() {
@@ -71,7 +75,7 @@
 
     public function testEditingCollectionName() {
         // Generate Test Collection
-        $collection = factory(App\Collection::class)->create([
+        $collection = factory(Collection::class)->create([
             'clctnName' => 'collection1',
         ]);
 
@@ -80,13 +84,13 @@
              ->post('collection/edit', [ 'id' => $collection->id, 'clctnName' => 'collection2' ]);
 
         //check if collection was renamed
-        $collection = App\Collection::find($collection->id);
+        $collection = Collection::find($collection->id);
         $this->assertEquals('collection2', $collection->clctnName);
     }
 
     public function testDisableThenEnableCollection() {
         // Generate Test Collection
-        $collection = factory(App\Collection::class)->create([
+        $collection = factory(Collection::class)->create([
             'clctnName' => 'collection1',
         ]);
 
@@ -97,7 +101,7 @@
         $this->actingAs($this->admin)->post('collection/disable', [ 'id' => $collection->id, 'clctnName' => $collection->clctnName ]);
 
         // Verify Collection is disabled
-        $collection = App\Collection::find($collection->id);
+        $collection = Collection::find($collection->id);
         $this->assertEquals('0', $collection->isEnabled);
 
         // While using a admin account try to enable a collection with invalid name (should be redirected)
@@ -106,13 +110,13 @@
         // While using a admin account try to enable a collection
         $this->actingAs($this->admin)->post('collection/enable', [ 'id' => $collection->id ]);
 
-        $collection = App\Collection::find($collection->id);
+        $collection = Collection::find($collection->id);
         $this->assertEquals('1', $collection->hasAccess);
     }
 
     public function testNonAdminDisableCollection() {
         // Generate Test Collection
-        $collection = factory(App\Collection::class)->create([
+        $collection = factory(Collection::class)->create([
            'clctnName' => 'collection1',
         ]);
 
@@ -120,7 +124,7 @@
         $this->actingAs($this->user)->post('collection/disable', [ 'id' => $collection->id, 'clctnName' => $collection->clctnName ]);
 
         // Verify Collection hasn't changed
-        $collection = App\Collection::find($collection->id);
+        $collection = Collection::find($collection->id);
         $this->assertEquals('1', $collection->isEnabled);
     }
 

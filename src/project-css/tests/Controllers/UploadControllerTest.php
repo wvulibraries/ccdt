@@ -2,6 +2,9 @@
     # app/tests/controllers/UploadControllerTest.php
 
     use Illuminate\Support\Facades\Storage;
+    use App\Models\User;
+    use App\Models\Collection;
+    use App\Models\Table;
 
     class UploadControllerTest extends TestCase {
 
@@ -14,8 +17,8 @@
         Artisan::call('db:seed');
 
         // find admin and test user accounts
-        $this->admin = App\User::where('name', '=', 'admin')->first();
-        $this->user = App\User::where('name', '=', 'test')->first();
+        $this->admin = User::where('name', '=', 'admin')->first();
+        $this->user = User::where('name', '=', 'test')->first();
     }
 
     protected function tearDown() {
@@ -31,7 +34,7 @@
              ->assertResponseStatus(200);
 
         // Generate Test Collection
-        $collection = factory(App\Collection::class)->create([
+        $collection = factory(Collection::class)->create([
             'clctnName' => 'collection1',
         ]);
 
@@ -57,11 +60,11 @@
              ->assertResponseStatus(200);
 
          // find table by searching on it's name
-         $table = App\Table::where('tblNme', '=', $tblname)->first();
+         $table = Table::where('tblNme', '=', $tblname)->first();
 
          // While using a admin account try to disable a table
          $this->actingAs($this->admin)->post('table/restrict', [ 'id' => $table->id ]);
-         $table = App\Table::where('tblNme', '=', $tblname)->first();
+         $table = Table::where('tblNme', '=', $tblname)->first();
          $this->assertEquals('0', $table->hasAccess);
 
          $this->visit('upload/1')
@@ -86,7 +89,7 @@
              ->assertResponseStatus(200);
 
         // Generate Test Collection
-        $collection = factory(App\Collection::class)->create([
+        $collection = factory(App\Models\Collection::class)->create([
             'clctnName' => 'collection1',
         ]);
 

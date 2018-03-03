@@ -1,7 +1,7 @@
 <?php
   # app/tests/controllers/HomeControllerTest.php
 
-  use App\User;
+  use App\Models\User;
 
   class UserControllerTest extends TestCase {
 
@@ -14,8 +14,8 @@
          Artisan::call('db:seed');
 
          // find admin and test user accounts
-         $this->admin = App\User::where('name', '=', 'admin')->first();
-         $this->user = App\User::where('name', '=', 'test')->first();
+         $this->admin = User::where('name', '=', 'admin')->first();
+         $this->user = User::where('name', '=', 'test')->first();
     }
 
     protected function tearDown() {

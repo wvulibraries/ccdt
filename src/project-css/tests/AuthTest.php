@@ -100,7 +100,7 @@ class AuthTest extends TestCase {
 
     public function testUserRedirectedToDashboard() {
         // Generate Test User
-        $user = factory(App\User::class)->create([
+        $user = factory(App\Models\User::class)->create([
             'email' => $this->userEmail,
             'password' => bcrypt($this->userPass),
         ]);

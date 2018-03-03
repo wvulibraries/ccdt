@@ -5,6 +5,10 @@
   use App\Http\Controllers\TableController;
   use App\Http\Controllers\DataViewController;
 
+  use App\Models\User;
+  use App\Models\Collection;
+  use App\Models\Table;
+
   class TableControllerTest extends TestCase {
 
     private $admin;
@@ -17,8 +21,8 @@
          Artisan::call('db:seed');
 
          // find admin and test user accounts
-         $this->admin = App\User::where('name', '=', 'admin')->first();
-         $this->user = App\User::where('name', '=', 'test')->first();
+         $this->admin = User::where('name', '=', 'admin')->first();
+         $this->user = User::where('name', '=', 'test')->first();
     }
 
     protected function tearDown() {
@@ -27,7 +31,7 @@
     }
 
     public function createCollection($name) {
-           $this->collection = factory(App\Collection::class)->create([
+           $this->collection = factory(Collection::class)->create([
                 'clctnName' => $name,
            ]);
     }
@@ -194,12 +198,12 @@
         $this->createTestTable($tblname, $path, $file);
 
         // find table by searching on it's name
-        $table = App\Table::where('tblNme', '=', $tblname)->first();
+        $table = Table::where('tblNme', '=', $tblname)->first();
 
         // While using a admin account try to disable a table
         $this->actingAs($this->admin)
              ->post('table/restrict', [ 'id' => $table->id ]);
-        $table = App\Table::where('tblNme', '=', $tblname)->first();
+        $table = Table::where('tblNme', '=', $tblname)->first();
         $this->assertEquals('0', $table->hasAccess);
 
         // cleanup remove $file from upload folder

@@ -1,8 +1,6 @@
 <?php
   # app/tests/controllers/HomeControllerTest.php
 
-  use App\User;
-
   class HomeControllerTest extends TestCase {
 
     private $userEmail;
