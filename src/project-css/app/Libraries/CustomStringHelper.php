@@ -126,7 +126,7 @@ class CustomStringHelper {
      * @return      string
      */
     public function cleanSearchString($str) {
-       $str = trim($str);
+       $str = strip_tags(trim($str));
        //replace ? with * for wildcard searches
        $str = str_replace('?', '*', $str);
        $str = $this->searchFormatter($str);
