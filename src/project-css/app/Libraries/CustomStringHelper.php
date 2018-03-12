@@ -83,31 +83,39 @@ class CustomStringHelper {
         return $subfolder;
     }
 
-    /**
-     * @param string $str
-     * @return string
-     */
-    private function db_esc_like_raw($str)
-    {
-        $ret = str_replace([ '%', '_' ], [ '\%', '\_' ], DB::getPdo()->quote($str));
-        return $ret && strlen($ret) >= 2 ? substr($ret, 1, count($ret)-2) : $ret;
+    private function sanitizeSearchTerm($searchPhrase) {
+      $searchPhrase = str_replace("@@", " ", $searchPhrase);
+      $searchPhrase = str_replace("@", " ", $searchPhrase);
+      $searchPhrase = str_replace(",", " ", $searchPhrase);
+      $searchPhrase = str_replace(";", " ", $searchPhrase);
+      $searchPhrase = str_replace("'", " ", $searchPhrase);
+      $searchPhrase = str_replace("--", " -", $searchPhrase);
+      $searchPhrase = str_replace("/*", " ", $searchPhrase);
+      $searchPhrase = str_replace("*/", " ", $searchPhrase);
+      $searchPhrase = str_replace("xp_", " ", $searchPhrase);
+      $searchPhrase = str_replace("++", " +", $searchPhrase);
+      $searchPhrase = str_replace("=", " ", $searchPhrase);
+      return $searchPhrase;
     }
 
-    private function filter_search($str) {
-      // remove excess whitespace
-      $str = str_replace('  ', ' ', $str);
-      // replace '--' with ' -'
-      $str = str_replace('--', ' -', $str);
-      // add spaces in front of + and -
-      $str = str_replace('+', ' +', $str);
-      $str = str_replace('-', ' -', $str);
+    // used by array_filter below filters out items less than 2 characters
+    public function testLength($string) {
+      return (strlen($string) > 1);
+    }
 
-      $removeItems = array('\\', '/', '%', '+ ', '- ', '+*', '-*');
-      $str = str_replace($removeItems, "", $str);
+    public function searchFormatter($searchterm) {
+        $searchTerms = $this->sanitizeSearchTerm($searchterm);
 
-      // remove trailing + - that doesn't have text after
-      $str = rtrim($str, "+");
-      return rtrim($str, "-");
+        $searchArray = (explode(' ', $searchTerms));
+
+        // check remove items with 0 length
+        $searchArray = array_values(array_filter(array_map('trim', $searchArray), array($this, 'testLength')));
+        // leave only unique items in array
+        $searchArray = array_unique($searchArray);
+
+        $searchterm = (implode(' ', $searchArray));
+
+        return $searchterm;
     }
 
     /**
@@ -118,14 +126,11 @@ class CustomStringHelper {
      * @return      string
      */
     public function cleanSearchString($str) {
-       $str = $this->db_esc_like_raw($str);
-      //replace ? with * for wildcard searches
-       $str = str_replace('?', '*', $str);
        $str = trim($str);
-       $str = strip_tags($str);
-       $str = addslashes($str);
-       $str = $this->db_esc_like_raw($str);
-       $str = $this->filter_search($str);
+       //replace ? with * for wildcard searches
+       $str = str_replace('?', '*', $str);
+       $str = $this->searchFormatter($str);
+
        // echo $str;
        // die();
        return strtolower($str);
