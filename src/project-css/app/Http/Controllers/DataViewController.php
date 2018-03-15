@@ -100,15 +100,21 @@ class DataViewController extends Controller {
                                 ->with('curId', $curId);
     }
 
-    public function search(Request $request, $curTable, $search = NULL, $page = 1) {
+    public function search(Request $request, $curTable, $page = 1) {
         // Get the table entry in meta table "tables"
         $curTable = Table::find($curTable);
         if (!$curTable->hasAccess) {
            return redirect()->back()->withErrors([ $this->tableDisabledErr ]);
         }
 
-        if ($search == NULL) {
+
+
+        if ($request->input('search') != NULL) {
           $search = $request->input('search');
+          $request->session()->put('search', $search);
+        }
+        else {
+            $search = $request->session()->get('search');
         }
 
         $srchStrng = (new customStringHelper)->cleanSearchString($search);
@@ -147,7 +153,6 @@ class DataViewController extends Controller {
                                   ->with('clmnNmes', $clmnNmes)
                                   ->with('tblNme', $curTable->tblNme)
                                   ->with('tblId', $curTable)
-                                  ->with('search', $srchStrng)
                                   ->with('page', $page)
                                   ->with('lastPage', $lastPage)
                                   ->with('morepages', $page<$lastPage);

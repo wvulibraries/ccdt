@@ -27,9 +27,9 @@
           <!-- <div class="btn-group btn-group-lg"> -->
             <div class="col-xs-6 col-sm-6 col-md-6 text-left">
               @if($page != 1)
-              <a class="btn btn-primary left-button" href="{{ url('/data', ['curTable' => $tblId, 'search' => $search, 'page' => $page-1])}}">
+              <a class="btn btn-primary left-button" href="{{ route('dataSearch', ['curTable' => $tblId, 'page' => $page-1])}}">
                 <span>
-                  <i class="glyphicon glyphicon-chevron-left"></i>
+                  <span class="glyphicon glyphicon-chevron-left"></span>
                 </span>
                 <span>previous page</span>
               </a>
@@ -37,7 +37,7 @@
             </div>
             <div class="col-xs-6 col-sm-6 col-md-6 text-right">
               @if($page != $lastPage)
-              <a class="btn btn-primary pull-right" href="{{ url('/data', ['curTable' => $tblId, 'search' => $search, 'page' => $page+1])}}">
+              <a class="btn btn-primary pull-right" href="{{ route('dataSearch', ['curTable' => $tblId, 'page' => $page+1])}}">
                 <span>next page</span>
                 <span>
                   <span class="glyphicon glyphicon-chevron-right"></span>
@@ -70,7 +70,7 @@
           <!-- <div class="btn-group btn-group-lg"> -->
             <div class="col-xs-6 col-sm-6 col-md-6 text-left">
               @if($page != 1)
-              <a class="btn btn-primary left-button" href="{{ url('/data', ['curTable' => $tblId, 'search' => $search, 'page' => $page-1])}}">
+              <a class="btn btn-primary left-button" href="{{ route('dataSearch', ['curTable' => $tblId, 'page' => $page-1])}}">
                 <span>
                   <i class="glyphicon glyphicon-chevron-left"></i>
                 </span>
@@ -80,7 +80,7 @@
             </div>
             <div class="col-xs-6 col-sm-6 col-md-6 text-right">
               @if($page != $lastPage)
-              <a class="btn btn-primary pull-right" href="{{ url('/data', ['curTable' => $tblId, 'search' => $search, 'page' => $page+1])}}">
+              <a class="btn btn-primary pull-right" href="{{ route('dataSearch', ['curTable' => $tblId, 'page' => $page+1])}}">
                 <span>next page</span>
                 <span>
                   <span class="glyphicon glyphicon-chevron-right"></span>
