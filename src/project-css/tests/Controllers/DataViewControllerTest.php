@@ -364,7 +364,7 @@
     public function testInvalidTableId() {
            // test to see if table id 99 is available
            // test should fail
-           $this->assertFalse((new DataViewController)->isValidTable('99'));
+           $this->assertFalse((new CheckTableId)->isValidTable('99'));
     }
 
     public function testNullShow() {
