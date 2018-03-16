@@ -84,17 +84,11 @@ class CustomStringHelper {
     }
 
     private function sanitizeSearchTerm($searchPhrase) {
-      $searchPhrase = str_replace("@@", " ", $searchPhrase);
-      $searchPhrase = str_replace("@", " ", $searchPhrase);
-      $searchPhrase = str_replace(",", " ", $searchPhrase);
-      $searchPhrase = str_replace(";", " ", $searchPhrase);
-      $searchPhrase = str_replace("'", " ", $searchPhrase);
-      $searchPhrase = str_replace("--", " -", $searchPhrase);
-      $searchPhrase = str_replace("/*", " ", $searchPhrase);
-      $searchPhrase = str_replace("*/", " ", $searchPhrase);
-      $searchPhrase = str_replace("xp_", " ", $searchPhrase);
-      $searchPhrase = str_replace("++", " +", $searchPhrase);
-      $searchPhrase = str_replace("=", " ", $searchPhrase);
+       //replace ? with * for wildcard searches
+      $searchPhrase = str_replace('?', '*', $searchPhrase);
+      $searchPhrase = str_replace("+", " +", $searchPhrase);
+      $searchPhrase = str_replace("-", " -", $searchPhrase);
+
       return $searchPhrase;
     }
 
@@ -104,8 +98,8 @@ class CustomStringHelper {
     }
 
     public function searchFormatter($searchterm) {
-        $searchTerms = $this->sanitizeSearchTerm($searchterm);
-
+        $searchTerms = preg_replace('/[^A-Za-z0-9-+<>"()*._ ]/', ' ', $searchterm);
+        $searchTerms = $this->sanitizeSearchTerm($searchTerms);
         $searchArray = (explode(' ', $searchTerms));
 
         // check remove items with 0 length
@@ -127,10 +121,7 @@ class CustomStringHelper {
      */
     public function cleanSearchString($str) {
        $str = strip_tags(trim($str));
-       //replace ? with * for wildcard searches
-       $str = str_replace('?', '*', $str);
        $str = $this->searchFormatter($str);
-
        // echo $str;
        // die();
        return strtolower($str);

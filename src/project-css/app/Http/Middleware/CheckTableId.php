@@ -5,8 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use App\Models\Table;
 
-class CheckTableId
-{
+class CheckTableId {
     /**
      * Handle an incoming request.
      *
@@ -14,14 +13,12 @@ class CheckTableId
      * @param  \Closure  $next
      * @return mixed
      */
-    public function handle($request, Closure $next)
-    {
-        // redirect is check fails
-        if ($this->isValidTable($request->curTable)) {
-            return $next($request);
-        }
-
-        return redirect()->route('home')->withErrors([ 'Table id is invalid' ]);
+    public function handle($request, Closure $next){
+      if ($this->isValidTable($request->curTable) && $this->hasAccess($request->curTable)) {
+        return $next($request);
+      }
+      $message = !($this->hasAccess($request->curTable)) ? 'Table is disabled' : 'Table is invalid';
+      return redirect()->route('home')->withErrors([ $message ]);
     }
 
     /**
@@ -36,5 +33,11 @@ class CheckTableId
       } else {
         return Table::find($curTable) == null ? false : true;
       }
+    }
+
+    public function hasAccess($curTable) {
+      // Get the table entry in meta table "tables"
+      $curTable = Table::find($curTable);
+      return $curTable->hasAccess;
     }
 }
