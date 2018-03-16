@@ -82,7 +82,7 @@
                  ->assertResponseStatus(200);
 
                  // test isValidTable
-                 $this->assertTrue((new DataViewController)->isValidTable('1'));
+                 $this->assertTrue((new CheckTableId)->isValidTable('1'));
 
                  // cleanup remove sample.dat from upload folder
                  Storage::delete('/flatfiles/' . $file);
