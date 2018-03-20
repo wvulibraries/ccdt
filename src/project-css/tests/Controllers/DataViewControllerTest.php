@@ -82,7 +82,10 @@
                  ->assertResponseStatus(200);
 
                  // test isValidTable
-                 $this->assertTrue((new CheckTableId)->isValidTable('1'));
+                 //$this->assertTrue((new CheckTableId)->isValidTable('1'));
+                 $middleware = new App\Http\Middleware\CheckTableId();
+                 $middlewareResponse = $middleware->isValidTable('1')
+                 $this->assertFalse($middlewareResponse);
 
                  // cleanup remove sample.dat from upload folder
                  Storage::delete('/flatfiles/' . $file);
@@ -364,7 +367,12 @@
     public function testInvalidTableId() {
            // test to see if table id 99 is available
            // test should fail
-           $this->assertFalse((new CheckTableId)->isValidTable('99'));
+           //$this->assertFalse((new CheckTableId)->isValidTable('99'));
+           // Pass it to the middleware
+
+          $middleware = new App\Http\Middleware\CheckTableId();
+          $middlewareResponse = $middleware->isValidTable('99')
+          $this->assertFalse($middlewareResponse);
     }
 
     public function testNullShow() {
