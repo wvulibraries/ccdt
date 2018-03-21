@@ -86,7 +86,8 @@
                  ->assertResponseStatus(200);
 
                  // test isValidTable
-                 $this->assertTrue((new DataViewController)->isValidTable('1'));
+                 $middleware = new App\Http\Middleware\CheckTableId();
+                 $this->assertTrue($middleware->isValidTable('1'));
     }
 
     public function testNonAdminCannotCreateTable() {

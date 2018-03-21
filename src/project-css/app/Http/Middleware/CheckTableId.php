@@ -17,7 +17,7 @@ class CheckTableId {
       if ($this->isValidTable($request->curTable) && $this->hasAccess($request->curTable)) {
         return $next($request);
       }
-      $message = !($this->hasAccess($request->curTable)) ? 'Table is disabled' : 'Table is invalid';
+      $message = !($this->isValidTable($request->curTable)) ? 'Table id is invalid' : 'Table is disabled';
       return redirect()->route('home')->withErrors([ $message ]);
     }
 
@@ -38,6 +38,9 @@ class CheckTableId {
     public function hasAccess($curTable) {
       // Get the table entry in meta table "tables"
       $curTable = Table::find($curTable);
-      return $curTable->hasAccess;
+      if (!is_null($curTable) || is_numeric($curTable)) {
+        return $curTable->hasAccess;
+      }
+      return false;
     }
 }

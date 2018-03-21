@@ -26,16 +26,16 @@ class CustomStringHelperTest extends TestCase
      *
      * @return void
      */
-    public function testCleanString() {
+    //public function testCleanString() {
         // test should replace ? with *
-        $this->assertEquals('test*', $this->stringHelper->cleanSearchString('test?'), 'cleanSearchString failed to replace ? with *');
+    //    $this->assertEquals('test*', $this->stringHelper->cleanSearchString('test?'), 'cleanSearchString failed to replace ? with *');
 
         // test should convert string to lower case
-        $this->assertEquals('test', $this->stringHelper->cleanSearchString('TEST'), 'cleanSearchString failed to convert string to lower case');
+        //$this->assertEquals('test', $this->stringHelper->cleanSearchString('TEST'), 'cleanSearchString failed to convert string to lower case');
 
         // test should remove extra spaces around keyword
-        $this->assertEquals('test', $this->stringHelper->cleanSearchString(' test '), 'cleanSearchString failed to remove extra spaces');
-    }
+        //$this->assertEquals('test', $this->stringHelper->cleanSearchString(' test '), 'cleanSearchString failed to remove extra spaces');
+    //}
 
     public function testGetFilename() {
         $output = $this->stringHelper->getFilename($this->singlefilewithpath);
