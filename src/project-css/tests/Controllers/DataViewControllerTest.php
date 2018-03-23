@@ -292,6 +292,11 @@
                 ->assertResponseStatus(200)
                 ->see('Table is disabled');
 
+          $this->session(['search' => "-------"])
+               ->visit('data/1/search/1')
+               ->assertResponseStatus(200)
+               ->see('Table is disabled');
+
            //while table is disabled try to force a Search
            //test bypasses middleware since we are calling
            //the controller directly and bypassing
@@ -302,6 +307,7 @@
            $response = (new DataViewController)->search($request, "1", "1");
            $errors = $response->errors->all();
            $this->assertEquals($errors[0], "Search Yeilded No Results");
+
            //$this->see("Table is disabled");
 
            //var_dump($response->errors);
