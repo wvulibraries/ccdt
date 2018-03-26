@@ -10,6 +10,7 @@ class Table extends Model
     protected $tableName = null;
     public function __construct($id = null) {
         $this->tableId = $id;
+        if ($id != null) { $this->tableName = $this->find($this->tableId)->tblNme; }
     }
 
     /**
@@ -29,27 +30,39 @@ class Table extends Model
 
     public function tableName() {
       if ($this->isValid()) {
-        return $this->find($this->tableId)->tblNme;
+        return $this->tableName;
       }
       return null;
     }
 
     public function recordCount() {
       if ($this->isValid()) {
-        return \DB::table($this->tableName())->count();
+        return \DB::table($this->tableName)->count();
       }
       return 0;
     }
 
     public function getPage($amount) {
-      return \DB::table($this->tableName())->paginate($amount);
+      return \DB::table($this->tableName)->paginate($amount);
     }
 
     public function getColumnList() {
-      return \DB::getSchemaBuilder()->getColumnListing($this->tableName());
+      return \DB::getSchemaBuilder()->getColumnListing($this->tableName);
     }
 
-    // public function query($search) {
-    //
-    // }
+    public function getRecord($id) {
+      return \DB::table($this->tableName)
+                  ->where('id', '=', $id)
+                  ->get();
+    }
+
+    public function fullTextQuery($search, $page, $perPage) {
+        $query = \DB::table($this->tableName)
+                ->whereRaw("match(srchindex) against (? in boolean mode)", array($search, $search))
+                ->orderBy('score', 'desc')
+                ->offset($page - 1 * $perPage)
+                ->limit($perPage);
+
+        return $query->get([ '*', \DB::raw("MATCH (srchindex) AGAINST (?) AS score")]);
+    }
 }

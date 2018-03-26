@@ -51,7 +51,7 @@ class DataViewController extends Controller {
      * Show a record in the table
      */
     public function show($curTable, $curId) {
-      // Check if id is valid
+        // Check if id is valid
         if (is_null($curId) || !is_numeric($curId)) {
            return redirect()->back()->withErrors([ $this->invalidRecordIdErr ]);
         }
@@ -61,9 +61,7 @@ class DataViewController extends Controller {
         if (!$table->isValid()) { return redirect()->route('home')->withErrors([ $this->invalidTableErr ]);}
 
         // query database for record
-        $rcrds = DB::table($table->tableName())
-                    ->where('id', '=', $curId)
-                    ->get();
+        $rcrds = $table->getRecord($curId);
 
         // check for the number of records if their is none return with error message
         if (count($rcrds) == 0) { return redirect()->back()->withErrors([ $this->noResultsErr ]); }
@@ -94,13 +92,15 @@ class DataViewController extends Controller {
         // set records per page
         $perPage = 30;
 
-        $query = DB::table($table->tableName())
-                ->whereRaw("match(srchindex) against (? in boolean mode)", array($srchStrng, $srchStrng))
-                ->orderBy('score', 'desc')
-                ->offset($page - 1 * $perPage)
-                ->limit($perPage);
+        // $query = DB::table($table->tableName())
+        //         ->whereRaw("match(srchindex) against (? in boolean mode)", array($srchStrng, $srchStrng))
+        //         ->orderBy('score', 'desc')
+        //         ->offset($page - 1 * $perPage)
+        //         ->limit($perPage);
+        //
+        // $rcrds = $query->get([ '*', DB::raw("MATCH (srchindex) AGAINST (?) AS score")]);
 
-        $rcrds = $query->get([ '*', DB::raw("MATCH (srchindex) AGAINST (?) AS score")]);
+        $rcrds = $table->fullTextQuery($srchStrng, $page, 30);
 
         $rcrdsCount = count($rcrds);
 
