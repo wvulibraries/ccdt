@@ -308,16 +308,6 @@
            $errors = $response->errors->all();
            $this->assertEquals($errors[0], "Search Yeilded No Results");
 
-           //$this->see("Table is disabled");
-
-           //var_dump($response->errors);
-           //die();
-
-           //$errors = $this->session()->get('errors', new Illuminate\Support\MessageBag)->all();
-
-           // $errors = $response->session()->get('errors', new Illuminate\Support\MessageBag)->all();
-           //$this->assertEquals($errors[0], "Table is disabled");
-
            //While using a admin account try to enable a collection
            $this->post('collection/enable', [ 'id' => $this->collection->id, 'clctnName' => $this->collection->clctnName ])
                 ->visit('data/1')
