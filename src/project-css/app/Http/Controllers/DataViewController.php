@@ -35,6 +35,7 @@ class DataViewController extends Controller {
      */
     public function index($curTable) {
         $table = new Table($curTable);
+
         if (!$table->isValid()) { return redirect()->route('home')->withErrors([ $this->invalidTableErr ]);}
 
         // check for the number of records
@@ -91,14 +92,6 @@ class DataViewController extends Controller {
 
         // set records per page
         $perPage = 30;
-
-        // $query = DB::table($table->tableName())
-        //         ->whereRaw("match(srchindex) against (? in boolean mode)", array($srchStrng, $srchStrng))
-        //         ->orderBy('score', 'desc')
-        //         ->offset($page - 1 * $perPage)
-        //         ->limit($perPage);
-        //
-        // $rcrds = $query->get([ '*', DB::raw("MATCH (srchindex) AGAINST (?) AS score")]);
 
         $rcrds = $table->fullTextQuery($srchStrng, $page, 30);
 
