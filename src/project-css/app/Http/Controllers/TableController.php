@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use App\Models\Table;
 use App\Models\Collection;
+use App\Libraries\CustomStringHelper;
 
 class TableController extends Controller
 {
@@ -638,7 +639,7 @@ class TableController extends Controller
 
       // remove duplicate keywords from the srchIndex
       $srchArr = array_unique($srchArr);
-      return(implode(' ', $srchArr));
+      return(implode(' ', (new customStringHelper)->removeCommonWords($srchArr)));
     }
 
     /**
@@ -661,7 +662,7 @@ class TableController extends Controller
         $curArry[ 'srchindex' ] = $this->createSrchIndex(implode(" ", $tkns));
 
         // Insert them into DB
-        \DB::table($tblNme)->insert($curArry);
+        DB::table($tblNme)->insert($curArry);
        }
     }
 

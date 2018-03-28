@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\DB;
 use App\Models\Table;
 use App\Libraries\CustomStringHelper;
 use App\Libraries\TikaConvert;
@@ -34,9 +33,8 @@ class DataViewController extends Controller {
      * Show the data from the selected table
      */
     public function index($curTable) {
-        $table = new Table($curTable);
-
-        if (!$table->isValid()) { return redirect()->route('home')->withErrors([ $this->invalidTableErr ]);}
+        $table = Table::findorFail($curTable);
+        if ($table == null) { return redirect()->route('home')->withErrors([ $this->invalidTableErr ]);}
 
         // check for the number of records
         if ($table->recordCount() == 0) { return redirect()->route('home')->withErrors([ $this->tableNoRecordsErr ]);}
@@ -44,7 +42,7 @@ class DataViewController extends Controller {
         // return the index page
         return view('user.data')->with('rcrds', $table->getPage(30))
                                 ->with('clmnNmes', $table->getColumnList())
-                                ->with('tblNme', $table->tableName())
+                                ->with('tblNme', $table->tblNme)
                                 ->with('tblId', $curTable);
     }
 
@@ -58,8 +56,8 @@ class DataViewController extends Controller {
         }
 
         // Get the table entry in meta table "tables"
-        $table = new Table($curTable);
-        if (!$table->isValid()) { return redirect()->route('home')->withErrors([ $this->invalidTableErr ]);}
+        $table = Table::findorFail($curTable);
+        if ($table == null) { return redirect()->route('home')->withErrors([ $this->invalidTableErr ]);}
 
         // query database for record
         $rcrds = $table->getRecord($curId);
@@ -70,15 +68,15 @@ class DataViewController extends Controller {
         // return the index page
         return view('user.show')->with('rcrds', $rcrds)
                                 ->with('clmnNmes', $table->getColumnList())
-                                ->with('tblNme', $table->tableName())
+                                ->with('tblNme', $table->tblNme)
                                 ->with('tblId', $curTable)
                                 ->with('curId', $curId);
     }
 
     public function search(Request $request, $curTable, $page = 1) {
         // Get the table entry in meta table "tables"
-        $table = new Table($curTable);
-        if (!$table->isValid()) { return redirect()->route('home')->withErrors([ $this->invalidTableErr ]);}
+        $table = Table::findorFail($curTable);
+        if ($table == null) { return redirect()->route('home')->withErrors([ $this->invalidTableErr ]);}
 
         if ($request->input('search') != NULL) {
           $search = $request->input('search');
@@ -104,7 +102,7 @@ class DataViewController extends Controller {
 
         if ($rcrdsCount == 0) {
           return view('user.search')->with('tblId', $curTable)
-                                    ->with('tblNme', $table->tableName())
+                                    ->with('tblNme', $table->tblNme)
                                     ->with('page', $page)
                                     ->with('lastPage', $lastPage)
                                     ->with('rcrds', $rcrds)
@@ -113,7 +111,7 @@ class DataViewController extends Controller {
 
         return view('user.search')->with('rcrds', $rcrds)
                                   ->with('clmnNmes', $table->getColumnList())
-                                  ->with('tblNme', $table->tableName())
+                                  ->with('tblNme', $table->tblNme)
                                   ->with('tblId', $curTable)
                                   ->with('page', $page)
                                   ->with('lastPage', $lastPage)
@@ -129,15 +127,15 @@ class DataViewController extends Controller {
      */
     public function view($curTable, $recId, $subfolder, $filename) {
         // Get the table entry in meta table "tables"
-        $table = new Table($curTable);
-        if (!$table->isValid()) { return redirect()->route('home')->withErrors([ $this->invalidTableErr ]);}
+        $table = Table::findorFail($curTable);
+        if ($table == null) { return redirect()->route('home')->withErrors([ $this->invalidTableErr ]);}
 
         // retrieve the column names
         $clmnNmes = $table->getColumnList();
 
-        $source = storage_path('app/'.$table->tableName().'/'.$subfolder.'/'.$filename);
+        $source = storage_path('app/'.$table->tblNme.'/'.$subfolder.'/'.$filename);
 
-        $fileMimeType = Storage::getMimeType($table->tableName().'/'.$subfolder.'/'.$filename);
+        $fileMimeType = Storage::getMimeType($table->tblNme.'/'.$subfolder.'/'.$filename);
 
         $matches = "/[^a-zA-Z0-9\s\,\.\-\n\r\t@\/\_\(\)]/";
 
@@ -146,7 +144,7 @@ class DataViewController extends Controller {
             case 'message/rfc822':
                  $fileContents = Response::make((new customStringHelper)->ssnRedact(file_get_contents($source)));
                  return view('user.fileviewer')->with('fileContents', $fileContents)
-                                               ->with('tblNme', $table->tableName())
+                                               ->with('tblNme', $table->tblNme)
                                                ->with('tblId', $curTable)
                                                ->with('recId', $recId);
             case 'application/msword':
@@ -155,13 +153,13 @@ class DataViewController extends Controller {
                  $fileContents = preg_replace($matches, "", (new tikaConvert)->convert($source));
                  $fileContents = Response::make((new customStringHelper)->ssnRedact($fileContents));
                  return view('user.fileviewer')->with('fileContents', $fileContents)
-                                               ->with('tblNme', $table->tableName())
+                                               ->with('tblNme', $table->tblNme)
                                                ->with('tblId', $curTable)
                                                ->with('recId', $recId);
             default:
                  // download file if we cannot determine what kind of file it is.
                  return Response::make(file_get_contents($source), 200, [
-                    'Content-Type' => Storage::getMimeType($table->tableName().'/'.$subfolder.'/'.$filename),
+                    'Content-Type' => Storage::getMimeType($table->tblNme.'/'.$subfolder.'/'.$filename),
                     'Content-Disposition' => 'inline; filename="'.$filename.'"'
                 ]);
         }

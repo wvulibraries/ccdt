@@ -9,7 +9,7 @@
   use App\Models\Collection;
   use App\Models\Table;
 
-  class TableControllerTest extends TestCase {
+  class TableControllerTest extends BrowserKitTestCase {
 
     private $admin;
     private $user;

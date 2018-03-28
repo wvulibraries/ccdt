@@ -1,7 +1,7 @@
 <?php
   # app/tests/controllers/HomeControllerTest.php
 
-  class HomeControllerTest extends TestCase {
+  class HomeControllerTest extends BrowserKitTestCase {
 
     private $userEmail;
     private $userPass;
