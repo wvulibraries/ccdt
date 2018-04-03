@@ -605,7 +605,7 @@ class TableController extends Controller
           // save the last row position and the Tokenized row
           $this->lastErrRow = $prcssd;
           $this->savedTkns = $tkns;
-          return (false);
+          return (null);
         }
 
         return ($tkns);
@@ -643,30 +643,6 @@ class TableController extends Controller
     }
 
     /**
-    * @param string $tkns
-    * @param integer $orgCount
-    * @param string $tblNme
-    * @param array $clmnLst
-    */
-    public function insertRecord($tkns, $orgCount, $tblNme, $clmnLst) {
-      if (count($tkns) == $orgCount) {
-        // Declae an array
-        $curArry = array();
-
-        // Compact them into one array with utf8 encoding
-        for ($i = 0; $i<$orgCount; $i++) {
-          $curArry[ strval($clmnLst[ $i ]) ] = utf8_encode($tkns[ $i ]);
-        }
-
-        // add srchindex
-        $curArry[ 'srchindex' ] = $this->createSrchIndex(implode(" ", $tkns));
-
-        // Insert them into DB
-        DB::table($tblNme)->insert($curArry);
-       }
-    }
-
-    /**
     * Process employs following algorithm:
     * get all the column names from table name
     * 1. Read the file as spl object
@@ -675,14 +651,10 @@ class TableController extends Controller
     *   2. Insert into database
     **/
     public function process($tblNme, $fltFleNme) {
-      // get all column names
-      $clmnLst = $this->getColLst($tblNme);
-
-      // remove the id and time stamps
-      $clmnLst = array_splice($clmnLst, 1, count($clmnLst) - 3);
-
-      // determine number of fields without the srchIndex
-      $orgCount = count($clmnLst) - 1;
+      //get table
+      $table = Table::where('tblNme', $tblNme)->first();
+      $orgCount = $table->getOrgCount();
+      $clmnLst = $table->getColumnList();
 
       // 1. Read the file as spl object
       $fltFleAbsPth = $this->strDir.'/'.$fltFleNme;
@@ -695,7 +667,6 @@ class TableController extends Controller
 
       //Check for an empty file
       if ($this->isEmpty($curFltFleObj)>0) {
-
 
         // Ignore the first line
         $curFltFleObj->seek(1);
@@ -710,10 +681,22 @@ class TableController extends Controller
 
           $tkns = $this->prepareLine($curLine, $delimiter, $orgCount, $prcssd);
 
+          // verify that passed $tkns match the expected field count
+          if (count($tkns) == $orgCount) {
+            // Declae an array
+            $curArry = array();
 
-          if ($tkns != NULL) {
-            $this->insertRecord($tkns, $orgCount, $tblNme, $clmnLst);
-          }
+            // Compact them into one array with utf8 encoding
+            for ($i = 0; $i<$orgCount; $i++) {
+              $curArry[ strval($clmnLst[ $i ]) ] = utf8_encode($tkns[ $i ]);
+            }
+
+            // add srchindex
+            $curArry[ 'srchindex' ] = $this->createSrchIndex(implode(" ", $tkns));
+
+            //insert Record into database
+            $table->insertRecord($curArry);
+           }
 
           // Update the counter
           $prcssd += 1;

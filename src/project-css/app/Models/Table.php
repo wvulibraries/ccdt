@@ -27,10 +27,25 @@ class Table extends Model
         return DB::getSchemaBuilder()->getColumnListing($this->tblNme);
     }
 
+    public function getOrgCount() {
+      // get all column names
+      $clmnLst = $this->getColumnList();
+
+      // determine number of fields without the id, time stamps and srchIndex
+      $orgCount = count($clmnLst) - 4;
+
+      return $orgCount;
+    }
+
     public function getRecord($id) {
         return DB::table($this->tblNme)
                     ->where('id', '=', $id)
                     ->get();
+    }
+
+    public function insertRecord($curArry) {
+        // Insert them into DB
+        DB::table($this->tblNme)->insert($curArry);
     }
 
     public function fullTextQuery($search, $page, $perPage) {

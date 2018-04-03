@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Table;
 use App\Libraries\CustomStringHelper;
+use App\Libraries\FullTextSearchFormatter;
 use App\Libraries\TikaConvert;
 
 /**
@@ -86,7 +87,7 @@ class DataViewController extends Controller {
             $search = $request->session()->get('search');
         }
 
-        $srchStrng = (new customStringHelper)->cleanSearchString($search);
+        $srchStrng = (new FullTextSearchFormatter)->prepareSearch($search);
 
         // set records per page
         $perPage = 30;

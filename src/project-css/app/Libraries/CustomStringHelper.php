@@ -182,17 +182,7 @@ class CustomStringHelper {
     * @return array with filenames
     */
     public function checkForFilenames($string) {
-      $fileExtensions = array(
-          'txt',
-          'doc',
-          "docx",
-          "pdf",
-          "xls",
-          "xlsx",
-          "ppt",
-          "pptx",
-          "jpg"
-      );
+      $fileExtensions = array("txt", "doc", "docx", "pdf", "xls", "xlsx", "ppt", "pptx", "jpg");
       $foundFiles = [];
       $pieces = explode("/", $string);
       foreach ($fileExtensions as $extension) {
