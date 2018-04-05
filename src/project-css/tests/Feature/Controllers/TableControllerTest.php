@@ -93,9 +93,9 @@
     public function testNonAdminCannotCreateTable() {
         // try to get to the user(s) page
         $this->actingAs($this->user)
-            ->get('table')
-            //invalid user gets redirected
-            ->assertResponseStatus(302);
+             ->get('table')
+             //invalid user gets redirected
+             ->assertResponseStatus(302);
     }
 
     public function testFileUploadAndTableCreate() {
@@ -169,6 +169,71 @@
 
         // cleanup remove $file from upload folder
         Storage::delete('/flatfiles/test.dat');
+    }
+
+    public function testSelect() {
+      $tblname = 'importtest'.mt_rand();
+      $tblname2 = 'importtest'.mt_rand();
+      $path = './storage/app/files/test/';
+      $file = 'test.dat';
+
+      $this->createTestTable($tblname, $path, $file);
+
+      $this->actingAs($this->admin)
+           ->visit('table/create#slctPnlBdy')
+           ->type($tblname2, 'slctTblNme')
+           ->see('collection1')
+           ->select($file, 'fltFile2')
+           ->press('Select')
+           ->see('Edit Schema')
+           ->submitForm('Submit', [ 'col-0-data' => 'string', 'col-0-size' => 'default',
+                                   'col-1-data' => 'string', 'col-1-size' => 'default',
+                                   'col-2-data' => 'string', 'col-2-size' => 'default',
+                                   'col-3-data' => 'string', 'col-3-size' => 'default',
+                                   'col-4-data' => 'string', 'col-4-size' => 'default',
+                                   'col-5-data' => 'string', 'col-5-size' => 'default',
+                                   'col-6-data' => 'string', 'col-6-size' => 'default',
+                                   'col-7-data' => 'string', 'col-7-size' => 'default',
+                                   'col-8-data' => 'string', 'col-8-size' => 'default',
+                                   'col-9-data' => 'string', 'col-9-size' => 'default',
+                                   'col-10-data' => 'string', 'col-10-size' => 'default',
+                                   'col-11-data' => 'string', 'col-11-size' => 'default',
+                                   'col-12-data' => 'string', 'col-12-size' => 'default',
+                                   'col-13-data' => 'string', 'col-13-size' => 'default',
+                                   'col-14-data' => 'string', 'col-14-size' => 'default',
+                                   'col-15-data' => 'string', 'col-15-size' => 'default',
+                                   'col-16-data' => 'integer', 'col-16-size' => 'medium',
+                                   'col-17-data' => 'string', 'col-17-size' => 'default',
+                                   'col-18-data' => 'string', 'col-18-size' => 'default',
+                                   'col-19-data' => 'integer', 'col-19-size' => 'big',
+                                   'col-20-data' => 'string', 'col-20-size' => 'big',
+                                   'col-21-data' => 'text', 'col-21-size' => 'default',
+                                   'col-22-data' => 'text', 'col-22-size' => 'medium',
+                                   'col-23-data' => 'string', 'col-23-size' => 'default',
+                                   'col-24-data' => 'string', 'col-24-size' => 'default',
+                                   'col-25-data' => 'string', 'col-25-size' => 'default',
+                                   'col-26-data' => 'string', 'col-26-size' => 'default',
+                                   'col-27-data' => 'string', 'col-27-size' => 'medium',
+                                   'col-28-data' => 'string', 'col-28-size' => 'big',
+                                   'col-29-data' => 'text', 'col-29-size' => 'big',
+                                   'col-30-data' => 'text', 'col-30-size' => 'big',
+                                   'col-31-data' => 'string', 'col-31-size' => 'default' ])
+           ->assertResponseStatus(200)
+           ->see('Load Data')
+           ->press('Load Data')
+           ->see('Table(s)')
+           ->assertResponseStatus(200);
+
+      // cleanup remove $file from upload folder
+      Storage::delete('/flatfiles/' . $file);
+
+      // cleanup remove directory for the test table
+      Storage::deleteDirectory($tblname);
+      Storage::deleteDirectory($tblname2);
+
+      // drop table after Testing
+      Schema::drop($tblname);
+      Schema::drop($tblname2);
     }
 
     public function testSelectAndCreateTableThenDisable() {

@@ -51,5 +51,36 @@
              ->assertResponseStatus(200);
     }
 
+    public function testRetryFailedJob() {
+        \DB::insert('insert into failed_jobs (payload) values(?)',['test payload']);
+        $this->actingAs($this->admin)
+             ->visit('admin/jobs/retry/1')
+             ->see('No Failed Job(s).')
+             ->assertResponseStatus(200);
+    }
+
+    public function testRetryAllFailedJobs() {
+        \DB::insert('insert into failed_jobs (payload) values(?)',['test payload']);
+        $this->actingAs($this->admin)
+             ->visit('admin/jobs/retryall')
+             ->see('No Failed Job(s).')
+             ->assertResponseStatus(200);
+    }
+
+    public function testForgetJob() {
+        \DB::insert('insert into failed_jobs (payload) values(?)',['test payload']);
+        $this->actingAs($this->admin)
+             ->visit('admin/jobs/forget/1')
+             ->see('No Failed Job(s).')
+             ->assertResponseStatus(200);
+    }
+
+    public function testForgetAllFailedJobs() {
+        \DB::insert('insert into failed_jobs (payload) values(?)',['test payload']);
+        $this->actingAs($this->admin)
+             ->visit('admin/jobs/flush')
+             ->see('No Failed Job(s).')
+             ->assertResponseStatus(200);
+    }
   }
 ?>

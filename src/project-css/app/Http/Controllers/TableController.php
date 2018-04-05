@@ -153,6 +153,7 @@ class TableController extends Controller
     * 3. Show the users with the schema
     */
     public function select(Request $request) {
+
       // 1. Get the file name and validate file, if not validated remove it
       //Rules for validation
       $rules = array(
@@ -519,14 +520,6 @@ class TableController extends Controller
 
       // return the list
       return $fltFleList;
-    }
-
-    /**
-    * Simple method to get the column listing
-    **/
-    public function getColLst($tblNme) {
-      // Returns the column names as an array
-      return Schema::getColumnListing($tblNme);
     }
 
     /**
