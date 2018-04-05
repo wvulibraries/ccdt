@@ -40,6 +40,7 @@ class FullTextSearchFormatter {
 
       // check remove items with 0 length
       $searchArray = array_values(array_filter(array_map('trim', $searchArray), array($this, 'testLength')));
+
       // leave only unique items in array
       $searchArray = array_unique($searchArray);
 
@@ -74,6 +75,13 @@ class FullTextSearchFormatter {
       return false;
     }
 
+    public function hasWildCard($string) {
+      if (mb_substr($string, -1) == '*') {
+        return true;
+      }
+      return false;
+    }
+
     public function getMatchEither($string) {
       // returns string between ()
       $startPos = strpos($string, '(') + 1;
@@ -86,6 +94,8 @@ class FullTextSearchFormatter {
         $eitherString = $this->getMatchEither($string);
         $eitherArray = (explode(' ', $eitherString));
         foreach ($eitherArray as &$value) {
+          // check if * exists on the end of string
+          $wildcard = $this->hasWildCard($value);
           if ($this->hasRelevancyModifier($value)) {
             $modifier = $value[0];
             $value = substr($value, 1, strlen($value) - 1);
@@ -93,6 +103,10 @@ class FullTextSearchFormatter {
           }
           else {
             $value = preg_replace('/[^A-Za-z0-9]/', '', $value);
+          }
+          // add back wildcard at to the string if it was present before
+          if ($wildcard) {
+            $value = $value . '*';
           }
         }
         return '+(' . implode(' ', $eitherArray) .')';
@@ -105,10 +119,8 @@ class FullTextSearchFormatter {
       // a exact term search is wrapped like "example search"
       if ($this->hasExactTerm($search)) {
         $searchTerms = $this->cleanSearchString('/[^A-Za-z0-9 ]/', $search);
-
         // add back the quotes
         $searchTerms = '"' . $searchTerms . '"';
-        var_dump($searchTerms);
         return $searchTerms;
       }
       else if ($this->hasMatchEither($search)) {
@@ -116,14 +128,12 @@ class FullTextSearchFormatter {
         $main = $this->cleanSearchString('/[^a-zA-Z+-~ ]/', substr($search, 0, strpos($search, '(')));
         //cleans and properly format the Match either part of the search string
         $matchEither = $this->cleanMatchEither($search);
+        //recombine both parts
         $searchTerms = $main . ' ' . $matchEither;
-        var_dump($searchTerms);
         return $searchTerms;
       }
       // if string isn't a exact term search or match either search
-      $searchTerms = $this->cleanSearchString('/[^a-zA-Z+-~ ]/', $search);
-      var_dump($searchTerms);
-      // die();
+      $searchTerms = $this->cleanSearchString('/[^a-zA-Z+-~* ]/', $search);
       return $searchTerms;
     }
 }

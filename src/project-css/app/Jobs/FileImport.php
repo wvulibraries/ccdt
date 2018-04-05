@@ -30,8 +30,7 @@ class FileImport implements ShouldQueue
      */
     public function handle()
     {
-        $TableController = (new TableController);
-        $TableController->process($this->tblNme, $this->fltFle);
+        (new TableController)->process($this->tblNme, $this->fltFle);
     }
 
 }

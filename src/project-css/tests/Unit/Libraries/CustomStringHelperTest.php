@@ -19,24 +19,6 @@ class CustomStringHelperTest extends TestCase
         parent::tearDown();
     }
 
-    /**
-     * Clean Search string replaces ? with * for fulltext searches
-     * Also it will remove extra spaces in the string
-     * And converts all characters to lower case
-     *
-     * @return void
-     */
-    //public function testCleanString() {
-        // test should replace ? with *
-    //    $this->assertEquals('test*', $this->stringHelper->cleanSearchString('test?'), 'cleanSearchString failed to replace ? with *');
-
-        // test should convert string to lower case
-        //$this->assertEquals('test', $this->stringHelper->cleanSearchString('TEST'), 'cleanSearchString failed to convert string to lower case');
-
-        // test should remove extra spaces around keyword
-        //$this->assertEquals('test', $this->stringHelper->cleanSearchString(' test '), 'cleanSearchString failed to remove extra spaces');
-    //}
-
     public function testGetFilename() {
         $output = $this->stringHelper->getFilename($this->singlefilewithpath);
         $this->assertEquals('114561.txt', $output, 'getFilename failed to get filename from String');
@@ -45,6 +27,11 @@ class CustomStringHelperTest extends TestCase
     public function testGetFolderName() {
         $output = $this->stringHelper->getFolderName($this->singlefilewithpath);
         $this->assertEquals('indivletters', $output, 'getFolderName failed to get folder from String');
+    }
+
+    public function testRemoveCommonWords() {
+        $output = $this->stringHelper->removeCommonWords(explode(" ", "this is a test string"));
+        $this->assertEquals('test string', implode(" ", $output), 'removeCommonWords failed to remove common words');
     }
 
     public function testSeparateFiles() {

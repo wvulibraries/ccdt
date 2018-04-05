@@ -31,10 +31,8 @@ class Table extends Model
       // get all column names
       $clmnLst = $this->getColumnList();
 
-      // determine number of fields without the id, time stamps and srchIndex
-      $orgCount = count($clmnLst) - 4;
-
-      return $orgCount;
+      // return number of fields without the id, time stamps and srchIndex
+      return (count($clmnLst) - 4);
     }
 
     public function getRecord($id) {

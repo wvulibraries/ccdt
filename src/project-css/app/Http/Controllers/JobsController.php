@@ -3,69 +3,51 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use App\Models\Jobs;
+use Auth;
 
 class JobsController extends Controller
 {
+    private $Jobs;
+
     public function __construct() {
       // Protection to make sure this is only accessible to admin
       $this->middleware('admin');
+      $this->Jobs = new Jobs();
     }
     /**
     * Show the collection index page
     */
     public function pending() {
-        // Sent the current authenticated user
-        $AuthUsr = \Auth::user();
-        $jobCount = \DB::table('jobs')->count();
-        $jobArray = \DB::table('jobs')->get();
-        // check if the user is admin
-        return view('admin/jobs/pending')->with('AuthUsr', $AuthUsr)
-                                 ->with('JobCount', $jobCount)
-                                 ->with('CurrentJobs', $jobArray);
+        return view('admin/jobs/pending')->with('AuthUsr', Auth::user())
+                                 ->with('JobCount', $this->Jobs->getPendingJobsCount())
+                                 ->with('CurrentJobs', $this->Jobs->getAllPendingJobs());
     }
 
     public function failed() {
-        // Sent the current authenticated user
-        $AuthUsr = \Auth::user();
-        $jobCount = \DB::table('failed_jobs')->count();
-        $jobArray = \DB::table('failed_jobs')->get();
-        // check if the user is admin
-        return view('admin/jobs/failed')->with('AuthUsr', $AuthUsr)
-                                 ->with('JobCount', $jobCount)
-                                 ->with('FailedJobs', $jobArray);
+        return view('admin/jobs/failed')->with('AuthUsr', Auth::user())
+                                 ->with('JobCount', $this->Jobs->getFailedJobsCount())
+                                 ->with('FailedJobs', $this->Jobs->getAllFailedJobs());
     }
 
     public function retry($id) {
-        if (is_numeric($id)) {
-          $queueRetry = \Artisan::call('queue:retry', ['id' => [$id]]);
-          \Log::info($queueRetry);
-        }
+        $this->Jobs->retryFailedJob($id);
         return $this->failed();
     }
 
     public function retryAll() {
-        $jobArray = \DB::table('failed_jobs')->get();
-        foreach ($jobArray as $job) {
-          if (is_numeric($job->id)) {
-            $queueRetry = \Artisan::call('queue:retry', ['id' => [$job->id]]);
-            \Log::info($queueRetry);
-          }
-        }
+        $this->Jobs->retryAllFailedJobs();
         return $this->failed();
     }
 
     public function forget($id) {
-        if (is_numeric($id)) {
-          $queueForget = \Artisan::call('queue:forget', ['id' => [$id]]);
-          \Log::info($queueForget);
-        }
+        $this->Jobs->forgetFailedJob($id);
         return $this->failed();
     }
 
     public function flush() {
-        $queueFlush = \Artisan::call('queue:flush');
-        \Log::info($queueFlush);
+        $this->Jobs->forgetAllFailedJobs();
         return $this->failed();
     }
-
 }
