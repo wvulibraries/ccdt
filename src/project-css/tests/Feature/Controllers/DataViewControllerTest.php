@@ -292,11 +292,6 @@
                 ->assertResponseStatus(200)
                 ->see('Table is disabled');
 
-          // $this->session(['search' => "-------"])
-          //      ->visit('data/1/search/1')
-          //      ->assertResponseStatus(200)
-          //      ->see('Table is disabled');
-
            //while table is disabled try to force a Search
            //test bypasses middleware since we are calling
            //the controller directly and bypassing
@@ -378,20 +373,11 @@
            Schema::drop($tblname);
     }
 
-    public function testInvalidTableId() {
-           // test to see if table id 99 is available
-           // test should fail
-          $middleware = new App\Http\Middleware\CheckTableId();
-          $this->assertFalse($middleware->isValidTable('99'));
-
-    }
-
     public function testNullShow() {
            // test to see if passing null for both table id and record produces a error response
            $response = (new DataViewController)->show(null, null);
            $errors = $response->getSession()->get('errors', new Illuminate\Support\MessageBag)->all();
            $this->assertEquals($errors[0], "Invalid Record ID");
-           //var_dump($errors);
     }
 
   }

@@ -9,7 +9,11 @@
     public function setUp() {
          parent::setUp();
          Artisan::call('migrate');
-         Artisan::call('db:seed');
+
+         \DB::insert('insert into collections (clctnName, isEnabled, hasAccess) values(?, ?, ?)',['collection1', true, true]);
+
+         //insert record into table for testing
+         \DB::insert('insert into tables (tblNme, collection_id, hasAccess) values(?, ?, ?)',['testtable1', 1, true]);
     }
 
     protected function tearDown() {
@@ -43,6 +47,19 @@
         // we are testing that the array is present and valid
         $response = (new TableController)->load();
         $this->assertInternalType('array', $response->fltFleList);
+    }
+
+    public function testProcess() {
+        // passing a empty file should throw an exception
+        $request = new \Illuminate\Http\Request();
+        $emptyFile = './storage/app/flatfiles/empty.csv';
+        touch($emptyFile);
+        try {
+         (new TableController)->process('testtable1', 'empty.csv');
+        } catch (Exception $e) {
+          $this->assertEquals("Cannot Import a Empty File.", $e->getMessage());
+        }
+        unlink($emptyFile);
     }
 
   }

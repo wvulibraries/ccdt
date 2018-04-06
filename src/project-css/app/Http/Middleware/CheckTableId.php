@@ -28,18 +28,19 @@ class CheckTableId {
     * 3. Check for the table id
     **/
     public function isValidTable($curTable) {
-      if (is_null($curTable) || !is_numeric($curTable)) {
-        return false;
-      } else {
+      if (!is_null($curTable) && is_numeric($curTable)) {
         return Table::find($curTable) == null ? false : true;
       }
+      return false;
     }
 
     public function hasAccess($curTable) {
-      // Get the table entry in meta table "tables"
-      $curTable = Table::find($curTable);
-      if (!is_null($curTable) || is_numeric($curTable)) {
-        return $curTable->hasAccess;
+      if ($this->isValidTable($curTable)) {
+        // Get the table entry in meta table "tables"
+        $curTable = Table::find($curTable);
+        if ($curTable->hasAccess == 1) {
+          return true;
+        }
       }
       return false;
     }

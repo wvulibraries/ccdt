@@ -659,7 +659,7 @@ class TableController extends Controller
       $delimiter = $this->detectDelimiter($fltFleFullPth);
 
       //Check for an empty file
-      if ($this->isEmpty($curFltFleObj)>0) {
+      if (filesize($fltFleFullPth)>0) {
 
         // Ignore the first line
         $curFltFleObj->seek(1);
