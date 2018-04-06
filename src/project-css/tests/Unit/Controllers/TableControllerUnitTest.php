@@ -51,11 +51,10 @@
 
     public function testProcess() {
         // passing a empty file should throw an exception
-        $request = new \Illuminate\Http\Request();
         $emptyFile = './storage/app/flatfiles/empty.csv';
         touch($emptyFile);
         try {
-         (new TableController)->process('testtable1', 'empty.csv');
+          (new TableController)->process('testtable1', 'empty.csv');
         } catch (Exception $e) {
           $this->assertEquals("Cannot Import a Empty File.", $e->getMessage());
         }

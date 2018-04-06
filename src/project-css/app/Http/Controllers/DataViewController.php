@@ -34,11 +34,15 @@ class DataViewController extends Controller {
      * Show the data from the selected table
      */
     public function index($curTable) {
-        $table = Table::findorFail($curTable);
-        if ($table == null) { return redirect()->route('home')->withErrors([ $this->invalidTableErr ]);}
+        $table = Table::findOrFail($curTable);
+        if ($table == null) {
+          return redirect()->route('home')->withErrors([ $this->invalidTableErr ]);
+        }
 
         // check for the number of records
-        if ($table->recordCount() == 0) { return redirect()->route('home')->withErrors([ $this->tableNoRecordsErr ]);}
+        if ($table->recordCount() == 0) {
+          return redirect()->route('home')->withErrors([ $this->tableNoRecordsErr ]);
+        }
 
         // return the index page
         return view('user.data')->with('rcrds', $table->getPage(30))
@@ -57,7 +61,7 @@ class DataViewController extends Controller {
         }
 
         // Get the table entry in meta table "tables"
-        $table = Table::findorFail($curTable);
+        $table = Table::findOrFail($curTable);
         if ($table == null) { return redirect()->route('home')->withErrors([ $this->invalidTableErr ]);}
 
         // query database for record
@@ -76,7 +80,7 @@ class DataViewController extends Controller {
 
     public function search(Request $request, $curTable, $page = 1) {
         // Get the table entry in meta table "tables"
-        $table = Table::findorFail($curTable);
+        $table = Table::findOrFail($curTable);
         if ($table == null) { return redirect()->route('home')->withErrors([ $this->invalidTableErr ]);}
 
         if ($request->input('search') != NULL) {
@@ -128,7 +132,7 @@ class DataViewController extends Controller {
      */
     public function view($curTable, $recId, $subfolder, $filename) {
         // Get the table entry in meta table "tables"
-        $table = Table::findorFail($curTable);
+        $table = Table::findOrFail($curTable);
         if ($table == null) { return redirect()->route('home')->withErrors([ $this->invalidTableErr ]);}
 
         // retrieve the column names

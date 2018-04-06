@@ -7,47 +7,72 @@ use Illuminate\Support\Facades\DB;
 use App\Models\Jobs;
 use Auth;
 
+// Jobs Controller manages the file import that loads data into the tables.
+
 class JobsController extends Controller
 {
-    private $Jobs;
-
     public function __construct() {
       // Protection to make sure this is only accessible to admin
       $this->middleware('admin');
-      $this->Jobs = new Jobs();
     }
+
     /**
-    * Show the collection index page
+    * Return the pending jobs page
     */
     public function pending() {
         return view('admin/jobs/pending')->with('AuthUsr', Auth::user())
-                                 ->with('JobCount', $this->Jobs->getPendingJobsCount())
-                                 ->with('CurrentJobs', $this->Jobs->getAllPendingJobs());
+                                 ->with('JobCount', Jobs::getPendingJobsCount())
+                                 ->with('CurrentJobs', Jobs::getAllPendingJobs());
     }
 
+    /**
+    * Return the failed jobs page
+    */
     public function failed() {
         return view('admin/jobs/failed')->with('AuthUsr', Auth::user())
-                                 ->with('JobCount', $this->Jobs->getFailedJobsCount())
-                                 ->with('FailedJobs', $this->Jobs->getAllFailedJobs());
+                                 ->with('JobCount', Jobs::getFailedJobsCount())
+                                 ->with('FailedJobs', Jobs::getAllFailedJobs());
     }
 
+    /**
+     * Calls the model function to retry specific job from the table.
+     *
+     * @param  int  $id
+     * @return view listing failed jobs.
+     */
     public function retry($id) {
-        $this->Jobs->retryFailedJob($id);
+        Jobs::retryFailedJob($id);
         return $this->failed();
     }
 
+    /**
+     * Calls the model function to retry all failed jobs from the table.
+     *
+     * @return view listing failed jobs.
+     */
     public function retryAll() {
-        $this->Jobs->retryAllFailedJobs();
+        Jobs::retryAllFailedJobs();
         return $this->failed();
     }
 
+    /**
+     * Calls the model function to clear specific job from the table.
+     *
+     * @param  int  $id
+     * @return view listing failed jobs.
+     */
     public function forget($id) {
-        $this->Jobs->forgetFailedJob($id);
+        Jobs::forgetFailedJob($id);
         return $this->failed();
     }
 
+    /**
+     * Calls the model function to clear all failed jobs from the table.
+     *
+     * @return view listing failed jobs.
+     */
     public function flush() {
-        $this->Jobs->forgetAllFailedJobs();
+        Jobs::forgetAllFailedJobs();
         return $this->failed();
     }
 }

@@ -706,7 +706,7 @@ class TableController extends Controller
     */
     public function restrict(Request $request) {
       // Create the collection name
-      $thisTbl = Table::findorFail($request->id);
+      $thisTbl = Table::findOrFail($request->id);
       $thisTbl->hasAccess = false;
       $thisTbl->save();
       return redirect()->route('tableIndex');

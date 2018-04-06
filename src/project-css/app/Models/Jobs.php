@@ -7,44 +7,44 @@ use Illuminate\Support\Facades\DB;
 
 class Jobs extends Model
 {
-    public function getPendingJobsCount() {
+    public static function getPendingJobsCount() {
         return DB::table('jobs')->count();
     }
 
-    public function getAllPendingJobs() {
+    public static function getAllPendingJobs() {
         return DB::table('jobs')->get();
     }
 
-    public function getFailedJobsCount() {
+    public static function getFailedJobsCount() {
         return DB::table('failed_jobs')->count();
     }
 
-    public function getAllFailedJobs() {
+    public static function getAllFailedJobs() {
         return DB::table('failed_jobs')->get();
     }
 
-    public function retryFailedJob($id) {
+    public static function retryFailedJob($id) {
       if (is_numeric($id)) {
         $queueRetry = \Artisan::call('queue:retry', ['id' => [$id]]);
         \Log::info($queueRetry);
       }
     }
 
-    public function retryAllFailedJobs() {
-      $jobArray = $this->getAllFailedJobs();
+    public static function retryAllFailedJobs() {
+      $jobArray = Jobs::getAllFailedJobs();
       foreach ($jobArray as $job) {
-        $this->retryFailedJob($job->id);
+        Jobs::retryFailedJob($job->id);
       }
     }
 
-    public function forgetFailedJob($id) {
+    public static function forgetFailedJob($id) {
       if (is_numeric($id)) {
         $queueForget = \Artisan::call('queue:forget', ['id' => [$id]]);
         \Log::info($queueForget);
       }
     }
 
-    public function forgetAllFailedJobs() {
+    public static function forgetAllFailedJobs() {
       $queueFlush = \Artisan::call('queue:flush');
       \Log::info($queueFlush);
     }
