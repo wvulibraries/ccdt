@@ -66,9 +66,16 @@ class FullTextSearchFormatterTest extends TestCase
        $this->assertEquals('+nice +(>language <country)', $this->fullTextHelper->prepareSearch('+nice +(>language <country)'), 'prepareSearch failed to remove extra spaces');
     }
 
+    public function testGetMatchEither() {
+        // missing ) should cause a False result
+        $this->assertFalse($this->fullTextHelper->getMatchEither('test (test1 test2'));
+        // test should return true has Match Either grouping
+        $this->assertEquals('<test1 >test2', $this->fullTextHelper->getMatchEither('test (<test1 >test2)'), 'cleanMatchEither failed to return properly formatted string');
+    }
+
     public function testCleanMatchEither() {
-        // test should return false has no grouping for matching either
-        $this->assertFalse($this->fullTextHelper->cleanMatchEither('test?'));
+        // test should properly format the (test? test2*) to +(test test2) removing the ?
+        $this->assertEquals('+(test test2*)', $this->fullTextHelper->cleanMatchEither('(test? test2*)'), 'cleanMatchEither failed to return properly formatted string');
         // test should return true has Match Either grouping
         $this->assertEquals('+(<test >test2)', $this->fullTextHelper->cleanMatchEither('(<test >test2)'), 'cleanMatchEither failed to return properly formatted string');
     }

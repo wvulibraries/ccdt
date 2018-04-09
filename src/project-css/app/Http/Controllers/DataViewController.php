@@ -15,11 +15,9 @@ use App\Libraries\TikaConvert;
  */
 class DataViewController extends Controller {
     // various error messages
-    public $tableDisabledErr = 'Table is disabled';
     public $tableNoRecordsErr = 'Table does not have any records.';
     public $invalidRecordIdErr = 'Invalid Record ID';
     public $noResultsErr = 'Search Yeilded No Results';
-    public $invalidTableErr = 'Invalid Table ID';
     public $invalidSearchStrErr = 'Invalid Search String';
 
     /**
@@ -35,9 +33,6 @@ class DataViewController extends Controller {
      */
     public function index($curTable) {
         $table = Table::findOrFail($curTable);
-        if ($table == null) {
-          return redirect()->route('home')->withErrors([ $this->invalidTableErr ]);
-        }
 
         // check for the number of records
         if ($table->recordCount() == 0) {
@@ -62,7 +57,6 @@ class DataViewController extends Controller {
 
         // Get the table entry in meta table "tables"
         $table = Table::findOrFail($curTable);
-        if ($table == null) { return redirect()->route('home')->withErrors([ $this->invalidTableErr ]);}
 
         // query database for record
         $rcrds = $table->getRecord($curId);
@@ -81,7 +75,6 @@ class DataViewController extends Controller {
     public function search(Request $request, $curTable, $page = 1) {
         // Get the table entry in meta table "tables"
         $table = Table::findOrFail($curTable);
-        if ($table == null) { return redirect()->route('home')->withErrors([ $this->invalidTableErr ]);}
 
         if ($request->input('search') != NULL) {
           $search = $request->input('search');
@@ -133,10 +126,6 @@ class DataViewController extends Controller {
     public function view($curTable, $recId, $subfolder, $filename) {
         // Get the table entry in meta table "tables"
         $table = Table::findOrFail($curTable);
-        if ($table == null) { return redirect()->route('home')->withErrors([ $this->invalidTableErr ]);}
-
-        // retrieve the column names
-        $clmnNmes = $table->getColumnList();
 
         $source = storage_path('app/'.$table->tblNme.'/'.$subfolder.'/'.$filename);
 

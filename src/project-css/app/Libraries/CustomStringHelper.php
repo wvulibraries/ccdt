@@ -103,11 +103,11 @@ class CustomStringHelper {
             // 0 we have matches against the SSN pattern and will return
             // a true value
             if (preg_match_all($pattern, $fileContents, $matches)>0) {
-                return(true);
+                return (true);
             }
 
         }
-        return(false);
+        return (false);
     }
 
     /**
