@@ -10,7 +10,7 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
  *
  *
  */
-class RegFormTest extends TestCase
+class RegFormTest extends BrowserKitTestCase
 {
     public function setUp() {
       parent::setUp();

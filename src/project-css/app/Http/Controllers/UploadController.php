@@ -22,13 +22,10 @@ class UploadController extends Controller {
     public function index($curTable) {
         // Get the table entry in meta table "tables"
         $curTable = Table::find($curTable);
-        if (!$curTable->hasAccess) {
-        return redirect()->route('home')->withErrors([ 'Table is disabled' ]);
-        }
 
         // return the index page
         return view('admin/upload')->with('tblNme', $curTable->tblNme)
-                                    ->with('tblId', $curTable);
+                                   ->with('tblId', $curTable);
     }
 
     /**

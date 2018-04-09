@@ -1,20 +1,27 @@
 <?php
   # app/tests/controllers/DataViewControllerTest.php
-
+  use \Illuminate\Session\SessionManager;
   use App\Http\Controllers\DataViewController;
   use App\Models\User;
   use App\Models\Collection;
   use App\Models\Table;
 
-  class DataViewControllerTest extends TestCase {
+  class DataViewControllerTest extends BrowserKitTestCase {
 
     private $admin;
     private $user;
+
+    /**
+    * @var \Illuminate\Session\SessionManager
+    */
+    protected $manager;
 
     public function setUp() {
            parent::setUp();
            Artisan::call('migrate');
            Artisan::call('db:seed');
+           Session::setDefaultDriver('array');
+           $this->manager = app('session');
 
            // find admin and test user accounts
            $this->admin = User::where('name', '=', 'admin')->first();
@@ -82,8 +89,8 @@
                  ->assertResponseStatus(200);
 
                  // test isValidTable
-                 $this->assertTrue((new DataViewController)->isValidTable('1'));
-
+                 $middleware = new App\Http\Middleware\CheckTableId();
+                 $this->assertTrue($middleware->isValidTable('1'));
                  // cleanup remove sample.dat from upload folder
                  Storage::delete('/flatfiles/' . $file);
     }
@@ -286,10 +293,15 @@
                 ->see('Table is disabled');
 
            //while table is disabled try to force a Search
+           //test bypasses middleware since we are calling
+           //the controller directly and bypassing
+           //the middleware that checks for access
            $request = new \Illuminate\Http\Request();
-           $response = (new DataViewController)->search($request, "1", "-------", "1");
-           $errors = $response->getSession()->get('errors', new Illuminate\Support\MessageBag)->all();
-           $this->assertEquals($errors[0], "Table is disabled");
+           $request->setLaravelSession($this->manager->driver());
+           $request->session(['search' => "-------"]);
+           $response = (new DataViewController)->search($request, "1", "1");
+           $errors = $response->errors->all();
+           $this->assertEquals($errors[0], "Search Yeilded No Results");
 
            //While using a admin account try to enable a collection
            $this->post('collection/enable', [ 'id' => $this->collection->id, 'clctnName' => $this->collection->clctnName ])
@@ -361,18 +373,11 @@
            Schema::drop($tblname);
     }
 
-    public function testInvalidTableId() {
-           // test to see if table id 99 is available
-           // test should fail
-           $this->assertFalse((new DataViewController)->isValidTable('99'));
-    }
-
     public function testNullShow() {
            // test to see if passing null for both table id and record produces a error response
            $response = (new DataViewController)->show(null, null);
            $errors = $response->getSession()->get('errors', new Illuminate\Support\MessageBag)->all();
            $this->assertEquals($errors[0], "Invalid Record ID");
-           //var_dump($errors);
     }
 
   }
