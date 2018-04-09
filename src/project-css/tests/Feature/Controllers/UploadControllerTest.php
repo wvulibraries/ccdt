@@ -6,7 +6,7 @@
     use App\Models\Collection;
     use App\Models\Table;
 
-    class UploadControllerTest extends TestCase {
+    class UploadControllerTest extends BrowserKitTestCase {
 
     private $admin;
     private $user;

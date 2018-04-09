@@ -83,57 +83,9 @@ class CustomStringHelper {
         return $subfolder;
     }
 
-    private function sanitizeSearchTerm($searchPhrase) {
-      $searchPhrase = str_replace("@@", " ", $searchPhrase);
-      $searchPhrase = str_replace("@", " ", $searchPhrase);
-      $searchPhrase = str_replace(",", " ", $searchPhrase);
-      $searchPhrase = str_replace(";", " ", $searchPhrase);
-      $searchPhrase = str_replace("'", " ", $searchPhrase);
-      $searchPhrase = str_replace("--", " -", $searchPhrase);
-      $searchPhrase = str_replace("/*", " ", $searchPhrase);
-      $searchPhrase = str_replace("*/", " ", $searchPhrase);
-      $searchPhrase = str_replace("xp_", " ", $searchPhrase);
-      $searchPhrase = str_replace("++", " +", $searchPhrase);
-      $searchPhrase = str_replace("=", " ", $searchPhrase);
-      return $searchPhrase;
-    }
-
-    // used by array_filter below filters out items less than 2 characters
-    public function testLength($string) {
-      return (strlen($string) > 1);
-    }
-
-    public function searchFormatter($searchterm) {
-        $searchTerms = $this->sanitizeSearchTerm($searchterm);
-
-        $searchArray = (explode(' ', $searchTerms));
-
-        // check remove items with 0 length
-        $searchArray = array_values(array_filter(array_map('trim', $searchArray), array($this, 'testLength')));
-        // leave only unique items in array
-        $searchArray = array_unique($searchArray);
-
-        $searchterm = (implode(' ', $searchArray));
-
-        return $searchterm;
-    }
-
-    /**
-     * Tries to clean search string of extra spaces also uses strip_tags and
-     * mysql_real_escape_string to safeguard AGAINST sql injection. Also
-     * replaces ? that is sometimes used as a wildcard and replaces it with a *
-     * @param       string  $search    Input string
-     * @return      string
-     */
-    public function cleanSearchString($str) {
-       $str = strip_tags(trim($str));
-       //replace ? with * for wildcard searches
-       $str = str_replace('?', '*', $str);
-       $str = $this->searchFormatter($str);
-
-       // echo $str;
-       // die();
-       return strtolower($str);
+    public function removeCommonWords($search) {
+      $stopWords=array("a","able","about","across","after","all","almost","also","am","among","an","and","any","are","as","at","be","because","been","but","by","can","cannot","could","dear","did","do","does","either","else","ever","every","for","from","get","got","had","has","have","he","her","hers","him","his","how","however","i","if","in","into","is","it","its","just","least","let","like","likely","may","me","might","most","must","my","neither","no","nor","not","of","off","often","on","only","or","other","our","own","rather","said","say","says","she","should","since","so","some","than","that","the","their","them","then","there","these","they","this","tis","to","too","twas","us","wants","was","we","were","what","when","where","which","while","who","whom","why","will","with","would","yet","you","your","ain't","aren't","can't","could've","couldn't","didn't","doesn't","don't","hasn't","he'd","he'll","he's","how'd","how'll","how's","i'd","i'll","i'm","i've","isn't","it's","might've","mightn't","must've","mustn't","shan't","she'd","she'll","she's","should've","shouldn't","that'll","that's","there's","they'd","they'll","they're","they've","wasn't","we'd","we'll","we're","weren't","what'd","what's","when'd","when'll","when's","where'd","where'll","where's","who'd","who'll","who's","why'd","why'll","why's","won't","would've","wouldn't","you'd","you'll","you're","you've");
+      return array_diff($search, $stopWords);
     }
 
     /**
@@ -151,11 +103,11 @@ class CustomStringHelper {
             // 0 we have matches against the SSN pattern and will return
             // a true value
             if (preg_match_all($pattern, $fileContents, $matches)>0) {
-                return(true);
+                return (true);
             }
 
         }
-        return(false);
+        return (false);
     }
 
     /**
@@ -178,17 +130,7 @@ class CustomStringHelper {
     * @return array with filenames
     */
     public function checkForFilenames($string) {
-      $fileExtensions = array(
-          'txt',
-          'doc',
-          "docx",
-          "pdf",
-          "xls",
-          "xlsx",
-          "ppt",
-          "pptx",
-          "jpg"
-      );
+      $fileExtensions = array("txt", "doc", "docx", "pdf", "xls", "xlsx", "ppt", "pptx", "jpg");
       $foundFiles = [];
       $pieces = explode("/", $string);
       foreach ($fileExtensions as $extension) {

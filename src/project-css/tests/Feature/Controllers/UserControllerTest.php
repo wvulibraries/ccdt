@@ -3,7 +3,7 @@
 
   use App\Models\User;
 
-  class UserControllerTest extends TestCase {
+  class UserControllerTest extends BrowserKitTestCase {
 
     private $admin;
     private $user;

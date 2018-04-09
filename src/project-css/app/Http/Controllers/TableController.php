@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use App\Models\Table;
 use App\Models\Collection;
+use App\Libraries\CustomStringHelper;
 
 class TableController extends Controller
 {
@@ -152,6 +153,7 @@ class TableController extends Controller
     * 3. Show the users with the schema
     */
     public function select(Request $request) {
+
       // 1. Get the file name and validate file, if not validated remove it
       //Rules for validation
       $rules = array(
@@ -521,14 +523,6 @@ class TableController extends Controller
     }
 
     /**
-    * Simple method to get the column listing
-    **/
-    public function getColLst($tblNme) {
-      // Returns the column names as an array
-      return Schema::getColumnListing($tblNme);
-    }
-
-    /**
     * Store takes a requested file import and adds it to the job queue for later processing
     **/
     public function store(Request $request) {
@@ -604,7 +598,7 @@ class TableController extends Controller
           // save the last row position and the Tokenized row
           $this->lastErrRow = $prcssd;
           $this->savedTkns = $tkns;
-          return (false);
+          return (null);
         }
 
         return ($tkns);
@@ -638,31 +632,7 @@ class TableController extends Controller
 
       // remove duplicate keywords from the srchIndex
       $srchArr = array_unique($srchArr);
-      return(implode(' ', $srchArr));
-    }
-
-    /**
-    * @param string $tkns
-    * @param integer $orgCount
-    * @param string $tblNme
-    * @param array $clmnLst
-    */
-    public function insertRecord($tkns, $orgCount, $tblNme, $clmnLst) {
-      if (count($tkns) == $orgCount) {
-        // Declae an array
-        $curArry = array();
-
-        // Compact them into one array with utf8 encoding
-        for ($i = 0; $i<$orgCount; $i++) {
-          $curArry[ strval($clmnLst[ $i ]) ] = utf8_encode($tkns[ $i ]);
-        }
-
-        // add srchindex
-        $curArry[ 'srchindex' ] = $this->createSrchIndex(implode(" ", $tkns));
-
-        // Insert them into DB
-        \DB::table($tblNme)->insert($curArry);
-       }
+      return(implode(' ', (new customStringHelper)->removeCommonWords($srchArr)));
     }
 
     /**
@@ -674,14 +644,10 @@ class TableController extends Controller
     *   2. Insert into database
     **/
     public function process($tblNme, $fltFleNme) {
-      // get all column names
-      $clmnLst = $this->getColLst($tblNme);
-
-      // remove the id and time stamps
-      $clmnLst = array_splice($clmnLst, 1, count($clmnLst) - 3);
-
-      // determine number of fields without the srchIndex
-      $orgCount = count($clmnLst) - 1;
+      //get table
+      $table = Table::where('tblNme', $tblNme)->first();
+      $orgCount = $table->getOrgCount();
+      $clmnLst = $table->getColumnList();
 
       // 1. Read the file as spl object
       $fltFleAbsPth = $this->strDir.'/'.$fltFleNme;
@@ -693,8 +659,7 @@ class TableController extends Controller
       $delimiter = $this->detectDelimiter($fltFleFullPth);
 
       //Check for an empty file
-      if ($this->isEmpty($curFltFleObj)>0) {
-
+      if (filesize($fltFleFullPth)>0) {
 
         // Ignore the first line
         $curFltFleObj->seek(1);
@@ -709,10 +674,22 @@ class TableController extends Controller
 
           $tkns = $this->prepareLine($curLine, $delimiter, $orgCount, $prcssd);
 
+          // verify that passed $tkns match the expected field count
+          if (count($tkns) == $orgCount) {
+            // Declae an array
+            $curArry = array();
 
-          if ($tkns != NULL) {
-            $this->insertRecord($tkns, $orgCount, $tblNme, $clmnLst);
-          }
+            // Compact them into one array with utf8 encoding
+            for ($i = 0; $i<$orgCount; $i++) {
+              $curArry[ strval($clmnLst[ $i ]) ] = utf8_encode($tkns[ $i ]);
+            }
+
+            // add srchindex
+            $curArry[ 'srchindex' ] = $this->createSrchIndex(implode(" ", $tkns));
+
+            //insert Record into database
+            $table->insertRecord($curArry);
+           }
 
           // Update the counter
           $prcssd += 1;
@@ -729,7 +706,7 @@ class TableController extends Controller
     */
     public function restrict(Request $request) {
       // Create the collection name
-      $thisTbl = Table::findorFail($request->id);
+      $thisTbl = Table::findOrFail($request->id);
       $thisTbl->hasAccess = false;
       $thisTbl->save();
       return redirect()->route('tableIndex');

@@ -5,7 +5,7 @@
   use App\Models\Collection;
   use App\Models\Table;
 
-  class CollectionControllerTest extends TestCase {
+  class CollectionControllerTest extends BrowserKitTestCase {
 
     private $adminEmail;
     private $adminPass;
