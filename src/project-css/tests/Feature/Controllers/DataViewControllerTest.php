@@ -87,12 +87,17 @@
                  ->press('Load Data')
                  ->see('Table(s)')
                  ->assertResponseStatus(200);
+    }
 
-                 // test isValidTable
-                 $middleware = new App\Http\Middleware\CheckTableId();
-                 $this->assertTrue($middleware->isValidTable('1'));
-                 // cleanup remove sample.dat from upload folder
-                 Storage::delete('/flatfiles/' . $file);
+    public function cleanup($tblname, $path, $file) {
+           // cleanup remove directory for the test table
+           Storage::deleteDirectory($tblname);
+
+           // cleanup remove header_only.csv from upload folder
+           Storage::delete('/flatfiles/'.$file);
+
+           // drop table after Testing
+           Schema::drop($tblname);
     }
 
     public function testIndexWithInvalidTable() {
@@ -126,14 +131,7 @@
                 ->assertResponseStatus(200)
                 ->see('Doe');
 
-           // cleanup remove directory for the test table
-           Storage::deleteDirectory($tblname);
-
-           // cleanup remove header_only.csv from upload folder
-           Storage::delete('/flatfiles/'.$file);
-
-           // drop table after Testing
-           Schema::drop($tblname);
+           $this->cleanup($tblname, $path, $file);
     }
 
     public function testSearch() {
@@ -151,14 +149,7 @@
                 ->assertResponseStatus(200)
                 ->see('John');
 
-           // cleanup remove directory for the test table
-           Storage::deleteDirectory($tblname);
-
-           // cleanup remove header_only.csv from upload folder
-           Storage::delete('/flatfiles/'.$file);
-
-           // drop table after Testing
-           Schema::drop($tblname);
+           $this->cleanup($tblname, $path, $file);
     }
 
     public function testSearchNoResults() {
@@ -176,14 +167,7 @@
                 ->assertResponseStatus(200)
                 ->see('Search Yeilded No Results');
 
-           // cleanup remove directory for the test table
-           Storage::deleteDirectory($tblname);
-
-           // cleanup remove header_only.csv from upload folder
-           Storage::delete('/flatfiles/'.$file);
-
-           // drop table after Testing
-           Schema::drop($tblname);
+           $this->cleanup($tblname, $path, $file);
     }
 
     public function testInvalidId() {
@@ -200,14 +184,7 @@
                 ->assertResponseStatus(200)
                 ->see('Search Yeilded No Results');
 
-           // cleanup remove directory for the test table
-           Storage::deleteDirectory($tblname);
-
-           // cleanup remove header_only.csv from upload folder
-           Storage::delete('/flatfiles/'.$file);
-
-           // drop table after Testing
-           Schema::drop($tblname);
+           $this->cleanup($tblname, $path, $file);
     }
 
     public function uploadFileToDatabaseAndView($upload) {
@@ -231,14 +208,7 @@
             $this->visit('data/1/1/view'.'/test/'.$upload)
                  ->assertResponseStatus(200);
 
-            // cleanup remove directory for the test table
-            Storage::deleteDirectory($tblname);
-
-            // cleanup remove file from upload folder
-            Storage::delete('/flatfiles/'.$file);
-
-            // drop table after Testing
-            Schema::drop($tblname);
+            $this->cleanup($tblname, $path, $file);
     }
 
     public function testUploadAndViewUploadedTxtFile() {
@@ -309,14 +279,7 @@
                 ->assertResponseStatus(200)
                 ->see($tblname);
 
-           // cleanup remove directory for the test table
-           Storage::deleteDirectory($tblname);
-
-           // cleanup remove header_only.csv from upload folder
-           Storage::delete('/flatfiles/'.$file);
-
-           // drop table after Testing
-           Schema::drop($tblname);
+           $this->cleanup($tblname, $path, $file);
     }
 
     public function testViewInvalidRecord() {
@@ -333,14 +296,7 @@
                 ->assertResponseStatus(200)
                 ->see('Search Yeilded No Results');
 
-           // cleanup remove directory for the test table
-           Storage::deleteDirectory($tblname);
-
-           // cleanup remove header_only.csv from upload folder
-           Storage::delete('/flatfiles/'.$file);
-
-           // drop table after Testing
-           Schema::drop($tblname);
+           $this->cleanup($tblname, $path, $file);
     }
 
     public function testImportWithNoRecords() {
@@ -363,14 +319,7 @@
                 ->assertResponseStatus(200)
                 ->see('Table does not have any records.');
 
-           // cleanup remove directory for the test table
-           Storage::deleteDirectory($tblname);
-
-           // cleanup remove header_only.csv from upload folder
-           Storage::delete('/flatfiles/'.$file);
-
-           // drop table after Testing
-           Schema::drop($tblname);
+           $this->cleanup($tblname, $path, $file);
     }
 
     public function testNullShow() {
