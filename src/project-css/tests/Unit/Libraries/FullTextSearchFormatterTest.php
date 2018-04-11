@@ -6,13 +6,16 @@ class FullTextSearchFormatterTest extends TestCase
 {
     protected $fullTextHelper;
 
-    protected function setUp() {
-        parent::setUp();
-        $this->fullTextHelper = new fullTextSearchFormatter();
+    public function setUp() {
+         parent::setUp();
+         Artisan::call('migrate');
+         Artisan::call('db:seed');
+         $this->fullTextHelper = new fullTextSearchFormatter();
     }
 
     protected function tearDown() {
-        parent::tearDown();
+         Artisan::call('migrate:reset');
+         parent::tearDown();
     }
 
     /**

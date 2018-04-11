@@ -6,7 +6,7 @@
   use App\Jobs\FileImport;
   use App\Models\Jobs;
 
-  class JobsControllerUnitTest extends TestCase {
+  class JobsUnitTest extends TestCase {
 
     public function setUp() {
          parent::setUp();
