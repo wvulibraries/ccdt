@@ -646,8 +646,13 @@ class TableController extends Controller
     public function process($tblNme, $fltFleNme) {
       //get table
       $table = Table::where('tblNme', $tblNme)->first();
-      $orgCount = $table->getOrgCount();
       $clmnLst = $table->getColumnList();
+
+      // remove the id and time stamps
+      $clmnLst = array_splice($clmnLst, 1, count($clmnLst) - 3);
+
+      // determine number of fields without the srchIndex
+      $orgCount = count($clmnLst) - 1;
 
       // 1. Read the file as spl object
       $fltFleAbsPth = $this->strDir.'/'.$fltFleNme;

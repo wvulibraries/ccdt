@@ -59,6 +59,11 @@
              ->see('Table(s)')
              ->assertResponseStatus(200);
 
+        // verify import loaded correctly
+        $this->actingAs($this->admin)
+             ->visit('data/1/1')
+             ->see('Adam Donachie');
+
          // find table by searching on it's name
          $table = Table::where('tblNme', '=', $tblname)->first();
 
