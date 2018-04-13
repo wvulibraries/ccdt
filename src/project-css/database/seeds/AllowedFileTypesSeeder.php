@@ -13,7 +13,7 @@ class AllowedFileTypesSeeder extends Seeder
         // insert stopwords into table
         $AllowedFileTypes = array("txt", "doc", "docx", "pdf", "xls", "xlsx", "ppt", "pptx", "jpg");
 
-        foreach ($AllowedFileTypes as $key => $word) {
+        foreach ($AllowedFileTypes as $key => $extension) {
             DB::table('allowedfiletypes')->insert([
                 'extension' => $extension
             ]);

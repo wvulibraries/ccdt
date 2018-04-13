@@ -3,7 +3,6 @@
 
   use App\Http\Controllers\JobsController;
   use App\Http\Controllers\TableController;
-  use App\Jobs\FileImport;
   use App\Models\StopWords;
 
   class StopWordsUnitTest extends TestCase {
