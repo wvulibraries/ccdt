@@ -694,8 +694,6 @@ class TableController extends Controller
 
             //insert Record into database
             $table->insertRecord($curArry);
-          } else {
-            throw new \Exception("Invalid Field Count - detected ".count($tkns)." expected ".$orgCount);
           }
 
           // Update the counter
