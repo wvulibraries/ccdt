@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 class Table extends Model
 {
@@ -24,7 +25,9 @@ class Table extends Model
     }
 
     public function getColumnList() {
-        return DB::getSchemaBuilder()->getColumnListing($this->tblNme);
+        // Returns the column names as an array
+        return Schema::getColumnListing($this->tblNme);
+        //return DB::getSchemaBuilder()->getColumnListing($this->tblNme);
     }
 
     public function getOrgCount() {

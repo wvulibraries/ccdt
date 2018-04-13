@@ -4,6 +4,7 @@ namespace App\Libraries;
 
 use Illuminate\Support\Facades\DB;
 use App\Models\StopWords;
+use App\Models\AllowedFileTypes;
 
 class CustomStringHelper {
     /**
@@ -18,7 +19,6 @@ class CustomStringHelper {
 
      // regex patter we will use to detect a social security number
      protected $pattern = '#\b[0-9]{3}-[0-9]{2}-[0-9]{4}\b#';
-
 
     /**
      * checks if files exists in storage under the folder
@@ -122,9 +122,8 @@ class CustomStringHelper {
      * @return      string
      */
     public function ssnRedact($fileContents) {
-        $redacted = '###-##-####';
         if ($this->ssnExists($fileContents)) {
-            return (preg_replace($this->pattern, $redacted, $fileContents));
+            return (preg_replace($this->pattern, '###-##-####', $fileContents));
         }
         return($fileContents);
     }
@@ -134,14 +133,12 @@ class CustomStringHelper {
     * @return array with filenames
     */
     public function checkForFilenames($string) {
-      $fileExtensions = array("txt", "doc", "docx", "pdf", "xls", "xlsx", "ppt", "pptx", "jpg");
       $foundFiles = [];
       $pieces = explode("/", $string);
-      foreach ($fileExtensions as $extension) {
-        foreach ($pieces as $value) {
-          if (strpos($value, '.'.$extension) !== false) {
-            array_push($foundFiles, $value);
-          }
+      foreach ($pieces as $value) {
+        $ext = substr($value, strrpos($value,'.')+1);
+        if (AllowedFileTypes::isAllowedType($ext)) {
+          array_push($foundFiles, $value);
         }
       }
       return ($foundFiles);
