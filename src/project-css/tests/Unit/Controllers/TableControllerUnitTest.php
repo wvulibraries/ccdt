@@ -49,7 +49,7 @@
         $this->assertInternalType('array', $response->fltFleList);
     }
 
-    public function testProcess() {
+    public function testProcessEmptyFile() {
         // passing a empty file should throw an exception
         $emptyFile = './storage/app/flatfiles/empty.csv';
         touch($emptyFile);

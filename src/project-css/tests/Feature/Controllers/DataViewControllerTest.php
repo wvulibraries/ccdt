@@ -89,7 +89,7 @@
                  ->assertResponseStatus(200);
     }
 
-    public function cleanup($tblname, $path, $file) {
+    public function cleanup($tblname, $file) {
            // cleanup remove directory for the test table
            Storage::deleteDirectory($tblname);
 
@@ -131,7 +131,7 @@
                 ->assertResponseStatus(200)
                 ->see('Doe');
 
-           $this->cleanup($tblname, $path, $file);
+           $this->cleanup($tblname, $file);
     }
 
     public function testSearch() {
@@ -149,7 +149,7 @@
                 ->assertResponseStatus(200)
                 ->see('John');
 
-           $this->cleanup($tblname, $path, $file);
+           $this->cleanup($tblname, $file);
     }
 
     public function testSearchNoResults() {
@@ -167,7 +167,7 @@
                 ->assertResponseStatus(200)
                 ->see('Search Yeilded No Results');
 
-           $this->cleanup($tblname, $path, $file);
+           $this->cleanup($tblname, $file);
     }
 
     public function testInvalidId() {
@@ -184,7 +184,7 @@
                 ->assertResponseStatus(200)
                 ->see('Search Yeilded No Results');
 
-           $this->cleanup($tblname, $path, $file);
+           $this->cleanup($tblname, $file);
     }
 
     public function uploadFileToDatabaseAndView($upload) {
@@ -208,7 +208,7 @@
             $this->visit('data/1/1/view'.'/test/'.$upload)
                  ->assertResponseStatus(200);
 
-            $this->cleanup($tblname, $path, $file);
+            $this->cleanup($tblname, $file);
     }
 
     public function testUploadAndViewUploadedTxtFile() {
@@ -279,7 +279,7 @@
                 ->assertResponseStatus(200)
                 ->see($tblname);
 
-           $this->cleanup($tblname, $path, $file);
+           $this->cleanup($tblname, $file);
     }
 
     public function testViewInvalidRecord() {
@@ -296,7 +296,7 @@
                 ->assertResponseStatus(200)
                 ->see('Search Yeilded No Results');
 
-           $this->cleanup($tblname, $path, $file);
+           $this->cleanup($tblname, $file);
     }
 
     public function testImportWithNoRecords() {
@@ -319,7 +319,7 @@
                 ->assertResponseStatus(200)
                 ->see('Table does not have any records.');
 
-           $this->cleanup($tblname, $path, $file);
+           $this->cleanup($tblname, $file);
     }
 
     public function testNullShow() {

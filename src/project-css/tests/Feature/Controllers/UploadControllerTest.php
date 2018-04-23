@@ -26,6 +26,17 @@
         parent::tearDown();
     }
 
+    public function cleanup($tblname, $file) {
+           // cleanup remove directory for the test table
+           Storage::deleteDirectory($tblname);
+
+           // cleanup remove $file from upload folder
+           Storage::delete('/flatfiles/'.$file);
+
+           // drop table after Testing
+           Schema::drop($tblname);
+    }
+
     public function testUploadFileToDisabledTable() {
         //try to import a table without a collection
         $this->actingAs($this->admin)
@@ -59,6 +70,11 @@
              ->see('Table(s)')
              ->assertResponseStatus(200);
 
+        // verify import loaded correctly
+        $this->actingAs($this->admin)
+             ->visit('data/1/1')
+             ->see('Adam Donachie');
+
          // find table by searching on it's name
          $table = Table::where('tblNme', '=', $tblname)->first();
 
@@ -71,14 +87,7 @@
                ->assertResponseStatus(200)
                ->see('Table is disabled');
 
-        // cleanup remove mlb_players.csv from upload folder
-        Storage::delete('/flatfiles/mlb_players.csv');
-
-        // cleanup remove directory for the test table
-        Storage::deleteDirectory($tblname);
-
-        // drop table after Testing
-        Schema::drop($tblname);
+        $this->cleanup($tblname, "mlb_players.csv");
     }
 
     public function testUploadFile() {
@@ -146,14 +155,8 @@
         $this->assertEquals(count($messages), 1, 'Message Count Should Equal 1');
 
         // cleanup remove test files
-        Storage::delete('/flatfiles/mlb_players.csv');
+        $this->cleanup($tblname, "mlb_players.csv");
         Storage::delete('/'.$tblname.'/test/test_upload.txt');
-
-        // cleanup remove directory for the test table
-        Storage::deleteDirectory($tblname);
-
-        // drop table after Testing
-        Schema::drop($tblname);
     }
 
   }

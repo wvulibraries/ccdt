@@ -7,16 +7,19 @@ class CustomStringHelperTest extends TestCase
     protected $stringHelper;
     private $singlefilewithpath;
 
-    protected function setUp() {
-        parent::setUp();
-        $this->stringHelper = new customStringHelper();
-        $this->singlefilewithpath = '..\documents\BlobExport\indivletters\114561.txt';
+    public function setUp() {
+         parent::setUp();
+         Artisan::call('migrate');
+         Artisan::call('db:seed');
+         $this->stringHelper = new customStringHelper();
+         $this->singlefilewithpath = '..\documents\BlobExport\indivletters\114561.txt';
     }
 
     protected function tearDown() {
-        unset($this->singlefilewithpath);
-        unset($this->stringHelper);
-        parent::tearDown();
+         Artisan::call('migrate:reset');
+         unset($this->singlefilewithpath);
+         unset($this->stringHelper);
+         parent::tearDown();
     }
 
     public function testGetFilename() {

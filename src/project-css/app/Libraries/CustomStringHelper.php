@@ -3,6 +3,8 @@
 namespace App\Libraries;
 
 use Illuminate\Support\Facades\DB;
+use App\Models\StopWords;
+use App\Models\AllowedFileTypes;
 
 class CustomStringHelper {
     /**
@@ -14,6 +16,9 @@ class CustomStringHelper {
      * environment.
      *
      */
+
+     // regex patter we will use to detect a social security number
+     protected $pattern = '#\b[0-9]{3}-[0-9]{2}-[0-9]{4}\b#';
 
     /**
      * checks if files exists in storage under the folder
@@ -84,8 +89,14 @@ class CustomStringHelper {
     }
 
     public function removeCommonWords($search) {
-      $stopWords=array("a","able","about","across","after","all","almost","also","am","among","an","and","any","are","as","at","be","because","been","but","by","can","cannot","could","dear","did","do","does","either","else","ever","every","for","from","get","got","had","has","have","he","her","hers","him","his","how","however","i","if","in","into","is","it","its","just","least","let","like","likely","may","me","might","most","must","my","neither","no","nor","not","of","off","often","on","only","or","other","our","own","rather","said","say","says","she","should","since","so","some","than","that","the","their","them","then","there","these","they","this","tis","to","too","twas","us","wants","was","we","were","what","when","where","which","while","who","whom","why","will","with","would","yet","you","your","ain't","aren't","can't","could've","couldn't","didn't","doesn't","don't","hasn't","he'd","he'll","he's","how'd","how'll","how's","i'd","i'll","i'm","i've","isn't","it's","might've","mightn't","must've","mustn't","shan't","she'd","she'll","she's","should've","shouldn't","that'll","that's","there's","they'd","they'll","they're","they've","wasn't","we'd","we'll","we're","weren't","what'd","what's","when'd","when'll","when's","where'd","where'll","where's","who'd","who'll","who's","why'd","why'll","why's","won't","would've","wouldn't","you'd","you'll","you're","you've");
-      return array_diff($search, $stopWords);
+      // loop over search array and remove any words that
+      // are in the StopWords table.
+      foreach($search as $key => $word) {
+        if (StopWords::isStopWord($word)) {
+          unset($search[$key]);
+        }
+      }
+      return $search;
     }
 
     /**
@@ -96,16 +107,10 @@ class CustomStringHelper {
         // number pattern. If the number of matches are above 0 then we
         // will return true.
         if ($fileContents != null) {
-            // regex patter we will use to detect a social security number
-            $pattern = '#\b[0-9]{3}-[0-9]{2}-[0-9]{4}\b#';
-
             // preg_match_all will return a count if it is greater than
             // 0 we have matches against the SSN pattern and will return
             // a true value
-            if (preg_match_all($pattern, $fileContents, $matches)>0) {
-                return (true);
-            }
-
+            return (preg_match_all($this->pattern, $fileContents, $matches)>0);
         }
         return (false);
     }
@@ -117,10 +122,8 @@ class CustomStringHelper {
      * @return      string
      */
     public function ssnRedact($fileContents) {
-        $pattern = '#\b[0-9]{3}-[0-9]{2}-[0-9]{4}\b#';
-        $redacted = '###-##-####';
         if ($this->ssnExists($fileContents)) {
-            return (preg_replace($pattern, $redacted, $fileContents));
+            return (preg_replace($this->pattern, '###-##-####', $fileContents));
         }
         return($fileContents);
     }
@@ -130,14 +133,12 @@ class CustomStringHelper {
     * @return array with filenames
     */
     public function checkForFilenames($string) {
-      $fileExtensions = array("txt", "doc", "docx", "pdf", "xls", "xlsx", "ppt", "pptx", "jpg");
       $foundFiles = [];
       $pieces = explode("/", $string);
-      foreach ($fileExtensions as $extension) {
-        foreach ($pieces as $value) {
-          if (strpos($value, '.'.$extension) !== false) {
-            array_push($foundFiles, $value);
-          }
+      foreach ($pieces as $value) {
+        $ext = substr($value, strrpos($value,'.')+1);
+        if (AllowedFileTypes::isAllowedType($ext)) {
+          array_push($foundFiles, $value);
         }
       }
       return ($foundFiles);
