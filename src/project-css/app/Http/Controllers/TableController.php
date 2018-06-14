@@ -469,7 +469,7 @@ class TableController extends Controller
 
       // create folder in storage that will contain any additional files associated to the table
       if (Storage::exists($tblNme) == FALSE) {
-        Storage::makeDirectory($tblNme);
+        Storage::makeDirectory($tblNme, 0775);
       }
 
       // Finally return the view to load data
