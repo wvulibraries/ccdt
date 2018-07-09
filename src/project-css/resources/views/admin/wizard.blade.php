@@ -24,7 +24,7 @@
       <!--Panel to create the table with flat file -->
         <div class="col-md-6">
             <div class="panel panel-default formPanel">
-                <div class="panel-heading"><a data-toggle="collapse" href="#imprtPnlBdy"><h3>Import from flat file</h3></a></div>
+                <div class="panel-heading"><a data-toggle="collapse" href="#imprtPnlBdy"><h3>Import from Flat File</h3></a></div>
                 <div id="imprtPnlBdy" class="panel-collapse collapse">
                   <div class="panel-body">
                       <form class="form-horizontal" name="uploadFltFile" aria-label="uploadFltFile" role="form" method="POST" enctype="multipart/form-data" action="{{ url('/table/create/import') }}">
@@ -72,7 +72,7 @@
             </div>
         </div>
         <!--Panel to create the table with flat file -->
-          <div class="col-md-6">
+        <div class="col-md-6">
               <div class="panel panel-default formPanel{{count($fltFleList)>0 ? '' : ' dsbld' }}">
                   <div class="panel-heading"><a data-toggle="collapse" href="#slctPnlBdy"><h3>Select from directory</h3></a></div>
                   <div id="slctPnlBdy" class="panel-collapse collapse">
@@ -127,6 +127,98 @@
                   </div>
               </div>
           </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-6">
+          <div class="panel panel-default formPanel">
+              <div class="panel-heading"><a data-toggle="collapse" href="#importCMSDISPanel"><h3>Import from CMS Files</h3></a></div>
+              <div id="importCMSDISPanel" class="panel-collapse collapse">
+                <div class="panel-body">
+                  <form class="form-horizontal" name="uploadCMSDISFiles" aria-label="uploadCMSDISFiles" role="form" method="POST" enctype="multipart/form-data" action="{{ url('/table/create/importcmsdis') }}">
+                      {{ csrf_field() }}
+                      <!-- Select Collection Name -->
+                      <div class="form-group{{ $errors->has('colID') ? ' has-error' : '' }}">
+                          <label for="colID" class="col-md-4 control-label">Select Collection</label>
+
+                          <div class="col-md-6">
+                            <select id="colID" type="text" class="form-control" name="colID" value="{{ old('colID') }}" required autofocus>
+                              @foreach($collcntNms as $collcntNm)
+                                @if($collcntNm->isEnabled)
+                                  <option value="{{$collcntNm->id}}">{{$collcntNm->clctnName}}</option>
+                                @endif
+                              @endforeach
+                            </select>
+                          </div>
+                      </div>
+                      <!-- Select File -->
+                      <div class="form-group{{ $errors->has('multipleFiles') ? ' has-error' : '' }}">
+                          <label for="cmsdisFiles" class="col-md-4 control-label">Import CMS Files</label>
+
+                          <div class="col-md-6">
+                              <input id="cmsdisFiles" type="file" class="form-control" name="cmsdisFiles[]" multiple required autofocus>
+                          </div>
+                      </div>
+                      <div class="form-group">
+                          <div class="col-md-6 col-md-offset-6">
+                              <button type="submit" class="btn btn-primary">
+                                  Import
+                              </button>
+                          </div>
+                      </div>
+                  </form>
+
+                </div>
+              </div>
+          </div>
+      </div>
+      <div class="col-md-6">
+          <div class="panel panel-default formPanel">
+              <div class="panel-heading"><a data-toggle="collapse" href="#selectCMSFilesPanel"><h3>Select CMS Files</h3></a></div>
+              <div id="selectCMSFilesPanel" class="panel-collapse collapse">
+                <div class="panel-body">
+                  <form class="form-horizontal" name="selectCMSDISFiles" aria-label="selectCMSDISFiles" role="form" method="POST" action="{{ url('/table/create/selectCMSDIS') }}">
+                      {{ csrf_field() }}
+                      <!-- Select Collection Name -->
+                      <div class="form-group{{ $errors->has('colID2') ? ' has-error' : '' }}">
+                          <label for="colID2" class="col-md-4 control-label">Select Collection</label>
+
+                          <div class="col-md-6">
+                            <select id="colID2" type="text" class="form-control" name="colID2" value="{{ old('colID2') }}" required autofocus>
+                              @foreach($collcntNms as $collcntNm)
+                                @if($collcntNm->isEnabled)
+                                  <option value="{{$collcntNm->id}}">{{$collcntNm->clctnName}}</option>
+                                @endif
+                              @endforeach
+                            </select>
+                          </div>
+                      </div>
+                      <!-- Choose File -->
+                      <div class="form-group{{ $errors->has('fltFile') ? ' has-error' : '' }}">
+                          <label for="fltFile2" class="col-md-4 control-label">Import</label>
+
+                          <div class="col-md-6">
+                            <select id="fltFile2" type="text" class="form-control" name="cmsdisFiles2[]" multiple required autofocus>
+                              @foreach($fltFleList as $fltFile)
+                                @if($fltFile)
+                                  <option value="{{$fltFile}}">{{$fltFile}}</option>
+                                @endif
+                              @endforeach
+                            </select>
+                          </div>
+                      </div>
+                      <div class="form-group">
+                          <div class="col-md-6 col-md-offset-6">
+                              <button type="submit" class="btn btn-primary">
+                                  Select
+                              </button>
+                          </div>
+                      </div>
+                  </form>
+                </div>
+              </div>
+          </div>
+      </div>
     </div>
 </div>
 

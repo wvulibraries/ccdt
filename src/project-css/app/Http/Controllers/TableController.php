@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use App\Models\Table;
 use App\Models\Collection;
+use App\Models\CMSRecords;
 use App\Libraries\CustomStringHelper;
 
 class TableController extends Controller
@@ -90,7 +91,7 @@ class TableController extends Controller
       $rules = array(
         'imprtTblNme' => 'required|unique:tables,tblNme|max:30|min:6|alpha_num',
         'colID' => 'required|Integer',
-        'fltFile' => 'required|file|mimetypes:text/plain|mimes:txt,dat,csv',
+        'fltFile' => 'required|file|mimetypes:text/plain|mimes:txt,dat,csv,tab',
       );
 
       //Customize the error messages
@@ -105,7 +106,7 @@ class TableController extends Controller
         'fltFile.required' => 'Please select a valid flat file',
         'fltFile.file' => 'Please select a valid flat file',
         'fltFile.mimetypes' => 'The flat file must be a file of type: text/plain.',
-        'fltFile.mimes' => 'The flat file must have an extension: txt, dat, csv.',
+        'fltFile.mimes' => 'The flat file must have an extension: txt, dat, csv, tab.',
       );
 
       // Validate the request before storing the data
@@ -114,13 +115,17 @@ class TableController extends Controller
       // Validate the file before upload
       // Get the file
       $thisFltFile = $request->fltFile;
+
       // Get the file name
       $thisFltFileNme = $thisFltFile->getClientOriginalName();
+
       // Get the client extension
       // $thisFltFileExt = $thisFltFile->getClientOriginalExtension();
+
       // check if the file exists
       // Get the list of files in the directory
       $fltFleList = Storage::allFiles($this->strDir);
+
       // check the file name in the file list array
       if (in_array($this->strDir.'/'.$thisFltFileNme, $fltFleList)) {
         return redirect()->route('tableIndex')->withErrors([ 'File already exists. Please select the file or rename and re-upload.' ]);
@@ -132,6 +137,7 @@ class TableController extends Controller
 
       // 3. Show the users schema for further verification
       $schema = $this->schema($this->strDir.'/'.$thisFltFileNme);
+
       // If the file isn't valid return with an error
       if (!$schema) {
         Storage::delete($fltFleAbsPth);
@@ -143,6 +149,65 @@ class TableController extends Controller
                                  ->with('tblNme', $request->imprtTblNme)
                                  ->with('fltFile', $thisFltFileNme)
                                  ->with('collctnId', $request->colID);
+    }
+
+    public function isCMSInterchangeRecords($schemaList) {
+      foreach ($schemaList as &$value) {
+        if (CMSRecords::isCMSRecord($value[0])) { return true; }
+      }
+      return false;
+    }
+
+    public function importCMSDIS(Request $request) {
+      // Get the list of files in the directory
+      $fltFleList = Storage::allFiles($this->strDir);
+      $multipleFileList = [];
+
+      // Get all files from $request
+      $files = $request->file('cmsdisFiles');
+
+      $errors = [];
+      $schemaList = [];
+
+      // Loop over them
+      foreach ($files as $file) {
+        $thisFltFileNme = $file->getClientOriginalName();
+        if (in_array($this->strDir.'/'.$thisFltFileNme, $fltFleList)) {
+          array_push($errors, $thisFltFileNme . ' File already exists. Please select the file or rename and re-upload.');
+        }
+
+        // Store in the directory inside storage/app
+        $file->storeAs($this->strDir, $thisFltFileNme);
+
+        // put filename to list of saved files
+        array_push($multipleFileList, $thisFltFileNme);
+
+        $schema = $this->schema($this->strDir.'/'.$thisFltFileNme);
+
+        // If the file isn't valid return with an error
+        if (!$schema) {
+          Storage::delete($fltFleAbsPth);
+          array_push($errors, [ 'The selected flat file must be of type: text/plain', 'The selected flat file should not be empty', 'File is deleted for security reasons' ]);
+        }
+        else {
+          array_push($schemaList, $schema);
+        }
+      }
+
+      if (count($errors) > 0) {
+        return redirect()->route('tableCreate')->withErrors($errors);
+      }
+
+      if ($this->isCMSInterchangeRecords($schemaList)) {
+        return view('admin.cmsdis')->with('cmsFileList', $multipleFileList)
+                                   ->with('schemaList', $schemaList)
+                                   ->with('collctnId', $request->colID);
+      }
+
+      // Return the view with filename and schema
+      return view('admin.recordtypes')->with('fltFileList', $multipleFileList)
+                                      ->with('schemaList', $schemaList)
+                                      ->with('collctnId', $request->colID);
     }
 
     /**
@@ -643,9 +708,10 @@ class TableController extends Controller
     *   1. Validate
     *   2. Insert into database
     **/
-    public function process($tblNme, $fltFleNme) {
+    public function process($tblNme, $fltFleNme, $ignoreFirst = true) {
       //get table
       $table = Table::where('tblNme', $tblNme)->first();
+
       $clmnLst = $table->getColumnList();
 
       // remove the id and time stamps
@@ -666,8 +732,8 @@ class TableController extends Controller
       //Check for an empty file
       if (filesize($fltFleFullPth)>0) {
 
-        // Ignore the first line
-        $curFltFleObj->seek(1);
+        // Ignore the first line unless set to false
+        if ($ignoreFirst) { $curFltFleObj->seek(1); }
 
         // Counter for processed
         $prcssd = 0;

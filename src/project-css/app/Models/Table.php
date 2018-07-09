@@ -27,7 +27,6 @@ class Table extends Model
     public function getColumnList() {
         // Returns the column names as an array
         return Schema::getColumnListing($this->tblNme);
-        //return DB::getSchemaBuilder()->getColumnListing($this->tblNme);
     }
 
     public function getOrgCount() {
