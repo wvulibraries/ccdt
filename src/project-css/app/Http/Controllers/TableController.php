@@ -13,6 +13,7 @@ use App\Models\Table;
 use App\Models\Collection;
 use App\Models\CMSRecords;
 use App\Libraries\CustomStringHelper;
+use App\Libraries\CSVHelper;
 
 class TableController extends Controller
 {
@@ -168,6 +169,7 @@ class TableController extends Controller
 
       $errors = [];
       $schemaList = [];
+      $fieldTypes = [];
 
       // Loop over them
       foreach ($files as $file) {
@@ -192,12 +194,15 @@ class TableController extends Controller
         else {
           array_push($schemaList, $schema);
         }
+
+        array_push($fieldTypes, (new CSVHelper)->determineTypes(false, $fltFleAbsPth, 1000));
       }
 
       if (count($errors) > 0) {
         return redirect()->route('tableCreate')->withErrors($errors);
       }
 
+      // if files are cms files then load cmsdis view
       if ($this->isCMSInterchangeRecords($schemaList)) {
         return view('admin.cmsdis')->with('cmsFileList', $multipleFileList)
                                    ->with('schemaList', $schemaList)
@@ -267,6 +272,42 @@ class TableController extends Controller
                                  ->with('collctnId', $request->colID2);
     }
 
+    public function selectCMSDIS(Request $request) {
+      // Get the list of files in the directory
+      $fltFleList = Storage::allFiles($this->strDir);
+      $multipleFileList = [];
+      $schemaList = [];
+      $fieldTypes = [];
+
+      // Get all files from $request
+      $files = $request->cmsdisFiles2;
+
+      // Loop over them
+      foreach ($files as $file) {
+        $fltFleAbsPth = $this->strDir.'/'.$file;
+
+        // put filename to list of saved files
+        array_push($multipleFileList, $fltFleAbsPth);
+
+        $schema = $this->schema($fltFleAbsPth);
+
+        // If the file isn't valid return with an error
+        if (!$schema) {
+          Storage::delete($fltFleAbsPth);
+          array_push($errors, [ 'The selected flat file must be of type: text/plain', 'The selected flat file should not be empty', 'File is deleted for security reasons' ]);
+        }
+        else {
+          array_push($schemaList, $schema);
+        }
+
+        array_push($fieldTypes, (new CSVHelper)->determineTypes(false, $fltFleAbsPth, 1000));
+      }
+
+      return view('admin.cmsdis')->with('cmsFileList', $multipleFileList)
+                                 ->with('schemaList', $schemaList)
+                                 ->with('collctnId', $request->colID2);
+    }
+
     /**
     * Simple function to create the table within the collections
     * @param string $tblNme
@@ -327,9 +368,9 @@ class TableController extends Controller
       $hdr = str_replace('"', "", $hdr);
 
       // Tokenize the line
-      $tkns = $this->tknze($hdr, $this->detectDelimiter(\storage_path()."/app/".$fltFlePth));
+      $tkns = (new CSVHelper)->tknze($hdr, (new CSVHelper)->detectDelimiter(\storage_path()."/app/".$fltFlePth));
       // Validate the tokens and filter them
-      $tkns = $this->fltrTkns($tkns);
+      $tkns = (new CSVHelper)->fltrTkns($tkns);
 
       // Returning tokens
       return $tkns;
@@ -340,47 +381,47 @@ class TableController extends Controller
     * @param string $line
     * @param false|string $delimiter
     */
-    public function tknze($line, $delimiter) {
-      // Tokenize the line
-      // Define a pattern
-      $pattern = '/['.$delimiter.']/';
-
-      // preg split
-      $tkns = preg_split($pattern, $line);
-
-      // Return the array
-      return $tkns;
-    }
+    // public function tknze($line, $delimiter) {
+    //   // Tokenize the line
+    //   // Define a pattern
+    //   $pattern = '/['.$delimiter.']/';
+    //
+    //   // preg split
+    //   $tkns = preg_split($pattern, $line);
+    //
+    //   // Return the array
+    //   return $tkns;
+    // }
 
      /*
      * @param string $csvFile Path to the CSV file
      * @return string Delimiter
      */
-     public function detectDelimiter($csvFile)
-     {
-         $delimiters = array(
-             ';' => 0,
-             ',' => 0,
-             "\t" => 0,
-             "|" => 0
-         );
-
-         $handle = fopen($csvFile, "r");
-         $firstLine = fgets($handle);
-         fclose($handle);
-         foreach ($delimiters as $delimiter => &$count) {
-             $count = count(str_getcsv($firstLine, $delimiter));
-         }
-
-         return array_search(max($delimiters), $delimiters);
-     }
+     // public function detectDelimiter($csvFile)
+     // {
+     //     $delimiters = array(
+     //         ';' => 0,
+     //         ',' => 0,
+     //         "\t" => 0,
+     //         "|" => 0
+     //     );
+     //
+     //     $handle = fopen($csvFile, "r");
+     //     $firstLine = fgets($handle);
+     //     fclose($handle);
+     //     foreach ($delimiters as $delimiter => &$count) {
+     //         $count = count(str_getcsv($firstLine, $delimiter));
+     //     }
+     //
+     //     return array_search(max($delimiters), $delimiters);
+     // }
 
     /**
     * Get the line numbers for a fileobject
     * @param \SplFileObject $fltFleObj
     */
     public function isEmpty($fltFleObj) {
-      // Before anytthing set to seek first line
+      // Before anything set to seek first line
       $fltFleObj->seek(0);
 
       // Variable to count the length
@@ -406,16 +447,16 @@ class TableController extends Controller
     /**
     * Method to check if the given tkns are null
     */
-    public function fltrTkns($tkns) {
-      // Run through the files
-      foreach ($tkns as $key => $tkn) {
-        // trim the token
-        $tkns[ $key ] = trim($tkn);
-      }
-
-      // Return the filtered tokens
-      return $tkns;
-    }
+    // public function fltrTkns($tkns) {
+    //   // Run through the files
+    //   foreach ($tkns as $key => $tkn) {
+    //     // trim the token
+    //     $tkns[ $key ] = trim($tkn);
+    //   }
+    //
+    //   // Return the filtered tokens
+    //   return $tkns;
+    // }
 
     /**
     * Method to read input from the schema and start actual data import
@@ -644,10 +685,10 @@ class TableController extends Controller
         $curLine = str_replace('"', "", $curLine);
 
         // Tokenize the line
-        $tkns = $this->tknze($curLine, $delimiter);
+        $tkns = (new CSVHelper)->tknze($curLine, $delimiter);
 
         // Validate the tokens and filter them
-        $tkns = $this->fltrTkns($tkns);
+        $tkns = (new CSVHelper)->fltrTkns($tkns);
 
         // if lastErrRow is the previous row try to combine the lines
         if ((count($tkns) != $orgCount) && ($this->lastErrRow == $prcssd - 1) && ($this->savedTkns != NULL)) {
@@ -727,7 +768,7 @@ class TableController extends Controller
       // Create an instance for the file
       $curFltFleObj = new \SplFileObject($fltFleFullPth);
 
-      $delimiter = $this->detectDelimiter($fltFleFullPth);
+      $delimiter = (new CSVHelper)->detectDelimiter($fltFleFullPth);
 
       //Check for an empty file
       if (filesize($fltFleFullPth)>0) {

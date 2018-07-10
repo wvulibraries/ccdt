@@ -22,8 +22,10 @@
     }
 
     public function testSchema() {
+        // check for a valid file
         if (File::exists(storage_path('/flatfiles/mlb_players.csv'))) {
-          // check for a valid file
+          // if a header row exists running schema will return an array
+          // containing field names.
           $result = (new TableController)->schema('/files/test/mlb_players.csv');
           $this->assertEquals($result[ 0 ], 'Name');
         }
@@ -42,7 +44,7 @@
     }
 
     public function testLoad() {
-        // calling load should return items one is the list of files
+        // calling load should return the list of files
         // in the flatfile directory under Storage
         // we are testing that the array is present and valid
         $response = (new TableController)->load();
@@ -60,6 +62,7 @@
         }
         unlink($emptyFile);
     }
+
 
   }
 ?>

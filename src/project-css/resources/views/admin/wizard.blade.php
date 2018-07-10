@@ -7,7 +7,7 @@
   <div class="container adminHeading" role="banner">
     <span class="text-center">
       <h1><a href="{{ url('table/create') }}">Create Table(s) Wizard</a></h1>
-      <p>Please upload the flat file using the import option or use select if you have already copied the file.</p>
+      <p>Please upload the file(s) using the import option or use select if you have already copied the file(s).</p>
     </span>
   </div>
 </div>
@@ -174,7 +174,7 @@
       </div>
       <div class="col-md-6">
           <div class="panel panel-default formPanel">
-              <div class="panel-heading"><a data-toggle="collapse" href="#selectCMSFilesPanel"><h3>Select CMS Files</h3></a></div>
+              <div class="panel-heading"><a data-toggle="collapse" href="#selectCMSFilesPanel"><h3>Select CMS Files from directory</h3></a></div>
               <div id="selectCMSFilesPanel" class="panel-collapse collapse">
                 <div class="panel-body">
                   <form class="form-horizontal" name="selectCMSDISFiles" aria-label="selectCMSDISFiles" role="form" method="POST" action="{{ url('/table/create/selectCMSDIS') }}">
@@ -198,7 +198,7 @@
                           <label for="fltFile2" class="col-md-4 control-label">Import</label>
 
                           <div class="col-md-6">
-                            <select id="fltFile2" type="text" class="form-control" name="cmsdisFiles2[]" multiple required autofocus>
+                            <select id="cmsdisFiles2" type="text" class="form-control" name="cmsdisFiles2[]" multiple required autofocus>
                               @foreach($fltFleList as $fltFile)
                                 @if($fltFile)
                                   <option value="{{$fltFile}}">{{$fltFile}}</option>
