@@ -9,7 +9,7 @@ class CMSRecords extends Model
 {
     public static function isCMSRecord($recordtype) {
         $response = DB::table('recordtypes')
-                    ->where('tblNme', '=', $recordtype)
+                    ->where('recordType', '=', $recordtype)
                     ->get();
         if (count($response) == 1) {
           return true;
@@ -19,8 +19,12 @@ class CMSRecords extends Model
 
     public static function getCMSHeader($recordtype) {
         $response = DB::table('recordtypes')
-                    ->where('tblNme', '=', $recordtype)
+                    ->where('recordType', '=', $recordtype)
                     ->get();
-        return unserialize($response->fieldNames);
+        if (count($response) == 1) {
+          return $response;
+          //return unserialize($response[0]->fieldNames);
+        }
+        return null;
     }
 }

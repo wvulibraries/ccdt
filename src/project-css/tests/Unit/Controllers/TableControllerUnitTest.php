@@ -21,28 +21,6 @@
       parent::tearDown();
     }
 
-    public function testSchema() {
-        // check for a valid file
-        if (File::exists(storage_path('/flatfiles/mlb_players.csv'))) {
-          // if a header row exists running schema will return an array
-          // containing field names.
-          $result = (new TableController)->schema('/files/test/mlb_players.csv');
-          $this->assertEquals($result[ 0 ], 'Name');
-        }
-
-        // passing a filename that doesn't exits should produce false result
-        $this->assertFalse((new TableController)->schema('/files/test/unknown.csv'));
-
-        // passing a file that isn't of the correct type should produce false result
-        $this->assertFalse((new TableController)->schema('/files/test/images.png'));
-
-        //passing a empty file should produce a false result
-        $emptyFile = './storage/app/files/test/empty.csv';
-        touch($emptyFile);
-        $this->assertFalse((new TableController)->schema('/files/test/empty.csv'));
-        unlink($emptyFile);
-    }
-
     public function testLoad() {
         // calling load should return the list of files
         // in the flatfile directory under Storage

@@ -15,8 +15,7 @@ class CreateRecordTypesTable extends Migration
     {
         Schema::create('recordtypes', function(Blueprint $table) {
           $table->increments('id');
-          $table->string('tblNme', 191)->unique();
-          $table->string('recordType');  
+          $table->string('recordType');
           $table->integer('fieldCount');
           $table->text('fieldNames');
           $table->timestamps();

@@ -2,12 +2,14 @@
 
 namespace App\Libraries;
 
+use Illuminate\Support\Facades\Storage;
+
 class CSVHelper {
     /**
      * Table Helper
      *
-     * These are various functions that help with dynamically
-     * creating tables that can be searched.
+     * These are various functions that help with processing
+     * csv or other delmimited files prior to importing.
      *
      */
 
@@ -107,15 +109,15 @@ class CSVHelper {
              $checkArray = [];
              for ($x = 0; $x < $fieldcount; $x++) {
                // push default item as numeric
-               array_push($checkArray, [1, 0]);
+               array_push($checkArray, [0, 0]);
              }
            }
 
            foreach($tkns as $x=>$x_value)
              {
                // change type if we detect any that the string isn't numeric
-               if (!is_numeric($x_value) && ($x_value != "")) {
-                 $checkArray[$x][0] = 0;
+               if (is_numeric($x_value) && ($x_value != "")) {
+                 $checkArray[$x][0] = 1;
                }
                // save character count if higher than last pass
                if ($checkArray[$x][1] < strlen($x_value)) {
@@ -173,4 +175,87 @@ class CSVHelper {
            }
          return $fieldType;
      }
+
+     /**
+     * Get the line numbers for a fileobject
+     * @param \SplFileObject $fltFleObj
+     */
+     public function isEmpty($fltFleObj) {
+       // Before anything set to seek first line
+       $fltFleObj->seek(0);
+
+       // Variable to count the length
+       $len = 0;
+
+       // Loop till EOF
+       while (!$fltFleObj->eof()) {
+         // Check if the file has at least one line
+         if ($len>=1) {
+           // Break here so that it's not reading huge files
+           break;
+         }
+         // Increament variable
+         $len += 1;
+         // Seek the next item
+         $fltFleObj->next();
+       }
+
+       // Return the length
+       return $len;
+     }
+
+     /**
+     * Method to validate the file type and read the first line only for schema
+     * Algorithm:
+     * 1. Get the flatfile instance
+     * 2. Validate the file type
+     * 3. Tokenize the current line
+     * 4. Validate the tokens and return
+     * 5. Return first line as array
+     * @param string $fltFlePth
+     * @return boolean
+     */
+     public function schema($fltFlePth) {
+       // 1. Get the flatfile instance
+       // Check if the file exists
+       if (!Storage::has($fltFlePth)) {
+         // If the file doesn't exists return with error
+         return false;
+       }
+       // Create an instance for the file
+       $fltFleObj = new \SplFileObject(\storage_path()."/app/".$fltFlePth);
+
+       // 2. Validate the file type
+       // Create a finfo instance
+       $fleInf = new \finfo(FILEINFO_MIME_TYPE);
+       // Get the file type
+       $fleMime = $fleInf->file($fltFleObj->getRealPath());
+       // Check the mimetype
+       if (!str_is($fleMime, "text/plain")) {
+         // If the file isn't a text file return false
+         return false;
+       }
+       // Check if the file is empty
+       if (!$this->isEmpty($fltFleObj)>0) {
+         return false;
+       }
+
+       // 3. Tokenize the current line
+       // Get the first line as the header
+       $fltFleObj->seek(0);
+       $hdr = $fltFleObj->fgets();
+
+       // Strip out Quotes that are sometimes seen in header rows of csv files
+       $hdr = str_replace('"', "", $hdr);
+
+       // Tokenize the line
+       $tkns = $this->tknze($hdr, $this->detectDelimiter(\storage_path()."/app/".$fltFlePth));
+       // Validate the tokens and filter them
+       $tkns = $this->fltrTkns($tkns);
+
+       // Returning tokens
+       return $tkns;
+     }
+
+
 }

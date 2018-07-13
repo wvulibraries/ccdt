@@ -14,6 +14,8 @@ use App\Models\Collection;
 use App\Models\CMSRecords;
 use App\Libraries\CustomStringHelper;
 use App\Libraries\CSVHelper;
+use App\Libraries\CMSHelper;
+use App\Libraries\TableHelper;
 
 class TableController extends Controller
 {
@@ -137,7 +139,7 @@ class TableController extends Controller
       $thisFltFile->storeAs($this->strDir, $thisFltFileNme);
 
       // 3. Show the users schema for further verification
-      $schema = $this->schema($this->strDir.'/'.$thisFltFileNme);
+      $schema = (new CSVHelper)->schema($this->strDir.'/'.$thisFltFileNme);
 
       // If the file isn't valid return with an error
       if (!$schema) {
@@ -150,13 +152,6 @@ class TableController extends Controller
                                  ->with('tblNme', $request->imprtTblNme)
                                  ->with('fltFile', $thisFltFileNme)
                                  ->with('collctnId', $request->colID);
-    }
-
-    public function isCMSInterchangeRecords($schemaList) {
-      foreach ($schemaList as &$value) {
-        if (CMSRecords::isCMSRecord($value[0])) { return true; }
-      }
-      return false;
     }
 
     public function importCMSDIS(Request $request) {
@@ -177,42 +172,29 @@ class TableController extends Controller
         if (in_array($this->strDir.'/'.$thisFltFileNme, $fltFleList)) {
           array_push($errors, $thisFltFileNme . ' File already exists. Please select the file or rename and re-upload.');
         }
-
-        // Store in the directory inside storage/app
-        $file->storeAs($this->strDir, $thisFltFileNme);
-
-        // put filename to list of saved files
-        array_push($multipleFileList, $thisFltFileNme);
-
-        $schema = $this->schema($this->strDir.'/'.$thisFltFileNme);
-
-        // If the file isn't valid return with an error
-        if (!$schema) {
-          Storage::delete($fltFleAbsPth);
-          array_push($errors, [ 'The selected flat file must be of type: text/plain', 'The selected flat file should not be empty', 'File is deleted for security reasons' ]);
-        }
         else {
-          array_push($schemaList, $schema);
+          // Store in the directory inside storage/app
+          $file->storeAs($this->strDir, $thisFltFileNme);
+          $fltFleAbsPth = $this->strDir.'/'.$thisFltFileNme;
+          $schema = (new CSVHelper)->schema($fltFleAbsPth);
+          if (!$schema) {
+            Storage::delete($fltFleAbsPth);
+            array_push($errors, [ 'The selected flat file must be of type: text/plain', 'The selected flat file should not be empty', 'File is deleted for security reasons' ]);
+          }
+          else {
+            // detect field types
+            $fieldType = (new CSVHelper)->determineTypes(false, $fltFleAbsPth, 1000);
+            // create table and load data
+            (new TableHelper)->createTable($thisFltFileNme, $schema[0], $fieldType, count($schema), $request->colID);
+          }
         }
-
-        array_push($fieldTypes, (new CSVHelper)->determineTypes(false, $fltFleAbsPth, 1000));
       }
 
-      if (count($errors) > 0) {
-        return redirect()->route('tableCreate')->withErrors($errors);
-      }
+      // if (count($errors) > 0) {
+      //   return redirect()->route('tableCreate')->withErrors($errors);
+      // }
 
-      // if files are cms files then load cmsdis view
-      if ($this->isCMSInterchangeRecords($schemaList)) {
-        return view('admin.cmsdis')->with('cmsFileList', $multipleFileList)
-                                   ->with('schemaList', $schemaList)
-                                   ->with('collctnId', $request->colID);
-      }
-
-      // Return the view with filename and schema
-      return view('admin.recordtypes')->with('fltFileList', $multipleFileList)
-                                      ->with('schemaList', $schemaList)
-                                      ->with('collctnId', $request->colID);
+      return redirect()->route('tableIndex');
     }
 
     /**
@@ -258,7 +240,7 @@ class TableController extends Controller
       }
 
       // 2. Check for file validity and Create the table with schema
-      $schema = $this->schema($fltFleAbsPth);
+      $schema = (new CSVHelper)->schema($fltFleAbsPth);
       // If the file isn't valid return with an error
       if (!$schema) {
         Storage::delete($fltFleAbsPth);
@@ -273,11 +255,8 @@ class TableController extends Controller
     }
 
     public function selectCMSDIS(Request $request) {
-      // Get the list of files in the directory
-      $fltFleList = Storage::allFiles($this->strDir);
-      $multipleFileList = [];
-      $schemaList = [];
-      $fieldTypes = [];
+      // array for keeping errors that we will send to the user
+      $errors = [];
 
       // Get all files from $request
       $files = $request->cmsdisFiles2;
@@ -286,177 +265,28 @@ class TableController extends Controller
       foreach ($files as $file) {
         $fltFleAbsPth = $this->strDir.'/'.$file;
 
-        // put filename to list of saved files
-        array_push($multipleFileList, $fltFleAbsPth);
+        // Calling schema will return an array containing the
+        // tokenized first row of our file to be imported
+        $schema = (new CSVHelper)->schema($fltFleAbsPth);
 
-        $schema = $this->schema($fltFleAbsPth);
-
-        // If the file isn't valid return with an error
+        // if the array is not valid we will delete the file
+        // and push a error to the $errors array
         if (!$schema) {
           Storage::delete($fltFleAbsPth);
           array_push($errors, [ 'The selected flat file must be of type: text/plain', 'The selected flat file should not be empty', 'File is deleted for security reasons' ]);
         }
         else {
-          array_push($schemaList, $schema);
+          // since we are looking at CMS files we know that they will not contain
+          // a header row so we set the first value to false. We will detect fields
+          // by checking the first 1000 rows.
+          $fieldType = (new CSVHelper)->determineTypes(false, $fltFleAbsPth, 1000);
+          // Once we have all our data we can create table and load data
+          (new TableHelper)->createTable($file, $schema[0], $fieldType, count($schema), $request->colID2);
         }
-
-        array_push($fieldTypes, (new CSVHelper)->determineTypes(false, $fltFleAbsPth, 1000));
       }
 
-      return view('admin.cmsdis')->with('cmsFileList', $multipleFileList)
-                                 ->with('schemaList', $schemaList)
-                                 ->with('collctnId', $request->colID2);
+      return redirect()->route('tableIndex')->withErrors($errors);
     }
-
-    /**
-    * Simple function to create the table within the collections
-    * @param string $tblNme
-    * @param string $collctnId
-    */
-    public function crteTblInCollctn($tblNme, $collctnId) {
-      // declare a new table instance
-      $thisTabl = new Table;
-      // Assign the table name and collctn id
-      $thisTabl->tblNme = $tblNme;
-      $thisTabl->collection_id = $collctnId;
-      // Save the collection
-      $thisTabl->save();
-    }
-
-    /**
-    * Method to validate the file type and read the first line only for schema
-    * Algorithm:
-    * 1. Get the flatfile instance
-    * 2. Validate the file type
-    * 3. Tokenize the current line
-    * 4. Validate the tokens and return
-    * 5. Return first line as array
-    * @param string $fltFlePth
-    * @return boolean
-    */
-    public function schema($fltFlePth) {
-      // 1. Get the flatfile instance
-      // Check if the file exists
-      if (!Storage::has($fltFlePth)) {
-        // If the file doesn't exists return with error
-        return false;
-      }
-      // Create an instance for the file
-      $fltFleObj = new \SplFileObject(\storage_path()."/app/".$fltFlePth);
-
-      // 2. Validate the file type
-      // Create a finfo instance
-      $fleInf = new \finfo(FILEINFO_MIME_TYPE);
-      // Get the file type
-      $fleMime = $fleInf->file($fltFleObj->getRealPath());
-      // Check the mimetype
-      if (!str_is($fleMime, "text/plain")) {
-        // If the file isn't a text file return false
-        return false;
-      }
-      // Check if the file is empty
-      if (!$this->isEmpty($fltFleObj)>0) {
-        return false;
-      }
-
-      // 3. Tokenize the current line
-      // Get the first line as the header
-      $fltFleObj->seek(0);
-      $hdr = $fltFleObj->fgets();
-
-      // Strip out Quotes that are sometimes seen in header rows of csv files
-      $hdr = str_replace('"', "", $hdr);
-
-      // Tokenize the line
-      $tkns = (new CSVHelper)->tknze($hdr, (new CSVHelper)->detectDelimiter(\storage_path()."/app/".$fltFlePth));
-      // Validate the tokens and filter them
-      $tkns = (new CSVHelper)->fltrTkns($tkns);
-
-      // Returning tokens
-      return $tkns;
-    }
-
-    /**
-    * Method to tokenize the string for multiple lines
-    * @param string $line
-    * @param false|string $delimiter
-    */
-    // public function tknze($line, $delimiter) {
-    //   // Tokenize the line
-    //   // Define a pattern
-    //   $pattern = '/['.$delimiter.']/';
-    //
-    //   // preg split
-    //   $tkns = preg_split($pattern, $line);
-    //
-    //   // Return the array
-    //   return $tkns;
-    // }
-
-     /*
-     * @param string $csvFile Path to the CSV file
-     * @return string Delimiter
-     */
-     // public function detectDelimiter($csvFile)
-     // {
-     //     $delimiters = array(
-     //         ';' => 0,
-     //         ',' => 0,
-     //         "\t" => 0,
-     //         "|" => 0
-     //     );
-     //
-     //     $handle = fopen($csvFile, "r");
-     //     $firstLine = fgets($handle);
-     //     fclose($handle);
-     //     foreach ($delimiters as $delimiter => &$count) {
-     //         $count = count(str_getcsv($firstLine, $delimiter));
-     //     }
-     //
-     //     return array_search(max($delimiters), $delimiters);
-     // }
-
-    /**
-    * Get the line numbers for a fileobject
-    * @param \SplFileObject $fltFleObj
-    */
-    public function isEmpty($fltFleObj) {
-      // Before anything set to seek first line
-      $fltFleObj->seek(0);
-
-      // Variable to count the length
-      $len = 0;
-
-      // Loop till EOF
-      while (!$fltFleObj->eof()) {
-        // Check if the file has at least one line
-        if ($len>=1) {
-          // Break here so that it's not reading huge files
-          break;
-        }
-        // Increament variable
-        $len += 1;
-        // Seek the next item
-        $fltFleObj->next();
-      }
-
-      // Return the length
-      return $len;
-    }
-
-    /**
-    * Method to check if the given tkns are null
-    */
-    // public function fltrTkns($tkns) {
-    //   // Run through the files
-    //   foreach ($tkns as $key => $tkn) {
-    //     // trim the token
-    //     $tkns[ $key ] = trim($tkn);
-    //   }
-    //
-    //   // Return the filtered tokens
-    //   return $tkns;
-    // }
 
     /**
     * Method to read input from the schema and start actual data import
@@ -571,7 +401,7 @@ class TableController extends Controller
 
       // Finally create the table
       // Save the table upon the schema
-      $this->crteTblInCollctn($tblNme, $collctnId);
+      (new TableHelper)->crteTblInCollctn($tblNme, $collctnId);
 
       // create folder in storage that will contain any additional files associated to the table
       if (Storage::exists($tblNme) == FALSE) {
@@ -642,18 +472,9 @@ class TableController extends Controller
       // Validate the request before storing the job
       $this->validate($request, $rules);
 
-      // set messages array to empty
-      $messages = [ ];
+      //Queue Job for Import
+      (new TableHelper)->fileImport($request->tblNme, $request->fltFle);
 
-      Log::info('File Import has been requested for table '.$request->tblNme.' using flat file '.$request->fltFle);
-      // add job to queue
-      $this->dispatch(new FileImport($request->tblNme, $request->fltFle));
-      $message = [
-        'content'  =>  $request->fltFle.' has been queued for import to '.$request->tblNme.' table. It will be available shortly.',
-        'level'    =>  'success',
-      ];
-      array_push($messages, $message);
-      session()->flash('messages', $messages);
       return redirect()->route('tableIndex');
     }
 
