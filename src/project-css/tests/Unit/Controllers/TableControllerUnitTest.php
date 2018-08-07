@@ -17,8 +17,8 @@
     }
 
     protected function tearDown() {
-      Artisan::call('migrate:reset');
-      parent::tearDown();
+         Artisan::call('migrate:reset');
+         parent::tearDown();
     }
 
     public function testLoad() {
@@ -31,15 +31,38 @@
 
     public function testProcessEmptyFile() {
         // passing a empty file should throw an exception
-        $emptyFile = './storage/app/flatfiles/empty.csv';
+        $path = './storage/app';
+        $folder = 'flatfiles';
+        $fileName = 'empty.csv';
+        $tableName = 'testtable1';
+
+        $emptyFile = $path.'/'.$folder.'/'.$fileName;
         touch($emptyFile);
         try {
-          (new TableController)->process('testtable1', 'empty.csv');
+          (new TableController)->process($tableName, $folder, $fileName);
         } catch (Exception $e) {
           $this->assertEquals("Cannot Import a Empty File.", $e->getMessage());
         }
         unlink($emptyFile);
     }
+
+    // public function testProcessFile() {
+    //     // passing a empty file should throw an exception
+    //     $path = './storage/app';
+    //     $folder = 'files/test';
+    //     $fileName = 'zillow.csv';
+    //     $tableName = 'testtable1';
+    //
+    //     $fltFleFullPth = $path.'/'.$folder.'/'.$fileName;
+    //     // create new table
+    //     (new TableController)->process($tableName, $folder, $fileName);
+    //
+    //     // check for Table collection18E
+    //     $this->assertTrue(Schema::hasTable($tableName));
+    //
+    //     // import test database
+    //     // compare loaded data
+    // }
 
 
   }

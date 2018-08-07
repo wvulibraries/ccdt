@@ -11,20 +11,37 @@ class CMSRecords extends Model
         $response = DB::table('recordtypes')
                     ->where('recordType', '=', $recordtype)
                     ->get();
-        if (count($response) == 1) {
+        if (count($response) >= 1) {
           return true;
         }
         return false;
     }
 
+    // return all records sorted in descending order
     public static function getCMSHeader($recordtype) {
-        $response = DB::table('recordtypes')
+        return DB::table('recordtypes')
                     ->where('recordType', '=', $recordtype)
+                    ->orderBy('fieldCount', 'desc')
                     ->get();
-        if (count($response) == 1) {
-          return $response;
-          //return unserialize($response[0]->fieldNames);
-        }
-        return null;
     }
+
+    // query recordTypes returning only records with fieldCount
+    // equal to what is expected
+    public static function findCMSHeader($recordtype, $fieldCount) {
+        return DB::table('recordtypes')
+                    ->where('recordType', '=', $recordtype)
+                    ->having("fieldCount", "=", $fieldCount)
+                    ->orderBy('fieldCount', 'asc')
+                    ->get();
+    }
+
+    // query recordTypes returning only records with fieldCount greater
+    // than or equal to what is expected
+    // public static function findClosestCMSHeader($recordtype, $fieldCount) {
+    //     return DB::table('recordtypes')
+    //                 ->where('recordType', '=', $recordtype)
+    //                 ->having("fieldCount", ">=", $fieldCount)
+    //                 ->orderBy('fieldCount', 'asc')
+    //                 ->get();
+    // }
 }

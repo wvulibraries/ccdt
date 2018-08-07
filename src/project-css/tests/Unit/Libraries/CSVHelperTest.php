@@ -59,10 +59,10 @@ class CSVHelperTest extends TestCase
       $this->assertEquals($result[3][1], 'default');
 
       $this->assertEquals($result[4][0], 'integer');
-      $this->assertEquals($result[4][1], 'default');
+      $this->assertEquals($result[4][1], 'medium');
 
       $this->assertEquals($result[5][0], 'integer');
-      $this->assertEquals($result[5][1], 'default');
+      $this->assertEquals($result[5][1], 'medium');
     }
 
     public function testgetTypesFromCSVwithHeaderZillow() {
@@ -81,7 +81,7 @@ class CSVHelperTest extends TestCase
       $this->assertEquals($result[0][1], 'default');
 
       $this->assertEquals($result[1][0], 'integer');
-      $this->assertEquals($result[1][1], 'default');
+      $this->assertEquals($result[1][1], 'medium');
 
       $this->assertEquals($result[2][0], 'integer');
       $this->assertEquals($result[2][1], 'default');
@@ -90,13 +90,65 @@ class CSVHelperTest extends TestCase
       $this->assertEquals($result[3][1], 'default');
 
       $this->assertEquals($result[4][0], 'integer');
-      $this->assertEquals($result[4][1], 'default');
+      $this->assertEquals($result[4][1], 'medium');
 
       $this->assertEquals($result[5][0], 'integer');
-      $this->assertEquals($result[5][1], 'default');
+      $this->assertEquals($result[5][1], 'medium');
 
       $this->assertEquals($result[6][0], 'integer');
+      $this->assertEquals($result[6][1], 'medium');
+    }
+
+    public function testgetTypesFromCSVwithoutHeader() {
+      // test should return an array of vaild types for the database table
+      // creation. Pass boolean for it to read header row, filename and maximum
+      // number of records to read to determine field types
+
+      //pass true if contains header row, file location, number of rows to check
+      $result = (new CSVHelper)->determineTypes(false, '/files/test/1A-random.tab', 10);
+
+      // array should have a count of 7 items
+      $this->assertEquals(count($result), 13);
+
+      // expected results
+      $this->assertEquals($result[0][0], 'string');
+      $this->assertEquals($result[0][1], 'default');
+
+      $this->assertEquals($result[1][0], 'string');
+      $this->assertEquals($result[1][1], 'medium');
+
+      $this->assertEquals($result[2][0], 'string');
+      $this->assertEquals($result[2][1], 'default');
+
+      $this->assertEquals($result[3][0], 'string');
+      $this->assertEquals($result[3][1], 'default');
+
+      $this->assertEquals($result[4][0], 'string');
+      $this->assertEquals($result[4][1], 'default');
+
+      $this->assertEquals($result[5][0], 'string');
+      $this->assertEquals($result[5][1], 'default');
+
+      $this->assertEquals($result[6][0], 'string');
       $this->assertEquals($result[6][1], 'default');
+
+      $this->assertEquals($result[7][0], 'string');
+      $this->assertEquals($result[7][1], 'default');
+
+      $this->assertEquals($result[8][0], 'string');
+      $this->assertEquals($result[8][1], 'default');
+
+      $this->assertEquals($result[9][0], 'string');
+      $this->assertEquals($result[9][1], 'default');
+
+      $this->assertEquals($result[10][0], 'integer');
+      $this->assertEquals($result[10][1], 'big');
+
+      $this->assertEquals($result[11][0], 'string');
+      $this->assertEquals($result[11][1], 'default');
+
+      $this->assertEquals($result[12][0], 'string');
+      $this->assertEquals($result[12][1], 'default');
     }
 
 }

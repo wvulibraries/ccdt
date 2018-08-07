@@ -15,7 +15,7 @@ services:
         build:
             context: ./
             dockerfile: serverConfiguration/deploy/dev.app.docker
-        container_name: rockefellercss_php
+        container_name: rockefeller-css_php
         volumes:
             - ./src/project-css/:/var/www
         links:

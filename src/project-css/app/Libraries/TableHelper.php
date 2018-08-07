@@ -30,7 +30,7 @@ class TableHelper {
           // Default
           if (str_is($curColSze, 'default')) {
             // For String default is 30 characters
-            $table->string($curColNme, 50)->default("Null");
+            $table->string($curColNme, 30)->default("Null");
           }
           // Medium
           if (str_is($curColSze, 'medium')) {
@@ -102,13 +102,13 @@ class TableHelper {
        $thisTabl->save();
      }
 
-     public function fileImport($tblNme, $fltFle) {
+     public function fileImport($tblNme, $fltFlePath, $fltFle) {
        // set messages array to empty
        $messages = [ ];
 
        Log::info('File Import has been requested for table '.$tblNme.' using flat file '.$fltFle);
        // add job to queue
-       dispatch(new FileImport($tblNme, $fltFle));
+       dispatch(new FileImport($tblNme, $fltFlePath, $fltFle));
        $message = [
          'content'  =>  $fltFle.' has been queued for import to '.$tblNme.' table. It will be available shortly.',
          'level'    =>  'success',
@@ -117,17 +117,10 @@ class TableHelper {
        session()->flash('messages', $messages);
      }
 
-     public function createTable($fileName, $recordType, $fieldType, $fieldCount, $collctnId) {
-        if (CMSRecords::isCMSRecord($recordType)) {
-         $header = CMSRecords::getCMSHeader($recordType);
-         $fieldNames = unserialize($header[0]->fieldNames);
-
-         //find collection so we can get the collection name
-         $thisClctn = Collection::findorFail($collctnId);
-         //create table name
-         $tblNme = $thisClctn->clctnName . $recordType;
+     public function createTable($filepath, $fileName, $tblNme, $fieldNames, $fieldTypes, $collctnId) {
+         $fieldCount = count($fieldTypes);
          if (count($fieldNames) == $fieldCount) {
-           Schema::connection('mysql')->create($tblNme, function(Blueprint $table) use($fieldNames, $fieldType, $fieldCount, $header, $collctnId) {
+           Schema::connection('mysql')->create($tblNme, function(Blueprint $table) use($fieldNames, $fieldTypes, $fieldCount, $collctnId) {
 
              // Default primary key
              $table->increments('id');
@@ -135,7 +128,7 @@ class TableHelper {
              // Add all the dynamic columns
              for ($i = 0; $i<$fieldCount; $i++) {
                // Create Field from current column name, type and size
-               $table = $this->setupTableField($table, $fieldNames[$i], $fieldType[$i][0], $fieldType[$i][1]);
+               $table = $this->setupTableField($table, $fieldNames[$i], $fieldTypes[$i][0], $fieldTypes[$i][1]);
              }
 
              // search index
@@ -158,9 +151,17 @@ class TableHelper {
            }
 
            // queue job for import
-           $this->fileImport($tblNme, $fileName);
-         }
-
+           $this->fileImport($tblNme, $filepath, $fileName);
+        }
+        else {
+          // send failure message
+          $messages = [ ];
+          $message = [
+            'content'  =>  $fileName.' was not imported due to field mismatch ',
+            'level'    =>  'danger',
+          ];
+          array_push($messages, $message);
+          session()->flash('messages', $messages);
         }
      }
 

@@ -27,11 +27,11 @@ class TableController extends Controller
     /**
      * Create a new controller instance.
      */
-    public function __construct() {
+    public function __construct($storageFolder = 'flatfiles') {
       // Protection to make sure this is only accessible to admin
       $this->middleware('admin');
       // Storage directory
-      $this->strDir = 'flatfiles';
+      $this->strDir = $storageFolder;
       // offset for extra colmns
       $this->extraClmns = 3;
     }
@@ -157,14 +157,11 @@ class TableController extends Controller
     public function importCMSDIS(Request $request) {
       // Get the list of files in the directory
       $fltFleList = Storage::allFiles($this->strDir);
-      $multipleFileList = [];
 
       // Get all files from $request
       $files = $request->file('cmsdisFiles');
 
       $errors = [];
-      $schemaList = [];
-      $fieldTypes = [];
 
       // Loop over them
       foreach ($files as $file) {
@@ -182,10 +179,14 @@ class TableController extends Controller
             array_push($errors, [ 'The selected flat file must be of type: text/plain', 'The selected flat file should not be empty', 'File is deleted for security reasons' ]);
           }
           else {
-            // detect field types
-            $fieldType = (new CSVHelper)->determineTypes(false, $fltFleAbsPth, 1000);
-            // create table and load data
-            (new TableHelper)->createTable($thisFltFileNme, $schema[0], $fieldType, count($schema), $request->colID);
+            // find collection so we can get the collection name
+            $thisClctn = Collection::findorFail($request->colID);
+
+            // create table name
+            $tblNme = $thisClctn->clctnName . $schema[0];
+
+            // pass values to create file
+            (new CMSHelper)->createCMSTable($this->strDir, $thisFltFileNme, $request->colID, $tblNme);
           }
         }
       }
@@ -276,12 +277,14 @@ class TableController extends Controller
           array_push($errors, [ 'The selected flat file must be of type: text/plain', 'The selected flat file should not be empty', 'File is deleted for security reasons' ]);
         }
         else {
-          // since we are looking at CMS files we know that they will not contain
-          // a header row so we set the first value to false. We will detect fields
-          // by checking the first 1000 rows.
-          $fieldType = (new CSVHelper)->determineTypes(false, $fltFleAbsPth, 1000);
-          // Once we have all our data we can create table and load data
-          (new TableHelper)->createTable($file, $schema[0], $fieldType, count($schema), $request->colID2);
+          // find collection so we can get the collection name
+          $thisClctn = Collection::findorFail($request->colID2);
+
+          // create table name
+          $tblNme = $thisClctn->clctnName . $schema[0];
+
+          // pass values to create file
+          (new CMSHelper)->createCMSTable($this->strDir, $file, $request->colID2, $tblNme);
         }
       }
 
@@ -473,7 +476,7 @@ class TableController extends Controller
       $this->validate($request, $rules);
 
       //Queue Job for Import
-      (new TableHelper)->fileImport($request->tblNme, $request->fltFle);
+      (new TableHelper)->fileImport($request->tblNme, $this->strDir, $request->fltFle);
 
       return redirect()->route('tableIndex');
     }
@@ -570,7 +573,7 @@ class TableController extends Controller
     *   1. Validate
     *   2. Insert into database
     **/
-    public function process($tblNme, $fltFleNme, $ignoreFirst = true) {
+    public function process($tblNme, $fltFlePath, $fltFleNme, $ignoreFirst = true) {
       //get table
       $table = Table::where('tblNme', $tblNme)->first();
 
@@ -583,7 +586,7 @@ class TableController extends Controller
       $orgCount = count($clmnLst) - 1;
 
       // 1. Read the file as spl object
-      $fltFleAbsPth = $this->strDir.'/'.$fltFleNme;
+      $fltFleAbsPth = $fltFlePath.'/'.$fltFleNme;
       $fltFleFullPth = storage_path('app/'.$fltFleAbsPth);
 
       // Create an instance for the file

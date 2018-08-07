@@ -31,7 +31,7 @@ services:
         build:
             context: ./
             dockerfile: serverConfiguration/deploy/prod.app.docker
-        container_name: rockefellercss_php
+        container_name: rockefeller-css_php
         volumes:
         # uncomment when using
             - ./src/project-css/storage:/var/www/storage

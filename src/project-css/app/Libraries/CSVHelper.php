@@ -76,104 +76,157 @@ class CSVHelper {
       * @param string $fltFleAbsPth location of file to be checked.
       * @param integer $readCount lines to read to determine type
       */
-     public function checkFile($header, $fltFleAbsPth, $readCount) {
+     public function checkFile($hasheader, $fltFleAbsPth, $readCount) {
+       // 1. Get the flatfile instance
+       // Check if the file exists
+       if (!Storage::has($fltFleAbsPth)) {
+         // If the file doesn't exists return with error
+         return false;
+       }
+       // Create an instance for the file
+       $fltFleObj = new \SplFileObject(\storage_path()."/app/".$fltFleAbsPth);
+
+       // 2. Validate the file type
+       // Create a finfo instance
+       $fleInf = new \finfo(FILEINFO_MIME_TYPE);
+       // Get the file type
+       $fleMime = $fleInf->file($fltFleObj->getRealPath());
+       // Check the mimetype
+       if (!str_is($fleMime, "text/plain")) {
+         // If the file isn't a text file return false
+         return false;
+       }
+       // Check if the file is empty
+       if (!$this->isEmpty($fltFleObj)>0) {
+         return false;
+       }
+
+       $hasheader ? $fltFleObj->seek(1) : $fltFleObj->seek(0);
+
        $checkArray = [];
-       $file = new \SplFileObject(\storage_path()."/app/".$fltFleAbsPth);
-       $file->setFlags(\SplFileObject::DROP_NEW_LINE);
        $count = 0;
-       if ($header) {
-         // skip header
-         $file->seek(1);
-       }
-       while ($file->valid()) {
-           // break while if we reach loop maximum read
-           if ($count > $readCount) {
-             break;
+       $delimiter = $this->detectDelimiter(\storage_path()."/app/".$fltFleAbsPth);
+
+       // 3. Loop over the file until eof or $readCount is reached
+       while ($fltFleObj->valid()) {
+         // break while if we reach loop maximum read
+         if ($count > $readCount) {
+           break;
+         }
+         ++$count;
+
+         $hdr = $fltFleObj->fgets();
+
+         // Strip out Quotes that are sometimes seen in header rows of csv files
+         $hdr = str_replace('"', "", $hdr);
+
+         // Tokenize the line
+         $tkns = $this->tknze($hdr, $delimiter);
+         // Validate the tokens and filter them
+         $tkns = $this->fltrTkns($tkns);
+
+         $fieldcount = count($tkns);
+         if (count($checkArray) < $fieldcount) {
+           for ($pos = count($checkArray); $pos < $fieldcount; $pos++) {
+             // push default item as numeric
+             array_push($checkArray, [0, 0]);
            }
-           ++$count;
+         }
 
-           // read line
-           $line = $file->fgets();
-
-           // Strip out Quotes that are sometimes seen in csv files around each item
-           $hdr = str_replace('"', "", $line);
-
-           // Tokenize the line
-           $tkns = $this->tknze($hdr, $this->detectDelimiter(\storage_path()."/app/".$fltFleAbsPth));
-           //var_dump($tkns);
-           // Validate the tokens and filter them
-           $tkns = $this->fltrTkns($tkns);
-
-           $fieldcount = count($tkns);
-           if (count($checkArray) != $fieldcount) {
-             $checkArray = [];
-             for ($x = 0; $x < $fieldcount; $x++) {
-               // push default item as numeric
-               array_push($checkArray, [0, 0]);
-             }
+         foreach($tkns as $x=>$x_value) {
+           // change type if we detect any that the string isn't numeric
+           if (is_numeric($x_value) && ($x_value != "")) {
+             $checkArray[$x][0] = 1;
            }
+           // save character count if higher than last pass
+           if ($checkArray[$x][1] < strlen($x_value)) {
+             $checkArray[$x][1] = strlen($x_value);
+           }
+         }
 
-           foreach($tkns as $x=>$x_value)
-             {
-               // change type if we detect any that the string isn't numeric
-               if (is_numeric($x_value) && ($x_value != "")) {
-                 $checkArray[$x][0] = 1;
-               }
-               // save character count if higher than last pass
-               if ($checkArray[$x][1] < strlen($x_value)) {
-                 $checkArray[$x][1] = strlen($x_value);
-               }
-             }
        }
-       return ($checkArray);
+       // Returning detected fields
+       return $checkArray;
      }
 
-     public function determineTypes($header, $fltFleAbsPth, $readCount) {
+     public function determineTypes($hasheader, $fltFleAbsPth, $readCount) {
          // call checkFile process the passed file
-         $checkArray = $this->checkFile($header, $fltFleAbsPth, $readCount);
+         $checkArray = $this->checkFile($hasheader, $fltFleAbsPth, $readCount);
 
          $fieldType = [];
+
          // determine final field types
          foreach($checkArray as $x=>$x_value)
-           {
-             if ($x_value[0] == 0) {
-               switch ($x_value[1]) {
-                   case 0:
-                   case $x_value[1] < 50:
-                       array_push($fieldType, ['string', 'default']);
-                       break;
-                   case $x_value[1] < 150:
-                       array_push($fieldType, ['string', 'medium']);
-                       break;
-                   case $x_value[1] < 500:
-                       array_push($fieldType, ['string', 'big']);
-                       break;
-                   case $x_value[1] < 65535:
-                       array_push($fieldType, ['text', 'default']);
-                       break;
-                   case $x_value[1] < 16777215:
-                       array_push($fieldType, ['text', 'medium']);
-                       break;
-                   case $x_value[1] < 4294967295:
-                       array_push($fieldType, ['text', 'big']);
-               }
-             }
-
-             if ($x_value[0] == 1) {
-               switch ($x_value[1]) {
-                   case $x_value[1] >= 1000:
-                       array_push($fieldType, ['integer', 'big']);
-                       break;
-                   case $x_value[1] >= 100:
-                       array_push($fieldType, ['integer', 'medium']);
-                       break;
-                   default:
-                       array_push($fieldType, ['integer', 'default']);
-               }
-             }
-
+         {
+           // if integer is detected and character count is greater than
+           // 10 we will store it as text
+           if (($x_value[0] == 1) && ($x_value[1] > 10)) {
+             $x_value[0] = 0;
            }
-         return $fieldType;
+
+           if ($x_value[0] == 0) {
+             switch ($x_value[1]) {
+                 case 0:
+                 case $x_value[1] < 30:
+                     array_push($fieldType, ['string', 'default', $x_value[1]]);
+                     break;
+                 case $x_value[1] < 150:
+                     array_push($fieldType, ['string', 'medium', $x_value[1]]);
+                     break;
+                 case $x_value[1] < 500:
+                     array_push($fieldType, ['string', 'big', $x_value[1]]);
+                     break;
+                 case $x_value[1] < 2000:
+                     array_push($fieldType, ['text', 'default', $x_value[1]]);
+                     break;
+                 case $x_value[1] < 8000:
+                     array_push($fieldType, ['text', 'medium', $x_value[1]]);
+                     break;
+                 default:
+                     array_push($fieldType, ['text', 'big', $x_value[1]]);
+             }
+           }
+           elseif ($x_value[0] == 1) {
+             switch ($x_value[1]) {
+                 case $x_value[1] <= 2:
+                   array_push($fieldType, ['integer', 'default', $x_value[1]]);
+                   break;
+                 case $x_value[1] <= 7:
+                   array_push($fieldType, ['integer', 'medium', $x_value[1]]);
+                   break;
+                 default:
+                     array_push($fieldType, ['integer', 'big', $x_value[1]]);
+             }
+           }
+       }
+
+       return $fieldType;
+     }
+
+     public function generateHeader($fieldCount) {
+       $header = array();
+       for ($pos = 0; $pos < $fieldCount; $pos++) {
+         array_push($header, 'field'.$pos);
+       }
+       return $header;
+     }
+
+     // function is used to adjust detected types to match
+     // what is expected from $header
+     public function adjustTypes($fieldTypes, $header) {
+       // remove extra field that is sometimes detected
+       if ((count($fieldTypes)-1) == count($header) && ($fieldTypes[count($fieldTypes)-1][2] == 0)) {
+         array_pop($fieldTypes);
+       }
+       elseif (count($fieldTypes) < count($header)) {
+         // add extra fields
+         for ($pos = count($fieldTypes); $pos < count($header); $pos++) {
+           // add extra text fields if the header
+           // has more than what is detected
+           array_push($fieldTypes, ['text', 'big', 0]);
+         }
+       }
+       return $fieldTypes;
      }
 
      /**
