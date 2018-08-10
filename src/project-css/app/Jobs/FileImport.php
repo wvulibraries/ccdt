@@ -14,14 +14,16 @@ class FileImport implements ShouldQueue
     use InteractsWithQueue, Queueable, SerializesModels;
 
     private $tblNme;
+    private $fltFlePath;
     private $fltFle;
 
     /**
      * Create a new job instance.
      */
-    public function __construct($tblNme, $fltFle)
+    public function __construct($tblNme, $fltFlePath, $fltFle)
     {
         $this->tblNme = $tblNme;
+        $this->fltFlePath = $fltFlePath;
         $this->fltFle = $fltFle;
     }
 
@@ -30,7 +32,7 @@ class FileImport implements ShouldQueue
      */
     public function handle()
     {
-        (new TableController)->process($this->tblNme, $this->fltFle);
+        (new TableController)->process($this->tblNme, $this->fltFlePath, $this->fltFle);
     }
 
 }

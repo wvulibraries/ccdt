@@ -5,6 +5,7 @@
     use App\Models\User;
     use App\Models\Collection;
     use App\Models\Table;
+    use App\Libraries\TestHelper;
 
     class UploadControllerTest extends BrowserKitTestCase {
 
@@ -45,9 +46,7 @@
              ->assertResponseStatus(200);
 
         // Generate Test Collection
-        $collection = factory(Collection::class)->create([
-            'clctnName' => 'collection1',
-        ]);
+        $collection = (new TestHelper)->createCollection('collection1');
 
         $tblname = 'importtest'.mt_rand();
 
@@ -98,9 +97,7 @@
              ->assertResponseStatus(200);
 
         // Generate Test Collection
-        $collection = factory(App\Models\Collection::class)->create([
-            'clctnName' => 'collection1',
-        ]);
+        $collection = (new TestHelper)->createCollection('collection1');
 
         $tblname = 'importtest'.mt_rand();
 

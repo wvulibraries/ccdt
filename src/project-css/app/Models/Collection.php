@@ -13,4 +13,12 @@ class Collection extends Model
     // Establish the relationship
     return $this->hasMany('App\Models\Table');
   }
+
+  public function setCMSId($collectionID, $cmsId) {
+    // Set CMS Id in collection
+    \DB::table('collections')
+            ->where('id', $collectionID)
+            ->update(['cmsId' => $cmsId]);
+  }
+
 }

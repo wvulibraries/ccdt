@@ -10,7 +10,7 @@
       Queue::fake();
 
       // Push a job
-      Queue::push(new FileImport('test1', '2.csv'));
+      Queue::push(new FileImport('test1', 'flatfile', '2.csv'));
 
       // Assert the job was pushed to the queue
       Queue::assertPushed(FileImport::class);

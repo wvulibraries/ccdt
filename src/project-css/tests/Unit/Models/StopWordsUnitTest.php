@@ -1,8 +1,8 @@
 <?php
   # app/tests/Unit/controllers/StopWordsUnitTest.php
 
-  use App\Http\Controllers\JobsController;
-  use App\Http\Controllers\TableController;
+  // use App\Http\Controllers\JobsController;
+  // use App\Http\Controllers\TableController;
   use App\Models\StopWords;
 
   class StopWordsUnitTest extends TestCase {

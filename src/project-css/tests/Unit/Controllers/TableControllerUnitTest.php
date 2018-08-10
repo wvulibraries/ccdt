@@ -3,6 +3,7 @@
 
   use Illuminate\Support\Facades\Storage;
   use App\Http\Controllers\TableController;
+  use App\Libraries\TestHelper;
 
   class TableControllerUnitTest extends TestCase {
 
@@ -17,32 +18,12 @@
     }
 
     protected function tearDown() {
-      Artisan::call('migrate:reset');
-      parent::tearDown();
-    }
-
-    public function testSchema() {
-        if (File::exists(storage_path('/flatfiles/mlb_players.csv'))) {
-          // check for a valid file
-          $result = (new TableController)->schema('/files/test/mlb_players.csv');
-          $this->assertEquals($result[ 0 ], 'Name');
-        }
-
-        // passing a filename that doesn't exits should produce false result
-        $this->assertFalse((new TableController)->schema('/files/test/unknown.csv'));
-
-        // passing a file that isn't of the correct type should produce false result
-        $this->assertFalse((new TableController)->schema('/files/test/images.png'));
-
-        //passing a empty file should produce a false result
-        $emptyFile = './storage/app/files/test/empty.csv';
-        touch($emptyFile);
-        $this->assertFalse((new TableController)->schema('/files/test/empty.csv'));
-        unlink($emptyFile);
+         Artisan::call('migrate:reset');
+         parent::tearDown();
     }
 
     public function testLoad() {
-        // calling load should return items one is the list of files
+        // calling load should return the list of files
         // in the flatfile directory under Storage
         // we are testing that the array is present and valid
         $response = (new TableController)->load();
@@ -51,10 +32,15 @@
 
     public function testProcessEmptyFile() {
         // passing a empty file should throw an exception
-        $emptyFile = './storage/app/flatfiles/empty.csv';
+        $path = './storage/app';
+        $folder = 'flatfiles';
+        $fileName = 'empty.csv';
+        $tableName = 'testtable1';
+
+        $emptyFile = $path.'/'.$folder.'/'.$fileName;
         touch($emptyFile);
         try {
-          (new TableController)->process('testtable1', 'empty.csv');
+          (new TableController)->process($tableName, $folder, $fileName);
         } catch (Exception $e) {
           $this->assertEquals("Cannot Import a Empty File.", $e->getMessage());
         }

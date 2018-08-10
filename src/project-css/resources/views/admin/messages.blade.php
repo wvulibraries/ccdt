@@ -2,7 +2,7 @@
 @if(session()->has('messages'))
   @if(count(session()->get('messages')) > 0)
 
-    @if(count(session()->get('messages')) == 1))
+    @if(count(session()->get('messages')) == 1)
       @foreach (session()->get('messages') as $message)
         <div class="alert alert-{{ $message['level'] }} alrtArea">
           <h4>{{ $message['content'] }}</h4>

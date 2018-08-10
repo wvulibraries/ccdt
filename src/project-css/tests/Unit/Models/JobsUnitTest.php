@@ -1,17 +1,22 @@
 <?php
-  # app/tests/Unit/controllers/TableControllerUnitTest.php
+  # app/tests/Unit/Models/JobsUnitTest.php
 
   use App\Http\Controllers\JobsController;
   use App\Http\Controllers\TableController;
   use App\Jobs\FileImport;
   use App\Models\Jobs;
+  use Vendor\fzaninotto\Faker\Generator;
 
   class JobsUnitTest extends TestCase {
+    // use the factory to create a Faker\Generator instance
+    public $faker;
 
     public function setUp() {
          parent::setUp();
          Artisan::call('migrate');
          Artisan::call('db:seed');
+
+         $this->faker = Faker\Factory::create();
     }
 
     protected function tearDown() {
@@ -21,7 +26,7 @@
 
     public function testRetryAllFailedJobs() {
          //insert dummy record into the failed jobs
-         \DB::insert('insert into failed_jobs (payload) values(?)',['test payload']);
+         \DB::insert('insert into failed_jobs (payload) values(?)',[$this->faker->text]);
          //test job exists
          $jobs = new Jobs();
          $this->assertEquals(1, $jobs->getFailedJobsCount());
@@ -31,7 +36,7 @@
 
     public function testRetryFailedJob() {
          //insert dummy record into the failed jobs
-         \DB::insert('insert into failed_jobs (payload) values(?)',['test payload']);
+         \DB::insert('insert into failed_jobs (payload) values(?)',[$this->faker->text]);
          //test job exists
          $jobs = new Jobs();
          $this->assertEquals(1, $jobs->getFailedJobsCount());
@@ -41,7 +46,7 @@
 
     public function testForgetAllFailedJobs() {
          //insert dummy record into the failed jobs
-         \DB::insert('insert into failed_jobs (payload) values(?)',['test payload']);
+         \DB::insert('insert into failed_jobs (payload) values(?)',[$this->faker->text]);
          //test job exists
          $jobs = new Jobs();
          $this->assertEquals(1, $jobs->getFailedJobsCount());
@@ -51,7 +56,7 @@
 
     public function testForgetFailedJob() {
          //insert dummy record into the failed jobs
-         \DB::insert('insert into failed_jobs (payload) values(?)',['test payload']);
+         \DB::insert('insert into failed_jobs (payload) values(?)',[$this->faker->text]);
          //test job exists
          $jobs = new Jobs();
          $this->assertEquals(1, $jobs->getFailedJobsCount());

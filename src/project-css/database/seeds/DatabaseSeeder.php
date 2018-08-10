@@ -13,6 +13,7 @@ class DatabaseSeeder extends Seeder
         // Call the user table seed
         $this->call(UsersTableSeeder::class);
         $this->call(StopWordsSeeder::class);
-        $this->call(AllowedFileTypesSeeder::class);        
+        $this->call(AllowedFileTypesSeeder::class);
+        $this->call(RecordTypesSeeder::class);      
     }
 }

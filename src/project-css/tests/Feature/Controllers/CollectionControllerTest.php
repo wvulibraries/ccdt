@@ -4,6 +4,7 @@
   use App\Models\User;
   use App\Models\Collection;
   use App\Models\Table;
+  use App\Libraries\TestHelper;
 
   class CollectionControllerTest extends BrowserKitTestCase {
 
@@ -75,9 +76,7 @@
 
     public function testEditingCollectionName() {
         // Generate Test Collection
-        $collection = factory(Collection::class)->create([
-            'clctnName' => 'collection1',
-        ]);
+        $collection = (new TestHelper)->createCollection('collection1');
 
         // While using a admin account try to rename collection name
         $this->actingAs($this->admin)
@@ -90,9 +89,7 @@
 
     public function testDisableThenEnableCollection() {
         // Generate Test Collection
-        $collection = factory(Collection::class)->create([
-            'clctnName' => 'collection1',
-        ]);
+        $collection = (new TestHelper)->createCollection('collection1');
 
         // While using a admin account try to disable a collection with invalid name (should be redirected)
         $this->actingAs($this->admin)->post('collection/disable', [ 'id' => $collection->id, 'clctnName' => 'collection' ])->assertResponseStatus(302);
@@ -116,9 +113,7 @@
 
     public function testNonAdminDisableCollection() {
         // Generate Test Collection
-        $collection = factory(Collection::class)->create([
-           'clctnName' => 'collection1',
-        ]);
+        $collection = (new TestHelper)->createCollection('collection1');
 
         // While using a admin account try to disable a collection
         $this->actingAs($this->user)->post('collection/disable', [ 'id' => $collection->id, 'clctnName' => $collection->clctnName ]);
