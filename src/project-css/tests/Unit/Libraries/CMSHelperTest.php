@@ -12,6 +12,7 @@ class CMSHelperTest extends TestCase
 
        // create a test collection
        (new TestHelper)->createCollection('collection1');
+       (new TestHelper)->createCollection('collection2');
   }
 
   protected function tearDown() {
@@ -27,15 +28,15 @@ class CMSHelperTest extends TestCase
     $response = $helper->getCMSFields(1, $fieldType, 13);
     $this->assertEquals(count($response), 13);
 
-    $response = $helper->getCMSFields(1, $fieldType, 16);
+    $response = $helper->getCMSFields(1, '3E', 4);
+    $this->assertEquals($response[1], 'Constituent ID');
+
+    $response = $helper->getCMSFields(2, $fieldType, 16);
     $this->assertEquals(count($response), 16);
 
     // sending an invalid count will not return any results
-    $response = $helper->getCMSFields(1, $fieldType, 9);
+    $response = $helper->getCMSFields(2, $fieldType, 9);
     $this->assertEquals(count($response), 0);
-
-    $response = $helper->getCMSFields(1, '3E', 4);
-    $this->assertEquals($response[1], 'Constituent ID');
   }
 
   /**
