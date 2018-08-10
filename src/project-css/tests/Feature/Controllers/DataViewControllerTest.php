@@ -5,11 +5,13 @@
   use App\Models\User;
   use App\Models\Collection;
   use App\Models\Table;
+  use App\Libraries\TestHelper;
 
   class DataViewControllerTest extends BrowserKitTestCase {
 
     private $admin;
     private $user;
+    private $collection;
 
     /**
     * @var \Illuminate\Session\SessionManager
@@ -33,14 +35,9 @@
            parent::tearDown();
     }
 
-    public function createCollection($name) {
-           $this->collection = factory(Collection::class)->create([
-                'clctnName' => $name,
-           ]);
-    }
-
     public function createTestTable($tblname, $path, $file) {
-            $this->createCollection('collection1');
+            // create a test collection
+            $this->collection = (new TestHelper)->createCollection('collection1');
 
             $this->actingAs($this->admin)
                  ->visit('table/create')

@@ -17,13 +17,30 @@ class CMSHelper {
      *
      */
 
-     public function getCMSFields($recordType, $fieldCount) {
+     public function getCMSFields($collctnId, $recordType, $fieldCount) {
        if (CMSRecords::isCMSRecord($recordType)) {
+
+        // get collection record so we can set the cms ID
+        $thisClctn = Collection::findorFail($collctnId);
+
         $response = CMSRecords::findCMSHeader($recordType, $fieldCount);
+
         // if only one item is found we return that result
         if (count($response) == 1) {
+          // set cmsID in Collection is not already set
+          if ($thisClctn->cmdId == null) {
+            $thisClctn->setCMSId($collctnId, $response[0]->cmsId);
+          }
+
           // first returned response should be the closest match
           return unserialize($response[0]->fieldNames);
+        }
+        elseif (count($response) > 1) {
+          for ($arrayPos = 0; $arrayPos < count($response); $arrayPos++) {
+            if ($response[$arrayPos]->cmsId === $thisClctn->cmsId) {
+              return unserialize($response[$arrayPos]->fieldNames);
+            }
+          }
         }
        }
        return null;
@@ -47,10 +64,10 @@ class CMSHelper {
        $schema = (new CSVHelper)->schema($storageFolder.'/'.$thsFltFile);
 
        // get header from database pass record type and detected field count
-       $header = $this->getCMSFields($schema[0], count($fieldTypes));
+       $header = $this->getCMSFields($collctnId, $schema[0], count($fieldTypes));
 
-       // adjusted $fieldTypes to match returned $header count
-       if (count($fieldTypes) != count($header)) {
+       // if we get a null header then we generate one
+       if ($header == null) {
          // generate header since we couldn't find a match
          $header = (new CSVHelper)->generateHeader(count($fieldTypes));
        }

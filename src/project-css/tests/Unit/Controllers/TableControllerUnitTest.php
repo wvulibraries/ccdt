@@ -3,6 +3,7 @@
 
   use Illuminate\Support\Facades\Storage;
   use App\Http\Controllers\TableController;
+  use App\Libraries\TestHelper;
 
   class TableControllerUnitTest extends TestCase {
 
@@ -45,25 +46,6 @@
         }
         unlink($emptyFile);
     }
-
-    // public function testProcessFile() {
-    //     // passing a empty file should throw an exception
-    //     $path = './storage/app';
-    //     $folder = 'files/test';
-    //     $fileName = 'zillow.csv';
-    //     $tableName = 'testtable1';
-    //
-    //     $fltFleFullPth = $path.'/'.$folder.'/'.$fileName;
-    //     // create new table
-    //     (new TableController)->process($tableName, $folder, $fileName);
-    //
-    //     // check for Table collection18E
-    //     $this->assertTrue(Schema::hasTable($tableName));
-    //
-    //     // import test database
-    //     // compare loaded data
-    // }
-
 
   }
 ?>

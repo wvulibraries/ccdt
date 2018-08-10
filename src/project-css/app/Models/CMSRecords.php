@@ -35,6 +35,13 @@ class CMSRecords extends Model
                     ->get();
     }
 
+    public static function findCMSHeaderWithId($recordtype, $cmdID) {
+        return DB::table('recordtypes')
+                    ->where('recordType', '=', $recordtype)
+                    ->having("cmsId", "=", $cmdID)
+                    ->get();
+    }
+
     // query recordTypes returning only records with fieldCount greater
     // than or equal to what is expected
     // public static function findClosestCMSHeader($recordtype, $fieldCount) {

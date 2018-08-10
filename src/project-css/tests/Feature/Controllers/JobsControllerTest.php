@@ -10,6 +10,9 @@
     private $admin;
     private $user;
 
+    // use the factory to create a Faker\Generator instance
+    public $faker;
+
     public function setUp() {
         parent::setUp();
         Artisan::call('migrate');
@@ -18,6 +21,8 @@
         // find admin and test user accounts
         $this->admin = User::where('name', '=', 'admin')->first();
         $this->user = User::where('name', '=', 'test')->first();
+
+        $this->faker = Faker\Factory::create();
     }
 
     protected function tearDown() {
@@ -52,7 +57,7 @@
     }
 
     public function testRetryFailedJob() {
-        \DB::insert('insert into failed_jobs (payload) values(?)',['test payload']);
+        \DB::insert('insert into failed_jobs (payload) values(?)',[$this->faker->text]);
         $this->actingAs($this->admin)
              ->visit('admin/jobs/retry/1')
              ->see('No Failed Job(s).')
@@ -60,7 +65,7 @@
     }
 
     public function testRetryAllFailedJobs() {
-        \DB::insert('insert into failed_jobs (payload) values(?)',['test payload']);
+        \DB::insert('insert into failed_jobs (payload) values(?)',[$this->faker->text]);
         $this->actingAs($this->admin)
              ->visit('admin/jobs/retryall')
              ->see('No Failed Job(s).')
@@ -68,7 +73,7 @@
     }
 
     public function testForgetJob() {
-        \DB::insert('insert into failed_jobs (payload) values(?)',['test payload']);
+        \DB::insert('insert into failed_jobs (payload) values(?)',[$this->faker->text]);
         $this->actingAs($this->admin)
              ->visit('admin/jobs/forget/1')
              ->see('No Failed Job(s).')
@@ -76,7 +81,7 @@
     }
 
     public function testForgetAllFailedJobs() {
-        \DB::insert('insert into failed_jobs (payload) values(?)',['test payload']);
+        \DB::insert('insert into failed_jobs (payload) values(?)',[$this->faker->text]);
         $this->actingAs($this->admin)
              ->visit('admin/jobs/flush')
              ->see('No Failed Job(s).')

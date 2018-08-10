@@ -139,7 +139,7 @@ class TableHelper {
            });
 
            // modify table for fulltext search using the srchindex column
-           DB::connection()->getPdo()->exec('ALTER TABLE '.$tblNme.' ADD FULLTEXT fulltext_index (srchindex)');
+           DB::connection()->getPdo()->exec('ALTER TABLE `'.$tblNme.'` ADD FULLTEXT fulltext_index (srchindex)');
 
            // Finally create the table
            // Save the table upon the schema

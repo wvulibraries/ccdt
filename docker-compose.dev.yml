@@ -26,6 +26,8 @@ services:
             - "DB_HOST=database"
             - "TIKA_PORT=9998"
             - "TIKA_HOST=tika_service"
+        tty: true
+        stdin_open: true    
     database:
         image: mysql:5.7.16
         command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci

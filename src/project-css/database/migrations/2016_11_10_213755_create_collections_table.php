@@ -18,6 +18,7 @@ class CreateCollectionsTable extends Migration
             $table->string('clctnName', 191)->unique();
             $table->boolean('isEnabled')->default(true);
             $table->boolean('hasAccess')->default(true);
+            $table->integer('cmsId')->default(null);
             $table->timestamps();
         });
     }

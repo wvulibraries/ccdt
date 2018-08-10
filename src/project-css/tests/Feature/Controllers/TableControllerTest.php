@@ -6,8 +6,9 @@
   use App\Http\Controllers\DataViewController;
 
   use App\Models\User;
-  use App\Models\Collection;
   use App\Models\Table;
+
+  use App\Libraries\TestHelper;
 
   class TableControllerTest extends BrowserKitTestCase {
 
@@ -30,14 +31,8 @@
          parent::tearDown();
     }
 
-    public function createCollection($name) {
-         $this->collection = factory(Collection::class)->create([
-              'clctnName' => $name,
-         ]);
-    }
-
     public function createTestTable($tblname, $path, $file) {
-         $this->createCollection('collection1');
+         (new TestHelper)->createCollection('collection1');
 
          $this->actingAs($this->admin)
               ->visit('table/create')
@@ -87,6 +82,21 @@
 
     }
 
+    public function createCMSTestTable($path, $file) {
+         (new TestHelper)->createCollection('collection1');
+
+         $this->actingAs($this->admin)
+               ->visit('table/create')
+               ->click('Import from CMS Files')
+               ->see('Select Collection')
+               ->see('Import CMS Files')
+               ->type('1', 'colID')
+               ->attach($path . $file, 'cmsdisFiles')
+               ->press('Import')
+               ->see('Table(s)')
+               ->assertResponseStatus(200);
+    }
+
     public function cleanup($tblname, $file) {
            // cleanup remove directory for the test table
            Storage::deleteDirectory($tblname);
@@ -116,10 +126,35 @@
          $this->cleanup($tblname, $file);
     }
 
+    // public function testCMSFileUploadAndTableCreate() {
+    //      (new testHelper)->createCollection('collection1');
+    //      $path = './storage/app/files/test/';
+    //      $file = '1A-random.tab';
+    //
+    //      $uploadedFile = new \Illuminate\Http\UploadedFile($path.$file, $file, 'plain/text', filesize($path.$file), UPLOAD_ERR_OK, true);
+    //      $files = [
+    //        'files' => [$uploadedFile ]
+    //      ];
+    //
+    //      $path = './storage/app/files/test/';
+    //      $file = '1A-random.tab';
+    //      $tableName = 'collection11A';
+    //      $this->actingAs($this->admin)
+    //           ->visit('table/create')
+    //           ->type('1', 'colID')
+    //           ->attach($files, 'cmsdisFiles[]')
+    //           ->press('Import')
+    //           ->assertResponseStatus(200);
+    //
+    //      $this->assertTrue(Schema::hasTable($tableName));
+    //
+    //      $this->cleanup($tableName, $file);
+    // }
+
     public function testInvalidFileTypeUpload() {
         $tblname = 'importtest'.mt_rand();
 
-        $this->createCollection('collection1');
+        (new TestHelper)->createCollection('collection1');
 
         $this->actingAs($this->admin)
              ->visit('table/create')

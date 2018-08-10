@@ -122,9 +122,6 @@ class TableController extends Controller
       // Get the file name
       $thisFltFileNme = $thisFltFile->getClientOriginalName();
 
-      // Get the client extension
-      // $thisFltFileExt = $thisFltFile->getClientOriginalExtension();
-
       // check if the file exists
       // Get the list of files in the directory
       $fltFleList = Storage::allFiles($this->strDir);
@@ -158,9 +155,6 @@ class TableController extends Controller
       // Get the list of files in the directory
       $fltFleList = Storage::allFiles($this->strDir);
 
-      // Get all files from $request
-      $files = $request->file('cmsdisFiles');
-
       $errors = [];
 
       // Loop over them
@@ -179,21 +173,17 @@ class TableController extends Controller
             array_push($errors, [ 'The selected flat file must be of type: text/plain', 'The selected flat file should not be empty', 'File is deleted for security reasons' ]);
           }
           else {
-            // find collection so we can get the collection name
-            $thisClctn = Collection::findorFail($request->colID);
+            // filter record string
+            $filteredType = filter_var($schema[0], FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_HIGH);
 
             // create table name
-            $tblNme = $thisClctn->clctnName . $schema[0];
-
+            $tblNme = $filteredType . time();
+            
             // pass values to create file
             (new CMSHelper)->createCMSTable($this->strDir, $thisFltFileNme, $request->colID, $tblNme);
           }
         }
       }
-
-      // if (count($errors) > 0) {
-      //   return redirect()->route('tableCreate')->withErrors($errors);
-      // }
 
       return redirect()->route('tableIndex');
     }
@@ -277,11 +267,11 @@ class TableController extends Controller
           array_push($errors, [ 'The selected flat file must be of type: text/plain', 'The selected flat file should not be empty', 'File is deleted for security reasons' ]);
         }
         else {
-          // find collection so we can get the collection name
-          $thisClctn = Collection::findorFail($request->colID2);
+          // filter record string
+          $filteredType = filter_var($schema[0], FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_HIGH);
 
           // create table name
-          $tblNme = $thisClctn->clctnName . $schema[0];
+          $tblNme = $filteredType . time();
 
           // pass values to create file
           (new CMSHelper)->createCMSTable($this->strDir, $file, $request->colID2, $tblNme);

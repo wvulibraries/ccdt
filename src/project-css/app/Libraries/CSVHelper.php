@@ -89,13 +89,16 @@ class CSVHelper {
        // 2. Validate the file type
        // Create a finfo instance
        $fleInf = new \finfo(FILEINFO_MIME_TYPE);
+
        // Get the file type
        $fleMime = $fleInf->file($fltFleObj->getRealPath());
+
        // Check the mimetype
        if (!str_is($fleMime, "text/plain")) {
          // If the file isn't a text file return false
          return false;
        }
+       
        // Check if the file is empty
        if (!$this->isEmpty($fltFleObj)>0) {
          return false;
@@ -122,6 +125,7 @@ class CSVHelper {
 
          // Tokenize the line
          $tkns = $this->tknze($hdr, $delimiter);
+
          // Validate the tokens and filter them
          $tkns = $this->fltrTkns($tkns);
 
@@ -309,6 +313,4 @@ class CSVHelper {
        // Returning tokens
        return $tkns;
      }
-
-
 }

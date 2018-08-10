@@ -2,21 +2,18 @@
 use App\Libraries\CSVHelper;
 use App\Libraries\CMSHelper;
 use App\Libraries\TableHelper;
+use App\Libraries\TestHelper;
 
 class TableHelperTest extends TestCase
 {
-    // use the factory to create a Faker\Generator instance
-    public $faker;
-
     public function setUp() {
        parent::setUp();
        Artisan::call('migrate');
        Artisan::call('db:seed');
 
        // create test collection
-       \DB::insert('insert into collections (clctnName, isEnabled, hasAccess) values(?, ?, ?)',['collection1', true, true]);
-
-       $this->faker = Faker\Factory::create();
+       //\DB::insert('insert into collections (clctnName, isEnabled, hasAccess) values(?, ?, ?)',['collection1', true, true]);
+       (new TestHelper)->createCollection('collection1');
     }
 
     protected function tearDown() {
@@ -45,6 +42,9 @@ class TableHelperTest extends TestCase
 
       // drop test table
       Schema::dropIfExists($tableName);
+
+      // clear folder that was created with the table
+      rmdir('./storage/app'.'/'.$tableName);
     }
 
     public function testCreateTableWithoutHeader() {
@@ -56,12 +56,10 @@ class TableHelperTest extends TestCase
 
       // get 1st row from csv file
       $schema = (new CSVHelper)->schema($storageFolder.'/'.$fileName);
-      //var_dump($schema);
 
       // detect fields we pass false if we do not have a header row,
       // file location, number of rows to check
       $fieldTypes = (new CSVHelper)->determineTypes(false, $storageFolder.'/'.$fileName, 100);
-      //var_dump($fieldTypes);
 
       // generate $header since one is not provided
       $header = (new CSVHelper)->generateHeader(count($schema));
@@ -73,6 +71,9 @@ class TableHelperTest extends TestCase
 
       // drop test table
       Schema::dropIfExists($tableName);
+
+      // clear folder that was created with the table
+      rmdir('./storage/app'.'/'.$tableName);
     }
 
     public function testCreateCMSTableWithoutHeader() {
@@ -90,7 +91,7 @@ class TableHelperTest extends TestCase
       $fieldTypes = (new CSVHelper)->determineTypes(false, $storageFolder.'/'.$fileName, 100);
 
       // get header from database
-      $header = (new CMSHelper)->getCMSFields($schema[0], count($fieldTypes));
+      $header = (new CMSHelper)->getCMSFields($schema[0], count($fieldTypes), 1);
 
       // if correct header isn't found we generate one
       if (count($fieldTypes) != count($header)) {
@@ -107,16 +108,8 @@ class TableHelperTest extends TestCase
 
       // drop test table
       Schema::dropIfExists($tableName);
-    }
 
-    function generateRandomID($length = 40) {
-        $characters = '0123456789';
-        $charactersLength = strlen($characters);
-        $randomString = '';
-        for ($i = 0; $i < $length; $i++) {
-            $randomString .= $characters[rand(0, $charactersLength - 1)];
-        }
-        return $randomString;
+      // clear folder that was created with the table
+      rmdir('./storage/app'.'/'.$tableName);
     }
-
 }
