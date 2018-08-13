@@ -13,10 +13,14 @@ class CSVHelper {
      *
      */
 
-     /*
-     * @param string $csvFile Path to the CSV file
-     * @return string Delimiter
-     */
+     /**
+      * Determine delimiter used in a file
+      *
+      * @param string $csvFile Path to the CSV file
+      *
+      * @author Tracy A. McCormick <tam0013@mail.wvu.edu>
+      * @return string Delimiter
+      */
      public function detectDelimiter($csvFile)
      {
          $delimiters = array(
@@ -75,6 +79,9 @@ class CSVHelper {
       * @param boolean $header true if file has header row
       * @param string $fltFleAbsPth location of file to be checked.
       * @param integer $readCount lines to read to determine type
+      *
+      * @author Tracy A. McCormick <tam0013@mail.wvu.edu>
+      * @return Array that contains type and character count for each detected field
       */
      public function checkFile($hasheader, $fltFleAbsPth, $readCount) {
        // 1. Get the flatfile instance
@@ -98,7 +105,7 @@ class CSVHelper {
          // If the file isn't a text file return false
          return false;
        }
-       
+
        // Check if the file is empty
        if (!$this->isEmpty($fltFleObj)>0) {
          return false;

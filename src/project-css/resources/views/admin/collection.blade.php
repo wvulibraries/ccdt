@@ -93,22 +93,17 @@
                   <input id="clctnEditId_{{$key}}" name="id" type="hidden" value="{{$collcntNm->id}}" />
 
                   <div class="form-group{{ $errors->has('clctnName') ? ' has-error' : '' }}">
+                    <div class="col-md-6">
+                      <span for="clctnEditName_{{$key}}" class="control-label">Collection Name</span>
+                      <input id="clctnEditName_{{$key}}" type="text" aria-label="Enter Collection Name" class="form-control" name="clctnName" value="{{$collcntNm->clctnName}}" required autofocus>
+                    </div>
+                  </div>
 
-                      <div class="col-md-6">
-                          <span for="clctnEditName_{{$key}}" class="col-md-3 control-label">Collection Name</span>
-                          <input id="clctnEditName_{{$key}}" type="text" aria-label="Enter Collection Name" class="form-control" name="clctnName" value="{{$collcntNm->clctnName}}" required autofocus>
-                      </div>
-                      <div class="col-md-3">
-                          <button type="submit" class="btn btn-primary">
-                              Save
-                          </button>
-                      </div>
+                  <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Save</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
                   </div>
               </form>
-            </div>
-
-            <div class="modal-footer">
-              <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
             </div>
           </div>
 
@@ -131,27 +126,22 @@
                 Are you sure you want to disable <strong>{{$collcntNm->clctnName}}</strong> collection? All the tables associated with this collection will be disabled as well. Please enter collection name below to confirm.
               </p>
               <form class="form-horizontal" name="clctnDisable" aria-label="clctnDisable{{$collcntNm->clctnName}}" role="form" method="POST" action="{{ url('collection/disable') }}">
-                  {{ csrf_field() }}
-                  <label for="clctnDisableId_{{$key}}"> Collection ID </label>
-                  <input id="clctnDisableId_{{$key}}" name="id" type="hidden" value="{{$collcntNm->id}}" />
+                {{ csrf_field() }}
+                <label for="clctnDisableId_{{$key}}"> Collection ID </label>
+                <input id="clctnDisableId_{{$key}}" name="id" type="hidden" value="{{$collcntNm->id}}" />
 
-                  <div class="form-group{{ $errors->has('clctnName') ? ' has-error' : '' }}">
-
-                      <div class="col-md-6">
-                          <span for="clctnDisableName_{{$key}}"> Collection Name </span>
-                          <input id="clctnDisableName_{{$key}}" type="text" aria-label="Enter Collection Name" class="form-control" name="clctnName" required autofocus>
-                      </div>
-                      <div class="col-md-3">
-                          <button type="submit" class="btn btn-primary">
-                              Confirm
-                          </button>
-                      </div>
+                <div class="form-group{{ $errors->has('clctnName') ? ' has-error' : '' }}">
+                  <div class="col-md-6">
+                      <span for="clctnDisableName_{{$key}}"> Collection Name </span>
+                      <input id="clctnDisableName_{{$key}}" type="text" aria-label="Enter Collection Name" class="form-control" name="clctnName" required autofocus>
                   </div>
-              </form>
-            </div>
+                </div>
 
-            <div class="modal-footer">
-              <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                <div class="modal-footer">
+                  <button type="submit" class="btn btn-primary">Confirm</button>
+                  <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                </div>
+              </form>
             </div>
           </div>
 
@@ -204,24 +194,15 @@
                 Are you sure you want to enable <strong>{{$collcntNm->clctnName}}</strong> collection?
               </p>
               <form class="form-horizontal" name="clctnEnable" aria-label="clctnEnable{{$collcntNm->clctnName}}" role="form" method="POST" action="{{ url('collection/enable') }}">
-                  {{ csrf_field() }}
-                  <label for="enblCllctnId" class="col-md-3 control-label">Collection ID</label>
-                  <input id="enblCllctnId" name="id" type="hidden" value="{{$collcntNm->id}}" />
+                {{ csrf_field() }}
+                <input id="enblCllctnId" name="id" type="hidden" value="{{$collcntNm->id}}" />
 
-                  <div class="form-group{{ $errors->has('clctnName') ? ' has-error' : '' }}">
-                    <div class="modal-footer">
-                      <div class="col-md-offset-8 col-md-2">
-                            <button type="submit" class="btn btn-primary">
-                                Confirm
-                            </button>
-                          </div>
-                          <div class="col-md-2">
-                            <button type="button" class="btn btn-primary" data-dismiss="modal">
-                              Close
-                            </button>
-                        </div>
-                    </div>
+                <div class="form-group{{ $errors->has('clctnName') ? ' has-error' : '' }}">
+                  <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Confirm</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
                   </div>
+                </div>
               </form>
             </div>
           </div>
@@ -247,22 +228,17 @@
                 {{ csrf_field() }}
 
                 <div class="form-group{{ $errors->has('clctnName') ? ' has-error' : '' }}">
+                  <div class="col-md-12">
+                    <label for="clctnCreateName" class="control-label">Collection Name</label>
+                    <input id="clctnCreateName" type="text" class="form-control" name="clctnName" required autofocus>
+                  </div>
+                </div>
 
-                    <div class="col-md-6">
-                        <label for="clctnCreateName" class="col-md-3 control-label">Collection Name</label>
-                        <input id="clctnCreateName" type="text" class="form-control" name="clctnName" required autofocus>
-                    </div>
-                    <div class="col-md-3">
-                        <button type="submit" class="btn btn-primary">
-                            Create
-                        </button>
-                    </div>
+                <div class="modal-footer">
+                  <button type="submit" class="btn btn-primary">Create</button>
+                  <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
                 </div>
             </form>
-          </div>
-
-          <div class="modal-footer">
-            <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
           </div>
         </div>
 

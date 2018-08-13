@@ -17,6 +17,17 @@ class CMSHelper {
      *
      */
 
+
+     /**
+      * Check the Record Types table for a matching header for the table
+      *
+      * @param integer $collctnID Contains the collection ID
+      * @param string $recordType Contains the Record type 1A, 1B, etc.
+      * @param integer $fieldCount Contains number of fields expected for the Record
+      *
+      * @author Tracy A. McCormick <tam0013@mail.wvu.edu>
+      * @return unserialized Array if found or null
+      */
      public function getCMSFields($collctnId, $recordType, $fieldCount) {
        if (CMSRecords::isCMSRecord($recordType)) {
 
@@ -46,7 +57,14 @@ class CMSHelper {
        return null;
      }
 
-     // function return array of generated field names
+     /**
+      * return array of generated field names
+      *
+      * @param integer $fieldCount Contains number of fields Requried for the Table
+      *
+      * @author Tracy A. McCormick <tam0013@mail.wvu.edu>
+      * @return Array
+      */
      public function generateHeader($fieldCount) {
        $headerArray = [];
        for ($arrayPos = 0; $arrayPos < $fieldCount; $arrayPos++) {
@@ -55,6 +73,16 @@ class CMSHelper {
        return $headerArray;
      }
 
+     /**
+      * Check the Record Types table for a matching header for the table
+      *
+      * @param string $storageFolder location of the file to be imported to a table
+      * @param string $thsFltFile filename of file to be imported
+      * @param integer $collctnID Contains the collection ID
+      * @param string $tblNme name to be used when creating the new table
+      *
+      * @author Tracy A. McCormick <tam0013@mail.wvu.edu>
+      */
      public function createCMSTable($storageFolder, $thsFltFile, $collctnId, $tblNme) {
        // detect fields we pass false if we do not have a header row,
        // file location, number of rows to check
