@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Libraries;
-
 use App\Jobs\FileImport;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -119,50 +118,39 @@ class TableHelper {
 
      public function createTable($filepath, $fileName, $tblNme, $fieldNames, $fieldTypes, $collctnId) {
          $fieldCount = count($fieldTypes);
-         if (count($fieldNames) == $fieldCount) {
-           Schema::connection('mysql')->create($tblNme, function(Blueprint $table) use($fieldNames, $fieldTypes, $fieldCount, $collctnId) {
 
-             // Default primary key
-             $table->increments('id');
+         Schema::connection('mysql')->create($tblNme, function(Blueprint $table) use($fieldNames, $fieldTypes, $fieldCount, $collctnId) {
 
-             // Add all the dynamic columns
-             for ($i = 0; $i<$fieldCount; $i++) {
-               // Create Field from current column name, type and size
-               $table = $this->setupTableField($table, $fieldNames[$i], $fieldTypes[$i][0], $fieldTypes[$i][1]);
-             }
+           // Default primary key
+           $table->increments('id');
 
-             // search index
-             $table->longText('srchindex');
-
-             // Time stamps
-             $table->timestamps();
-           });
-
-           // modify table for fulltext search using the srchindex column
-           DB::connection()->getPdo()->exec('ALTER TABLE `'.$tblNme.'` ADD FULLTEXT fulltext_index (srchindex)');
-
-           // Finally create the table
-           // Save the table upon the schema
-           $this->crteTblInCollctn($tblNme, $collctnId);
-
-           // create folder in storage that will contain any additional files associated to the table
-           if (Storage::exists($tblNme) == FALSE) {
-             Storage::makeDirectory($tblNme, 0775);
+           // Add all the dynamic columns
+           for ($i = 0; $i<$fieldCount; $i++) {
+             // Create Field from current column name, type and size
+             $table = $this->setupTableField($table, $fieldNames[$i], $fieldTypes[$i][0], $fieldTypes[$i][1]);
            }
 
-           // queue job for import
-           $this->fileImport($tblNme, $filepath, $fileName);
-        }
-        else {
-          // send failure message
-          $messages = [ ];
-          $message = [
-            'content'  =>  $fileName.' was not imported due to field mismatch ',
-            'level'    =>  'danger',
-          ];
-          array_push($messages, $message);
-          session()->flash('messages', $messages);
-        }
+           // search index
+           $table->longText('srchindex');
+
+           // Time stamps
+           $table->timestamps();
+         });
+
+         // modify table for fulltext search using the srchindex column
+         DB::connection()->getPdo()->exec('ALTER TABLE `'.$tblNme.'` ADD FULLTEXT fulltext_index (srchindex)');
+
+         // Finally create the table
+         // Save the table upon the schema
+         $this->crteTblInCollctn($tblNme, $collctnId);
+
+         // create folder in storage that will contain any additional files associated to the table
+         if (Storage::exists($tblNme) == FALSE) {
+           Storage::makeDirectory($tblNme, 0775);
+         }
+
+         // queue job for import
+         $this->fileImport($tblNme, $filepath, $fileName);
      }
 
 }

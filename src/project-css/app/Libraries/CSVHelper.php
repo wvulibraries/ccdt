@@ -222,24 +222,6 @@ class CSVHelper {
        return $header;
      }
 
-     // function is used to adjust detected types to match
-     // what is expected from $header
-     public function adjustTypes($fieldTypes, $header) {
-       // remove extra field that is sometimes detected
-       if ((count($fieldTypes)-1) == count($header) && ($fieldTypes[count($fieldTypes)-1][2] == 0)) {
-         array_pop($fieldTypes);
-       }
-       elseif (count($fieldTypes) < count($header)) {
-         // add extra fields
-         for ($pos = count($fieldTypes); $pos < count($header); $pos++) {
-           // add extra text fields if the header
-           // has more than what is detected
-           array_push($fieldTypes, ['text', 'big', 0]);
-         }
-       }
-       return $fieldTypes;
-     }
-
      /**
      * Get the line numbers for a fileobject
      * @param \SplFileObject $fltFleObj

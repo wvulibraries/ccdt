@@ -67,7 +67,7 @@ Route::group([ 'prefix' => 'table' ], function() {
     Route::post('create/import', 'TableController@import');
     Route::post('create/importcmsdis', 'TableController@importCMSDIS');
     Route::post('create/select', 'TableController@select');
-    Route::post('create/selectCMSDIS', 'TableController@selectCMSDIS');    
+    Route::post('create/selectCMSDIS', 'TableController@selectCMSDIS');
     // Forward route in case for error
     Route::get('create/select', 'TableController@wizard');
     Route::post('create/finalize', 'TableController@finalize');
@@ -108,7 +108,8 @@ Route::group([ 'middleware' => [ 'checktableid' ] ], function() {
       Route::get('{curTable}/{id}', 'DataViewController@show')->name('dataShow');
       Route::post('{curTable}', 'DataViewController@search')->name('dataSearch');
       Route::get('{curTable}/search/{page}', 'DataViewController@search')->name('dataSearch');
-      Route::get('{curTable}/{recId}/view/{subfolder}/{filename}', 'DataViewController@view')->name('dataFileView');
+      Route::get('{curTable}/{recId}/view/{key}/{filename}', 'DataViewController@view')->name('dataFileView');
+      Route::get('{curTable}/{recId}/view/{filename}', 'DataViewController@view')->name('dataFileView');
   });
 
   /*

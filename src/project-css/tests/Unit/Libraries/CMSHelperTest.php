@@ -13,6 +13,7 @@ class CMSHelperTest extends TestCase
        // create a test collection
        (new TestHelper)->createCollection('collection1');
        (new TestHelper)->createCollection('collection2');
+       (new TestHelper)->createCollection('collection3');
   }
 
   protected function tearDown() {
@@ -20,7 +21,7 @@ class CMSHelperTest extends TestCase
        parent::tearDown();
   }
 
-  public function testgetCMSFields() {
+  public function testgetCMSFields1A() {
     $fieldType = '1A';
     $helper = (new CMSHelper);
 
@@ -37,6 +38,15 @@ class CMSHelperTest extends TestCase
     // sending an invalid count will not return any results
     $response = $helper->getCMSFields(2, $fieldType, 9);
     $this->assertEquals(count($response), 0);
+  }
+
+  public function testgetCMSFields2A() {
+    $fieldType = '2A';
+    $helper = (new CMSHelper);
+
+    // by sending 13 as the field count we should get the original header
+    $response = $helper->getCMSFields(3, $fieldType, 13);
+    $this->assertEquals(count($response), 13);
   }
 
   /**

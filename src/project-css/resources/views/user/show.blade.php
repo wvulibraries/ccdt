@@ -7,7 +7,7 @@
 @include('user/searchbox')
 
 @inject('strhelper', \App\Libraries\CustomStringHelper)
-
+@inject('filehelper', \App\Libraries\FileViewHelper)
 <!-- Separation -->
 <hr/>
 
@@ -34,9 +34,8 @@
                   <h4><strong>{{$clmnNme}}</strong>:
                     @for ($arrayPos = 0; $arrayPos < count($filesArray); $arrayPos++)
                       </br>{{$filesArray[$arrayPos]}}
-
-                      @if ($strhelper->fileExistsInFolder($tblNme, $filesArray[$arrayPos]))
-                        <a href="{{ url('/data', ['curTable' => $tblId, 'recId' => $curId, 'view' => 'view', 'subfolder' => $strhelper->getFolderName($filesArray[$arrayPos]), 'filename' => $strhelper->getFilename($filesArray[$arrayPos])])}}">
+                      @if ($filehelper->fileExistsInFolder($tblNme, $filesArray[$arrayPos]))
+                        <a href="{{ url('/data', ['curTable' => $tblId, 'recId' => $curId, 'view' => 'view', 'subfolder' => $filehelper->getFolderName($filesArray[$arrayPos]), 'filename' => $filehelper->getFilename($filesArray[$arrayPos])])}}">
                           <span> View</span>
                         </a>
                       @endif
@@ -47,11 +46,10 @@
             @else
               <div class="col-xs-12 col-sm-12 col-md-12">
                 <h4><strong>{{$clmnNme}}</strong>: {{$rcrd->$clmnNme}}
-
-                @if ($strhelper->fileExistsInFolder($tblNme, $rcrd->$clmnNme))
-                  <a href="{{ url('/data', ['curTable' => $tblId, 'recId' => $curId, 'view' => 'view', 'subfolder' => $strhelper->getFolderName($rcrd->$clmnNme), 'filename' => $strhelper->getFilename($rcrd->$clmnNme)])}}">
-                    <span> View</span>
-                  </a>
+                @if ($filehelper->fileExistsInFolder($tblNme, $rcrd->$clmnNme))
+                    <a href="{{ url('/data', ['curTable' => $tblId, 'recId' => $curId, 'view' => 'view', 'filename' => $filehelper->getFilename($rcrd->$clmnNme)])}}">
+                      <span> View</span>
+                    </a>
                 @endif
                 </h4>
               </div>
@@ -71,9 +69,21 @@
                 <h4><strong>Filename(s) detected in {{$clmnNme}}</strong>:
                   @for ($arrayPos = 0; $arrayPos < count($filesArray); $arrayPos++)
                     </br>{{$filesArray[$arrayPos]}}
+                    @php
+                      $fileLocation = $filehelper->locateFile($tblId, $filesArray[$arrayPos]);
+                      // if we cannot locate file with original file string add .txt
+                      // some files in rockefeller have been converted to .txt files.
+                      if ($fileLocation == null) {
+                        $fileLocation = $filehelper->locateFile($tblId, $filesArray[$arrayPos].'.txt');
+                        $filename = $filesArray[$arrayPos].'.txt';
+                      }
+                      else {
+                        $filename = $filesArray[$arrayPos];
+                      }
+                    @endphp
 
-                    @if ($strhelper->fileExists($tblNme, 'formletters/'.$filesArray[$arrayPos].'.txt'))
-                      <a href="{{ url('/data', ['curTable' => $tblId, 'recId' => $curId, 'view' => 'view', 'subfolder' => 'formletters', 'filename' => $filesArray[$arrayPos].'.txt'])}}">
+                    @if ($fileLocation != null)
+                      <a href="{{ url('/data', ['curTable' => $tblId, 'recId' => $curId, 'view' => 'view', 'filename' => $filename])}}">
                         <span> View</span>
                       </a>
                     @endif

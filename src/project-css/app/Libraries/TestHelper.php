@@ -2,6 +2,9 @@
 
 namespace App\Libraries;
 
+use App\Libraries\CMSHelper;
+use App\Libraries\CSVHelper;
+use App\Libraries\TableHelper;
 use App\Models\Collection;
 
 class TestHelper {
@@ -25,5 +28,34 @@ class TestHelper {
                'clctnName' => $name,
           ]);
           return $collection;
+     }
+
+     public function createTable($storageFolder, $fileName, $headerRowExists) {
+       // Test Table Name
+       $tableName = 'test'.time();
+
+       // create test collection
+       $collection = $this->createCollection(time());
+
+       //pass true if contains header row, file location, number of rows to check
+       $fieldTypes = (new CSVHelper)->determineTypes($headerRowExists, $storageFolder.'/'.$fileName, 10);
+
+       // get header from csv file
+       $schema = (new CSVHelper)->schema($storageFolder.'/'.$fileName);
+
+       if (!$headerRowExists) {
+          $schema = (new CMSHelper)->getCMSFields($collection->id, $schema[0], count($fieldTypes));
+
+          if ($schema == null) {
+            // generate header using number of detected fields
+            $schema = (new CMSHelper)->generateHeader(count($fieldTypes));
+          }
+       }
+
+       // create new test table
+       (new TableHelper)->createTable($storageFolder, $fileName, $tableName, $schema, $fieldTypes, $collection->id);
+
+       // return name of test table created
+       return $tableName;
      }
 }

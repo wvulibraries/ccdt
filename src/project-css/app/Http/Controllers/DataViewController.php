@@ -7,8 +7,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Table;
 use App\Libraries\CustomStringHelper;
+use App\Libraries\FileViewHelper;
 use App\Libraries\FullTextSearchFormatter;
-use App\Libraries\TikaConvert;
+use App\Libraries\TableHelper;
 
 /**
  * The controller is responsible for showing the cards data
@@ -116,46 +117,33 @@ class DataViewController extends Controller {
                                   ->with('morepages', $page<$lastPage);
     }
 
-
     /**
      * view checks the file type and if its plain text or a word document it
      * will run ssnRedact to replace a US style social security number with
      * ###-##-####. Any other files the user will be able to download and then
      * view with a local application.
      */
-    public function view($curTable, $recId, $subfolder, $filename) {
-        // Get the table entry in meta table "tables"
+    public function view($curTable, $recId, $filename) {
+      // Get the table entry in meta table "tables"
         $table = Table::findOrFail($curTable);
 
-        $source = storage_path('app/'.$table->tblNme.'/'.$subfolder.'/'.$filename);
+        $path = (new FileViewHelper)->getFilePath($curTable, $recId, $filename);
 
-        $fileMimeType = Storage::getMimeType($table->tblNme.'/'.$subfolder.'/'.$filename);
+        $source = storage_path('app/'.$path);
+        $fileMimeType = Storage::getMimeType($path);
 
-        $matches = "/[^a-zA-Z0-9\s\,\.\-\n\r\t@\/\_\(\)]/";
-
-        switch ($fileMimeType) {
-            case 'text/plain':
-            case 'message/rfc822':
-                 $fileContents = Response::make((new customStringHelper)->ssnRedact(file_get_contents($source)));
-                 return view('user.fileviewer')->with('fileContents', $fileContents)
-                                               ->with('tblNme', $table->tblNme)
-                                               ->with('tblId', $curTable)
-                                               ->with('recId', $recId);
-            case 'application/msword':
-            case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
-            case 'text/rtf':
-                 $fileContents = preg_replace($matches, "", (new tikaConvert)->convert($source));
-                 $fileContents = Response::make((new customStringHelper)->ssnRedact($fileContents));
-                 return view('user.fileviewer')->with('fileContents', $fileContents)
-                                               ->with('tblNme', $table->tblNme)
-                                               ->with('tblId', $curTable)
-                                               ->with('recId', $recId);
-            default:
-                 // download file if we cannot determine what kind of file it is.
-                 return Response::make(file_get_contents($source), 200, [
-                    'Content-Type' => Storage::getMimeType($table->tblNme.'/'.$subfolder.'/'.$filename),
-                    'Content-Disposition' => 'inline; filename="'.$filename.'"'
-                ]);
+        if ((new FileViewHelper)->isSupportedMimeType($fileMimeType)) {
+          return view('user.fileviewer')->with('fileContents', (new FileViewHelper)->getFileContents($source))
+                                        ->with('tblNme', $table->tblNme)
+                                        ->with('tblId', $curTable)
+                                        ->with('recId', $recId);
+        }
+        else {
+          // download file if we cannot determine what kind of file it is.
+          return Response::make(file_get_contents($source), 200, [
+             'Content-Type' => $fileMimeType,
+             'Content-Disposition' => 'inline; filename="'.$filename.'"'
+         ]);
         }
     }
 
