@@ -40,7 +40,6 @@
          //verify 1A is identified as a CMS Record
          $header = array('Record Type', 'Constituent ID', 'Individual Type', 'Prefix', 'First Name', 'Middle Name', 'Last Name', 'Suffix', 'Appellation', 'Salutation', 'Date of Birth', 'No Mail Flag', 'Deceased Flag');
          $response = CMSRecords::findCMSHeaderWithId('1A', 1);
-         var_dump($response);
          // compare with the $header to verify we have what we expected
          $this->assertEquals(unserialize($response[0]->fieldNames), $header);
     }

@@ -77,15 +77,13 @@ class DataViewController extends Controller {
         // Get the table entry in meta table "tables"
         $table = Table::findOrFail($curTable);
 
+        // save the search to the session if it isn't NULL
         if ($request->input('search') != NULL) {
-          $search = $request->input('search');
-          $request->session()->put('search', $search);
-        }
-        else {
-            $search = $request->session()->get('search');
+          $request->session()->put('search', $request->input('search'));
         }
 
-        $srchStrng = (new FullTextSearchFormatter)->prepareSearch($search);
+        // pull search from session and prepare search
+        $srchStrng = (new FullTextSearchFormatter)->prepareSearch($request->session()->get('search'));
 
         // set records per page
         $perPage = 30;
@@ -138,13 +136,12 @@ class DataViewController extends Controller {
                                         ->with('tblId', $curTable)
                                         ->with('recId', $recId);
         }
-        else {
-          // download file if we cannot determine what kind of file it is.
-          return Response::make(file_get_contents($source), 200, [
-             'Content-Type' => $fileMimeType,
-             'Content-Disposition' => 'inline; filename="'.$filename.'"'
-         ]);
-        }
+
+        // download file if tika doesn't support the conversion to text
+        return Response::make(file_get_contents($source), 200, [
+           'Content-Type' => $fileMimeType,
+           'Content-Disposition' => 'inline; filename="'.$filename.'"'
+       ]);
     }
 
 }

@@ -38,17 +38,6 @@ class FileViewHelper {
       * @return      boolean
       */
      public function fileExistsInFolder($tblNme, $str) {
-         // var_dump($tblNme);
-         // var_dump($str);
-         // var_dump($this->buildFileLink($tblNme, $str));
-         // var_dump(\Storage::exists($this->buildFileLink($tblNme, $str)));
-         // die();
-
-         // var_dump($this->getFolderName($str));
-         // var_dump(\Storage::exists($tblNme.'/'.$str));
-         //var_dump($tblNme.'/'.$this->getFilename($str));
-         //var_dump(\Storage::exists($tblNme.'/'.$this->getFilename($str)));
-
          return Storage::exists($this->buildFileLink($tblNme, $str));
      }
 
@@ -89,13 +78,21 @@ class FileViewHelper {
          return $filename;
      }
 
-     public function buildFileLink($tblNme, $str) {
-       if ($this->getFolderName($str) != '') {
-         return ($tblNme.'/'.$this->getFolderName($str).'/'.$this->getFilename($str));
+     /**
+      * Given Table name and a path we return a new valid
+      * path to our file.
+      * @param       string  $tblNme    Input string
+      * @param       string  $originalFilePath Input string
+      * @return      string
+      */
+     public function buildFileLink($tblNme, $originalFilePath) {
+       if ($this->getFolderName($originalFilePath) != '') {
+         // return new path with folder tblNme/folder/filename
+         return ($tblNme.'/'.$this->getFolderName($originalFilePath).'/'.$this->getFilename($originalFilePath));
        }
-       else {
-         return ($tblNme.'/'.$this->getFilename($str));
-       }
+
+       // return new path with folder tblNme/folder/filename
+       return ($tblNme.'/'.$this->getFilename($originalFilePath));
      }
 
      // locates the original item in the record
@@ -136,19 +133,18 @@ class FileViewHelper {
 
        // Check for file in root of the table
        if (Storage::exists($table->tblNme.'/'.$filename)) {
-         //var_dump($value .'/'.$filename.'.txt');
          return($table->tblNme.'/'.$filename);
        }
-       else {
-         // get all subfolder
-         $ffs = Storage::disk('local')->directories($table->tblNme);
-         //var_dump($ffs);
-         foreach ($ffs as &$value) {
-          if (Storage::exists($value.'/'.$filename)) {
-            return($value .'/'.$filename);
-          }
-         }
+
+       // get all subfolder
+       $ffs = Storage::disk('local')->directories($table->tblNme);
+       foreach ($ffs as &$value) {
+        if (Storage::exists($value.'/'.$filename)) {
+          return($value .'/'.$filename);
+        }
        }
+
+       return false;
      }
 
      public function getFilePath($curTable, $recId, $filename) {
@@ -159,8 +155,7 @@ class FileViewHelper {
        if ($originalFilePath == null) {
          return $this->locateFile($curTable, $filename);
        }
-       // var_dump($originalFilePath);
-       // var_dump($this->buildFileLink($table->tblNme, $originalFilePath));
+
        return $this->buildFileLink($table->tblNme, $originalFilePath);
      }
 }
