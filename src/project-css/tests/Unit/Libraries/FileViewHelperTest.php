@@ -202,15 +202,16 @@ class FileViewHelperTest extends TestCase
 
         $result = $this->fileViewHelper->getFilePath(1, 1, $testUpload);
 
-        $this->assertFalse($result);
+        $this->assertEquals($result, $tableName.'/'.$folder.'/000006.txt');
 
         unlink('./storage/app'.'/'.$tableName.'/'.$folder.'/'.$testUpload);
 
+        // clear folder that was created with the table
+        rmdir('./storage/app'.'/'.$tableName.'/'.$folder);         
+        rmdir('./storage/app'.'/'.$tableName);
+
         // drop test table
         Schema::dropIfExists($tableName);
-
-        // clear folder that was created with the table
-        rmdir('./storage/app'.'/'.$tableName);
   }
 
 }
