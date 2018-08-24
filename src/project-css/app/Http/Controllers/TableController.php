@@ -152,8 +152,6 @@ class TableController extends Controller
     }
 
     public function importCMSDIS(Request $request) {
-      // var_dump($request->colID);
-      // var_dump($request->cmsdisFiles);
       return (new TableHelper)->storeUploadsAndImport($this->strDir, $request->colID, $request->cmsdisFiles);
     }
 

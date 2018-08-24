@@ -159,11 +159,6 @@ class TableHelper {
      // $colID is the collection id
      // $array of files
      public function storeUploadsAndImport($strDir, $colID, $files) {
-       // var_dump($strDir);
-       // var_dump($colID);
-       // var_dump($files);
-       // die();
-
        // Get the list of files in the directory
        $fltFleList = Storage::allFiles($strDir);
 
