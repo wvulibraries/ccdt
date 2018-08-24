@@ -65,9 +65,9 @@ Route::get('table', 'TableController@index')->name('tableIndex');
 Route::group([ 'prefix' => 'table' ], function() {
     Route::get('create', 'TableController@wizard');
     Route::post('create/import', 'TableController@import');
-    Route::post('create/importcmsdis', 'TableController@importCMSDIS');
+    Route::post('create/importcmsdis', 'TableController@importCMSDIS')->name('importcmsdis');
     Route::post('create/select', 'TableController@select');
-    Route::post('create/selectCMSDIS', 'TableController@selectCMSDIS');
+    Route::post('create/selectCMSDIS', 'TableController@selectCMSDIS')->name('selectcmsdis');
     // Forward route in case for error
     Route::get('create/select', 'TableController@wizard');
     Route::post('create/finalize', 'TableController@finalize');

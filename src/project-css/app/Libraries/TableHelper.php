@@ -11,6 +11,8 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use App\Models\Collection;
 use App\Models\CMSRecords;
 use App\Models\Table;
+use App\Libraries\CSVHelper;
+use App\Libraries\CMSHelper;
 
 class TableHelper {
     /**
@@ -152,5 +154,81 @@ class TableHelper {
          // queue job for import
          $this->fileImport($tblNme, $filepath, $fileName);
      }
+
+     // $strDir is the storage folder
+     // $colID is the collection id
+     // $array of files
+     public function storeUploadsAndImport($strDir, $colID, $files) {
+       // var_dump($strDir);
+       // var_dump($colID);
+       // var_dump($files);
+       // die();
+
+       // Get the list of files in the directory
+       $fltFleList = Storage::allFiles($strDir);
+
+       $errors = [];
+
+       // Loop over them
+       foreach ($files as $file) {
+         $thisFltFileNme = $file->getClientOriginalName();
+         if (in_array($strDir.'/'.$thisFltFileNme, $fltFleList)) {
+           array_push($errors, $thisFltFileNme . ' File already exists. Please select the file or rename and re-upload.');
+         }
+         else {
+           // Store in the directory inside storage/app
+           $file->storeAs($strDir, $thisFltFileNme);
+           $fltFleAbsPth = $strDir.'/'.$thisFltFileNme;
+           $schema = (new CSVHelper)->schema($fltFleAbsPth);
+           if (!$schema) {
+             Storage::delete($fltFleAbsPth);
+             array_push($errors, [ 'The selected flat file must be of type: text/plain', 'The selected flat file should not be empty', 'File is deleted for security reasons' ]);
+           }
+           else {
+             // filter record string
+             $filteredType = filter_var($schema[0], FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_HIGH);
+
+             // create table name
+             $tblNme = $filteredType . time();
+
+             // pass values to create file
+             (new CMSHelper)->createCMSTable($strDir, $thisFltFileNme, $colID, $tblNme);
+           }
+         }
+       }
+
+       return redirect()->route('tableIndex')->withErrors($errors);
+     }
+
+     // $strDir is the storage folder
+     // $colID is the collection id
+     // $array of files
+     public function selectFilesAndImport($strDir, $colID, $files) {
+     // array for keeping errors that we will send to the user
+     $errors = [];
+
+     // Loop over them
+     foreach ($files as $file) {
+       $fltFleAbsPth = $strDir.'/'.$file;
+       // Calling schema will return an array containing the
+       // tokenized first row of our file to be imported
+       $schema = (new CSVHelper)->schema($fltFleAbsPth);
+       // if the array is not valid we will delete the file
+       // and push a error to the $errors array
+       if (!$schema) {
+         Storage::delete($fltFleAbsPth);
+         array_push($errors, [ 'The selected flat file must be of type: text/plain', 'The selected flat file should not be empty', 'File is deleted for security reasons' ]);
+       }
+       else {
+         // filter record string
+         $filteredType = filter_var($schema[0], FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_HIGH);
+         // create table name
+         $tblNme = $filteredType . time();
+         // pass values to create file
+         (new CMSHelper)->createCMSTable($strDir, $file, $colID, $tblNme);
+       }
+     }
+     return redirect()->route('tableIndex')->withErrors($errors);
+   }
 
 }

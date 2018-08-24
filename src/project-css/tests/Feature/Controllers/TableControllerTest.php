@@ -82,32 +82,6 @@
 
     }
 
-    public function createCMSTestTable($path, $file) {
-         (new TestHelper)->createCollection('collection1');
-
-         $this->actingAs($this->admin)
-               ->visit('table/create')
-               ->click('Import from CMS Files')
-               ->see('Select Collection')
-               ->see('Import CMS Files')
-               ->type('1', 'colID')
-               ->attach($path . $file, 'cmsdisFiles')
-               ->press('Import')
-               ->see('Table(s)')
-               ->assertResponseStatus(200);
-    }
-
-    public function cleanup($tblname, $file) {
-           // cleanup remove directory for the test table
-           Storage::deleteDirectory($tblname);
-
-           // cleanup remove $file from upload folder
-           Storage::delete('/flatfiles/'.$file);
-
-           // drop table after Testing
-           Schema::drop($tblname);
-    }
-
     public function testNonAdminCannotCreateTable() {
          // try to get to the user(s) page
          $this->actingAs($this->user)
@@ -123,36 +97,38 @@
 
          $this->createTestTable($tblname, $path, $file);
 
-         $this->cleanup($tblname, $file);
+         // test tables, files and folders that were created
+         (new TestHelper)->cleanupTestTables([$file]);
     }
 
-    // public function testCMSFileUploadAndTableCreate() {
-    //      (new testHelper)->createCollection('collection1');
-    //      $path = './storage/app/files/test/';
-    //      $file = '1A-random.tab';
-    //
-    //      $uploadedFile = new \Illuminate\Http\UploadedFile($path.$file, $file, 'plain/text', filesize($path.$file), UPLOAD_ERR_OK, true);
-    //      $files = [
-    //        'files' => [$uploadedFile ]
-    //      ];
-    //
-    //      $path = './storage/app/files/test/';
-    //      $file = '1A-random.tab';
-    //      $tableName = 'collection11A';
-    //      $this->actingAs($this->admin)
-    //           ->visit('table/create')
-    //           ->type('1', 'colID')
-    //           ->attach($files, 'cmsdisFiles[]')
-    //           ->press('Import')
-    //           ->assertResponseStatus(200);
-    //
-    //      $this->assertTrue(Schema::hasTable($tableName));
-    //
-    //      $this->cleanup($tableName, $file);
-    // }
+    public function testCMSSelectFileAndTableCreate() {
+          $path = './storage/app/files/test/';
+          $file = '1A-random.tab';
+          $file2 = '1B-random.tab';
+
+          (new TestHelper)->createCollection('collection1');
+
+          $storageFolder = 'flatfiles';
+
+          $fltFleAbsPth = './storage/app'.'/'.$storageFolder.'/';
+
+          copy($path.$file, $fltFleAbsPth.$file);
+          copy($path.$file2, $fltFleAbsPth.$file2);
+
+
+          $response = $this->actingAs($this->admin)
+                           ->call('POST', route('selectcmsdis'), ['colID2' => 1, 'cmsdisFiles2' => [$file, $file2]]);
+
+          $this->assertEquals(DB::table('tables')->count(), 2);
+
+          // test tables, files and folders that were created
+          (new TestHelper)->cleanupTestTables([$file, $file2]);
+    }
 
     public function testInvalidFileTypeUpload() {
         $tblname = 'importtest'.mt_rand();
+        $path = './storage/app/files/test/';
+        $file = 'images.png';
 
         (new TestHelper)->createCollection('collection1');
 
@@ -160,17 +136,13 @@
              ->visit('table/create')
              ->type($tblname, 'imprtTblNme')
              ->type('1', 'colID')
-             ->attach('./storage/app/files/test/images.png', 'fltFile')
+             ->attach($path.$file, 'fltFile')
              ->press('Import')
              ->assertResponseStatus(200)
              ->see('The flat file must be a file of type: text/plain.');
 
-        // cleanup remove directory for the test table
-        Storage::deleteDirectory($tblname);
-
-        // cleanup remove images.png from upload folder
-        // if it exists
-        Storage::delete('/flatfiles/images.png');
+        // test tables, files and folders that were created
+        (new TestHelper)->cleanupTestTables([$file]);
     }
 
     public function testFileExistsUpload() {
@@ -190,11 +162,8 @@
              ->assertResponseStatus(200)
              ->see('File already exists. Please select the file or rename and re-upload.');
 
-        // cleanup remove directory for the test table
-        Storage::deleteDirectory($tblname);
-
-        // drop table after Testing
-        Schema::drop($tblname);
+        // test tables, files and folders that were created
+        (new TestHelper)->cleanupTestTables([$file]);
     }
 
     public function testCheckFlatFiles() {
@@ -202,9 +171,6 @@
         // using getFiles
         $filesArray = (new TableController)->getFiles('.');
         $this->assertContains('files/test/test.dat', $filesArray);
-
-        // cleanup remove $file from upload folder
-        Storage::delete('/flatfiles/test.dat');
     }
 
     public function testSelect() {
@@ -260,13 +226,8 @@
            ->see('Table(s)')
            ->assertResponseStatus(200);
 
-      $this->cleanup($tblname, $file);
-
-      // cleanup remove directory for the test table
-      Storage::deleteDirectory($tblname2);
-
-      // drop table after Testing
-      Schema::drop($tblname2);
+      // test tables, files and folders that were created
+      (new TestHelper)->cleanupTestTables([$file]);
     }
 
     public function testSelectAndCreateTableThenDisable() {
@@ -285,7 +246,35 @@
         $table = Table::where('tblNme', '=', $tblname)->first();
         $this->assertEquals('0', $table->hasAccess);
 
-        $this->cleanup($tblname, $file);
+        // test tables, files and folders that were created
+        (new TestHelper)->cleanupTestTables([$file]);
+    }
+
+    public function testCMSImportFileUploadAndTableCreate() {
+         $path = './storage/app/files/test/';
+         $file = '1A-random.tab';
+         $file2 = '1B-random.tab';
+
+         (new TestHelper)->createCollection('collection1');
+
+         $storageFolder = 'flatfiles';
+
+         $fltFleAbsPth = './storage/app'.'/'.$storageFolder.'/';
+
+         copy($path.$file, sys_get_temp_dir().'/'.$file);
+         copy($path.$file2, sys_get_temp_dir().'/'.$file2);
+
+         //$uploadedFile = new \Illuminate\Http\UploadedFile($path.$file, $file, 'text/csv', filesize($path.$file), null, false);
+         $files = [new \Illuminate\Http\UploadedFile(sys_get_temp_dir().'/'.$file, $file, 'application/octet-stream', filesize($path.$file), null, false),
+                   new \Illuminate\Http\UploadedFile(sys_get_temp_dir().'/'.$file2, $file2, 'application/octet-stream', filesize($path.$file2), null, false)];
+
+         $response = $this->actingAs($this->admin)
+                          ->call('POST', route('importcmsdis'), ['colID' => 1, 'cmsdisFiles' => $files]);
+
+         $this->assertEquals(DB::table('tables')->count(), 2);
+
+         // test tables, files and folders that were created
+         (new TestHelper)->cleanupTestTables([$file, $file2]);
     }
 
   }

@@ -30,6 +30,21 @@ class TestHelper {
           return $collection;
      }
 
+     public function cleanupTestTables($files) {
+       $tables = \DB::table('tables')->get();
+
+       foreach ($tables as $table)
+       {
+          \Storage::deleteDirectory($table->tblNme);
+          \Schema::drop($table->tblNme);
+       }
+
+       foreach ($files as $file)
+       {
+          \Storage::delete('/flatfiles/'.$file);
+       }
+     }
+
      public function createTable($storageFolder, $fileName, $headerRowExists) {
        // Test Table Name
        $tableName = 'test'.time();

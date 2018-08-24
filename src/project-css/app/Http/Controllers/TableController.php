@@ -152,40 +152,9 @@ class TableController extends Controller
     }
 
     public function importCMSDIS(Request $request) {
-      // Get the list of files in the directory
-      $fltFleList = Storage::allFiles($this->strDir);
-
-      $errors = [];
-
-      // Loop over them
-      foreach ($files as $file) {
-        $thisFltFileNme = $file->getClientOriginalName();
-        if (in_array($this->strDir.'/'.$thisFltFileNme, $fltFleList)) {
-          array_push($errors, $thisFltFileNme . ' File already exists. Please select the file or rename and re-upload.');
-        }
-        else {
-          // Store in the directory inside storage/app
-          $file->storeAs($this->strDir, $thisFltFileNme);
-          $fltFleAbsPth = $this->strDir.'/'.$thisFltFileNme;
-          $schema = (new CSVHelper)->schema($fltFleAbsPth);
-          if (!$schema) {
-            Storage::delete($fltFleAbsPth);
-            array_push($errors, [ 'The selected flat file must be of type: text/plain', 'The selected flat file should not be empty', 'File is deleted for security reasons' ]);
-          }
-          else {
-            // filter record string
-            $filteredType = filter_var($schema[0], FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_HIGH);
-
-            // create table name
-            $tblNme = $filteredType . time();
-            
-            // pass values to create file
-            (new CMSHelper)->createCMSTable($this->strDir, $thisFltFileNme, $request->colID, $tblNme);
-          }
-        }
-      }
-
-      return redirect()->route('tableIndex');
+      // var_dump($request->colID);
+      // var_dump($request->cmsdisFiles);
+      return (new TableHelper)->storeUploadsAndImport($this->strDir, $request->colID, $request->cmsdisFiles);
     }
 
     /**
@@ -246,39 +215,7 @@ class TableController extends Controller
     }
 
     public function selectCMSDIS(Request $request) {
-      // array for keeping errors that we will send to the user
-      $errors = [];
-
-      // Get all files from $request
-      $files = $request->cmsdisFiles2;
-
-      // Loop over them
-      foreach ($files as $file) {
-        $fltFleAbsPth = $this->strDir.'/'.$file;
-
-        // Calling schema will return an array containing the
-        // tokenized first row of our file to be imported
-        $schema = (new CSVHelper)->schema($fltFleAbsPth);
-
-        // if the array is not valid we will delete the file
-        // and push a error to the $errors array
-        if (!$schema) {
-          Storage::delete($fltFleAbsPth);
-          array_push($errors, [ 'The selected flat file must be of type: text/plain', 'The selected flat file should not be empty', 'File is deleted for security reasons' ]);
-        }
-        else {
-          // filter record string
-          $filteredType = filter_var($schema[0], FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_HIGH);
-
-          // create table name
-          $tblNme = $filteredType . time();
-
-          // pass values to create file
-          (new CMSHelper)->createCMSTable($this->strDir, $file, $request->colID2, $tblNme);
-        }
-      }
-
-      return redirect()->route('tableIndex')->withErrors($errors);
+      return (new TableHelper)->selectFilesAndImport($this->strDir, $request->colID2, $request->cmsdisFiles2);
     }
 
     /**
@@ -406,6 +343,26 @@ class TableController extends Controller
     }
 
     /**
+    * Method to format the storage files
+    **/
+    public function getFiles($strDir) {
+      // Get the list of files in the directory
+      $fltFleList = Storage::allFiles($strDir);
+
+      // Format the file names by truncating the dir
+      foreach ($fltFleList as $key => $value) {
+        // check if directory string exists in the path
+        if (str_contains($value, $this->strDir.'/')) {
+          // replace the string
+          $fltFleList[ $key ] = str_replace($this->strDir.'/', '', $value);
+        }
+      }
+
+      // return the list
+      return $fltFleList;
+    }
+
+    /**
     * Method responsible to load the data into the given table
     **/
     public function load($isFrwded = False, $tblNme = "", $fltFle = "") {
@@ -432,26 +389,6 @@ class TableController extends Controller
     }
 
     /**
-    * Method to format the storage files
-    **/
-    public function getFiles($strDir) {
-      // Get the list of files in the directory
-      $fltFleList = Storage::allFiles($strDir);
-
-      // Format the file names by truncating the dir
-      foreach ($fltFleList as $key => $value) {
-        // check if directory string exists in the path
-        if (str_contains($value, $this->strDir.'/')) {
-          // replace the string
-          $fltFleList[ $key ] = str_replace($this->strDir.'/', '', $value);
-        }
-      }
-
-      // return the list
-      return $fltFleList;
-    }
-
-    /**
     * Store takes a requested file import and adds it to the job queue for later processing
     **/
     public function store(Request $request) {
@@ -469,17 +406,6 @@ class TableController extends Controller
       (new TableHelper)->fileImport($request->tblNme, $this->strDir, $request->fltFle);
 
       return redirect()->route('tableIndex');
-    }
-
-    // if 2 lines are read that do not contain enough fields we will attempt to
-    // merge them to get the required number of Fields we assume that the last array
-    // item in $tkns1 is continued in the first item of $tkns2 so they will be
-    // combined.
-    public function mergeLines($tkns1, $tkns2) {
-        $numItem = count($tkns1) - 1;
-        $tkns1[ $numItem ] = $tkns1[ $numItem ] . ' ' . $tkns2[ 0 ];
-        unset($tkns2[ 0 ]);
-        return( (count($tkns2) > 0) ? array_merge($tkns1, $tkns2) : $tkns1 );
     }
 
     /**
@@ -506,7 +432,7 @@ class TableController extends Controller
 
         // if lastErrRow is the previous row try to combine the lines
         if ((count($tkns) != $orgCount) && ($this->lastErrRow == $prcssd - 1) && ($this->savedTkns != NULL)) {
-            $tkns = $this->mergeLines($this->savedTkns, $tkns);
+            $tkns = (new customStringHelper)->mergeLines($this->savedTkns, $tkns);
 
             // clear last saved line since we did a merge
             $this->lastErrRow = NULL;
@@ -522,37 +448,6 @@ class TableController extends Controller
         }
 
         return ($tkns);
-    }
-
-    /**
-     * takes a string and prepares it to be used as a search index for fulltext search
-     * @param string $curLine
-     * @return string
-     */
-    public function createSrchIndex($curLine) {
-      // remove extra characters replacing them with spaces
-      // also remove .. that is in the filenames
-      $cleanString = preg_replace('/[^A-Za-z0-9._ ]/', ' ', str_replace('..', '', $curLine));
-
-      // remove extra spaces and make string all lower case
-      $cleanString = strtolower(preg_replace('/\s+/', ' ', $cleanString));
-
-      // remove duplicate keywords in the srchindex
-      $srchArr = explode(' ', $cleanString);
-
-      // remove any items less than 2 characters
-      // as fulltext searches need at least 2 characters
-      $counter = 0;
-      foreach ($srchArr as $value) {
-        if (strlen($value)<2) {
-          unset($srchArr[ $counter ]);
-        }
-       $counter++;
-      }
-
-      // remove duplicate keywords from the srchIndex
-      $srchArr = array_unique($srchArr);
-      return(implode(' ', (new customStringHelper)->removeCommonWords($srchArr)));
     }
 
     /**
@@ -611,7 +506,7 @@ class TableController extends Controller
             }
 
             // add srchindex
-            $curArry[ 'srchindex' ] = $this->createSrchIndex(implode(" ", $tkns));
+            $curArry[ 'srchindex' ] = (new customStringHelper)->createSrchIndex(implode(" ", $tkns));
 
             //insert Record into database
             $table->insertRecord($curArry);
