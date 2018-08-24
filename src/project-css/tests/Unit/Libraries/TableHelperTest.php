@@ -68,42 +68,4 @@ class TableHelperTest extends TestCase
       rmdir('./storage/app'.'/'.$tableName);
     }
 
-    // public function testcreateTablesFromFiles() {
-    //   // set storage location
-    //   $storageFolder = 'files/test';
-    //
-    //   // set location of file
-    //   $fileName = '1A-random.tab';
-    //
-    //   $fltFleAbsPth = './storage/app'.'/'.$storageFolder.'/'.$fileName;
-    //
-    //   $path = sys_get_temp_dir().'/'.$fileName;
-    //
-    //   copy($fltFleAbsPth, $path);
-    //
-    //   $file = new \Illuminate\Http\UploadedFile($fltFleAbsPth, $fileName, 'text/csv', filesize($fltFleAbsPth), UPLOAD_ERR_OK, true);
-    //   // $response = $this->call('POST', '/table/create', ['cmsdisFiles' => $file], ['Accept' => 'application/json']);
-    //   //
-    //   // $this->assertFileExists('./storage/app'.'/flatfiles/'.$fileName);
-    //
-    //   $files = [
-    //     'files' => [$file]
-    //   ];
-    //
-    //   $response = $this->actingAs(User::where('name', '=', 'admin')->first())
-    //                           ->call('POST', route('table.create/importcmsdis', $project->id), $this->defaultProjectData(), [], $files);
-    //
-    //
-    //   // $this->assertEquals(0, DB::table('tables')->count());
-    //   //
-    //   // $tableHelper = (new TableHelper);
-    //   //
-    //   // // create test collection
-    //   // $collection = (new TestHelper)->createCollection(time());
-    //   //
-    //   // $response = $tableHelper->createTablesFromFiles('flatfiles', $collection->id, $files);
-    //   //
-    //   // $this->assertEquals(DB::table('tables')->count(), 1);
-    // }
-
 }
