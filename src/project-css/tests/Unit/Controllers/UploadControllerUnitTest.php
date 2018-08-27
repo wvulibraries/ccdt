@@ -1,7 +1,6 @@
 <?php
   # app/tests/Unit/controllers/UploadControllerUnitTest.php
 
-  use Illuminate\Support\Facades\Storage;
   use App\Http\Controllers\UploadController;
 
   class UploadControllerUnitTest extends TestCase {

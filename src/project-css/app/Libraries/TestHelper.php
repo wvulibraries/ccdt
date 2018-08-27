@@ -30,7 +30,7 @@ class TestHelper {
           return $collection;
      }
 
-     public function cleanupTestTables($files) {
+     public function cleanupTestTables($files = []) {
        $tables = \DB::table('tables')->get();
 
        foreach ($tables as $table)

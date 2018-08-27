@@ -44,5 +44,11 @@
          $this->assertEquals(unserialize($response[0]->fieldNames), $header);
     }
 
+    public function testfindClosestCMSHeader() {
+        $response = CMSRecords::findClosestCMSHeader('1A', 9);
+        // we should have a response count of 1
+        $this->assertEquals(2, count($response));
+    }
+
   }
 ?>
