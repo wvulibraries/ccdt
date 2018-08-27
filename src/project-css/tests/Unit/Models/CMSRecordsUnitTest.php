@@ -25,7 +25,7 @@
     public function testgetCMSHeaderFailure() {
         $response = CMSRecords::getCMSHeader('A1');
         // we should have a response count of 0
-        $this->assertEquals(count($response), 0);
+        $this->assertEquals(0, count($response));
     }
 
     public function testfindCMSHeader() {

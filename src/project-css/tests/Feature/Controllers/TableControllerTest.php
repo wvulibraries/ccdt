@@ -279,7 +279,6 @@
            copy($path.$file, sys_get_temp_dir().'/'.$file);
            copy($path.$file2, sys_get_temp_dir().'/'.$file2);
 
-           //$uploadedFile = new \Illuminate\Http\UploadedFile($path.$file, $file, 'text/csv', filesize($path.$file), null, false);
            $files = [new \Illuminate\Http\UploadedFile(sys_get_temp_dir().'/'.$file, $file, 'application/octet-stream', filesize($path.$file), null, false),
                      new \Illuminate\Http\UploadedFile(sys_get_temp_dir().'/'.$file2, $file2, 'application/octet-stream', filesize($path.$file2), null, false)];
 
@@ -300,7 +299,6 @@
 
            copy($path.$file, sys_get_temp_dir().'/'.$file);
 
-           //$uploadedFile = new \Illuminate\Http\UploadedFile($path.$file, $file, 'text/csv', filesize($path.$file), null, false);
            $files = [new \Illuminate\Http\UploadedFile(sys_get_temp_dir().'/'.$file, $file, 'application/octet-stream', filesize($path.$file), null, false)];
 
            $response = $this->actingAs($this->admin)
@@ -322,7 +320,6 @@
 
            copy($path.$file, sys_get_temp_dir().'/'.$file);
 
-           //$uploadedFile = new \Illuminate\Http\UploadedFile($path.$file, $file, 'text/csv', filesize($path.$file), null, false);
            $files = [new \Illuminate\Http\UploadedFile(sys_get_temp_dir().'/'.$file, $file, 'application/octet-stream', filesize($path.$file), null, false)];
 
            $response = $this->actingAs($this->admin)
