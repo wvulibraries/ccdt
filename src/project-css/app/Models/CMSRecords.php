@@ -11,10 +11,7 @@ class CMSRecords extends Model
         $response = DB::table('recordtypes')
                     ->where('recordType', '=', $recordtype)
                     ->get();
-        if (count($response) >= 1) {
-          return true;
-        }
-        return false;
+        return (count($response) >= 1);
     }
 
     // return all records sorted in descending order
