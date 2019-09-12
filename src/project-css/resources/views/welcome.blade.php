@@ -63,7 +63,7 @@
             </a>
           </div>
           <div class="col-xs-12 col-sm-6 col-md-3">
-            <a href="https://lib.wvu.edu/software/">
+            <a href="mailto:libdev@mail.wvu.edu?&cc=danielle.emerling@mail.wvu.edu">
               <div class="well dashCard btn-circle">
                 <!-- heading -->
                 <div class="dashCardHeading">
