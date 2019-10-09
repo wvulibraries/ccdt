@@ -14,9 +14,8 @@ language: php
 # Select the project language
 php:
   - 7.0
-
-addons:
-  mysql: 5.7
+services:
+  - mysql
 #==============================================================================
 
 # Commands to run before the install
