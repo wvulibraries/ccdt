@@ -14,6 +14,9 @@ language: php
 # Select the project language
 php:
   - 7.0
+
+addons:
+  mysql: 5.7
 #==============================================================================
 
 # Commands to run before the install
@@ -32,11 +35,11 @@ before_script:
   - chmod 777 -R storage
   # Set up the environment variables
   - cp .env.travis .env
+  # Create the database and set users
+  - mysql -e 'CREATE DATABASE IF NOT EXISTS css_testing;'
   # Install dependencies
   - composer self-update
   - composer install --no-interaction
-  # Create the database and set users
-  - mysql -e 'CREATE DATABASE IF NOT EXISTS css_testing;'  
   # Set the key
   - php artisan key:generate
   # Migrate the users
