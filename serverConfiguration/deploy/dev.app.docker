@@ -1,4 +1,4 @@
-FROM php:7.0.4-fpm
+FROM php:7.1.9-fpm
 
 ENV	VERSION='8'
 
@@ -28,3 +28,8 @@ RUN curl -sS https://getcomposer.org/installer | php && mv composer.phar /usr/lo
 ADD ./serverConfiguration/php.ini /usr/local/etc/php/
 
 WORKDIR /var/www
+
+# run startup script to launch job queue
+# ADD ./startup.sh /usr/bin/
+# RUN chmod -v +x /usr/bin/startup.sh
+# ENTRYPOINT ["/usr/bin/startup.sh"]
