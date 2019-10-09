@@ -1,25 +1,12 @@
-version: '2'
+version: '3'
 services:
-    # uncomment web section when testing production setup
-    # server install uses local nginx
-    # web:
-    #     build:
-    #         context: ./
-    #         dockerfile: serverConfiguration/deploy/prod.web.docker
-    #     container_name: nginx
-    #     volumes:
-    #       - ./serverConfiguration/certs:/etc/letsencrypt
-    #     ports:
-    #       - 80:80
-    #       - 443:443
     database:
-        image: mysql:5.7.16
+        image: mysql:5.7.27
         command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
         env_file: ./src/project-css/.env.mysql
         volumes:
-            - ./serverConfiguration/mysql_data:/var/lib/mysql
-            - ./conf/setup-docker.sql:/docker-entrypoint-initdb.d/setup.sql
-            - ./serverConfiguration/my.cnf:/etc/mysql/my.cnf
+            - ./mysql_data:/var/lib/mysql
+            - ./mysql-files/setup.sql:/docker-entrypoint-initdb.d/setup.sql
         ports:
             - "3306:3306"
     tika:
@@ -28,15 +15,12 @@ services:
         ports:
             - "9998:9998"
     app:
-        build:
-            context: ./
-            dockerfile: serverConfiguration/deploy/prod.app.docker
+        build: 
+          context: ./
+          dockerfile: Dockerfile
         container_name: rockefeller-css_php
         volumes:
-        # uncomment when using
             - ./src/project-css/storage:/var/www/storage
-        # used on production server
-        #- /data/storage:/var/www/storage
         env_file: ./src/project-css/.env.prod
         ports:
-          - "9001:9000"
+          - "9000:9000"
