@@ -30,8 +30,6 @@ before_install:
 
 # Commands to run before the testing
 before_script:
-  # Set the required permissions
-  - chmod 777 -R storage
   # Set up the environment variables
   - cp .env.travis .env
   # Create the database and set users
@@ -39,10 +37,8 @@ before_script:
   # Install dependencies
   - composer self-update
   - composer install --no-interaction
-  # Set the key
-  - php artisan key:generate
   # Migrate the users
-  - php artisan migrate --seed
+  - php artisan migrate --no-interaction -vvv
 
 #==============================================================================
 
