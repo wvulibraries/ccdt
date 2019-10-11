@@ -1,16 +1,25 @@
 FROM php:7.1.9-fpm
+
+WORKDIR /var/www
+ADD src/project-css /var/www
+
+# Fix debconf warnings upon build
+ARG DEBIAN_FRONTEND=noninteractive
+
+# Install selected extensions and other stuff
 RUN apt-get update && apt-get install -y libmcrypt-dev \
     mysql-client libmagickwand-dev --no-install-recommends \
     && pecl install imagick xdebug\
     && docker-php-ext-enable imagick xdebug\
     && docker-php-ext-install mcrypt pdo_mysql mbstring zip
+
+# install composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-WORKDIR /app
-ADD src/project-css /app
-RUN composer install
 
-EXPOSE 9000
+ADD src/project-css /var/www
 
-ADD ./startup.sh /usr/bin/
-RUN chmod -v +x /usr/bin/startup.sh
-ENTRYPOINT ["/usr/bin/startup.sh"]
+RUN chown -R www-data:www-data \
+        /var/www/storage \
+        /var/www/bootstrap/cache
+
+RUN php artisan optimize

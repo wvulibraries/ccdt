@@ -1,0 +1,5 @@
+FROM nginx:latest
+
+ADD ./serverConfiguration/deploy/prod.vhost.conf /etc/nginx/conf.d/default.conf
+
+COPY ./src/project-css/public /var/www/public
