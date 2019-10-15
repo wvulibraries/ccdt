@@ -12,7 +12,7 @@ class TikaConvert {
 
     function __construct() {
         $this->tika_host = env('TIKA_HOST', 'localhost');
-        $this->tika_port = env('TIKA_PORT', 'localhost');
+        $this->tika_port = env('TIKA_PORT', '9998');
     }
 
     function setTikaHost($host) {
