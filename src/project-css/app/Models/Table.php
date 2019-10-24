@@ -48,13 +48,13 @@ class Table extends Model
         DB::table($this->tblNme)->insert($curArry);
     }
 
-    public function fullTextQuery($search, $page, $perPage) {
+    public function fullTextQuery($search, $page, $perPage) {        
         return DB::table($this->tblNme)
                 ->select('*')
                 ->selectRaw("MATCH (srchindex) AGAINST (? IN BOOLEAN MODE) AS relevance_score", [$search])
                 ->whereRaw("MATCH (srchindex) AGAINST (? IN BOOLEAN MODE)", [$search])
                 ->orderBy('relevance_score', 'desc')
-                ->offset($page - 1 * $perPage)
+                ->offset(($page - 1) * $perPage)
                 ->limit($perPage)
                 ->get();
     }
