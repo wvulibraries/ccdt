@@ -16,12 +16,12 @@ services:
         env_file: ./src/project-css/.env.mysql
         volumes:
             - ./mysql_data:/var/lib/mysql
-            - ./mysql-files/setup-docker.sql:/docker-entrypoint-initdb.d/setup.sql
+            - ./mysql-files/setup.sql:/docker-entrypoint-initdb.d/setup.sql
             - ./serverConfiguration/deploy/my.cnf:/etc/mysql/my.cnf
         ports:
             - "3306:3306"
     tika:
-        image: trmccormick/tika
+        image: logicalspark/docker-tikaserver
         container_name: tika_service
         ports:
             - "9998:9998"
@@ -35,3 +35,12 @@ services:
         env_file: ./src/project-css/.env.prod
         ports:
           - "9001:9000"
+    laravel-queue:
+        restart: always
+        build:
+            context: ./
+            dockerfile: serverConfiguration/deploy/prod.app.docker
+        command: php artisan queue:work
+        volumes:
+            - ./src/project-css:/var/www
+        env_file: ./src/project-css/.env.prod

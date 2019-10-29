@@ -22,4 +22,5 @@ RUN chown -R www-data:www-data \
         /var/www/storage \
         /var/www/bootstrap/cache
 
-RUN php artisan optimize
+RUN composer install
+RUN php artisan key:generate
