@@ -26,6 +26,9 @@ RUN curl -sL https://deb.nodesource.com/setup_${VERSION}.x | bash - \
 # install gulp
 RUN npm install --global gulp-cli    
 
+# set php.ini
+ADD ./serverConfiguration/php.ini /usr/local/etc/php/
+
 EXPOSE 9000
 
 ADD ./startup-dev.sh /usr/bin/
