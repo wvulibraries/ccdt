@@ -5,11 +5,8 @@ services:
             context: ./
             dockerfile: serverConfiguration/deploy/prod.web.docker
         container_name: nginx
-        volumes:
-          - ./serverConfiguration/certs:/etc/letsencrypt/live/tracyamccormick.com/
         ports:
           - 80:80
-          - 443:443    
     database:
         image: mysql:5.7.27
         command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci

@@ -22,5 +22,8 @@ RUN chown -R www-data:www-data \
         /var/www/storage \
         /var/www/bootstrap/cache
 
+# set php.ini
+ADD ./serverConfiguration/php.ini /usr/local/etc/php/
+
 RUN composer install
 RUN php artisan key:generate

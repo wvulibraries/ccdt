@@ -83,4 +83,8 @@ class UserController extends Controller {
         return redirect()->route('userIndex')->withErrors("Failed to Demote Admin to User. Admin wasn't found.");
     }
 
+    public function AuthRouteAPI(Request $request){
+        return $request->user();
+    }    
+
 }
