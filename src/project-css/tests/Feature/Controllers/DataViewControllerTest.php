@@ -18,7 +18,7 @@
     */
     protected $manager;
 
-    public function setUp() {
+    public function setUp(): void {
            parent::setUp();
            Artisan::call('migrate');
            Artisan::call('db:seed');
@@ -30,7 +30,7 @@
            $this->user = User::where('name', '=', 'test')->first();
     }
 
-    protected function tearDown() {
+    protected function tearDown(): void {
            Artisan::call('migrate:reset');
            parent::tearDown();
     }

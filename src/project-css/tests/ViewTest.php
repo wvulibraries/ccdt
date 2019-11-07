@@ -13,7 +13,7 @@ class ViewTest extends BrowserKitTestCase
     private $userEmail;
     private $userPass;
 
-    public function setUp() {
+    public function setUp(): void {
         parent::setUp();
         Artisan::call('migrate');
         Artisan::call('db:seed');
@@ -28,7 +28,7 @@ class ViewTest extends BrowserKitTestCase
         $this->userPass = "testing";
     }
 
-    protected function tearDown() {
+    protected function tearDown(): void {
         Artisan::call('migrate:reset');
         parent::tearDown(); // Moving that call to the top of the function didn't work either.
     }
