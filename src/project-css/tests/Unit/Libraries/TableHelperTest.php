@@ -9,13 +9,13 @@ use App\Libraries\TestHelper;
 
 class TableHelperTest extends TestCase
 {
-    public function setUp() {
+    public function setUp(): void {
         parent::setUp();
         Artisan::call('migrate');
         Artisan::call('db:seed');
     }
 
-    protected function tearDown() {
+    protected function tearDown(): void {
         Artisan::call('migrate:reset');
         parent::tearDown();
     }

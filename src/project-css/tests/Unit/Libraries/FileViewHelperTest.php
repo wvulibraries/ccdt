@@ -10,7 +10,7 @@ class FileViewHelperTest extends TestCase
     protected $fileViewHelper;
     private $singlefilewithpath;
 
-    public function setUp() {
+    public function setUp(): void {
          parent::setUp();
          Artisan::call('migrate');
          Artisan::call('db:seed');
@@ -18,7 +18,7 @@ class FileViewHelperTest extends TestCase
          $this->singlefilewithpath = '..\documents\BlobExport\indivletters\114561.txt';
     }
 
-    protected function tearDown() {
+    protected function tearDown(): void {
          Artisan::call('migrate:reset');
          unset($this->singlefilewithpath);
          unset($this->fileViewHelper);

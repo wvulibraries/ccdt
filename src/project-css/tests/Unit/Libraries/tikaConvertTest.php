@@ -7,13 +7,13 @@ class tikaConvertTest extends TestCase
     protected $tikaConvert;
     private $singlefilewithpath;
 
-    protected function setUp() {
+    protected function setUp(): void {
         parent::setUp();
         $this->tikaConvert = new tikaConvert();
         $this->singlefilewithpath = './storage/app/files/test/test_upload.doc';
     }
 
-    protected function tearDown() {
+    protected function tearDown(): void {
         unset($this->singlefilewithpath);
         unset($this->tikaConvert);
         parent::tearDown();

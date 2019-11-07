@@ -5,7 +5,8 @@
 
   class UploadControllerUnitTest extends TestCase {
 
-    public function setUp() {
+    public function setUp(): void 
+    {
          parent::setUp();
          Artisan::call('migrate');
 
@@ -15,7 +16,7 @@
          \DB::insert('insert into tables (tblNme, collection_id, hasAccess) values(?, ?, ?)',['testtable1', 1, true]);
     }
 
-    protected function tearDown() {
+    protected function tearDown(): void {
           Artisan::call('migrate:reset');
           parent::tearDown();
     }

@@ -11,7 +11,7 @@
     // use the factory to create a Faker\Generator instance
     public $faker;
 
-    public function setUp() {
+    public function setUp(): void {
          parent::setUp();
          Artisan::call('migrate');
          Artisan::call('db:seed');
@@ -19,7 +19,7 @@
          $this->faker = Faker\Factory::create();
     }
 
-    protected function tearDown() {
+    protected function tearDown(): void {
          Artisan::call('migrate:reset');
          parent::tearDown();
     }

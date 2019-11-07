@@ -5,7 +5,7 @@ use App\Libraries\TestHelper;
 
 class CMSHelperTest extends TestCase
 {
-  public function setUp() {
+  public function setUp(): void {
        parent::setUp();
        Artisan::call('migrate');
        Artisan::call('db:seed');
@@ -16,7 +16,7 @@ class CMSHelperTest extends TestCase
        (new TestHelper)->createCollection('collection3');
   }
 
-  protected function tearDown() {
+  protected function tearDown(): void {
        Artisan::call('migrate:reset');
        parent::tearDown();
   }

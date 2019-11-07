@@ -4,11 +4,11 @@ use App\Libraries\CSVHelper;
 
 class CSVHelperTest extends TestCase
 {
-    public function setUp() {
+    public function setUp(): void {
          parent::setUp();
     }
 
-    protected function tearDown() {
+    protected function tearDown(): void {
          parent::tearDown();
     }
 
