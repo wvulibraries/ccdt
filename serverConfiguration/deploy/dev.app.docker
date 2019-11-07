@@ -7,7 +7,7 @@ ADD src/project-css /var/www
 ARG DEBIAN_FRONTEND=noninteractive
 
 # Install selected extensions and other stuff
-RUN apt-get update && apt-get install -y libmcrypt-dev \
+RUN apt-get update && apt-get install -y apt-utils libmcrypt-dev \
     mysql-client libmagickwand-dev --no-install-recommends \
     && pecl install imagick xdebug\
     && docker-php-ext-enable imagick xdebug\
@@ -26,7 +26,7 @@ RUN curl -sL https://deb.nodesource.com/setup_${VERSION}.x | bash - \
 # install gulp
 RUN npm install --global gulp-cli    
 
-# set php.ini
+# set php
 ADD ./serverConfiguration/php.ini /usr/local/etc/php/
 
 EXPOSE 9000

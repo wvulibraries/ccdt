@@ -7,7 +7,7 @@ ADD src/project-css /var/www
 ARG DEBIAN_FRONTEND=noninteractive
 
 # Install selected extensions and other stuff
-RUN apt-get update && apt-get install -y libmcrypt-dev \
+RUN apt-get update && apt-get install -y apt-utils libmcrypt-dev \
     mysql-client libmagickwand-dev --no-install-recommends \
     && pecl install imagick xdebug\
     && docker-php-ext-enable imagick xdebug\
@@ -25,5 +25,8 @@ RUN chown -R www-data:www-data \
 # set php.ini
 ADD ./serverConfiguration/php.ini /usr/local/etc/php/
 
-RUN composer install
-RUN php artisan key:generate
+EXPOSE 9000
+
+ADD ./startup.sh /usr/bin/
+RUN chmod -v +x /usr/bin/startup.sh
+ENTRYPOINT ["/usr/bin/startup.sh"]
