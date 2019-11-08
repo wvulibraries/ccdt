@@ -16,7 +16,7 @@ class RedirectIfAdmin
      * @return mixed
      */
     public function handle($request, Closure $next) {
-        // Check if the user is logged in
+      // Check if the user is logged in
       if (Auth::check()) {
         // Check if the user is admin
         if ($request->user()->isAdmin) {

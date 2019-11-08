@@ -104,7 +104,7 @@ class FileViewHelper {
        // query database for record
        $rcrds = $table->getRecord($recId);
       
-       // guard clause if no results return null
+       // no results return null
        if (count($rcrds) == 0) { return null; }
 
        foreach ($rcrds[0] as &$value) {
