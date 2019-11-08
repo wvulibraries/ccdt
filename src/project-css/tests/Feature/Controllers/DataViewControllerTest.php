@@ -20,8 +20,7 @@
 
     public function setUp(): void {
            parent::setUp();
-           Artisan::call('migrate');
-           Artisan::call('db:seed');
+           Artisan::call('migrate:refresh --seed');
            Session::setDefaultDriver('array');
            $this->manager = app('session');
 
@@ -30,10 +29,10 @@
            $this->user = User::where('name', '=', 'test')->first();
     }
 
-    protected function tearDown(): void {
-           Artisan::call('migrate:reset');
-           parent::tearDown();
-    }
+//     protected function tearDown(): void {
+//            Artisan::call('migrate:reset');
+//            parent::tearDown();
+//     }
 
     public function createTestTable($tblname, $path, $file) {
             // create a test collection

@@ -8,8 +8,7 @@
 
     public function setUp(): void {
       parent::setUp();
-      Artisan::call('migrate');
-      Artisan::call('db:seed');
+      Artisan::call('migrate:refresh --seed');
 
       //admin credentials
       $this->adminEmail = "admin@admin.com";
@@ -20,10 +19,10 @@
       $this->userPass = "testing";
     }
 
-    protected function tearDown(): void {
-      Artisan::call('migrate:reset');
-      parent::tearDown();
-    }
+    // protected function tearDown(): void {
+    //   Artisan::call('migrate:reset');
+    //   parent::tearDown();
+    // }
 
     public function test_login_with_user() {
         // Type some valid values

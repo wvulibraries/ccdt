@@ -12,14 +12,12 @@ class FileViewHelperTest extends TestCase
 
     public function setUp(): void {
          parent::setUp();
-         Artisan::call('migrate');
-         Artisan::call('db:seed');
+         Artisan::call('migrate:refresh --seed');
          $this->fileViewHelper = new FileViewHelper();
          $this->singlefilewithpath = '..\documents\BlobExport\indivletters\114561.txt';
     }
 
     protected function tearDown(): void {
-         Artisan::call('migrate:reset');
          unset($this->singlefilewithpath);
          unset($this->fileViewHelper);
          parent::tearDown();
