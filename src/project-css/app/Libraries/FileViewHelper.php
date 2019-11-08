@@ -56,7 +56,7 @@ class FileViewHelper {
          // get the last folder the file exists in
          $subfolder = prev($tokens);
 
-         if (count($subfolder) > 0) {
+         if (count((array) $subfolder) > 0) {
            return $subfolder;
          }
 
