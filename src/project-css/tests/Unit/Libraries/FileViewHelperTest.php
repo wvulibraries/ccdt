@@ -18,6 +18,7 @@ class FileViewHelperTest extends TestCase
     }
 
     protected function tearDown(): void {
+         Artisan::call('migrate:reset');
          unset($this->singlefilewithpath);
          unset($this->fileViewHelper);
          parent::tearDown();
