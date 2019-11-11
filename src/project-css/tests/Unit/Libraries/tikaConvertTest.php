@@ -19,10 +19,10 @@ class tikaConvertTest extends TestCase
         parent::tearDown();
     }
 
-    public function testConvertValidFile() {
-        $contents = $this->tikaConvert->convert($this->singlefilewithpath);
-        $this->assertTrue(strpos($contents, 'testing') !== false);
-    }
+    // public function testConvertValidFile() {
+    //     $contents = $this->tikaConvert->convert($this->singlefilewithpath);
+    //     $this->assertTrue(strpos($contents, 'testing') !== false);
+    // }
 
     // public function testConvertInvalidFile() {
     //     $contents = $this->tikaConvert->convert('invalid.doc');
