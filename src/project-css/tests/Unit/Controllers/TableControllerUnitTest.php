@@ -28,7 +28,7 @@
         // in the flatfile directory under Storage
         // we are testing that the array is present and valid
         $response = (new TableController)->load();
-        $this->assertInternalType('array', $response->fltFleList);
+        $this->assertIsArray($response->fltFleList);
     }
 
     public function testProcessEmptyFile() {

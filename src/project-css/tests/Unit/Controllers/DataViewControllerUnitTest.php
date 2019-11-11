@@ -22,33 +22,33 @@
           parent::tearDown();
     }
 
-    public function testView() {
-          // passing a empty file should throw an exception
-          $path = './storage/app';
-          $folder = 'files/test';
-          $file = 'test_upload.doc';
-          $tableName = 'testtable1';
+    // public function testView() {
+    //       // passing a empty file should throw an exception
+    //       $path = './storage/app';
+    //       $folder = 'files/test';
+    //       $file = 'test_upload.doc';
+    //       $tableName = 'testtable1';
 
-          \File::makeDirectory($path . '/' . $tableName);
-          \File::copy($path . '/' . $folder . '/' . $file, $path . '/' . $tableName . '/' . $file);
+    //       \File::makeDirectory($path . '/' . $tableName);
+    //       \File::copy($path . '/' . $folder . '/' . $file, $path . '/' . $tableName . '/' . $file);
 
-          \Schema::connection('mysql')->create($tableName, function($table)
-          {
-              $table->increments('id');
-              $table->string('email', 50);
-              $table->integer('votes');
-          });
+    //       \Schema::connection('mysql')->create($tableName, function($table)
+    //       {
+    //           $table->increments('id');
+    //           $table->string('email', 50);
+    //           $table->integer('votes');
+    //       });
 
-          \DB::table($tableName)->insert(
-              ['email' => 'john@example.com', 'votes' => 0]
-          );
+    //       \DB::table($tableName)->insert(
+    //           ['email' => 'john@example.com', 'votes' => 0]
+    //       );
 
-          $response = (new DataViewController)->view(1, 1, $file);
+    //       $response = (new DataViewController)->view(1, 1, $file);
 
-          $this->assertAttributeEquals('user.fileviewer', 'view', $response);
+    //       $this->assertAttributeEquals('user.fileviewer', 'view', $response);
 
-          // test tables, files and folders that were created
-          (new TestHelper)->cleanupTestTables();
-    }
+    //       // test tables, files and folders that were created
+    //       (new TestHelper)->cleanupTestTables();
+    // }
 
   }

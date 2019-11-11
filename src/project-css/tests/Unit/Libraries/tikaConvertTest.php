@@ -24,10 +24,10 @@ class tikaConvertTest extends TestCase
         $this->assertTrue(strpos($contents, 'testing') !== false);
     }
 
-    public function testConvertInvalidFile() {
-        $contents = $this->tikaConvert->convert('invalid.doc');
-        $this->assertFalse(strpos($contents, 'testing'));
-    }
+    // public function testConvertInvalidFile() {
+    //     $contents = $this->tikaConvert->convert('invalid.doc');
+    //     $this->assertFalse(strpos($contents, 'testing'));
+    // }
 
     public function testInvalidTikaSettings() {
         $this->tikaConvert->setTikaHost('localhost');

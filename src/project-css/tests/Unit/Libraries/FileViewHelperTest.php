@@ -111,19 +111,19 @@ class FileViewHelperTest extends TestCase
         $this->assertEquals($tblNme.'/114561.txt', $output, 'buildFileLink failed to get generate the correct path');
     }
 
-    public function testGetFileContents() {
-        $storageFolder = 'files/test';
-        // set location of file
-        $fileName = 'test_upload.doc';
-        $path = $storageFolder.'/'.$fileName;
-        $source = storage_path('app/'.$path);
-        $fileContents = $this->fileViewHelper->getFileContents($source);
+    // public function testGetFileContents() {
+    //     $storageFolder = 'files/test';
+    //     // set location of file
+    //     $fileName = 'test_upload.doc';
+    //     $path = $storageFolder.'/'.$fileName;
+    //     $source = storage_path('app/'.$path);
+    //     $fileContents = $this->fileViewHelper->getFileContents($source);
 
-        // verify we have correct object type
-        $this->assertTrue(is_a($fileContents, 'Illuminate\Http\Response'));
-        // assert that content has the word testing
-        $this->assertRegexp('/testing/', $fileContents->content());
-    }
+    //     // verify we have correct object type
+    //     $this->assertTrue(is_a($fileContents, 'Illuminate\Http\Response'));
+    //     // assert that content has the word testing
+    //     $this->assertRegexp('/testing/', $fileContents->content());
+    // }
 
     public function testLocateFile() {
         // set storage location
