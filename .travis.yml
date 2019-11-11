@@ -41,6 +41,8 @@ before_script:
   - composer install --no-interaction
   # Set the key
   - php artisan key:generate
+  # Reset Cached Config
+  - php artisan config:cache
   # Migrate the users
   - php artisan migrate --seed
 
