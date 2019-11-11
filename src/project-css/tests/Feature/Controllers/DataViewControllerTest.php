@@ -242,6 +242,7 @@
 
            // While using a admin account try to disable a collection
            $this->actingAs($this->admin)
+                ->withoutMiddleware()
                 ->post('collection/disable', [ 'id' => $this->collection->id, 'clctnName' => $this->collection->clctnName ])
                 // try to visit the disabled table
                 ->visit('data/1')
@@ -270,7 +271,10 @@
            $this->assertEquals($errors[0], "Search Yeilded No Results");
 
            //While using a admin account try to enable a collection
-           $this->post('collection/enable', [ 'id' => $this->collection->id, 'clctnName' => $this->collection->clctnName ])
+
+           $this->actingAs($this->admin)
+                ->withoutMiddleware()
+                ->post('collection/enable', [ 'id' => $this->collection->id, 'clctnName' => $this->collection->clctnName ])
                 ->visit('data/1')
                 ->assertResponseStatus(200)
                 ->see($tblname);
