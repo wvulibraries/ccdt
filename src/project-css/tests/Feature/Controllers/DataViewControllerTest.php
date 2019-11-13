@@ -6,12 +6,14 @@
   use App\Models\Collection;
   use App\Models\Table;
   use App\Libraries\TestHelper;
+  use Illuminate\Foundation\Testing\WithoutMiddleware;
 
   class DataViewControllerTest extends BrowserKitTestCase {
 
     private $admin;
     private $user;
     private $collection;
+    private $table;
 
     /**
     * @var \Illuminate\Session\SessionManager
@@ -30,17 +32,16 @@
     }
 
     protected function tearDown(): void {
-           Artisan::call('migrate:reset');
+       //     Artisan::call('migrate:rollback');
            parent::tearDown();
     }
 
     public function createTestTable($tblname, $path, $file) {
             // create a test collection
             $this->collection = (new TestHelper)->createCollection('collection1');
-
             $this->actingAs($this->admin)
-                 ->withoutMiddleware()
                  ->visit('table/create')
+                 ->see('collection1')
                  ->type($tblname, 'imprtTblNme')
                  ->type('1', 'colID')
                  ->attach($path . $file, 'fltFile')
@@ -109,27 +110,34 @@
                 ->see("Table id is invalid");
     }
 
-//     public function testImportWithRecords() {
-//            $tblname = 'importtest'.mt_rand();
-//            $path = './storage/app/files/test/';
-//            $file = 'test.dat';
+    public function testImportWithRecords() {
+           $tblname = 'importtest'.mt_rand();
+           $path = './storage/app/files/test/';
+           $file = 'test.dat';
 
-//            $this->createTestTable($tblname, $path, $file);
+           $this->createTestTable($tblname, $path, $file);
 
-//            $this->actingAs($this->admin)
-//                 ->visit('table')
-//                 ->assertResponseStatus(200)
-//                 ->see('3');
+           // verify we can see table in the table list
+           $this->actingAs($this->admin)
+                ->visit('table')
+                ->assertResponseStatus(200)
+                ->see($tblname);
 
-//            $this->actingAs($this->admin)
-//                 ->visit('data/1')
-//                 ->see($tblname.' Records')
-//                 ->visit('data/1/1')
-//                 ->assertResponseStatus(200)
-//                 ->see('Doe');
+           // verify we can get to table
+           $this->actingAs($this->admin)
+                ->visit('data/1')
+                ->assertResponseStatus(200);
 
-//            $this->cleanup($tblname, $file);
-//     }
+           $this->actingAs($this->admin)
+                ->visit('data/1/1')
+                ->assertResponseStatus(200);
+
+           $this->actingAs($this->admin)
+                ->visit('data/1')
+                ->see('Doe');       
+
+           $this->cleanup($tblname, $file);
+    }
 
 //     public function testSearch() {
 //            $tblname = 'importtest'.mt_rand();
@@ -167,66 +175,66 @@
 //            $this->cleanup($tblname, $file);
 //     }
 
-//     public function testInvalidId() {
-//            $tblname = 'importtest'.mt_rand();
-//            $path = './storage/app/files/test/';
-//            $file = 'test.dat';
+    public function testInvalidId() {
+           $tblname = 'importtest'.mt_rand();
+           $path = './storage/app/files/test/';
+           $file = 'test.dat';
 
-//            $this->createTestTable($tblname, $path, $file);
+           $this->createTestTable($tblname, $path, $file);
 
-//            // view specific record with a invalid id
-//            // should produce error messsage that no results
-//            $this->actingAs($this->admin)
-//                 ->visit('data/1/2000')
-//                 ->assertResponseStatus(200)
-//                 ->see('Search Yeilded No Results');
+           // view specific record with a invalid id
+           // should produce error messsage that no results
+           $this->actingAs($this->admin)
+                ->visit('data/1/2000')
+                ->assertResponseStatus(200)
+                ->see('Search Yeilded No Results');
 
-//            $this->cleanup($tblname, $file);
-//     }
+           $this->cleanup($tblname, $file);
+    }
 
-//     public function uploadFileToDatabaseAndView($upload) {
-//             $tblname = 'importtest'.mt_rand();
-//             $path = './storage/app/files/test/';
-//             $file = 'test.dat';
+    public function uploadFileToDatabaseAndView($upload) {
+            $tblname = 'importtest'.mt_rand();
+            $path = './storage/app/files/test/';
+            $file = 'test.dat';
 
-//             $this->createTestTable($tblname, $path, $file);
+            $this->createTestTable($tblname, $path, $file);
 
-//             $this->actingAs($this->admin)
-//                  ->visit('upload/1')
-//                  ->assertResponseStatus(200)
-//                  ->see('Upload files to '.$tblname.' Table')
-//                  ->type('test', 'upFldNme')
-//                  ->attach(array($path.$upload), 'attachments[]')
-//                  ->press('Upload')
-//                  ->assertResponseStatus(200)
-//                  ->see('Upload files to '.$tblname.' Table')
-//                  ->assertFileExists(storage_path('app/'.$tblname.'/test/'.$upload));
+            $this->actingAs($this->admin)
+                 ->visit('upload/1')
+                 ->assertResponseStatus(200)
+                 ->see('Upload files to '.$tblname.' Table')
+                 ->type('test', 'upFldNme')
+                 ->attach(array($path.$upload), 'attachments[]')
+                 ->press('Upload')
+                 ->assertResponseStatus(200)
+                 ->see('Upload files to '.$tblname.' Table')
+                 ->assertFileExists(storage_path('app/'.$tblname.'/test/'.$upload));
 
-//             $this->visit('data/1/1/view'.'/test/'.$upload)
-//                  ->assertResponseStatus(200);
+            $this->visit('data/1/1/view'.'/test/'.$upload)
+                 ->assertResponseStatus(200);
 
-//             $this->cleanup($tblname, $file);
-//     }
+            $this->cleanup($tblname, $file);
+    }
 
-//     public function testUploadAndViewUploadedTxtFile() {
-//            $this->uploadFileToDatabaseAndView('test_upload.txt');
-//     }
+    public function testUploadAndViewUploadedTxtFile() {
+           $this->uploadFileToDatabaseAndView('test_upload.txt');
+    }
 
-//     public function testUploadAndViewUploadedDocFile() {
-//            $this->uploadFileToDatabaseAndView('test_upload.doc');
-//     }
+    public function testUploadAndViewUploadedDocFile() {
+           $this->uploadFileToDatabaseAndView('test_upload.doc');
+    }
 
-//     public function testUploadAndViewUploadedDocxFile() {
-//            $this->uploadFileToDatabaseAndView('test_upload.docx');
-//     }
+    public function testUploadAndViewUploadedDocxFile() {
+           $this->uploadFileToDatabaseAndView('test_upload.docx');
+    }
 
-//     public function testUploadAndViewUploadedPdfFile() {
-//            $this->uploadFileToDatabaseAndView('test_upload.pdf');
-//     }
+    public function testUploadAndViewUploadedPdfFile() {
+           $this->uploadFileToDatabaseAndView('test_upload.pdf');
+    }
 
-//     public function testUploadAndViewUploadedPngFile() {
-//            $this->uploadFileToDatabaseAndView('images.png');
-//     }
+    public function testUploadAndViewUploadedPngFile() {
+           $this->uploadFileToDatabaseAndView('images.png');
+    }
 
 //     public function testViewDisabledCollection() {
 //            $tblname = 'importtest'.mt_rand();
@@ -283,45 +291,45 @@
 //            $this->cleanup($tblname, $file);
 //     }
 
-//     public function testViewInvalidRecord() {
-//            $tblname = 'importtest'.mt_rand();
-//            $path = './storage/app/files/test/';
-//            $file = 'test.dat';
+    public function testViewInvalidRecord() {
+           $tblname = 'importtest'.mt_rand();
+           $path = './storage/app/files/test/';
+           $file = 'test.dat';
 
-//            $this->createTestTable($tblname, $path, $file);
+           $this->createTestTable($tblname, $path, $file);
 
-//            // view specific record with a invalid id
-//            // should produce error messsage that no results
-//            $this->actingAs($this->admin)
-//                 ->visit('data/1/2000')
-//                 ->assertResponseStatus(200)
-//                 ->see('Search Yeilded No Results');
+           // view specific record with a invalid id
+           // should produce error messsage that no results
+           $this->actingAs($this->admin)
+                ->visit('data/1/2000')
+                ->assertResponseStatus(200)
+                ->see('Search Yeilded No Results');
 
-//            $this->cleanup($tblname, $file);
-//     }
+           $this->cleanup($tblname, $file);
+    }
 
-//     public function testImportWithNoRecords() {
-//            $tblname = 'importtest'.mt_rand();
-//            $path = './storage/app/files/test/';
-//            $file = 'header_only.dat';
+    public function testImportWithNoRecords() {
+           $tblname = 'importtest'.mt_rand();
+           $path = './storage/app/files/test/';
+           $file = 'header_only.dat';
 
-//            // make sure file isn't already their
-//            Storage::delete('/flatfiles/'.$file);
+           // make sure file isn't already their
+           Storage::delete('/flatfiles/'.$file);
 
-//            $this->createTestTable($tblname, $path, $file);
+           $this->createTestTable($tblname, $path, $file);
 
-//            $this->actingAs($this->admin)
-//                 ->visit('table')
-//                 ->assertResponseStatus(200)
-//                 ->see('0');
+           $this->actingAs($this->admin)
+                ->visit('table')
+                ->assertResponseStatus(200)
+                ->see('0');
 
-//            // visit a table with no records
-//            $this->visit('data/1')
-//                 ->assertResponseStatus(200)
-//                 ->see('Table does not have any records.');
+           // visit a table with no records
+           $this->visit('data/1')
+                ->assertResponseStatus(200)
+                ->see('Table does not have any records.');
 
-//            $this->cleanup($tblname, $file);
-//     }
+           $this->cleanup($tblname, $file);
+    }
 
     public function testNullShow() {
            // test to see if passing null for both table id and record produces a error response

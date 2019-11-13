@@ -18,7 +18,7 @@
     }
 
     protected function tearDown(): void {
-          Artisan::call('migrate:reset');
+          Artisan::call('migrate:rollback');
           parent::tearDown();
     }
 
