@@ -172,18 +172,18 @@
                 ->see('John');
     }
 
-    public function testSearchNoResults() {
-           $this->createTestTable();
+//     public function testSearchNoResults() {
+//            $this->createTestTable();
 
-           //search for a name this will go to the fulltext search
-           $this->actingAs($this->admin)
-                ->visit('data/1')
-                ->see('search')
-                ->type('NoResults', 'search')
-                ->press('Search')
-                ->assertResponseStatus(200)
-                ->see('Search Yeilded No Results');
-    }
+//            //search for a name this will go to the fulltext search
+//            $this->actingAs($this->admin)
+//                 ->visit('data/1')
+//                 ->see('search')
+//                 ->type('NoResults', 'search')
+//                 ->press('Search')
+//                 ->assertResponseStatus(200)
+//                 ->see('Search Yeilded No Results');
+//     }
 
     public function uploadFileToDatabaseAndView($upload) {
             $this->createTestTable();
