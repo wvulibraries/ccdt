@@ -12,10 +12,10 @@
          Artisan::call('migrate:refresh --seed');
     }
 
-//     protected function tearDown(): void {
-//          Artisan::call('migrate:reset');
-//          parent::tearDown();
-//     }
+    protected function tearDown(): void {
+         Artisan::call('migrate:reset');
+         parent::tearDown();
+    }
 
     public function testIsStopWord() {
          //verify adam is not a stop word should return false

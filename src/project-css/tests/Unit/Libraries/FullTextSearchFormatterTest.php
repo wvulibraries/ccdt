@@ -12,10 +12,10 @@ class FullTextSearchFormatterTest extends TestCase
          $this->fullTextHelper = new fullTextSearchFormatter();
     }
 
-    // protected function tearDown(): void {
-    //      Artisan::call('migrate:reset');
-    //      parent::tearDown();
-    // }
+    protected function tearDown(): void {
+         Artisan::call('migrate:reset');
+         parent::tearDown();
+    }
 
     /**
      * Clean Search string replaces ? with * for fulltext searches

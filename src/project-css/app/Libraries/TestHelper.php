@@ -73,4 +73,5 @@ class TestHelper {
        // return name of test table created
        return $tableName;
      }
+
 }

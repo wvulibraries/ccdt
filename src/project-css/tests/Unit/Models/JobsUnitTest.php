@@ -18,10 +18,10 @@
          $this->faker = Faker\Factory::create();
     }
 
-//     protected function tearDown(): void {
-//          Artisan::call('migrate:reset');
-//          parent::tearDown();
-//     }
+    protected function tearDown(): void {
+         Artisan::call('migrate:reset');
+         parent::tearDown();
+    }
 
     public function testRetryAllFailedJobs() {
          //insert dummy record into the failed jobs

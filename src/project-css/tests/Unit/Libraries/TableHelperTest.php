@@ -14,10 +14,10 @@ class TableHelperTest extends TestCase
         Artisan::call('migrate:refresh --seed');
     }
 
-    // protected function tearDown(): void {
-    //     Artisan::call('migrate:reset');
-    //     parent::tearDown();
-    // }
+    protected function tearDown(): void {
+        Artisan::call('migrate:reset');
+        parent::tearDown();
+    }
 
     public function testCreateTableWithHeader() {
         // set storage location
