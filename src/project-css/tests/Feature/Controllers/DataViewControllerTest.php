@@ -164,15 +164,7 @@
 
            $this->actingAs($this->admin)
                 ->visit('data/1')
-                ->see('Doe');   
-
-           //search for a name this will go to the fulltext search    
-           $this->actingAs($this->admin)
-                ->visit('data/1')
-                ->type('Doe', 'search')
-                ->press('Search')
-                ->assertResponseStatus(200)
-                ->see('John');
+                ->see('Doe');       
     }
 
 //     public function testSearch() {
