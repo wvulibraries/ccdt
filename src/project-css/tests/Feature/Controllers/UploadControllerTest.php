@@ -21,10 +21,10 @@
         $this->user = User::where('name', '=', 'test')->first();
     }
 
-//     protected function tearDown(): void {
-//         Artisan::call('migrate:reset');
-//         parent::tearDown();
-//     }
+    protected function tearDown(): void {
+        Artisan::call('migrate:reset');
+        parent::tearDown();
+    }
 
     public function cleanup($tblname, $file) {
            // cleanup remove directory for the test table

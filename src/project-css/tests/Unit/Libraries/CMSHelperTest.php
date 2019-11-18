@@ -16,10 +16,10 @@ class CMSHelperTest extends TestCase
        (new TestHelper)->createCollection('collection3');
   }
 
-  // protected function tearDown(): void {
-  //      Artisan::call('migrate:reset');
-  //      parent::tearDown();
-  // }
+  protected function tearDown(): void {
+       Artisan::call('migrate:reset');
+       parent::tearDown();
+  }
 
   public function testgetCMSFields1A() {
     $fieldType = '1A';

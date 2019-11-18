@@ -31,7 +31,14 @@
 
            // find admin and test user accounts
            $this->admin = User::where('name', '=', 'admin')->first();
+           if($this->admin == null){
+              $this->fail('No admin user present');
+           }
+
            $this->user = User::where('name', '=', 'test')->first();
+           if($this->user == null){
+              $this->fail('No user present');
+           }
     }
 
     public function cleanup() {
@@ -160,17 +167,17 @@
                 ->see('Doe');       
     }
 
-//     public function testSearch() {
-//            $this->createTestTable();
+    public function testSearch() {
+           $this->createTestTable();
 
-//            //search for a name this will go to the fulltext search
-//            $this->actingAs($this->admin)
-//                 ->visit('data/1')
-//                 ->type('Doe', 'search')
-//                 ->press('Search')
-//                 ->assertResponseStatus(200)
-//                 ->see('John');
-//     }
+           //search for a name this will go to the fulltext search
+           $this->actingAs($this->admin)
+                ->visit('data/1')
+                ->type('Doe', 'search')
+                ->press('Search')
+                ->assertResponseStatus(200)
+                ->see('John');
+    }
 
 //     public function testSearchNoResults() {
 //            $this->createTestTable();
