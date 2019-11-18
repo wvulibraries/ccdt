@@ -118,7 +118,7 @@
                  ->assertResponseStatus(200);
 
               // tests running too fast let job queue import
-              sleep(5);  
+              sleep(10);  
     }
 
     public function testInvalidId() {
