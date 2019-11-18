@@ -118,7 +118,7 @@
                  ->assertResponseStatus(200);
 
               // tests running too fast let job queue import
-              sleep(10);  
+              sleep(5);  
     }
 
     public function testInvalidId() {
@@ -164,22 +164,28 @@
 
            $this->actingAs($this->admin)
                 ->visit('data/1')
-                ->see('Doe');       
-    }
+                ->see('Doe');   
 
-    public function testSearch() {
-           $this->createTestTable();
-
-           //search for a name this will go to the fulltext search
+           //search for a name this will go to the fulltext search    
            $this->actingAs($this->admin)
                 ->visit('data/1')
-                ->see('Search');
-
-              //   ->type('Doe', 'search')
-              //   ->press('Search')
-              //   ->assertResponseStatus(200)
-              //   ->see('John');
+                ->type('Doe', 'search')
+                ->press('Search')
+                ->assertResponseStatus(200)
+                ->see('John');
     }
+
+//     public function testSearch() {
+//            $this->createTestTable();
+
+//            //search for a name this will go to the fulltext search
+//            $this->actingAs($this->admin)
+//                 ->visit('data/1')
+//                 ->type('Doe', 'search')
+//                 ->press('Search')
+//                 ->assertResponseStatus(200)
+//                 ->see('John');
+//     }
 
 //     public function testSearchNoResults() {
 //            $this->createTestTable();
