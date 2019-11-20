@@ -44,12 +44,12 @@ Route::view('/help', 'help');
 | Controller for the admin dashboard page
 |--------------------------------------------------------------------------
 */
-Route::get('collection', 'CollectionController@index')->name('collectionIndex');
+Route::get('collection', 'CollectionController@index')->name('collection.index');
 Route::group([ 'prefix' => 'collection' ], function() {
-    Route::post('create', 'CollectionController@create');
-    Route::post('edit', 'CollectionController@edit');
-    Route::post('disable', 'CollectionController@disable');
-    Route::post('enable', 'CollectionController@enable');
+    Route::post('create', 'CollectionController@create')->name('collection.create');
+    Route::post('edit', 'CollectionController@edit')->name('collection.edit');
+    Route::post('disable', 'CollectionController@disable')->name('collection.disable');;
+    Route::post('enable', 'CollectionController@enable')->name('collection.enable');;
 });
 
 /*

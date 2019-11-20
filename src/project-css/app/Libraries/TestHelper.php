@@ -30,6 +30,15 @@ class TestHelper {
           return $collection;
      }
 
+     public function createDisabledCollection($name) {
+          $collection = factory(Collection::class)->create([
+               'clctnName' => $name,
+               'isEnabled' => false,
+          ]);
+          return $collection;
+     }
+     
+
      public function cleanupTestTables($files = []) {
        $tables = \DB::table('tables')->get();
 
@@ -74,4 +83,17 @@ class TestHelper {
        return $tableName;
      }
 
+     public function createCollectionWithTable($collection, $table) {
+       \DB::insert('insert into collections (clctnName, isEnabled, hasAccess) values(?, ?, ?)',[$collection, true, true]);
+
+       //insert record into table for testing
+       \DB::insert('insert into tables (tblNme, collection_id, hasAccess) values(?, ?, ?)',[$table, 1, true]);
+     }
+
+     public function createDisabledCollectionWithTable($collection, $table) {
+       \DB::insert('insert into collections (clctnName, isEnabled, hasAccess) values(?, ?, ?)',[$collection, false, false]);
+
+       //insert record into table for testing
+       \DB::insert('insert into tables (tblNme, collection_id, hasAccess) values(?, ?, ?)',[$table, 1, true]);
+     }
 }
