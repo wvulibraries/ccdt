@@ -43,8 +43,8 @@
                  
             // Check that testtable1 is not shown
             $this->actingAs($this->admin)
-                 ->visit('/table');
-            //      ->see('testtable1');            
+                 ->visit('/table')
+                 ->see('Table(s)');            
         }        
 
         /** @test */
@@ -62,6 +62,11 @@
                  ->see('Add Tables')
                  ->see('Edit')
                  ->see('Disable');
+
+            // Check that testtable1 is shown
+            $this->actingAs($this->admin)
+                 ->visit('/table')
+                 ->see('testtable1');   
 
             // Go to collection page and disable collection1
             $this->actingAs($this->admin)

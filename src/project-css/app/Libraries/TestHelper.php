@@ -83,17 +83,49 @@ class TestHelper {
        return $tableName;
      }
 
-     public function createCollectionWithTable($collection, $table) {
-       \DB::insert('insert into collections (clctnName, isEnabled, hasAccess) values(?, ?, ?)',[$collection, true, true]);
+     public function createCollectionWithTable($colNme, $tblNme) {
+        // create test collection
+        \DB::insert('insert into collections (clctnName, isEnabled, hasAccess) values(?, ?, ?)',[$colNme, true, true]);
 
-       //insert record into table for testing
-       \DB::insert('insert into tables (tblNme, collection_id, hasAccess) values(?, ?, ?)',[$table, 1, true]);
+        //insert record into table for testing
+        \DB::insert('insert into tables (tblNme, collection_id, hasAccess) values(?, ?, ?)',[$tblNme, 1, 1]);
+
+        // define testing table
+        $createTableSqlString =
+          "CREATE TABLE $tblNme (
+               id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+               srchindex LONGTEXT,
+               created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+               updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+          )
+          COLLATE='utf8_general_ci'
+          ENGINE=InnoDB
+          AUTO_INCREMENT=1;";
+
+        // insert testing table
+        \DB::statement($createTableSqlString);
      }
 
-     public function createDisabledCollectionWithTable($collection, $table) {
-       \DB::insert('insert into collections (clctnName, isEnabled, hasAccess) values(?, ?, ?)',[$collection, false, false]);
+     public function createDisabledCollectionWithTable($colNme, $tblNme) {
+        // create test collection          
+        \DB::insert('insert into collections (clctnName, isEnabled, hasAccess) values(?, ?, ?)',[$colNme, 0, 0]);
 
-       //insert record into table for testing
-       \DB::insert('insert into tables (tblNme, collection_id, hasAccess) values(?, ?, ?)',[$table, 1, true]);
+        //insert record into table for testing
+        \DB::insert('insert into tables (tblNme, collection_id, hasAccess) values(?, ?, ?)',[$tblNme, 1, 1]);
+
+        // define testing table
+        $createTableSqlString =
+          "CREATE TABLE $tblNme (
+               id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+               srchindex LONGTEXT,
+               created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+               updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+          )
+          COLLATE='utf8_general_ci'
+          ENGINE=InnoDB
+          AUTO_INCREMENT=1;";
+     
+        // insert testing table
+        \DB::statement($createTableSqlString);
      }
 }
