@@ -267,23 +267,34 @@
            $this->assertEquals($errors[0], "Invalid Record ID");
     }
 
-    //     public function testViewDisabledCollection() {
-//            $this->createTestTable();
+       //   public function testViewDisabledCollection() {
+       //     $this->createTestTable();
 
-//            //create empty file to test view file
-//            $emptyFile = 'empty.csv';
-//            $filePath = './storage/app/'.$this->tblname.'/test';
-//            mkdir($filePath);
-//            touch($filePath.'/'.$emptyFile);
+       //     //create empty file to test view file
+       //     $emptyFile = 'empty.csv';
+       //     $filePath = './storage/app/'.$this->tblname.'/test';
+       //     mkdir($filePath);
+       //     touch($filePath.'/'.$emptyFile);
 
-//            // While using a admin account try to disable a collection
-//            $this->actingAs($this->admin)
-//                 ->withoutMiddleware()
-//                 ->post('collection/disable', [ 'id' => $this->collection->id, 'clctnName' => $this->collection->clctnName ])
-//                 // try to visit the disabled table
-//                 ->visit('data/1')
-//                 ->assertResponseStatus(200)
-//                 ->see('Table is disabled');
+       //     if($this->collection == null){
+       //        $this->fail('No Collection present');
+       //     }
+
+       //     $data = [ 'id' => $this->collection->id, 'clctnName' => $this->collection->clctnName ];
+
+       //     $this->actingAs($this->admin)
+       //          ->post('collection.disable', $data)
+       //          ->visit('data/1')
+       //          ->assertResponseStatus(200)
+       //          ->see('Table is disabled');
+
+           //While using a admin account try to disable a collection
+       //     $this->actingAs($this->admin)
+       //          ->post('collection.disable', [ 'id' => $this->collection->id, 'clctnName' => $this->collection->clctnName ])
+       //          // try to visit the disabled table
+       //          ->visit('data/1')
+       //          ->assertResponseStatus(200)
+       //          ->see('Table is disabled');
 
 //           // try to view a record in a disabled table
 //           $this->visit('data/1/1')

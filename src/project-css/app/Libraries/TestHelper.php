@@ -16,6 +16,13 @@ class TestHelper {
      *
      */
 
+     public $faker;
+
+     public function setUp(): void {
+        parent::setUp();
+        $this->faker = Faker\Factory::create();
+     }
+
      /**
       * creates a collection used for Testing
       *
@@ -46,6 +53,8 @@ class TestHelper {
         $createTableSqlString =
           "CREATE TABLE $tblNme (
                id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+               firstname TEXT,
+               lastname TEXT, 
                srchindex LONGTEXT,
                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
@@ -56,6 +65,42 @@ class TestHelper {
      
         // insert testing table
         \DB::statement($createTableSqlString);
+     }
+
+     public function seedTestTable($tblNme, $items) {
+        $insertString = "insert into $tblNme (firstname, lastname) values(?, ?)";
+
+        for ($x = 0; $x <= $items; $x++) {
+          //insert record into table for testing
+          \DB::insert($insertString,['dummy'.$x, 'dummylast'.$x]);
+        } 
+     }     
+
+     public function createCollectionWithTable($colNme, $tblNme) {
+        // create test collection
+        $this->createCollection($colNme);
+
+        // create empty table        
+        $this->createTestTable($tblNme);
+     }
+
+     public function createCollectionWithTableAndRecords($colNme, $tblNme) {
+        // create test collection
+        $this->createCollection($colNme);
+
+        // create empty table        
+        $this->createTestTable($tblNme);
+
+        // populate table
+        $this->seedTestTable($tblNme, 100);
+     }
+
+     public function createDisabledCollectionWithTable($colNme, $tblNme) {
+        // create test collection          
+        $this->createDisabledCollection($colNme);
+
+        // create empty table
+        $this->createTestTable($tblNme);
      }
      
      public function cleanupTestTables($files = []) {
@@ -102,17 +147,5 @@ class TestHelper {
        return $tableName;
      }
 
-     public function createCollectionWithTable($colNme, $tblNme) {
-        // create test collection
-        $this->createCollection($colNme);
 
-        $this->createTestTable($tblNme);
-     }
-
-     public function createDisabledCollectionWithTable($colNme, $tblNme) {
-        // create test collection          
-        $this->createDisabledCollection($colNme);
-
-        $this->createTestTable($tblNme);
-     }
 }

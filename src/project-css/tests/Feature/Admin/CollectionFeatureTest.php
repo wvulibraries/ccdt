@@ -1,5 +1,5 @@
 <?php
-    # app/tests/controllers/HomeControllerTest.php
+    # app/tests/feature/admin/CollectionFeatureTest.php
     use App\Models\User;
     use App\Libraries\TestHelper;
 
@@ -44,13 +44,16 @@
             // Check that testtable1 is not shown
             $this->actingAs($this->admin)
                  ->visit('/table')
-                 ->see('Table(s)');            
+                 ->see('Table(s)');  
+                 
+            // drop testtable1
+            \Schema::drop('testtable1');
         }        
 
         /** @test */
         public function it_can_disable_a_collection_with_table()
         {
-            // Generate Test Collection
+            // Generate Test Collection with a table
             $collection = (new TestHelper)->createCollectionWithTable('collection1', 'testtable1');
 
             // Go to collection page and see that collection1 exists
@@ -79,7 +82,10 @@
             // Check that testtable1 is not shown
             $this->actingAs($this->admin)
                  ->visit('/table')
-                 ->assertViewMissing('testtable1');                
+                 ->assertViewMissing('testtable1');  
+                 
+            // drop testtable1
+            \Schema::drop('testtable1');
         }    
 
         /** @test */
