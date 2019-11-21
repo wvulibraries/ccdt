@@ -32,7 +32,7 @@
     </a>
 
     @foreach($collcntNms as $key => $collcntNm)
-      <!-- Show the currently enabled cololections -->
+      <!-- Show the currently enabled collections -->
       @if($collcntNm->isEnabled)
       <div class="col-xs-12 col-sm-12 col-md-12">
         <div class="colCard">
@@ -154,7 +154,7 @@
     <!-- Disabled collections are shown here -->
     <!-- Iterate to show the existing collection -->
     @foreach($collcntNms as $key => $collcntNm)
-      <!-- Show the currently enabled cololections -->
+      <!-- Show the currently enabled collections -->
       @if(!($collcntNm->isEnabled))
       <div class="col-xs-12 col-sm-12 col-md-12">
         <div class="dsbldColCard">

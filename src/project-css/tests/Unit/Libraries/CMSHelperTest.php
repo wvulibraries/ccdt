@@ -7,8 +7,8 @@ class CMSHelperTest extends TestCase
 {
   public function setUp(): void {
        parent::setUp();
-       Artisan::call('migrate');
-       Artisan::call('db:seed');
+
+       Artisan::call('migrate:refresh --seed');
 
        // create a test collection
        (new TestHelper)->createCollection('collection1');
@@ -27,17 +27,17 @@ class CMSHelperTest extends TestCase
 
     // by sending 13 as the field count we should get the original header
     $response = $helper->getCMSFields(1, $fieldType, 13);
-    $this->assertEquals(count($response), 13);
+    $this->assertEquals(count((array) $response), 13);
 
     $response = $helper->getCMSFields(1, '3E', 4);
     $this->assertEquals($response[1], 'Constituent ID');
 
     $response = $helper->getCMSFields(2, $fieldType, 16);
-    $this->assertEquals(count($response), 16);
+    $this->assertEquals(count((array) $response), 16);
 
     // sending an invalid count will not return any results
     $response = $helper->getCMSFields(2, $fieldType, 9);
-    $this->assertEquals(count($response), 0);
+    $this->assertEquals(count((array) $response), 0);
   }
 
   public function testgetCMSFields2A() {
@@ -46,7 +46,7 @@ class CMSHelperTest extends TestCase
 
     // by sending 13 as the field count we should get the original header
     $response = $helper->getCMSFields(3, $fieldType, 13);
-    $this->assertEquals(count($response), 13);
+    $this->assertEquals(count((array) $response), 13);
   }
 
   /**
@@ -61,18 +61,18 @@ class CMSHelperTest extends TestCase
     $helper = (new CMSHelper);
 
     $response = $helper->generateHeader($fieldCount);
-    $this->assertEquals(count($response), $fieldCount);
+    $this->assertEquals(count( (array) $response), $fieldCount);
     $this->assertEquals($response[0], 'Field0');
   }
 
   public function testgetheader() {
     $fieldType = '1A';
     $header = array('Record Type', 'Constituent ID', 'Individual Type', 'Prefix', 'First Name', 'Middle Name', 'Last Name', 'Suffix', 'Appellation', 'Salutation', 'Date of Birth', 'No Mail Flag', 'Deceased Flag');
-    $response = (new CMSHelper)->getCMSFields(1, $fieldType, count($header));
+    $response = (new CMSHelper)->getCMSFields(1, $fieldType, count( (array) $header));
 
     // compare with the $header to verify we have what we expected
     $this->assertEquals($response, $header);
-    $this->assertEquals(count($response), count($header));
+    $this->assertEquals(count( (array) $response), count( (array) $header));
   }
 
   public function testcreate1Acmstable() {

@@ -16,6 +16,13 @@ class TestHelper {
      *
      */
 
+     public $faker;
+
+     public function setUp(): void {
+        parent::setUp();
+        $this->faker = Faker\Factory::create();
+     }
+
      /**
       * creates a collection used for Testing
       *
@@ -30,6 +37,72 @@ class TestHelper {
           return $collection;
      }
 
+     public function createDisabledCollection($name) {
+          $collection = factory(Collection::class)->create([
+               'clctnName' => $name,
+               'isEnabled' => false,
+          ]);
+          return $collection;
+     }
+
+     public function createTestTable($tblNme) {
+        //insert record into table for testing
+        \DB::insert('insert into tables (tblNme, collection_id, hasAccess) values(?, ?, ?)',[$tblNme, 1, 1]);
+
+        // define testing table
+        $createTableSqlString =
+          "CREATE TABLE $tblNme (
+               id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+               firstname TEXT,
+               lastname TEXT, 
+               srchindex LONGTEXT,
+               created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+               updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+          )
+          COLLATE='utf8_general_ci'
+          ENGINE=InnoDB
+          AUTO_INCREMENT=1;";
+     
+        // insert testing table
+        \DB::statement($createTableSqlString);
+     }
+
+     public function seedTestTable($tblNme, $items) {
+        $insertString = "insert into $tblNme (firstname, lastname) values(?, ?)";
+
+        for ($x = 0; $x <= $items; $x++) {
+          //insert record into table for testing
+          \DB::insert($insertString,[$this->faker->firstName, $this->faker->lastName]);
+        } 
+     }     
+
+     public function createCollectionWithTable($colNme, $tblNme) {
+        // create test collection
+        $this->createCollection($colNme);
+
+        // create empty table        
+        $this->createTestTable($tblNme);
+     }
+
+     public function createCollectionWithTableAndRecords($colNme, $tblNme) {
+        // create test collection
+        $this->createCollection($colNme);
+
+        // create empty table        
+        $this->createTestTable($tblNme);
+
+        // populate table
+        $this->seedTestTable($tblNme, 100);
+     }
+
+     public function createDisabledCollectionWithTable($colNme, $tblNme) {
+        // create test collection          
+        $this->createDisabledCollection($colNme);
+
+        // create empty table
+        $this->createTestTable($tblNme);
+     }
+     
      public function cleanupTestTables($files = []) {
        $tables = \DB::table('tables')->get();
 
@@ -73,4 +146,6 @@ class TestHelper {
        // return name of test table created
        return $tableName;
      }
+
+
 }

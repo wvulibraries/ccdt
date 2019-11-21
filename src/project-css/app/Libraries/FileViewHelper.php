@@ -56,7 +56,7 @@ class FileViewHelper {
          // get the last folder the file exists in
          $subfolder = prev($tokens);
 
-         if (count($subfolder) > 0) {
+         if (count((array) $subfolder) > 0) {
            return $subfolder;
          }
 
@@ -103,12 +103,16 @@ class FileViewHelper {
 
        // query database for record
        $rcrds = $table->getRecord($recId);
+      
+       // no results return null
+       if (count($rcrds) == 0) { return null; }
 
        foreach ($rcrds[0] as &$value) {
-         if (strpos($value, $filename) !== false) {
-             return $value;
-         }
+          if (strpos($value, $filename) !== false) {
+              return $value;
+          }
        }
+       
        return null;
      }
 
@@ -152,6 +156,7 @@ class FileViewHelper {
        $table = Table::findOrFail($curTable);
 
        $originalFilePath = $this->getOriginalPath($curTable, $recId, $filename);
+
        if ($originalFilePath == null) {
          return $this->locateFile($curTable, $filename);
        }

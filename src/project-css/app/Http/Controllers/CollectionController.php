@@ -59,7 +59,7 @@ class CollectionController extends Controller
 
     // Take the form object and insert using model
     // Used a named route for better redirection
-    return redirect()->route('collectionIndex');
+    return redirect()->route('collection.index');
   }
 
   /**
@@ -89,7 +89,7 @@ class CollectionController extends Controller
     $thisClctn->save();
 
     // Take the form object and insert using model
-    return redirect()->route('collectionIndex');
+    return redirect()->route('collection.index');
   }
 
   /**
@@ -111,11 +111,11 @@ class CollectionController extends Controller
       $thisClctn->save();
 
       // Take the form object and insert using model
-      return redirect()->route('collectionIndex');
+      return redirect()->route('collection.index');
     }
 
     // Else redirect with error
-    return redirect()->route('collectionIndex')->withErrors("The collection name doesn't match");
+    return redirect()->route('collection.index')->withErrors("The collection name doesn't match");
   }
 
   /**
@@ -137,7 +137,7 @@ class CollectionController extends Controller
     $thisClctn->isEnabled = true;
     $thisClctn->save();
 
-    return redirect()->route('collectionIndex');
+    return redirect()->route('collection.index');
   }
 
 }

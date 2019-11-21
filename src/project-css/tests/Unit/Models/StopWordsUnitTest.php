@@ -9,8 +9,7 @@
 
     public function setUp(): void {
          parent::setUp();
-         Artisan::call('migrate');
-         Artisan::call('db:seed');
+         Artisan::call('migrate:refresh --seed');
     }
 
     protected function tearDown(): void {

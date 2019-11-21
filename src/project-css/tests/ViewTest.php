@@ -15,8 +15,7 @@ class ViewTest extends BrowserKitTestCase
 
     public function setUp(): void {
         parent::setUp();
-        Artisan::call('migrate');
-        Artisan::call('db:seed');
+        Artisan::call('migrate:refresh --seed');
 
         //admin credentials
         $this->adminEmail = "admin@admin.com";
@@ -28,10 +27,10 @@ class ViewTest extends BrowserKitTestCase
         $this->userPass = "testing";
     }
 
-    protected function tearDown(): void {
-        Artisan::call('migrate:reset');
-        parent::tearDown(); // Moving that call to the top of the function didn't work either.
-    }
+//     protected function tearDown(): void {
+//         Artisan::call('migrate:reset');
+//         parent::tearDown(); // Moving that call to the top of the function didn't work either.
+//     }
 
     /**
      * Check the views for the home page

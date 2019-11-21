@@ -18,8 +18,7 @@
 
     public function setUp(): void {
            parent::setUp();
-           Artisan::call('migrate');
-           Artisan::call('db:seed');
+           Artisan::call('migrate:refresh --seed');
 
            // find admin and test user accounts
            $this->admin = User::where('name', '=', 'admin')->first();
@@ -115,6 +114,7 @@
             copy($path.$file2, $fltFleAbsPth.$file2);
 
             $this->actingAs($this->admin)
+                 ->withoutMiddleware()
                  ->call('POST', route('selectcmsdis'), ['colID2' => 1, 'cmsdisFiles2' => [$file, $file2]]);
 
             $this->assertEquals(DB::table('tables')->count(), 2);
@@ -136,6 +136,7 @@
             copy($path.$file, $fltFleAbsPth.$file);
 
             $this->actingAs($this->admin)
+                 ->withoutMiddleware()
                  ->call('POST', route('selectcmsdis'), ['colID2' => 1, 'cmsdisFiles2' => [$file]]);
 
             $this->assertEquals(DB::table('tables')->count(), 0);
@@ -261,6 +262,7 @@
 
             // While using a admin account try to disable a table
             $this->actingAs($this->admin)
+                 ->withoutMiddleware()
                  ->post('table/restrict', [ 'id' => $table->id ]);
             $table = Table::where('tblNme', '=', $tblname)->first();
             $this->assertEquals('0', $table->hasAccess);
@@ -283,6 +285,7 @@
                      new \Illuminate\Http\UploadedFile(sys_get_temp_dir().'/'.$file2, $file2, 'application/octet-stream', filesize($path.$file2), null, false)];
 
            $this->actingAs($this->admin)
+                ->withoutMiddleware()
                 ->call('POST', route('importcmsdis'), ['colID' => 1, 'cmsdisFiles' => $files]);
 
            $this->assertEquals(DB::table('tables')->count(), 2);
@@ -302,6 +305,7 @@
            $files = [new \Illuminate\Http\UploadedFile(sys_get_temp_dir().'/'.$file, $file, 'application/octet-stream', filesize($path.$file), null, false)];
 
            $response = $this->actingAs($this->admin)
+                ->withoutMiddleware()
                 ->call('POST', route('importcmsdis'), ['colID' => 1, 'cmsdisFiles' => $files]);
 
            $this->assertEquals(DB::table('tables')->count(), 0);
@@ -323,6 +327,7 @@
            $files = [new \Illuminate\Http\UploadedFile(sys_get_temp_dir().'/'.$file, $file, 'application/octet-stream', filesize($path.$file), null, false)];
 
            $response = $this->actingAs($this->admin)
+                ->withoutMiddleware()
                 ->call('POST', route('importcmsdis'), ['colID' => 1, 'cmsdisFiles' => $files]);
 
            $this->assertEquals(DB::table('tables')->count(), 0);

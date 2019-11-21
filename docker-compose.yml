@@ -31,13 +31,4 @@ services:
             - ./src/project-css:/var/www
         env_file: ./src/project-css/.env.prod
         ports:
-          - "9001:9000"
-    laravel-queue:
-        restart: always
-        build:
-            context: ./
-            dockerfile: serverConfiguration/deploy/prod.app.docker
-        command: php artisan queue:work
-        volumes:
-            - ./src/project-css:/var/www
-        env_file: ./src/project-css/.env.prod
+          - "9000:9000"

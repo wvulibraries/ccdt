@@ -17,8 +17,7 @@ class AuthTest extends BrowserKitTestCase {
 
     public function setUp(): void {
         parent::setUp();
-        Artisan::call('migrate');
-        Artisan::call('db:seed');
+        Artisan::call('migrate:refresh --seed');
 
         //credentials
         $this->adminEmail = "admin@admin.com";
@@ -31,10 +30,10 @@ class AuthTest extends BrowserKitTestCase {
         $this->userPass = 'password123';
     }
 
-    protected function tearDown(): void {
-        Artisan::call('migrate:reset');
-        parent::tearDown();
-    }
+    // protected function tearDown(): void {
+    //     Artisan::call('migrate:reset');
+    //     parent::tearDown();
+    // }
 
     /**
      * Check for the registration form
