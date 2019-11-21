@@ -72,7 +72,7 @@ class TestHelper {
 
         for ($x = 0; $x <= $items; $x++) {
           //insert record into table for testing
-          \DB::insert($insertString,['dummy'.$x, 'dummylast'.$x]);
+          \DB::insert($insertString,[$this->faker->firstName, $this->faker->lastName]);
         } 
      }     
 
