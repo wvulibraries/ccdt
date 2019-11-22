@@ -65,16 +65,17 @@ class TestHelper {
      
         // insert testing table
         \DB::statement($createTableSqlString);
+
+        $alterTable = "ALTER TABLE $tblNme ADD FULLTEXT index_name(srchindex);";
+        \DB::statement($alterTable);
      }
 
-     public function seedTestTable($tblNme, $items) {
-        $insertString = "insert into $tblNme (firstname, lastname) values(?, ?)";
+     public function insertTestRecord($tblNme, $firstName, $lastName) {
+        $insertString = "insert into $tblNme (firstname, lastname, srchindex) values(?, ?, ?)";
 
-        for ($x = 0; $x <= $items; $x++) {
-          //insert record into table for testing
-          \DB::insert($insertString,[$this->faker->firstName, $this->faker->lastName]);
-        } 
-     }     
+        //insert record into table for testing
+        \DB::insert($insertString,[$firstName, $lastName, $firstName . ' ' . $lastName]);
+     }    
 
      public function createCollectionWithTable($colNme, $tblNme) {
         // create test collection
