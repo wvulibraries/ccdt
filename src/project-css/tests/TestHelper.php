@@ -69,6 +69,7 @@ class TestHelper {
      }    
 
      public function seedTestTable($tblNme, $numItems) {
+        
         $faker = Faker\Factory::create();  
         for ($x = 0; $x <= $numItems; $x++) {
             //insert record into table for testing
