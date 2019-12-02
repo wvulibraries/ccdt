@@ -5,7 +5,6 @@
     use App\Models\User;
     use App\Models\Collection;
     use App\Models\Table;
-    use App\Libraries\TestHelper;
 
     class UploadControllerTest extends BrowserKitTestCase {
 

@@ -1,14 +1,11 @@
 <?php
     # app/tests/feature/admin/DataViewFeatureTest.php
     use App\Models\User;
-    use App\Libraries\TestHelper;
 
     class DataViewFeatureTest extends BrowserKitTestCase
     {
         private $admin;
-        private $testHelper;
-        public $faker;
-
+        public $testHelper;
 
         public function setUp(): void {
             parent::setUp();
@@ -16,7 +13,6 @@
 
             // find admin and test user accounts
             $this->admin = User::where('name', '=', 'admin')->first();
-            $this->faker = Faker\Factory::create();
             $this->testHelper = new TestHelper;
         }
 
@@ -24,15 +20,6 @@
             Artisan::call('migrate:rollback');
             parent::tearDown();
         }  
-        
-        public function seedTestTable($tblNme, $items) {
-            $insertString = "insert into $tblNme (firstname, lastname) values(?, ?)";
-
-            for ($x = 0; $x <= $items; $x++) {
-               //insert record into table for testing
-               $this->testHelper->insertTestRecord($tblNme, $this->faker->firstName, $this->faker->lastName);
-            } 
-        }    
 
         /** @test */
         public function search_table()
@@ -58,7 +45,7 @@
         {
             // Generate Test Collection with a table
             $collection = $this->testHelper->createCollectionWithTable('collection1', 'testtable1');
-            $this->seedTestTable('testtable1', 10);
+            $this->testHelper->seedTestTable('testtable1', 10);
 
             $this->actingAs($this->admin)
                  ->get('/data/1/1')
@@ -73,7 +60,7 @@
         {
             // Generate Test Collection with a table
             $collection = $this->testHelper->createCollectionWithTable('collection1', 'testtable1');
-            $this->seedTestTable('testtable1', 10);
+            $this->testHelper->seedTestTable('testtable1', 10);
 
             $this->actingAs($this->admin)
                  ->get('/data/1')

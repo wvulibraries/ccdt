@@ -3,7 +3,6 @@
 
   use Illuminate\Support\Facades\Storage;
   use App\Http\Controllers\TableController;
-  use App\Libraries\TestHelper;
 
   class TableControllerUnitTest extends TestCase {
 

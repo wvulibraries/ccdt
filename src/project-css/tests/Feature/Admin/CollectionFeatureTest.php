@@ -1,11 +1,11 @@
 <?php
     # app/tests/feature/admin/CollectionFeatureTest.php
     use App\Models\User;
-    use App\Libraries\TestHelper;
 
     class CollectionFeatureTest extends BrowserKitTestCase
     {
         private $admin;
+        public $testHelper;        
 
         public function setUp(): void {
             parent::setUp();
@@ -13,6 +13,7 @@
 
             // find admin and test user accounts
             $this->admin = User::where('name', '=', 'admin')->first();
+            $this->testHelper = new TestHelper;
         }
 
         protected function tearDown(): void {

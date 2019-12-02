@@ -8,8 +8,6 @@
     use App\Models\User;
     use App\Models\Table;
 
-    use App\Libraries\TestHelper;
-
     class TableControllerTest extends BrowserKitTestCase {
 
     private $admin;

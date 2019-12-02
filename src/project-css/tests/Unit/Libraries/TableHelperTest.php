@@ -5,7 +5,6 @@ use App\Libraries\CSVHelper;
 use App\Libraries\CMSHelper;
 use App\Libraries\FileViewHelper;
 use App\Libraries\TableHelper;
-use App\Libraries\TestHelper;
 
 class TableHelperTest extends TestCase
 {

@@ -1,7 +1,5 @@
 <?php
 
-namespace App\Libraries;
-
 use App\Libraries\CMSHelper;
 use App\Libraries\CSVHelper;
 use App\Libraries\TableHelper;
@@ -15,13 +13,6 @@ class TestHelper {
      * the application
      *
      */
-
-     public $faker;
-
-     public function setUp(): void {
-        parent::setUp();
-        $this->faker = Faker\Factory::create();
-     }
 
      /**
       * creates a collection used for Testing
@@ -77,11 +68,19 @@ class TestHelper {
         \DB::insert($insertString,[$firstName, $lastName, $firstName . ' ' . $lastName]);
      }    
 
+     public function seedTestTable($tblNme, $numItems) {
+        $faker = Faker\Factory::create();  
+        for ($x = 0; $x <= $numItems; $x++) {
+            //insert record into table for testing
+            $this->insertTestRecord($tblNme, $faker->firstName, $faker->lastName);
+        } 
+     }    
+
      public function createCollectionWithTable($colNme, $tblNme) {
         // create test collection
         $this->createCollection($colNme);
 
-        // create empty table        
+        // create empty table
         $this->createTestTable($tblNme);
      }
 
@@ -147,6 +146,5 @@ class TestHelper {
        // return name of test table created
        return $tableName;
      }
-
 
 }

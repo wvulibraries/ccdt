@@ -5,7 +5,6 @@
   use App\Models\User;
   use App\Models\Collection;
   use App\Models\Table;
-  use App\Libraries\TestHelper;
   use Illuminate\Foundation\Testing\WithoutMiddleware;
 
   class DataViewControllerTest extends BrowserKitTestCase {

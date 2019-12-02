@@ -1,7 +1,6 @@
 <?php
 
 use App\Libraries\CMSHelper;
-use App\Libraries\TestHelper;
 
 class CMSHelperTest extends TestCase
 {

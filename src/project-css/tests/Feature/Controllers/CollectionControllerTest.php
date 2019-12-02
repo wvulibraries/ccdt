@@ -4,7 +4,6 @@
   use App\Models\User;
   use App\Models\Collection;
   use App\Models\Table;
-  use App\Libraries\TestHelper;
 
   class CollectionControllerTest extends BrowserKitTestCase {
 
