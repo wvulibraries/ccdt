@@ -41,6 +41,25 @@
         }    
 
         /** @test */
+        public function search_table_no_results()
+        {
+            // Generate Test Collection with a table
+            $collection = $this->testHelper->createCollectionWithTable('collection1', 'testtable1');
+            $this->testHelper->insertTestRecord('testtable1', 'John', 'Doe');
+
+           //search for a name this will go to the fulltext search
+           $this->actingAs($this->admin)
+                ->visit('data/1')
+                ->type('Jack', 'search')
+                ->press('Search')
+                ->assertResponseStatus(200)
+                ->see('Search Yeilded No Results');
+
+            // drop testtable1
+            \Schema::drop('testtable1');
+        }    
+
+        /** @test */
         public function show_table_record()
         {
             // Generate Test Collection with a table
@@ -70,6 +89,39 @@
             // drop testtable1
             \Schema::drop('testtable1');
         }         
+
+        /** @test */
+        public function view_table_record()
+        {
+            // Generate Test Collection with a table
+            $collection = $this->testHelper->createCollectionWithTable('collection1', 'testtable1');
+            $this->testHelper->seedTestTable('testtable1', 10);
+
+            $this->actingAs($this->admin)
+                 ->get('/data/1/1')
+                 ->assertResponseStatus(200)
+                 ->see('1');
+
+            // drop testtable1
+            \Schema::drop('testtable1');
+        }
+        
+        /** @test */
+        public function view_table_invalid_record()
+        {
+            // Generate Test Collection with a table
+            $collection = $this->testHelper->createCollectionWithTable('collection1', 'testtable1');
+            $this->testHelper->insertTestRecord('testtable1', 'John', 'Doe');
+
+           //search for a name this will go to the fulltext search
+           $this->actingAs($this->admin)
+                ->visit('data/1/2')
+                ->assertResponseStatus(200)
+                ->see('Search Yeilded No Results');
+
+            // drop testtable1
+            \Schema::drop('testtable1');
+        }    
 
         /** @test */
         public function viewing_table_without_records_causes_redirect()
