@@ -1,5 +1,5 @@
 <?php
-require 'testhelper.php';
+require __DIR__.'./testhelper.php';
 
 use Illuminate\Contracts\Console\Kernel;
 use Laravel\BrowserKitTesting\TestCase as BaseTestCase;
