@@ -5,7 +5,6 @@
     class DataViewFeatureTest extends BrowserKitTestCase
     {
         private $admin;
-        public $testHelper;
 
         public function setUp(): void {
             parent::setUp();
@@ -13,7 +12,6 @@
 
             // find admin and test user accounts
             $this->admin = User::where('name', '=', 'admin')->first();
-            $this->testHelper = new TestHelper;
         }
 
         protected function tearDown(): void {

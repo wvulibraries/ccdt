@@ -10,7 +10,6 @@ services:
             - ./serverConfiguration/deploy/my.cnf:/etc/mysql/my.cnf
         ports:
             - "3306:3306"
-
     tika:
         image: logicalspark/docker-tikaserver
         container_name: tika_service

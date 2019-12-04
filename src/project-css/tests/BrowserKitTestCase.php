@@ -21,6 +21,7 @@ abstract class BrowserKitTestCase extends BaseTestCase
      */
     public function createApplication()
     {
+        // Add testHelper
         $this->testHelper = new TestHelper;
 
         $app = require __DIR__.'/../bootstrap/app.php';
