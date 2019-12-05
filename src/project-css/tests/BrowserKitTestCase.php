@@ -1,4 +1,5 @@
 <?php
+include 'testhelper.php';
 
 use Illuminate\Contracts\Console\Kernel;
 use Laravel\BrowserKitTesting\TestCase as BaseTestCase;
@@ -11,6 +12,7 @@ abstract class BrowserKitTestCase extends BaseTestCase
      * @var string
      */
     public $baseUrl = 'http://localhost';
+    public $testHelper;
 
     /**
      * Creates the application.
@@ -19,10 +21,14 @@ abstract class BrowserKitTestCase extends BaseTestCase
      */
     public function createApplication()
     {
+        // Add testHelper
+        $this->testHelper = new TestHelper;
+
         $app = require __DIR__.'/../bootstrap/app.php';
 
         $app->make(Kernel::class)->bootstrap();
 
         return $app;
     }
+ 
 }

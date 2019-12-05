@@ -1,9 +1,8 @@
 <?php
 
 use App\Libraries\CMSHelper;
-use App\Libraries\TestHelper;
 
-class CMSHelperTest extends TestCase
+class CMSHelperTest extends BrowserKitTestCase
 {
   public function setUp(): void {
        parent::setUp();
@@ -11,9 +10,9 @@ class CMSHelperTest extends TestCase
        Artisan::call('migrate:refresh --seed');
 
        // create a test collection
-       (new TestHelper)->createCollection('collection1');
-       (new TestHelper)->createCollection('collection2');
-       (new TestHelper)->createCollection('collection3');
+       $this->testHelper->createCollection('collection1');
+       $this->testHelper->createCollection('collection2');
+       $this->testHelper->createCollection('collection3');
   }
 
   protected function tearDown(): void {

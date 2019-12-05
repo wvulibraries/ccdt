@@ -3,7 +3,8 @@
 
   use App\Models\CMSRecords;
 
-  class CMSRecordsUnitTest extends TestCase {
+  class CMSRecordsUnitTest extends BrowserKitTestCase
+  {
 
     public function setUp(): void {
          parent::setUp();

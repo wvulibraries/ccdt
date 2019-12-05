@@ -2,7 +2,7 @@
 
 use App\Libraries\CSVHelper;
 
-class CSVHelperTest extends TestCase
+class CSVHelperTest extends BrowserKitTestCase
 {
     public function setUp(): void {
          parent::setUp();

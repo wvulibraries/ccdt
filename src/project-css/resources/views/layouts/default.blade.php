@@ -1,3 +1,4 @@
+<!-- nagios check -->
 <!DOCTYPE html>
 <html lang="en">
   <head>

@@ -2,7 +2,7 @@
 
 use App\Libraries\FullTextSearchFormatter;
 
-class FullTextSearchFormatterTest extends TestCase
+class FullTextSearchFormatterTest extends BrowserKitTestCase
 {
     protected $fullTextHelper;
 

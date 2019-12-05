@@ -1,11 +1,10 @@
 <?php
     # app/tests/feature/admin/CollectionFeatureTest.php
     use App\Models\User;
-    use App\Libraries\TestHelper;
 
     class CollectionFeatureTest extends BrowserKitTestCase
     {
-        private $admin;
+        private $admin;      
 
         public function setUp(): void {
             parent::setUp();
@@ -24,7 +23,7 @@
         public function it_can_enable_a_collection_with_tables()
         {
             // Generate Test Collection
-            $collection = (new TestHelper)->createDisabledCollectionWithTable('collection1', 'testtable1');
+            $this->testHelper->createDisabledCollectionWithTable('collection1', 'testtable1');
 
             // Go to collection page and enable collection
             $this->actingAs($this->admin)
@@ -54,7 +53,7 @@
         public function it_can_disable_a_collection_with_table()
         {
             // Generate Test Collection with a table
-            $collection = (new TestHelper)->createCollectionWithTable('collection1', 'testtable1');
+            $collection = $this->testHelper->createCollectionWithTable('collection1', 'testtable1');
 
             // Go to collection page and see that collection1 exists
             $this->actingAs($this->admin)
@@ -92,7 +91,7 @@
         public function it_can_enable_a_collection()
         {
             // Generate Test Collection
-            $collection = (new TestHelper)->createDisabledCollection('collection1');
+            $collection = $this->testHelper->createDisabledCollection('collection1');
 
             // Go to collection page and enable collection
             $this->actingAs($this->admin)
@@ -114,7 +113,7 @@
         public function it_can_disable_a_collection()
         {
             // Generate Test Collection
-            $collection = (new TestHelper)->createCollection('collection1');
+            $collection = $this->testHelper->createCollection('collection1');
 
             // Go to collection page and see that collection1 exists
             $this->actingAs($this->admin)

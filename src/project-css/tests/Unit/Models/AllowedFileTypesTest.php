@@ -3,7 +3,8 @@
 
   use App\Models\AllowedFileTypes;
 
-  class AllowedFileTypesTest extends TestCase {
+  class AllowedFileTypesTest extends BrowserKitTestCase
+  {
 
     public function setUp(): void {
          parent::setUp();

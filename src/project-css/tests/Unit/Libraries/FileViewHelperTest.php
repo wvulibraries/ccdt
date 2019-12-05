@@ -3,9 +3,8 @@
 use App\Libraries\CSVHelper;
 use App\Libraries\FileViewHelper;
 use App\Libraries\TableHelper;
-use App\Libraries\TestHelper;
 
-class FileViewHelperTest extends TestCase
+class FileViewHelperTest extends BrowserKitTestCase
 {
     protected $fileViewHelper;
     private $singlefilewithpath;

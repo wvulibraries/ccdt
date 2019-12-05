@@ -4,7 +4,6 @@
   use App\Models\User;
   use App\Models\Collection;
   use App\Models\Table;
-  use App\Libraries\TestHelper;
 
   class CollectionControllerTest extends BrowserKitTestCase {
 
@@ -75,7 +74,7 @@
 
     public function testEditingCollectionName() {
         // Generate Test Collection
-        $collection = (new TestHelper)->createCollection('collection1');
+        $collection = $this->testHelper->createCollection('collection1');
 
         // While using a admin account try to rename collection name
         $this->actingAs($this->admin)
@@ -89,7 +88,7 @@
 
     public function testDisableThenEnableCollection() {
         // Generate Test Collection
-        $collection = (new TestHelper)->createCollection('collection1');
+        $collection = $this->testHelper->createCollection('collection1');
 
         // While using a admin account try to disable a collection with invalid name (should be redirected)
         $this->actingAs($this->admin)
@@ -119,19 +118,22 @@
         $this->assertEquals('1', $collection->hasAccess);
     }
 
-//     public function testNonAdminDisableCollection() {
-//         // Generate Test Collection
-//         $collection = (new TestHelper)->createCollection('collection1');
+    public function testNonAdminDisableCollection() {
+        // Generate Test Collection
+        $collection = $this->testHelper->createCollection('collection1');
 
-//         // While using a admin account try to disable a collection
-//         $this->actingAs($this->admin)
-//              ->withoutMiddleware()    
-//              ->post('collection/disable', [ 'id' => $collection->id, 'clctnName' => $collection->clctnName ]);
+        // Verify Collection isEnabled
+        $collection = Collection::find($collection->id);
+        $this->assertEquals('1', $collection->isEnabled);
 
-//         // Verify Collection hasn't changed
-//         $collection = Collection::find($collection->id);
-//         $this->assertEquals('1', $collection->isEnabled);
-//     }
+        // While using a admin account try to disable a collection
+        $this->actingAs($this->user)  
+             ->post('collection/disable', [ 'id' => $collection->id, 'clctnName' => $collection->clctnName ]);
+
+        // Verify Collection hasn't changed
+        $collection = Collection::find($collection->id);
+        $this->assertEquals('1', $collection->isEnabled);
+    }
 
   }
 ?>

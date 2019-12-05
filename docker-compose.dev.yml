@@ -1,4 +1,4 @@
-version: '2'
+version: '3.7'
 services:
     database:
         image: mysql:5.7.27
@@ -10,7 +10,6 @@ services:
             - ./serverConfiguration/deploy/my.cnf:/etc/mysql/my.cnf
         ports:
             - "3306:3306"
-
     tika:
         image: logicalspark/docker-tikaserver
         container_name: tika_service

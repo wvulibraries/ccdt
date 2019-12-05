@@ -5,7 +5,6 @@
   use App\Models\User;
   use App\Models\Collection;
   use App\Models\Table;
-  use App\Libraries\TestHelper;
   use Illuminate\Foundation\Testing\WithoutMiddleware;
 
   class DataViewControllerTest extends BrowserKitTestCase {
@@ -25,7 +24,7 @@
 
     public function setUp(): void {
            parent::setUp();
-           Artisan::call('migrate:refresh --seed');
+           Artisan::call('migrate:fresh --seed');
            Session::setDefaultDriver('array');
            $this->manager = app('session');
 
@@ -167,31 +166,6 @@
                 ->see('Doe');       
     }
 
-//     public function testSearch() {
-//            $this->createTestTable();
-
-//            //search for a name this will go to the fulltext search
-//            $this->actingAs($this->admin)
-//                 ->visit('data/1')
-//                 ->type('Doe', 'search')
-//                 ->press('Search')
-//                 ->assertResponseStatus(200)
-//                 ->see('John');
-//     }
-
-//     public function testSearchNoResults() {
-//            $this->createTestTable();
-
-//            //search for a name this will go to the fulltext search
-//            $this->actingAs($this->admin)
-//                 ->visit('data/1')
-//                 ->see('search')
-//                 ->type('NoResults', 'search')
-//                 ->press('Search')
-//                 ->assertResponseStatus(200)
-//                 ->see('Search Yeilded No Results');
-//     }
-
     public function uploadFileToDatabaseAndView($upload) {
             $this->createTestTable();
 
@@ -266,67 +240,6 @@
            $errors = $response->getSession()->get('errors', new Illuminate\Support\MessageBag)->all();
            $this->assertEquals($errors[0], "Invalid Record ID");
     }
-
-       //   public function testViewDisabledCollection() {
-       //     $this->createTestTable();
-
-       //     //create empty file to test view file
-       //     $emptyFile = 'empty.csv';
-       //     $filePath = './storage/app/'.$this->tblname.'/test';
-       //     mkdir($filePath);
-       //     touch($filePath.'/'.$emptyFile);
-
-       //     if($this->collection == null){
-       //        $this->fail('No Collection present');
-       //     }
-
-       //     $data = [ 'id' => $this->collection->id, 'clctnName' => $this->collection->clctnName ];
-
-       //     $this->actingAs($this->admin)
-       //          ->post('collection.disable', $data)
-       //          ->visit('data/1')
-       //          ->assertResponseStatus(200)
-       //          ->see('Table is disabled');
-
-           //While using a admin account try to disable a collection
-       //     $this->actingAs($this->admin)
-       //          ->post('collection.disable', [ 'id' => $this->collection->id, 'clctnName' => $this->collection->clctnName ])
-       //          // try to visit the disabled table
-       //          ->visit('data/1')
-       //          ->assertResponseStatus(200)
-       //          ->see('Table is disabled');
-
-//           // try to view a record in a disabled table
-//           $this->visit('data/1/1')
-//                 ->assertResponseStatus(200)
-//                 ->see('Table is disabled');
-
-//            //while table is disabled try to view a file
-//            $this->visit('data/1/1/view'.'/test/'.$emptyFile)
-//                 ->assertResponseStatus(200)
-//                 ->see('Table is disabled');
-
-//            //while table is disabled try to force a Search
-//            //test bypasses middleware since we are calling
-//            //the controller directly and bypassing
-//            //the middleware that checks for access
-//            $request = new \Illuminate\Http\Request();
-//            $request->setLaravelSession($this->manager->driver());
-//            $request->session(['search' => "-------"]);
-//            $response = (new DataViewController)->search($request, "1", "1");
-//            $errors = $response->errors->all();
-//            $this->assertEquals($errors[0], "Search Yeilded No Results");
-
-//            //While using a admin account try to enable a collection
-
-//            $this->actingAs($this->admin)
-//                 ->post('collection/enable', [ 'id' => $this->collection->id, 'clctnName' => $this->collection->clctnName ])
-//                 ->visit('data/1')
-//                 ->assertResponseStatus(200)
-//                 ->see($this->tblname);
-
-//            $this->cleanup($this->tblname, $this->file);
-//     }
 
   }
 ?>

@@ -2,7 +2,7 @@
 
 use App\Libraries\tikaConvert;
 
-class tikaConvertTest extends TestCase
+class tikaConvertTest extends BrowserKitTestCase
 {
     protected $tikaConvert;
     private $singlefilewithpath;
@@ -19,15 +19,15 @@ class tikaConvertTest extends TestCase
         parent::tearDown();
     }
 
-    // public function testConvertValidFile() {
-    //     $contents = $this->tikaConvert->convert($this->singlefilewithpath);
-    //     $this->assertTrue(strpos($contents, 'testing') !== false);
-    // }
+    public function testConvertValidFile() {
+        $contents = $this->tikaConvert->convert($this->singlefilewithpath);
+        $this->assertTrue(strpos($contents, 'testing') !== false);
+    }
 
-    // public function testConvertInvalidFile() {
-    //     $contents = $this->tikaConvert->convert('invalid.doc');
-    //     $this->assertFalse(strpos($contents, 'testing'));
-    // }
+    public function testConvertInvalidFile() {
+        $contents = $this->tikaConvert->convert('invalid.doc');
+        $this->assertFalse(strpos($contents, 'testing'));
+    }
 
     public function testInvalidTikaSettings() {
         $this->tikaConvert->setTikaHost('localhost');

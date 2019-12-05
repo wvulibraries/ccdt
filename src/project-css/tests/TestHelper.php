@@ -1,7 +1,5 @@
 <?php
 
-namespace App\Libraries;
-
 use App\Libraries\CMSHelper;
 use App\Libraries\CSVHelper;
 use App\Libraries\TableHelper;
@@ -15,13 +13,6 @@ class TestHelper {
      * the application
      *
      */
-
-     public $faker;
-
-     public function setUp(): void {
-        parent::setUp();
-        $this->faker = Faker\Factory::create();
-     }
 
      /**
       * creates a collection used for Testing
@@ -40,14 +31,14 @@ class TestHelper {
      public function createDisabledCollection($name) {
           $collection = factory(Collection::class)->create([
                'clctnName' => $name,
-               'isEnabled' => false,
+               'isEnabled' => '0',
           ]);
           return $collection;
      }
 
-     public function createTestTable($tblNme) {
+     public function createTestTable($tblNme, $collection_id = 1, $hasAccess = 1) {
         //insert record into table for testing
-        \DB::insert('insert into tables (tblNme, collection_id, hasAccess) values(?, ?, ?)',[$tblNme, 1, 1]);
+        \DB::insert('insert into tables (tblNme, collection_id, hasAccess) values(?, ?, ?)',[$tblNme, $collection_id, $hasAccess]);
 
         // define testing table
         $createTableSqlString =
@@ -77,11 +68,19 @@ class TestHelper {
         \DB::insert($insertString,[$firstName, $lastName, $firstName . ' ' . $lastName]);
      }    
 
+     public function seedTestTable($tblNme, $numItems) {
+        $faker = Faker\Factory::create();  
+        for ($x = 0; $x <= $numItems; $x++) {
+            //insert record into table for testing
+            $this->insertTestRecord($tblNme, $faker->firstName, $faker->lastName);
+        } 
+     }    
+
      public function createCollectionWithTable($colNme, $tblNme) {
         // create test collection
         $this->createCollection($colNme);
 
-        // create empty table        
+        // create empty table
         $this->createTestTable($tblNme);
      }
 
@@ -100,8 +99,8 @@ class TestHelper {
         // create test collection          
         $this->createDisabledCollection($colNme);
 
-        // create empty table
-        $this->createTestTable($tblNme);
+        // create empty table with disabled access
+        $this->createTestTable($tblNme, 1, 0);
      }
      
      public function cleanupTestTables($files = []) {
@@ -147,6 +146,5 @@ class TestHelper {
        // return name of test table created
        return $tableName;
      }
-
 
 }

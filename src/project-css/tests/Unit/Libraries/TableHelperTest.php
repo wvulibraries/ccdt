@@ -5,17 +5,16 @@ use App\Libraries\CSVHelper;
 use App\Libraries\CMSHelper;
 use App\Libraries\FileViewHelper;
 use App\Libraries\TableHelper;
-use App\Libraries\TestHelper;
 
-class TableHelperTest extends TestCase
+class TableHelperTest extends BrowserKitTestCase
 {
     public function setUp(): void {
         parent::setUp();
-        Artisan::call('migrate:refresh --seed');
+        Artisan::call('migrate:fresh --seed');
     }
 
     protected function tearDown(): void {
-        Artisan::call('migrate:reset');
+            Artisan::call('migrate:rollback');
         parent::tearDown();
     }
 

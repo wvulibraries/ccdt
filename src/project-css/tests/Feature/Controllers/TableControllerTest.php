@@ -8,8 +8,6 @@
     use App\Models\User;
     use App\Models\Table;
 
-    use App\Libraries\TestHelper;
-
     class TableControllerTest extends BrowserKitTestCase {
 
     private $admin;
@@ -31,7 +29,7 @@
     }
 
     public function createTestTable($tblname, $path, $file) {
-           (new TestHelper)->createCollection('collection1');
+           $this->testHelper->createCollection('collection1');
 
            $this->actingAs($this->admin)
                 ->visit('table/create')
@@ -96,7 +94,7 @@
            $this->createTestTable($tblname, $path, $file);
 
            // test tables, files and folders that were created
-           (new TestHelper)->cleanupTestTables([$file]);
+           $this->testHelper->cleanupTestTables([$file]);
     }
 
     public function testCMSSelectFileAndTableCreate() {
@@ -104,7 +102,7 @@
             $file = '1A-random.tab';
             $file2 = '1B-random.tab';
 
-            (new TestHelper)->createCollection('collection1');
+            $this->testHelper->createCollection('collection1');
 
             $storageFolder = 'flatfiles';
 
@@ -120,14 +118,14 @@
             $this->assertEquals(DB::table('tables')->count(), 2);
 
             // test tables, files and folders that were created
-            (new TestHelper)->cleanupTestTables([$file, $file2]);
+            $this->testHelper->cleanupTestTables([$file, $file2]);
     }
 
     public function testCMSSelectInvalidFile() {
             $path = './storage/app/files/test/';
             $file = 'images.png';
 
-            (new TestHelper)->createCollection('collection1');
+            $this->testHelper->createCollection('collection1');
 
             $storageFolder = 'flatfiles';
 
@@ -142,7 +140,7 @@
             $this->assertEquals(DB::table('tables')->count(), 0);
 
             // test tables, files and folders that were created
-            (new TestHelper)->cleanupTestTables([$file]);
+            $this->testHelper->cleanupTestTables([$file]);
     }
 
     public function testInvalidFileTypeUpload() {
@@ -150,7 +148,7 @@
             $path = './storage/app/files/test/';
             $file = 'images.png';
 
-            (new TestHelper)->createCollection('collection1');
+            $this->testHelper->createCollection('collection1');
 
             $this->actingAs($this->admin)
                  ->visit('table/create')
@@ -162,7 +160,7 @@
                  ->see('The flat file must be a file of type: text/plain.');
 
             // test tables, files and folders that were created
-            (new TestHelper)->cleanupTestTables([$file]);
+            $this->testHelper->cleanupTestTables([$file]);
     }
 
     public function testFileExistsUpload() {
@@ -183,7 +181,7 @@
                  ->see('File already exists. Please select the file or rename and re-upload.');
 
             // test tables, files and folders that were created
-            (new TestHelper)->cleanupTestTables([$file]);
+            $this->testHelper->cleanupTestTables([$file]);
     }
 
     public function testCheckFlatFiles() {
@@ -247,7 +245,7 @@
                  ->assertResponseStatus(200);
 
             // test tables, files and folders that were created
-            (new TestHelper)->cleanupTestTables([$file]);
+            $this->testHelper->cleanupTestTables([$file]);
     }
 
     public function testSelectAndCreateTableThenDisable() {
@@ -268,7 +266,7 @@
             $this->assertEquals('0', $table->hasAccess);
 
             // test tables, files and folders that were created
-            (new TestHelper)->cleanupTestTables([$file]);
+            $this->testHelper->cleanupTestTables([$file]);
     }
 
     public function testCMSImportFileUploadAndTableCreate() {
@@ -276,7 +274,7 @@
            $file = '1A-random.tab';
            $file2 = '1B-random.tab';
 
-           (new TestHelper)->createCollection('collection1');
+           $this->testHelper->createCollection('collection1');
 
            copy($path.$file, sys_get_temp_dir().'/'.$file);
            copy($path.$file2, sys_get_temp_dir().'/'.$file2);
@@ -291,14 +289,14 @@
            $this->assertEquals(DB::table('tables')->count(), 2);
 
            // test tables, files and folders that were created
-           (new TestHelper)->cleanupTestTables([$file, $file2]);
+           $this->testHelper->cleanupTestTables([$file, $file2]);
     }
 
     public function testCMSImportInvalidFileUploadAndTableCreate() {
            $path = './storage/app/files/test/';
            $file = 'images.png';
 
-           (new TestHelper)->createCollection('collection1');
+           $this->testHelper->createCollection('collection1');
 
            copy($path.$file, sys_get_temp_dir().'/'.$file);
 
@@ -311,14 +309,14 @@
            $this->assertEquals(DB::table('tables')->count(), 0);
 
            // test tables, files and folders that were created
-           (new TestHelper)->cleanupTestTables([$file]);
+           $this->testHelper->cleanupTestTables([$file]);
     }
 
     public function testCMSImportExistingFile() {
            $path = './storage/app/files/test/';
            $file = '1A-random.tab';
 
-           (new TestHelper)->createCollection('collection1');
+           $this->testHelper->createCollection('collection1');
 
            copy($path.$file, './storage/app/flatfiles/'.$file);
 
@@ -333,7 +331,7 @@
            $this->assertEquals(DB::table('tables')->count(), 0);
 
            // test tables, files and folders that were created
-           (new TestHelper)->cleanupTestTables([$file]);
+           $this->testHelper->cleanupTestTables([$file]);
     }
 
   }
