@@ -1,6 +1,6 @@
 .git
 .idea
-.env
+.env*
 node_modules
 vendor
 storage/framework/cache/**
