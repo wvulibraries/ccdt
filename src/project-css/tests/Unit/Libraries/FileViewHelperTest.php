@@ -4,7 +4,7 @@ use App\Libraries\CSVHelper;
 use App\Libraries\FileViewHelper;
 use App\Libraries\TableHelper;
 
-class FileViewHelperTest extends TestCase
+class FileViewHelperTest extends BrowserKitTestCase
 {
     protected $fileViewHelper;
     private $singlefilewithpath;

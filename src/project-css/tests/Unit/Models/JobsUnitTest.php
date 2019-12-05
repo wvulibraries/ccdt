@@ -7,7 +7,8 @@
   use App\Models\Jobs;
   use Vendor\fzaninotto\Faker\Generator;
 
-  class JobsUnitTest extends TestCase {
+  class JobsUnitTest extends BrowserKitTestCase
+  {
     // use the factory to create a Faker\Generator instance
     public $faker;
 

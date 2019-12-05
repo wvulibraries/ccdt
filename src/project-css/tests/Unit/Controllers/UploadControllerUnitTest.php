@@ -3,17 +3,13 @@
 
   use App\Http\Controllers\UploadController;
 
-  class UploadControllerUnitTest extends TestCase {
+  class UploadControllerUnitTest extends BrowserKitTestCase
+  {
 
     public function setUp(): void 
     {
          parent::setUp();
          Artisan::call('migrate');
-
-         \DB::insert('insert into collections (clctnName, isEnabled, hasAccess) values(?, ?, ?)',['collection1', true, true]);
-
-         //insert record into table for testing
-         \DB::insert('insert into tables (tblNme, collection_id, hasAccess) values(?, ?, ?)',['testtable1', 1, true]);
     }
 
     protected function tearDown(): void {

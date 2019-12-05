@@ -2,7 +2,7 @@
 
 use App\Libraries\CustomStringHelper;
 
-class CustomStringHelperTest extends TestCase
+class CustomStringHelperTest extends BrowserKitTestCase
 {
     protected $stringHelper;
     private $singlefilewithpath;
