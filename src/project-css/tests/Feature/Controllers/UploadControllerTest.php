@@ -88,26 +88,7 @@
 
         // cleanup remove test files
         $this->testHelper->cleanupTestTables(['mlb_players.csv']);
-    }
-
-    // public function testUploadFileToDisabledTable() {
-    //      $tblname = 'importtest'.mt_rand();
-
-    //      $this->testHelper->createDisabledCollectionWithTable('collection1', $tblname);
-
-    //      $this->visit('data/1')
-    //           ->see('Table is disabled');
-
-        //  $table = Table::where('tblNme', '=', $tblname)->first();
-        //  $this->assertEquals(0, $table->hasAccess);
-
-        //  $this->visit('upload/1')
-        //        ->assertResponseStatus(200)
-        //        ->see('Table is disabled');
-
-        // cleanup remove test files
-        //$this->testHelper->cleanupTestTables(['mlb_players.csv']);
-    //}    
+    } 
 
   }
 ?>

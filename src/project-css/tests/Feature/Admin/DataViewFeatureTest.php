@@ -23,7 +23,7 @@
         public function search_table()
         {
             // Generate Test Collection with a table
-            $collection = $this->testHelper->createCollectionWithTable('collection1', 'testtable1');
+            $this->testHelper->createCollectionWithTable('collection1', 'testtable1');
             $this->testHelper->insertTestRecord('testtable1', 'John', 'Doe');
 
            //search for a name this will go to the fulltext search
@@ -42,7 +42,7 @@
         public function search_table_no_results()
         {
             // Generate Test Collection with a table
-            $collection = $this->testHelper->createCollectionWithTable('collection1', 'testtable1');
+            $this->testHelper->createCollectionWithTable('collection1', 'testtable1');
             $this->testHelper->insertTestRecord('testtable1', 'John', 'Doe');
 
            //search for a name this will go to the fulltext search
@@ -61,7 +61,7 @@
         public function show_table_record()
         {
             // Generate Test Collection with a table
-            $collection = $this->testHelper->createCollectionWithTable('collection1', 'testtable1');
+            $this->testHelper->createCollectionWithTable('collection1', 'testtable1');
             $this->testHelper->seedTestTable('testtable1', 10);
 
             $this->actingAs($this->admin)
@@ -76,7 +76,7 @@
         public function viewing_table_with_records()
         {
             // Generate Test Collection with a table
-            $collection = $this->testHelper->createCollectionWithTable('collection1', 'testtable1');
+            $this->testHelper->createCollectionWithTable('collection1', 'testtable1');
             $this->testHelper->seedTestTable('testtable1', 10);
 
             $this->actingAs($this->admin)
@@ -92,7 +92,7 @@
         public function view_table_record()
         {
             // Generate Test Collection with a table
-            $collection = $this->testHelper->createCollectionWithTable('collection1', 'testtable1');
+            $this->testHelper->createCollectionWithTable('collection1', 'testtable1');
             $this->testHelper->seedTestTable('testtable1', 10);
 
             $this->actingAs($this->admin)
@@ -108,7 +108,7 @@
         public function view_table_invalid_record()
         {
             // Generate Test Collection with a table
-            $collection = $this->testHelper->createCollectionWithTable('collection1', 'testtable1');
+            $this->testHelper->createCollectionWithTable('collection1', 'testtable1');
             $this->testHelper->insertTestRecord('testtable1', 'John', 'Doe');
 
            //search for a name this will go to the fulltext search
@@ -125,7 +125,7 @@
         public function viewing_table_without_records_causes_redirect()
         {
             // Generate Test Collection with a table
-            $collection = $this->testHelper->createCollectionWithTable('collection1', 'testtable1');
+            $this->testHelper->createCollectionWithTable('collection1', 'testtable1');
 
             $this->actingAs($this->admin)
                  ->get('/data/1')

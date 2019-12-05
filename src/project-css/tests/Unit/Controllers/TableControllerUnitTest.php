@@ -4,21 +4,21 @@
   use Illuminate\Support\Facades\Storage;
   use App\Http\Controllers\TableController;
 
-  class TableControllerUnitTest extends TestCase {
-
+  class TableControllerUnitTest extends BrowserKitTestCase
+  {
     public function setUp(): void 
     {
          parent::setUp();
-         Artisan::call('migrate');
+         Artisan::call('migrate:fresh --seed');
 
-         \DB::insert('insert into collections (clctnName, isEnabled, hasAccess) values(?, ?, ?)',['collection1', true, true]);
+        //  \DB::insert('insert into collections (clctnName, isEnabled, hasAccess) values(?, ?, ?)',['collection1', true, true]);
 
-         //insert record into table for testing
-         \DB::insert('insert into tables (tblNme, collection_id, hasAccess) values(?, ?, ?)',['testtable1', 1, true]);
+        //  //insert record into table for testing
+        //  \DB::insert('insert into tables (tblNme, collection_id, hasAccess) values(?, ?, ?)',['testtable1', 1, true]);
     }
 
     protected function tearDown(): void {
-         Artisan::call('migrate:reset');
+         Artisan::call('migrate:rollback');
          parent::tearDown();
     }
 
@@ -35,7 +35,10 @@
         $path = './storage/app';
         $folder = 'flatfiles';
         $fileName = 'empty.csv';
+        $collectionName = 'collection1';
         $tableName = 'testtable1';
+
+        $this->testHelper->createCollectionWithTable($collectionName, $tableName);
 
         $emptyFile = $path.'/'.$folder.'/'.$fileName;
         touch($emptyFile);
@@ -45,6 +48,10 @@
           $this->assertEquals("Cannot Import a Empty File.", $e->getMessage());
         }
         unlink($emptyFile);
+        
+        // drop testtable1
+        \Schema::drop($tableName);
+
     }
 
   }
