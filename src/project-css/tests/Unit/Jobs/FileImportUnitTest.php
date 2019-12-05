@@ -3,7 +3,16 @@
 
   use App\Jobs\FileImport;
 
-  class FileImportUnitTest extends TestCase {
+  class FileImportUnitTest extends BrowserKitTestCase {
+    // public function setUp(): void {
+    //     parent::setUp();
+    //     Artisan::call('migrate:fresh --seed');
+    // }
+
+    // protected function tearDown(): void {
+    //     Artisan::call('migrate:rollback');
+    //     parent::tearDown();
+    // }  
 
     public function testPushingFakeJob() {
       // Fake the queue

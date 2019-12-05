@@ -11,8 +11,6 @@
 
     private $admin;
     private $user;
-    private $collection;
-    private $table;
     private $tblname;
     private $path;
     private $file;
@@ -68,7 +66,7 @@
             $this->file = $file;
 
             // create a test collection
-            $this->collection = (new TestHelper)->createCollection('collection1');
+            $this->testHelper->createCollection('collection1');
             $this->actingAs($this->admin)
                  ->visit('table/create')
                  ->see('collection1')
@@ -242,4 +240,3 @@
     }
 
   }
-?>

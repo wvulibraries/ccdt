@@ -33,7 +33,7 @@
              ->assertResponseStatus(200);
 
         // Generate Test Collection
-        $collection = $this->testHelper->createCollection('collection1');
+        $this->testHelper->createCollection('collection1');
 
         $tblname = 'importtest'.mt_rand();
 
@@ -91,4 +91,3 @@
     } 
 
   }
-?>
