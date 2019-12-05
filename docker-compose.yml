@@ -1,12 +1,12 @@
 version: '3.7'
 services:
-    web:
-        build:
-            context: ./
-            dockerfile: serverConfiguration/deploy/prod.web.docker
-        container_name: nginx
-        ports:
-          - 80:80
+#    web:
+#        build:
+#            context: ./
+#            dockerfile: serverConfiguration/deploy/prod.web.docker
+#        container_name: nginx
+#        ports:
+#          - 80:80
     database:
         image: mysql:5.7.27
         command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
@@ -28,7 +28,7 @@ services:
             dockerfile: serverConfiguration/deploy/prod.app.docker
         container_name: rockefeller-css_php
         volumes:
-            - ./src/project-css:/var/www
+            - /data/storage:/var/www/storage 
         env_file: ./src/project-css/.env.prod
         ports:
           - "9000:9000"
