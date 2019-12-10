@@ -1,4 +1,8 @@
 <?php
+/**
+ * @author Ajay Krishna Teja Kavur
+ * @author Tracy A McCormick <tam0013@mail.wvu.edu>
+ */
 
 namespace App\Http\Controllers;
 
@@ -23,8 +27,9 @@ class CollectionController extends Controller
   }
 
   /**
-  * Show the collection index page
-  */
+   * Display a listing of the resource.
+   * @return \Illuminate\Http\Response
+   */
   public function index() {
     $collcntNms = Collection::all();
     // check if the user is admin
@@ -32,7 +37,7 @@ class CollectionController extends Controller
   }
 
   /**
-  * Create the database entry into the database
+  * Takes request validates the collection name and saves new collection to database
   */
   public function create(Request $request) {
     //Customize the error messages
@@ -63,7 +68,7 @@ class CollectionController extends Controller
   }
 
   /**
-  * Edit the database entry into the database
+  * Takes request validates the updated collection name and then updates the database
   */
   public function edit(Request $request) {
     //Customize the error messages
@@ -93,7 +98,7 @@ class CollectionController extends Controller
   }
 
   /**
-  * Edit the database entry into the database
+  * Sets the the state of the collection to disabled and updates database
   */
   public function disable(Request $request) {
     // Create the collection name
@@ -119,7 +124,7 @@ class CollectionController extends Controller
   }
 
   /**
-  * Edit the database entry into the database
+  * Sets the the state of the collection to enabled and updates database
   */
   public function enable(Request $request) {
     // Create the collection name

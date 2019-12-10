@@ -16,10 +16,11 @@ RUN apt-get update && apt-get install -y \
     locales \
     libzip-dev \
     jpegoptim optipng pngquant gifsicle \
-    vim \
     unzip \
     git \
-    curl
+    curl \ 
+    wget \
+    graphviz
 
 # Install xdebug used for phpunit coverage reports
 RUN yes | pecl install xdebug \
@@ -31,9 +32,9 @@ RUN yes | pecl install xdebug \
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Install extensions
-RUN docker-php-ext-install pdo_mysql mbstring zip exif pcntl
-RUN docker-php-ext-configure gd --with-gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ --with-png-dir=/usr/include/
-RUN docker-php-ext-install gd
+RUN docker-php-ext-install pdo_mysql mbstring zip exif pcntl \
+    && docker-php-ext-configure gd --with-gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ --with-png-dir=/usr/include/ \
+    && docker-php-ext-install gd
 
 # install composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
@@ -46,7 +47,13 @@ RUN curl -sL https://deb.nodesource.com/setup_${VERSION}.x | bash - \
 	&& npm i -g npm
 
 # install gulp
-RUN npm install --global gulp-cli    
+RUN npm install --global gulp-cli   
+
+# Install phpDocumentor with Pear
+RUN wget https://pear.phpdoc.org/channel.xml \
+    && pear channel-add ./channel.xml
+RUN wget https://github.com/phpDocumentor/phpDocumentor2/releases/download/v2.9.0/phpDocumentor-2.9.0.tgz \
+    && pear install phpDocumentor-2.9.0.tgz
 
 # set php
 ADD ./serverConfiguration/php.ini /usr/local/etc/php/
