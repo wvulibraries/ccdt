@@ -16,6 +16,7 @@ php:
   - 7.3
 services:
   - mysql
+  - tika
 #==============================================================================
 
 # Commands to run before the install
