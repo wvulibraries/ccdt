@@ -164,6 +164,15 @@ class CSVHelper {
        return $checkArray;
      }
 
+     /**
+      * Determine Field Types for mysql table
+      * 
+      * @param boolean $hasheader set to true if header exists in the passed file
+      * @param string $fltFleAbsPth full path to file that is to be checked
+      * @param integer $readCount number of records to read from the file
+      * @return array $fieldType array that contains type of field and size of field 
+      *  used to create a mysql table prior to import of the file.
+      */
      public function determineTypes($hasheader, $fltFleAbsPth, $readCount) {
          // call checkFile process the passed file
          $checkArray = $this->checkFile($hasheader, $fltFleAbsPth, $readCount);
@@ -218,6 +227,13 @@ class CSVHelper {
        return $fieldType;
      }
 
+
+     /**
+      * Generate Table Header
+      * 
+      * @param integer $fieldCount number of fields in table
+      * @return array $header array that contains generic header names
+      */     
      public function generateHeader($fieldCount) {
        $header = array();
        for ($pos = 0; $pos < $fieldCount; $pos++) {
@@ -227,8 +243,10 @@ class CSVHelper {
      }
 
      /**
-     * Get the line numbers for a fileobject
+     * return the number of lines in a file
+     * 
      * @param \SplFileObject $fltFleObj
+     * @return integer $len
      */
      public function isEmpty($fltFleObj) {
        // Before anything set to seek first line
@@ -263,7 +281,7 @@ class CSVHelper {
      * 4. Validate the tokens and return
      * 5. Return first line as array
      * @param string $fltFlePth
-     * @return boolean
+     * @return array of field headers
      */
      public function schema($fltFlePth) {
        // 1. Get the flatfile instance

@@ -99,8 +99,13 @@ class FileViewHelper {
        return ($tblNme.'/'.$this->getFilename($originalFilePath));
      }
 
-     // locates the original item in the record
-     // that contains the filename passed
+      /**
+      * return returns string of record that contains the filename
+      * @param       integer $curTable Input integer
+      * @param       integer $recId    Input integer
+      * @param       string  $filename Input string
+      * @return      string or null
+      */        
      public function getOriginalPath($curTable, $recId, $filename) {
        // Get the table entry in meta table "tables"
        $table = Table::findOrFail($curTable);
@@ -109,22 +114,33 @@ class FileViewHelper {
        $rcrds = $table->getRecord($recId);
       
        // no results return null
-       if (count($rcrds) == 0) { return null; }
-
-       foreach ($rcrds[0] as &$value) {
-          if (strpos($value, $filename) !== false) {
-              return $value;
-          }
+       if (count($rcrds) > 0) {
+        foreach ($rcrds[0] as &$value) {
+            if (strpos($value, $filename) !== false) {
+                return $value;
+            }
+        }
        }
        
        return null;
      }
 
+     /**
+      * return true if passed mime type is supported
+      * @param       string  $fileMimeType    Input string
+      * @return      boolean
+      */     
      public function isSupportedMimeType($fileMimeType) {
        $mimeTypes = array('text/plain', 'message/rfc822', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'text/rtf');
        return in_array($fileMimeType, $mimeTypes);
      }
 
+     /**
+      * return contents of file by runningfile though tika and 
+      * then redating anything that looks like a social security number
+      * @param       string  $source    Input string
+      * @return      string
+      */        
      public function getFileContents($source) {
        $matches = "/[^a-zA-Z0-9\s\,\.\-\n\r\t@\/\_\(\)]/";
        // convert to text using tika
@@ -132,9 +148,12 @@ class FileViewHelper {
        return Response::make((new customStringHelper)->ssnRedact($fileContents));
      }
 
-     // given a table and a filename scan folders
-     // to locate the file.
-     // returns string with correct path to file
+      /**
+      * return returns string with correct path to file
+      * @param       integer $tableId   Input integer
+      * @param       string  $filename  Input string
+      * @return      string
+      */       
      public function locateFile($tableId, $filename) {
        // Get the table entry in meta table "tables"
        $table = Table::findOrFail($tableId);
@@ -154,7 +173,14 @@ class FileViewHelper {
 
        return false;
      }
-
+     
+      /**
+      * return returns string with correct path to file
+      * @param       integer $curTable Input integer
+      * @param       integer $recId    Input integer
+      * @param       string  $filename Input string
+      * @return      string
+      */   
      public function getFilePath($curTable, $recId, $filename) {
        // Get the table entry in meta table "tables"
        $table = Table::findOrFail($curTable);
