@@ -9,7 +9,7 @@ jobs:
           MYSQL_ALLOW_EMPTY_PASSWORD: yes
           MYSQL_USER: root
           MYSQL_ROOT_PASSWORD: ''
-          MYSQL_DATABASE: circleci
+          MYSQL_DATABASE: css_testing
         # volumes:
         #     - ./mysql-files/setup.sql:/docker-entrypoint-initdb.d/setup.sql
       - image: logicalspark/docker-tikaserver
@@ -47,7 +47,6 @@ jobs:
       - run:
           name: Setup Laravel stuffs
           command: |
-            cp .env.circleci .env
             php artisan migrate --force
       - run: ./vendor/bin/phpunit
 
