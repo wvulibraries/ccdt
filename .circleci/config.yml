@@ -13,8 +13,10 @@ jobs:
         volumes:
             - ./mysql-files/setup.sql:/docker-entrypoint-initdb.d/setup.sql
       - image: logicalspark/docker-tikaserver
+        ports:
+            - "9998:9998"
 
-    working_directory: ~/laravel
+    working_directory: ./src/project-css
 
     steps:
       - checkout
