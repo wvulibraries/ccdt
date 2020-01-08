@@ -28,7 +28,7 @@ jobs:
             sudo apt install -y default-mysql-client
       - run: sudo composer self-update
 
-      Download and cache dependencies
+      # Download and cache dependencies
       # - restore_cache:
       #     keys:
       #     - v1-dependencies-{{ checksum "composer.json" }}
