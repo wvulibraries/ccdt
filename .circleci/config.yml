@@ -4,17 +4,12 @@ jobs:
     docker:
       # Specify the version you desire here
       - image: circleci/php:7.3-stretch-node-browsers
-        environment:
-            DB_CONNECTION: mysql
-            DB_HOST: 127.0.0.1
-            DB_PORT: 3306
-            DB_DATABASE: circleci
-            DB_USERNAME: root
-            DB_PASSWORD: enFn8dsmQBi4gkcP      
       - image: circleci/mysql:5.7
         environment:
-            MYSQL_ROOT_HOST: "%"
-            MYSQL_ROOT_PASSWORD: enFn8dsmQBi4gkcP
+          MYSQL_ALLOW_EMPTY_PASSWORD: yes
+          MYSQL_USER: root
+          MYSQL_ROOT_PASSWORD: ''
+          MYSQL_DATABASE: circleci
         # volumes:
         #     - ./mysql-files/setup.sql:/docker-entrypoint-initdb.d/setup.sql
       - image: logicalspark/docker-tikaserver
@@ -53,7 +48,7 @@ jobs:
           name: Setup Laravel stuffs
           command: |
             cp .env.circleci .env
-            php artisan migrate --env=testing --database=circleci --force
+            php artisan migrate --force
       - run: ./vendor/bin/phpunit
 
 workflows:
