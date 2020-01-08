@@ -19,13 +19,6 @@ jobs:
     steps:
       - checkout
       - run:
-        name: Test building the docker image
-        command: docker build -t app:latest ./serverConfiguration/deploy/dev.app.docker
-      - run:
-        name: Create Container
-        command: docker create --name $DOCKER_CREATE_NAME $DOCKER_IMG_NAME:latest  
-
-      - run:
           name: Install PHP exts
           command: |
             sudo docker-php-ext-install zip
