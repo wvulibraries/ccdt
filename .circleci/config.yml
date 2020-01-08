@@ -22,6 +22,10 @@ jobs:
       - checkout:
           path: ~/laravel
       - run:
+          name: Create Mysql Database
+          command: mysql -h 127.0.0.1 -u root -e ./mysql-files/setup.sql
+
+      - run:
           name: Install PHP exts
           command: |
             sudo docker-php-ext-install zip
