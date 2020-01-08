@@ -19,8 +19,8 @@ jobs:
     working_directory: ~/laravel/src/project-css
 
     steps:
-  - checkout:
-      path: ~/laravel
+      - checkout:
+          path: ~/laravel
       - run:
           name: Install PHP exts
           command: |
