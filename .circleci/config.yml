@@ -47,7 +47,7 @@ jobs:
       - run:
           name: Setup Laravel stuffs
           command: |
-            cp .env.circleci .env
+            # cp .env.circleci .env
             mysqladmin create css_testing --host="127.0.0.1" --user="root"
             php artisan migrate --force
       - run: ./vendor/bin/phpunit
