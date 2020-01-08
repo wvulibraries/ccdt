@@ -6,10 +6,7 @@ jobs:
       - image: circleci/php:7.3-stretch-node-browsers
       - image: circleci/mysql:5.7
         environment:
-          MYSQL_ALLOW_EMPTY_PASSWORD: yes
-          MYSQL_USER: root
-          MYSQL_ROOT_PASSWORD: ''
-          MYSQL_DATABASE: circleci
+          MYSQL_ROOT_PASSWORD: 'root'
         # volumes:
         #     - ./mysql-files/setup.sql:/docker-entrypoint-initdb.d/setup.sql
       - image: logicalspark/docker-tikaserver
@@ -58,6 +55,7 @@ jobs:
           name: Setup Laravel stuffs
           command: |
             cp .env.circleci .env
+            mysqladmin create circleci --host="127.0.0.1" --user="root" --password="root"            
             php artisan migrate --force
       - run: ./vendor/bin/phpunit
 
