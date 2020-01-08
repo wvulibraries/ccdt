@@ -37,7 +37,7 @@ jobs:
       
       - run: ls
 
-      - run: composer install -n --prefer-dist
+      - run: cd /src/project-css && composer install -n --prefer-dist
 
       - save_cache:
           paths:
