@@ -3,7 +3,7 @@ jobs:
   build:
     docker:
       # Specify the version you desire here
-      - image: circleci/php:7.2-browsers
+      - image: circleci/php:7.3-stretch-node-browsers
       - image: circleci/mysql:5.7
         environment:
           MYSQL_ALLOW_EMPTY_PASSWORD: yes
@@ -15,8 +15,6 @@ jobs:
       - image: logicalspark/docker-tikaserver
         ports:
             - "9998:9998"
-
-    working_directory: ./src/project-css
 
     steps:
       - checkout
