@@ -3,9 +3,7 @@ jobs:
   build:
     docker:
       # Specify the version you desire here
-      - build:
-            context: ./
-            dockerfile: serverConfiguration/deploy/dev.app.docker
+      - image: circleci/php:7.2-browsers
       - image: circleci/mysql:5.7
         environment:
           MYSQL_ALLOW_EMPTY_PASSWORD: yes
@@ -16,10 +14,17 @@ jobs:
             - ./mysql-files/setup.sql:/docker-entrypoint-initdb.d/setup.sql
       - image: logicalspark/docker-tikaserver
 
-    working_directory: ./src/project-css
+    working_directory: /src/project-css
 
     steps:
       - checkout
+      - run:
+        name: Test building the docker image
+        command: docker build -t app:latest ./serverConfiguration/deploy/dev.app.docker
+      - run:
+        name: Create Container
+        command: docker create --name $DOCKER_CREATE_NAME $DOCKER_IMG_NAME:latest  
+
       - run:
           name: Install PHP exts
           command: |
