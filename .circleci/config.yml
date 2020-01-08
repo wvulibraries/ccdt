@@ -4,8 +4,6 @@ jobs:
     docker:
       # Specify the version you desire here
       - image: circleci/php:7.3-stretch-node-browsers
-        volumes:
-            - ./src/project-css:/var/www      
       - image: circleci/mysql:5.7
         environment:
           MYSQL_ALLOW_EMPTY_PASSWORD: yes
@@ -18,12 +16,11 @@ jobs:
         ports:
             - "9998:9998"
 
+    working_directory: ~/laravel/src/project-css
+
     steps:
-      - checkout
-      - run:
-          name: set correct folder
-          command: |
-            ls
+  - checkout:
+      path: ~/laravel
       - run:
           name: Install PHP exts
           command: |
