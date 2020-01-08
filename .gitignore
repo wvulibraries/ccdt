@@ -3,3 +3,5 @@ sqlFiles/
 .DS_Store
 *.log
 mysql_data/
+data/
+.circleci/config.yml
