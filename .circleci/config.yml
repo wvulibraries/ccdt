@@ -25,7 +25,8 @@ jobs:
           name: Install PHP exts
           command: |
             sudo apt update
-            sudo docker-php-ext-install zip pdo pdo_mysql
+            sudo docker-php-ext-install zip
+            sudo docker-php-ext-install pdo_mysql
             sudo apt install -y default-mysql-client
       - run: sudo composer self-update
 
@@ -46,9 +47,9 @@ jobs:
       - run:
           name: Setup Laravel stuffs
           command: |
-            # cp .env.circleci .env
+            cp .env.circleci .env
             mysqladmin create css_testing --host="127.0.0.1" --user="root"
-            php artisan migrate --force
+            php artisan migrate --env=testing --database=css_testing --force
       - run: ./vendor/bin/phpunit
 
 workflows:
