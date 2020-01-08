@@ -9,7 +9,7 @@ jobs:
           MYSQL_ALLOW_EMPTY_PASSWORD: yes
           MYSQL_USER: root
           MYSQL_ROOT_PASSWORD: ''
-          MYSQL_DATABASE: circleci
+          MYSQL_DATABASE: css_testing
         # volumes:
         #     - ./mysql-files/setup.sql:/docker-entrypoint-initdb.d/setup.sql
       - image: logicalspark/docker-tikaserver
@@ -24,7 +24,6 @@ jobs:
       - run:
           name: Install PHP exts
           command: |
-            sudo apt update
             sudo docker-php-ext-install zip
             sudo docker-php-ext-install pdo_mysql
             sudo apt install -y default-mysql-client
@@ -47,7 +46,6 @@ jobs:
       - run:
           name: Setup Laravel stuffs
           command: |
-            mysql -u root -h host="127.0.0.1" css < ./mysql-files/setup.sql
             php artisan migrate --force
       - run: ./vendor/bin/phpunit
 
