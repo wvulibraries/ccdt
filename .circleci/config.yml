@@ -5,7 +5,7 @@ jobs:
       # Specify the version you desire here
       - image: circleci/php:7.3-stretch-node-browsers
         environment:     
-          - DB_DATABASE=circle_test
+          - DB_DATABASE=css_testing
           - DB_USERNAME=root
           - DB_PASSWORD=circleci          
       - image: circleci/mysql:5.7
@@ -61,11 +61,21 @@ jobs:
           command: dockerize -wait tcp://localhost:3306 -timeout 1m
 
       - run:
+          name: Set the key
+          command: php artisan key:generate
+
+      - run:
+          name: Reset Cached Config
+          command: php artisan config:cache
+
+      - run:
           name: Database Create and Migrate
           command: |
             php artisan db:create            
             php artisan migrate --force
-      - run: ./vendor/bin/phpunit
+      - run: 
+          name: Run PHPUnit Tests
+          command: ./vendor/bin/phpunit
 
 workflows:
   version: 2
