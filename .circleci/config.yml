@@ -55,7 +55,7 @@ jobs:
           name: Setup Laravel stuffs
           command: |
             cp .env.circleci .env
-            mysqladmin create circleci --host="127.0.0.1" --user="root" --password="root"            
+            php artisan db:create            
             php artisan migrate --force
       - run: ./vendor/bin/phpunit
 
