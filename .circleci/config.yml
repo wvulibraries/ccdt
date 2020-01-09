@@ -4,9 +4,14 @@ jobs:
     docker:
       # Specify the version you desire here
       - image: circleci/php:7.3-stretch-node-browsers
+        environment:     
+          - DB_DATABASE=circle_test
+          - DB_USERNAME=root
+          - DB_PASSWORD=circleci          
       - image: circleci/mysql:5.7
         environment:
-          MYSQL_ROOT_PASSWORD: 'root'
+          - MYSQL_ROOT_HOST=%
+          - MYSQL_ROOT_PASSWORD=circleci
         # volumes:
         #     - ./mysql-files/setup.sql:/docker-entrypoint-initdb.d/setup.sql
       - image: logicalspark/docker-tikaserver
