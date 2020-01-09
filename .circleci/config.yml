@@ -11,7 +11,6 @@ jobs:
           - DB_HOST=127.0.0.1       
       - image: circleci/mysql:5.7
         environment:
-          - MYSQL_ROOT_HOST=%
           - MYSQL_ROOT_PASSWORD=circleci
         # volumes:
         #     - ./mysql-files/setup.sql:/docker-entrypoint-initdb.d/setup.sql
