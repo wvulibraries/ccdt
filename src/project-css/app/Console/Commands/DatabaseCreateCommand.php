@@ -32,7 +32,7 @@ class DatabaseCreateCommand extends Command
     /**
      * Execute the console command.
      */
-    public function fire()
+    public function handle()
     {
         $database = env('DB_DATABASE', false);
 
