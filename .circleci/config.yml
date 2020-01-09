@@ -7,7 +7,8 @@ jobs:
         environment:     
           - DB_DATABASE=css_testing
           - DB_USERNAME=root
-          - DB_PASSWORD=circleci          
+          - DB_PASSWORD=circleci   
+          - DB_HOST=127.0.0.1       
       - image: circleci/mysql:5.7
         environment:
           - MYSQL_ROOT_HOST=%
