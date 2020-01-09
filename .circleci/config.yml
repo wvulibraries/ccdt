@@ -19,6 +19,10 @@ jobs:
       - checkout:
           path: ~/laravel
       - run:
+          name: Copy .env.circleci to .env
+          command: |
+            cp .env.circleci .env          
+      - run:
           name: Install PHP exts
           command: |
             sudo apt update
@@ -52,9 +56,8 @@ jobs:
           command: dockerize -wait tcp://localhost:3306 -timeout 1m
 
       - run:
-          name: Setup Laravel stuffs
+          name: Database Create and Migrate
           command: |
-            cp .env.circleci .env
             php artisan db:create            
             php artisan migrate --force
       - run: ./vendor/bin/phpunit
