@@ -1,5 +1,5 @@
 <?php
-include 'testhelper.php';
+include 'TestHelper.php';
 
 use Illuminate\Contracts\Console\Kernel;
 use Laravel\BrowserKitTesting\TestCase as BaseTestCase;
