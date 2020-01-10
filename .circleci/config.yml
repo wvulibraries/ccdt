@@ -3,12 +3,7 @@ jobs:
   build:
     docker:
       # Specify the version you desire here
-      - image: circleci/php:7.3-stretch-node-browsers
-        environment:     
-          DB_DATABASE: css_testing
-          DB_USERNAME: user
-          DB_PASSWORD: circleci   
-          DB_HOST: 127.0.0.1       
+      - image: circleci/php:7.3-stretch-node-browsers  
       - image: circleci/mysql:5.7
         environment:
           MYSQL_ROOT_PASSWORD: rootpw
@@ -23,7 +18,12 @@ jobs:
 
     steps:
       - checkout:
-          path: ~/laravel      
+          path: ~/laravel    
+      - run:
+          name: Copy .env.circleci to .env
+          command: |
+            cp .env.circleci .env                  
+          
       - run:
           name: Install PHP exts
           command: |
