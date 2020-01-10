@@ -15,8 +15,6 @@ jobs:
           MYSQL_DATABASE: css_testing
           MYSQL_USER: user
           MYSQL_PASSWORD: circleci
-        # volumes:
-        #     - ./mysql-files/setup.sql:/docker-entrypoint-initdb.d/setup.sql
       - image: logicalspark/docker-tikaserver
         ports:
             - "9998:9998"
@@ -25,11 +23,7 @@ jobs:
 
     steps:
       - checkout:
-          path: ~/laravel
-      - run:
-          name: Copy .env.circleci to .env
-          command: |
-            cp .env.circleci .env          
+          path: ~/laravel      
       - run:
           name: Install PHP exts
           command: |
@@ -73,8 +67,7 @@ jobs:
 
       - run:
           name: Database Create and Migrate
-          command: |
-            # php artisan db:create            
+          command: |          
             php artisan migrate --force
       - run: 
           name: Run PHPUnit Tests
