@@ -1,6 +1,5 @@
 <?php
 /**
- * @author Ajay Krishna Teja Kavur
  * @author Tracy A McCormick <tam0013@mail.wvu.edu>
  */
 
