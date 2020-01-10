@@ -5,3 +5,4 @@ sqlFiles/
 mysql_data/
 data/
 .circleci/config.yml
+mysql_data_old/
