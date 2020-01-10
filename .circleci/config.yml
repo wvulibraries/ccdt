@@ -70,12 +70,18 @@ jobs:
           command: |          
             php artisan migrate --force
 
-      - run: 
-          name: Run PHPUnit Tests and Upload to scrutinizer-ci
-          command: |   
-            ./vendor/bin/phpunit --coverage-clover=coverage.clover
-            wget https://scrutinizer-ci.com/ocular.phar
-            php ocular.phar code-coverage:upload --format=php-clover coverage.clover
+      # Tests
+      - run:
+          name: 'Run PHPUnit tests'
+          command: './vendor/bin/phpunit --coverage-clover=coverage.clover'
+
+      - run:
+          name: 'Install Scrutinizer Ocular'
+          command: 'wget https://scrutinizer-ci.com/ocular.phar'
+
+      - run:
+          name: 'Scrutinizer Ocular'
+          command: 'php ocular.phar code-coverage:upload --format=php-clover coverage.clover'
 
 workflows:
   version: 2
