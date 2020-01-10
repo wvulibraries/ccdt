@@ -66,12 +66,16 @@ jobs:
           command: php artisan config:cache
 
       - run:
-          name: Database Create and Migrate
+          name: Database Migrate
           command: |          
             php artisan migrate --force
+
       - run: 
-          name: Run PHPUnit Tests
-          command: ./vendor/bin/phpunit
+          name: Run PHPUnit Tests and Upload to scrutinizer-ci
+          command: |   
+            ./vendor/bin/phpunit --coverage-clover=coverage.clover
+            wget https://scrutinizer-ci.com/ocular.phar
+            php ocular.phar code-coverage:upload --format=php-clover coverage.clover
 
 workflows:
   version: 2
