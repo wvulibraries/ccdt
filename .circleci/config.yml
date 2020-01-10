@@ -5,13 +5,16 @@ jobs:
       # Specify the version you desire here
       - image: circleci/php:7.3-stretch-node-browsers
         environment:     
-          - DB_DATABASE=css_testing
-          - DB_USERNAME=root
-          - DB_PASSWORD=circleci   
-          - DB_HOST=127.0.0.1       
+          DB_DATABASE: css_testing
+          DB_USERNAME: user
+          DB_PASSWORD: circleci   
+          DB_HOST: 127.0.0.1       
       - image: circleci/mysql:5.7
         environment:
-          - MYSQL_ROOT_PASSWORD=circleci
+          MYSQL_ROOT_PASSWORD: rootpw
+          MYSQL_DATABASE: css_testing
+          MYSQL_USER: user
+          MYSQL_PASSWORD: circleci
         # volumes:
         #     - ./mysql-files/setup.sql:/docker-entrypoint-initdb.d/setup.sql
       - image: logicalspark/docker-tikaserver
@@ -71,7 +74,7 @@ jobs:
       - run:
           name: Database Create and Migrate
           command: |
-            php artisan db:create            
+            # php artisan db:create            
             php artisan migrate --force
       - run: 
           name: Run PHPUnit Tests
