@@ -35,9 +35,13 @@ class CustomStringHelper {
         return $filesArray;
     }
 
+    /**
+     * loop over search array and remove any words that
+     * are in the StopWords table.
+     * @param       array $search Input array
+     * @return      array of strings
+     */    
     public function removeCommonWords($search) {
-      // loop over search array and remove any words that
-      // are in the StopWords table.
       foreach($search as $key => $word) {
         if (StopWords::isStopWord($word)) {
           unset($search[$key]);
@@ -47,12 +51,12 @@ class CustomStringHelper {
     }
 
     /**
+     * Detects a social security number pattern in string.
+     * 
      * @param string $fileContents
-     */
+     * @return boolean
+     */        
     public function ssnExists($fileContents) {
-        // ssnExists uses preg_match_all to detect a vaild social security
-        // number pattern. If the number of matches are above 0 then we
-        // will return true.
         if ($fileContents != null) {
             // preg_match_all will return a count if it is greater than
             // 0 we have matches against the SSN pattern and will return
@@ -122,10 +126,16 @@ class CustomStringHelper {
       return(implode(' ', $this->removeCommonWords($srchArr)));
     }
     
-    // if 2 lines are read that do not contain enough fields we will attempt to
-    // merge them to get the required number of Fields we assume that the last array
-    // item in $tkns1 is continued in the first item of $tkns2 so they will be
-    // combined.
+     /**
+     * Takes 2 arrays of tokens and merges them.
+     * Designed around the Rockefeller data their was instances where a
+     * incorrect character caused a break in reading the line. When this 
+     * is detected due to a inconsistent field count we will attempt to 
+     * merge the 2 lines.
+     * @param array $tkns1
+     * @param array $tkns2
+     * @return array
+     */    
     public function mergeLines($tkns1, $tkns2) {
         $numItem = count($tkns1) - 1;
         $tkns1[ $numItem ] = $tkns1[ $numItem ] . ' ' . $tkns2[ 0 ];

@@ -18,11 +18,25 @@ class TikaConvert {
         $this->tika_port = env('TIKA_PORT', '9998');
     }
 
+     /**
+     * Sets the port of the tika host
+     * @param string $host
+     */     
     function setTikaHost($host) {
-        $this->tika_host = $host;
+      // to do add validation of $host data
+      // ensure it is a vaild ip address or hostname number
+      // only numeric
+      $this->tika_host = $host;
     }
 
+     /**
+     * Sets the port of the tika host
+     * @param string $host
+     */       
     function setTikaPort($port) {
+      // to do add validation of $host data
+      // ensure it is a vaild port number
+      // only numeric
       $this->tika_port = $port;
     }
 
@@ -30,7 +44,7 @@ class TikaConvert {
      *
      * @param       string $filename Input string
      *              this should containe file path and filename
-     * @return
+     * @return      string detected text from source file
      */
     function convert($filename)
     {
@@ -69,6 +83,11 @@ class TikaConvert {
         return($fileContents);
     }
 
+    /**
+     * Tries to open a socket for the set tika server
+     * If succssful returns true otherwise returns false
+     * @return      boolean
+     */    
     function serverOpen() {
         $connection = @fsockopen($this->tika_host, $this->tika_port);
 

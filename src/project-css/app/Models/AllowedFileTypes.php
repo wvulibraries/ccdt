@@ -11,6 +11,13 @@ use Illuminate\Support\Facades\DB;
 
 class AllowedFileTypes extends Model
 {
+    /**
+     * Queries database to see if the passed filetype 
+     * exists. 
+     * 
+     * @param       string $extension Input string
+     * @return      boolean
+     */
     public static function isAllowedType($extension) {
         $response = DB::table('allowedfiletypes')
                     ->where('extension', '=', $extension)

@@ -3,6 +3,7 @@
 .env
 .env.dev
 .env.prod
+.env.mysql
 node_modules
 vendor
 storage/framework/cache/**

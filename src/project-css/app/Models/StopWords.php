@@ -10,13 +10,15 @@ use Illuminate\Support\Facades\DB;
 
 class StopWords extends Model
 {
+     /**
+     * check if word exists in the stopwords table
+     * 
+     * @return      boolean     
+     */     
     public static function isStopWord($word) {
         $response = DB::table('stopwords')
                     ->where('word', '=', $word)
                     ->get();
-        if (count($response) == 1) {
-          return true;
-        }
-        return false;
+        return (count($response) == 1);
     }
 }

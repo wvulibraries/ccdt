@@ -41,20 +41,34 @@ class DatabaseCreateCommand extends Command
             return;
         }
 
-        try {
-            $pdo = $this->getPDOConnection(env('DB_HOST'), env('DB_PORT'), env('DB_USERNAME'), env('DB_PASSWORD'));
-
-            $pdo->exec(sprintf(
-                'CREATE DATABASE IF NOT EXISTS %s CHARACTER SET %s COLLATE %s;',
-                $database,
-                env('DB_CHARSET'),
-                env('DB_COLLATION')
-            ));
-
-            $this->info(sprintf('Successfully created %s database', $database));
-        } catch (PDOException $exception) {
-            $this->error(sprintf('Failed to create %s database, %s', $database, $exception->getMessage()));
+        if (\DB::statement('create database ' . $database) == true) {
+            $new_connection = 'new';
+            $nc = \Illuminate\Support\Facades\Config::set('database.connec‌​tions.' . $new_connect‌​ion, [
+                'driver'   => 'mysql',
+                'host'     => env('DB_HOST'),
+                'database' => $database,
+                'username' => env('DB_USERNAME'),
+                'password' => env('DB_PASSWORD'),
+            ]);
+            Artisan::call('migrate', ['--database' => $new_connection]);
+        } else {
+            return 'db already exists!';
         }
+
+        //try {
+            // $pdo = $this->getPDOConnection(env('DB_HOST'), env('DB_PORT'), env('DB_USERNAME'), env('DB_PASSWORD'));
+
+            // $response = $pdo->exec(sprintf(
+            //     'CREATE DATABASE IF NOT EXISTS %s DEFAULT CHARACTER SET utf8mb4 DEFAULT COLLATE utf8mb4_unicode_ci',
+            //     $database
+            // ));
+            //$this->info(sprintf('Successfully created %s database', $database));            
+          
+            // \DB::statement('create database ' .$database );
+
+        // } catch (PDOException $exception) {
+        //     $this->error(sprintf('Failed to create %s database, %s', $database, $exception->getMessage()));
+        // }
     }
 
     /**
