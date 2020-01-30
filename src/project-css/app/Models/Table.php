@@ -20,19 +20,32 @@ class Table extends Model
         return $this->belongsTo('App\Models\Collection');
     }
 
+    /**
+    * Returns record count of the current table
+    */  
     public function recordCount() {
         return DB::table($this->tblNme)->count();
     }
 
+     /**
+     * returns 
+     * 
+     * @param       integer $amount Input integer
+     */   
     public function getPage($amount) {
         return DB::table($this->tblNme)->paginate($amount);
     }
 
+    /**
+    * Returns the column names as an array
+    */  
     public function getColumnList() {
-        // Returns the column names as an array
         return Schema::getColumnListing($this->tblNme);
     }
 
+    /**
+    * return number of fields
+    */    
     public function getOrgCount() {
       // get all column names
       $clmnLst = $this->getColumnList();
@@ -41,17 +54,34 @@ class Table extends Model
       return (count($clmnLst) - 4);
     }
 
+     /**
+     * returns requested record id
+     * 
+     * @param       integer $id Input integer
+     */      
     public function getRecord($id) {
         return DB::table($this->tblNme)
                     ->where('id', '=', $id)
                     ->get();
     }
 
+     /**
+     * inserts a new record into the table
+     * 
+     * @param       array $curArry Input array
+     */      
     public function insertRecord($curArry) {
         // Insert them into DB
         DB::table($this->tblNme)->insert($curArry);
     }
 
+     /**
+     * 
+     * 
+     * @param       string $search Input string
+     * @param       integer $page Input integer
+     * @param       integer $perPage Input integer
+     */      
     public function fullTextQuery($search, $page, $perPage) {        
         return DB::table($this->tblNme)
                 ->select('*')
