@@ -4,7 +4,7 @@ composer install
 # generate new application key
 php artisan key:generate
 # Start job queue to process file imports
-nohup php artisan queue:work --daemon --sleep=3 --tries=3 > /dev/null &
+nohup php artisan queue:work --daemon --sleep=3 --timeout=86400 --tries=3 > /dev/null &
 # Clear generated config so phpunit can use css_testing as the database
 php artisan config:clear
 # Start web server

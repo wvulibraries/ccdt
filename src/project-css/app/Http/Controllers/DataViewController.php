@@ -126,7 +126,7 @@ class DataViewController extends Controller {
      * view with a local application.
      */
     public function view($curTable, $recId, $filename) {
-      // Get the table entry in meta table "tables"
+        // Get the table entry in meta table "tables"
         $table = Table::findOrFail($curTable);
 
         $path = (new FileViewHelper)->getFilePath($curTable, $recId, $filename);
