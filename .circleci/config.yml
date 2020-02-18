@@ -10,6 +10,7 @@ jobs:
           MYSQL_DATABASE: css_testing
           MYSQL_USER: user
           MYSQL_PASSWORD: circleci
+          CC_TEST_REPORTER_ID: 168bb7cbd2eea60f133f998d851a10822f44eeb06a04bc2b71cec411ba2bb3ba
       - image: logicalspark/docker-tikaserver
         ports:
             - "9998:9998"
@@ -76,16 +77,25 @@ jobs:
           command: './vendor/bin/phpunit --coverage-clover=coverage.clover'
 
       - run:
-          name: 'Install Scrutinizer Ocular'
-          command: 'wget https://scrutinizer-ci.com/ocular.phar'
-
+          name: Setup Code Climate test-reporter
+          command: |
+          # download test reporter as a static binary
+            curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+            chmod +x ./cc-test-reporter
+            
       - run:
-          name: 'Scrutinizer Ocular'
-          command: 'php ocular.phar code-coverage:upload --format=php-clover coverage.clover'
+          name: Run tests
+          command: |
+            sudo docker-php-ext-enable xdebug
+            ./cc-test-reporter before-build
+            sudo vendor/bin/phpunit --coverage-clover clover.xml
+            ./cc-test-reporter after-build --coverage-input-type clover --exit-code $?
+
+Ci
 
       - store_test_results:
           path: tests/_output
-          
+
       - store_artifacts:
           path: tests/_output
 
