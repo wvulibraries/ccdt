@@ -18,7 +18,7 @@ class CollectionController extends Controller
    */
   protected $redirectTo = '/home';
 
-  //Customize the error messages
+  // Customize the error messages
   private $messages = array(
       'clctnName.required' => 'Please enter a collection name',
       'clctnName.unique' => 'The collection name has already been taken by current or disabled collection',
@@ -27,7 +27,7 @@ class CollectionController extends Controller
       'clctnName.alpha_num' => 'The collection name can only have alphab',
     );
 
-  //Rules for validation
+  // Rules for validation
   private $rules = array(
       'clctnName' => 'required|unique:collections|max:30|min:6|alpha_num',
     );
@@ -55,20 +55,6 @@ class CollectionController extends Controller
   * Takes request validates the collection name and saves new collection to database
   */
   public function create(Request $request) {
-    //Customize the error messages
-    // $messages = array(
-    //   'clctnName.required' => 'Please enter a collection name',
-    //   'clctnName.unique' => 'The collection name has already been taken by current or disabled collection',
-    //   'clctnName.max' => 'The collection name cannot exceed 30 characters',
-    //   'clctnName.min' => 'The collection name should be 6 characters or more',
-    //   'clctnName.alpha_num' => 'The collection name can only have alphab',
-    // );
-
-    //Rules for validation
-    // $rules = array(
-    //   'clctnName' => 'required|unique:collections|max:30|min:6|alpha_num',
-    // );
-
     // Validate the request before storing the data
     $this->validate($request, $this->rules, $this->messages);
 
@@ -86,20 +72,6 @@ class CollectionController extends Controller
   * Takes request validates the updated collection name and then updates the database
   */
   public function edit(Request $request) {
-    //Customize the error messages
-    // $messages = array(
-    //   'clctnName.required' => 'Please enter a collection name',
-    //   'clctnName.unique' => 'The collection name has already been taken by current or disabled collection',
-    //   'clctnName.max' => 'The collection name cannot exceed 30 characters',
-    //   'clctnName.min' => 'The collection name should be 6 characters or more',
-    //   'clctnName.alpha_num' => 'The collection name can only have alphab',
-    // );
-
-    //Rules for validation
-    // $rules = array(
-    //   'clctnName' => 'required|unique:collections|max:30|min:6|alpha_num',
-    // );
-
     // Validate the request before storing the data
     $this->validate($request, $this->rules, $this->messages);
 
@@ -147,7 +119,8 @@ class CollectionController extends Controller
   public function updateCollectionFlag($id, $flag) {
     // Create the collection name
     $thisClctn = Collection::findorFail($id);
-
+    
+    // Updated all Tables in collection
     $this->updateTableAccess($thisClctn, $flag);
 
     # enable the collection
