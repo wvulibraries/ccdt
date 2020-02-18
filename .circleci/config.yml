@@ -5,7 +5,7 @@ jobs:
       # Specify the version you desire here
       - image: circleci/php:7.3-stretch-node-browsers  
         environment:
-          CC_TEST_REPORTER_ID: 168bb7cbd2eea60f133f998d851a10822f44eeb06a04bc2b71cec411ba2bb3ba
+          CC_TEST_REPORTER_ID: c1a64ac787169d1117a84825b352a83fb9aefc6fa5aa6a72753e3ecd5587a950
       - image: circleci/mysql:5.7
         environment:
           MYSQL_ROOT_PASSWORD: rootpw
