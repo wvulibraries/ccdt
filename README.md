@@ -7,9 +7,6 @@
 [![Maintainability](https://api.codeclimate.com/v1/badges/8466ce146a44de48a3bd/maintainability)](https://codeclimate.com/github/wvulibraries/rockefeller-css/maintainability)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/8466ce146a44de48a3bd/test_coverage)](https://codeclimate.com/github/wvulibraries/rockefeller-css/test_coverage)
 
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/wvulibraries/rockefeller-css/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/wvulibraries/rockefeller-css/?branch=master) [![Code Coverage](https://scrutinizer-ci.com/g/wvulibraries/rockefeller-css/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/wvulibraries/rockefeller-css/?branch=master)
-
-
 ## Quick Start
 
  [Presentation](http://bitly.com/wvusystemscss) | [Documentation](https://github.com/wvulibraries/rockefeller-css/wiki)
