@@ -83,6 +83,12 @@ jobs:
           name: 'Scrutinizer Ocular'
           command: 'php ocular.phar code-coverage:upload --format=php-clover coverage.clover'
 
+      - store_test_results:
+          path: tests/_output
+          
+      - store_artifacts:
+          path: tests/_output
+
 workflows:
   version: 2
   notify_deploy:

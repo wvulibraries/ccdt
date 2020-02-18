@@ -58,6 +58,8 @@ class Table extends Model
      * returns requested record id
      * 
      * @param       integer $id Input integer
+     * 
+     * @return      object   
      */      
     public function getRecord($id) {
         return DB::table($this->tblNme)
@@ -76,11 +78,13 @@ class Table extends Model
     }
 
      /**
-     * 
+     * performs full text query on table 
      * 
      * @param       string $search Input string
      * @param       integer $page Input integer
      * @param       integer $perPage Input integer
+     * 
+     * @return      array   
      */      
     public function fullTextQuery($search, $page, $perPage) {        
         return DB::table($this->tblNme)

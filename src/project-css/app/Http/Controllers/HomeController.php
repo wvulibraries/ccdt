@@ -25,10 +25,16 @@ class HomeController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function index() {
-        // Check if the user is admin
-        // Page for a normal user
-        if (!(Auth::user()->isAdmin)) {
-          // Get the required variables
+        if (Auth::user()->isAdmin) return $this->showAdminView();
+        return $this->showUserView();
+    }
+
+    /**
+     * Show the application dashboard for user.
+     *
+     * @return \Illuminate\Http\Response
+     */    
+    private function showUserView() {
           // Collections
           $cllctns = Collection::all();
 
@@ -39,25 +45,29 @@ class HomeController extends Controller {
 
           // Return the view
           return view('user/index')->with($vwVars);
-        }
-        // Page for a admin user
-        else {
-          // Get the count of variables
-          $cllctCnt = Collection::all()->count();
-          $usrCnt = User::where('isAdmin', false)->count();
-          $admnCnt = User::where('isAdmin', true)->count();
-          $tblCnt = Table::all()->count();
+    }
 
-          // Compact them into array
-          $stats = array(
-              'cllctCnt' => $cllctCnt,
-              'usrCnt' => $usrCnt,
-              'admnCnt' => $admnCnt,
-              'tblCnt' => $tblCnt,
-          );
+    /**
+     * Show the application dashboard for admin.
+     *
+     * @return \Illuminate\Http\Response
+     */    
+    private function showAdminView() {
+        // Get the count of variables
+        $cllctCnt = Collection::all()->count();
+        $usrCnt = User::where('isAdmin', false)->count();
+        $admnCnt = User::where('isAdmin', true)->count();
+        $tblCnt = Table::all()->count();
 
-          //Return the view
-          return view('admin/index')->with($stats);
-        }
+        // Compact them into array
+        $stats = array(
+            'cllctCnt' => $cllctCnt,
+            'usrCnt' => $usrCnt,
+            'admnCnt' => $admnCnt,
+            'tblCnt' => $tblCnt,
+        );
+
+        // Return the view
+        return view('admin/index')->with($stats);
     }
 }

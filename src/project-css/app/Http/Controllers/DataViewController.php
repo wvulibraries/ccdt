@@ -77,6 +77,9 @@ class DataViewController extends Controller {
                                 ->with('curId', $curId);
     }
 
+     /**
+     * Show a record in the table
+     */   
     public function search(Request $request, $curTable, $page = 1) {
         // Get the table entry in meta table "tables"
         $table = Table::findOrFail($curTable);
@@ -92,8 +95,10 @@ class DataViewController extends Controller {
         // set records per page
         $perPage = 30;
 
-        $rcrds = $table->fullTextQuery($srchStrng, $page, 30);
+        // perform full text query 
+        $rcrds = $table->fullTextQuery($srchStrng, $page, $perPage);
 
+        // get number of records returned
         $rcrdsCount = count($rcrds);
 
         // if last query returned exactly 30 items
@@ -101,6 +106,7 @@ class DataViewController extends Controller {
         // so we set $lastPage to $page + 1
         $lastPage = ($rcrdsCount == $perPage) ? $page + 1 : $page;
 
+        // return view with errors if no records are found
         if ($rcrdsCount == 0) {
           return view('user.search')->with('tblId', $curTable)
                                     ->with('tblNme', $table->tblNme)
