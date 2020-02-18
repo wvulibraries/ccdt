@@ -83,16 +83,8 @@ jobs:
       - run:
           name: Run tests
           command: |
-            sudo docker-php-ext-enable xdebug
-            ./cc-test-reporter before-build
             sudo vendor/bin/phpunit --coverage-clover clover.xml
             ./cc-test-reporter after-build --coverage-input-type clover --exit-code $?
-
-      - store_test_results:
-          path: tests/_output
-
-      - store_artifacts:
-          path: tests/_output
 
 workflows:
   version: 2
