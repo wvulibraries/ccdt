@@ -28,6 +28,7 @@ class CollectionController extends Controller
 
   /**
    * Display a listing of the resource.
+   * 
    * @return \Illuminate\Http\Response
    */
   public function index() {
@@ -101,19 +102,11 @@ class CollectionController extends Controller
   * Sets the the state of the collection to disabled and updates database
   */
   public function disable(Request $request) {
-    // Create the collection name
+    // find the collection
     $thisClctn = Collection::findorFail($request->id);
+    
     if (strcasecmp($thisClctn->clctnName, $request->clctnName) == 0) {
-      // Get all the tables of this collection
-      $thisClctnTbls = $thisClctn->tables()->get();
-      // Update all the tables of this collection
-      foreach ($thisClctnTbls as $tbl) {
-        $tbl->hasAccess = false;
-        $tbl->save();
-      }
-      // Update the flag
-      $thisClctn->isEnabled = false;
-      $thisClctn->save();
+      $this->updateCollectionFlag($request->id, false);
 
       // Take the form object and insert using model
       return redirect()->route('collection.index');
@@ -127,22 +120,39 @@ class CollectionController extends Controller
   * Sets the the state of the collection to enabled and updates database
   */
   public function enable(Request $request) {
-    // Create the collection name
-    $thisClctn = Collection::findorFail($request->id);
-
-    // Get all the tables of this collection
-    $thisClctnTbls = $thisClctn->tables()->get();
-    // Update all the tables of this collection
-    foreach ($thisClctnTbls as $tbl) {
-      $tbl->hasAccess = true;
-      $tbl->save();
-    }
-
-    # enable the collection
-    $thisClctn->isEnabled = true;
-    $thisClctn->save();
+    $this->updateCollectionFlag($request->id, true);
 
     return redirect()->route('collection.index');
+  }
+
+  /**
+  * Sets the the state of the collection to the value in $flag
+  * then calls updateTableAccess to update all tables in the 
+  * collection
+  */
+  public function updateCollectionFlag($id, $flag) {
+    // Create the collection name
+    $thisClctn = Collection::findorFail($id);
+
+    $this->updateTableAccess($thisClctn, $flag);
+
+    # enable the collection
+    $thisClctn->isEnabled = $flag;
+    $thisClctn->save();
+  }
+
+  /**
+  * Sets hasAccess on all tables in collection
+  */  
+  public function updateTableAccess($collection, $access) {
+    // Get all the tables of this collection
+    $thisClctnTbls = $collection->tables()->get();
+
+    // Update all the tables of this collection
+    foreach ($thisClctnTbls as $tbl) {
+      $tbl->hasAccess = $access;
+      $tbl->save();
+    }
   }
 
 }
