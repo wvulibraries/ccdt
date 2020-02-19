@@ -259,66 +259,7 @@ class TableController extends Controller
           $curColType = strval($request->{'col-'.$i.'-data'});
           $curColSze = strval($request->{'col-'.$i.'-size'});
 
-          // Filter the data type and size and create the column
-          // Check for Strings
-          if (str_is($curColType, 'string')) {
-            // Check for the data type
-            // Default
-            if (str_is($curColSze, 'default')) {
-              // For String default is 30 characters
-              $table->string($curColNme, 50)->default("Null");
-            }
-            // Medium
-            if (str_is($curColSze, 'medium')) {
-              // For String medium is 150 characters
-              $table->string($curColNme, 150)->default("Null");
-            }
-            // Big
-            if (str_is($curColSze, 'big')) {
-              // For String big is 500 characters
-              $table->string($curColNme, 500)->default("Null");
-            }
-          }
-
-          // Check for Text data type
-          if (str_is($curColType, 'text')) {
-            // Check for the data type
-            // Default
-            if (str_is($curColSze, 'default')) {
-              // For text default is text type
-              $table->text($curColNme);
-            }
-            // Medium
-            if (str_is($curColSze, 'medium')) {
-              // For text medium is mediumtext type
-              $table->mediumText($curColNme);
-            }
-            // Big
-            if (str_is($curColSze, 'big')) {
-              // For text big is longtext type
-              $table->longText($curColNme);
-            }
-          }
-
-          // Check for Integer
-          if (str_is($curColType, 'integer')) {
-            // Check for the data type
-            // Default
-            if (str_is($curColSze, 'default')) {
-              // For Integer default integer type
-              $table->integer($curColNme)->default(0);
-            }
-            // Medium
-            if (str_is($curColSze, 'medium')) {
-              // For Integer medium is medium integer
-              $table->mediumInteger($curColNme)->default(0);
-            }
-            // Big
-            if (str_is($curColSze, 'big')) {
-              // For Integer big is big integer
-              $table->bigInteger($curColNme)->default(0);
-            }
-          }
+          $table = (new TableHelper)->setupTableField($table, $curColNme, $curColType, $curColSze);
         }
 
         // search index

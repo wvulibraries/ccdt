@@ -116,10 +116,10 @@ class CollectionController extends Controller
   * then calls updateTableAccess to update all tables in the 
   * collection
   */
-  public function updateCollectionFlag($id, $flag) {
+  private function updateCollectionFlag($id, $flag) {
     // Create the collection name
     $thisClctn = Collection::findorFail($id);
-    
+
     // Updated all Tables in collection
     $this->updateTableAccess($thisClctn, $flag);
 
@@ -131,7 +131,7 @@ class CollectionController extends Controller
   /**
   * Sets hasAccess on all tables in collection
   */  
-  public function updateTableAccess($collection, $access) {
+  private function updateTableAccess($collection, $access) {
     // Get all the tables of this collection
     $thisClctnTbls = $collection->tables()->get();
 
