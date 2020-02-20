@@ -203,31 +203,31 @@ class TableHelper {
      // $colID is the collection id
      // $array of files
      public function selectFilesAndImport($strDir, $colID, $files) {
-     // array for keeping errors that we will send to the user
-     $errors = [];
+        // array for keeping errors that we will send to the user
+        $errors = [];
 
-     // Loop over them
-     foreach ($files as $file) {
-       $fltFleAbsPth = $strDir.'/'.$file;
-       // Calling schema will return an array containing the
-       // tokenized first row of our file to be imported
-       $schema = (new CSVHelper)->schema($fltFleAbsPth);
-       // if the array is not valid we will delete the file
-       // and push a error to the $errors array
-       if (!$schema) {
-         Storage::delete($fltFleAbsPth);
-         array_push($errors, [ 'The selected flat file must be of type: text/plain', 'The selected flat file should not be empty', 'File is deleted for security reasons' ]);
-       }
-       else {
-         // filter record string
-         $filteredType = filter_var($schema[0], FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_HIGH);
-         // create table name
-         $tblNme = $filteredType . time();
-         // pass values to create file
-         (new CMSHelper)->createCMSTable($strDir, $file, $colID, $tblNme);
-       }
+        // Loop over them
+        foreach ($files as $file) {
+          $fltFleAbsPth = $strDir.'/'.$file;
+          // Calling schema will return an array containing the
+          // tokenized first row of our file to be imported
+          $schema = (new CSVHelper)->schema($fltFleAbsPth);
+          // if the array is not valid we will delete the file
+          // and push a error to the $errors array
+          if (!$schema) {
+            Storage::delete($fltFleAbsPth);
+            array_push($errors, [ 'The selected flat file must be of type: text/plain', 'The selected flat file should not be empty', 'File is deleted for security reasons' ]);
+          }
+          else {
+            // filter record string
+            $filteredType = filter_var($schema[0], FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_HIGH);
+            // create table name
+            $tblNme = $filteredType . time();
+            // pass values to create file
+            (new CMSHelper)->createCMSTable($strDir, $file, $colID, $tblNme);
+          }
+        }
+        return redirect()->route('tableIndex')->withErrors($errors);
      }
-     return redirect()->route('tableIndex')->withErrors($errors);
-   }
 
 }

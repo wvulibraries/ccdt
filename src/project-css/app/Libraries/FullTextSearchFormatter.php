@@ -12,6 +12,12 @@ class FullTextSearchFormatter {
 // a string that can be used for full text boolean searches
 // with sql injection in mind.
 
+     /**
+     * sanitizes and corrects search string for full text search
+     * 
+     * @param       string  $searchPhrase    Input string
+     * @return      string
+     */
     private function sanitizeSearchTerm($searchPhrase) {
        //replace ? with * for wildcard searches
       $searchPhrase = str_replace('?', '*', $searchPhrase);
@@ -22,7 +28,12 @@ class FullTextSearchFormatter {
       return $searchPhrase;
     }
 
-    // used by array_filter below filters out items less than 2 characters
+     /**
+     * returns true if string is greater than 1 character
+     * 
+     * @param       string  $string    Input string
+     * @return      string
+     */
     public function testLength($string) {
       return (strlen($string) > 1);
     }
@@ -52,45 +63,58 @@ class FullTextSearchFormatter {
       return strtolower($str);
     }
 
+    /**
+     * check to see if a relevancy modifier 
+     * exists in the string
+     *
+     * @param string $word
+     * @return boolean
+     */   
     public function hasRelevancyModifier($word) {
-      //if (!empty($word)) {
-        $count = substr_count('<>', $word[0]);
-        if ($count == 1) {
-          return true;
-        }
-      //}
-      return false;
+      $count = substr_count('<>', $word[0]);
+      return ($count == 1);
     }
 
+    /**
+     * verify that string is quoted "some string"
+     * that is used for a exact search
+     *
+     * @param string $string
+     * @return boolean
+     */       
     public function hasExactTerm($string) {
       $count = substr_count($string, '"');
-      //verify that string is quoted "some string"
-      //that is used for a exact search
-      if ($count == 2) {
-        return true;
-      }
-      return false;
+      return ($count == 2);
     }
 
+    /**
+     * checks to see if ( is before ) 
+     *
+     * @param string $string the string should contain ()
+     * @return boolean
+     */    
     public function hasMatchEither($string) {
       // verifes that the match either grouping is correct
-      $startCount = substr_count($string, '(');
-      $endCount = substr_count($string, ')');
-      if (($startCount == 1) && ($endCount == 1)) {
-        return (strpos($string, '(') < strpos($string, ')'));
-      }
-      return false;
+      return (strpos($string, '(') < strpos($string, ')'));
     }
 
+    /**
+     * checks to see is string contains a wildcard at the end
+     *
+     * @param string $string
+     * @return boolean
+     */  
     public function hasWildCard($string) {
-      if (mb_substr($string, -1) == '*') {
-        return true;
-      }
-      return false;
+      return (mb_substr($string, -1) == '*');
     }
 
+    /**
+     * returns string between ()
+     *
+     * @param string $string the string should contain ()
+     * @return string or false if substring cannot be returned
+     */    
     public function getMatchEither($string) {
-      // returns string between ()
       $startPos = strpos($string, '(') + 1;
       $endPos = strpos($string, ')') - $startPos;
       if ($startPos < $endPos) {
@@ -99,33 +123,55 @@ class FullTextSearchFormatter {
       return false;
     }
 
+    /**
+     * cleans string to insure it is correctly formatted
+     * used for mysql advanced text searching using full-text queries
+     *
+     * @param string $string
+     * @return string $value
+     */    
     public function cleanArrayItem($string) {
-      // check if * exists on the end of string
-      $wildcard = $this->hasWildCard($string);
       if ($this->hasRelevancyModifier($string)) {
         $value = $string[0] . preg_replace('/[^A-Za-z0-9]/', '', substr($string, 1, strlen($string) - 1));
       }
       else {
         $value = preg_replace('/[^A-Za-z0-9]/', '', $string);
       }
+
       // add back wildcard at to the string if it was present before
-      if ($wildcard) {
+      if ($this->hasWildCard($string)) {
         $value = $value . '*';
       }
 
       return $value;
     }
 
+    /**
+     * cleans string for match either items
+     * ie +nice +(language country)
+     *
+     * @param string $string
+     * @return string $value
+     */        
     public function cleanMatchEither($string) {
+      // words in match either query
       $eitherString = $this->getMatchEither($string);
       // separate section into a array
       $eitherArray = (explode(' ', $eitherString));
       foreach ($eitherArray as &$value) {
+        // clean items in array
         $value = $this->cleanArrayItem($value);
       }
+      // combine and return properly formmated string
       return '+(' . implode(' ', $eitherArray) .')';
     }
 
+    /**
+     * properly format search string
+     *
+     * @param string $search
+     * @return string $searchTerms
+     */      
     public function prepareSearch($search) {
       // if the string is wrapped in quotes we add them back after the preg_replace
       // a exact term search is wrapped like "example search"

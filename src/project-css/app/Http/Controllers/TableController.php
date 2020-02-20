@@ -393,6 +393,25 @@ class TableController extends Controller
         return ($tkns);
     }
 
+    public function processLine($tkns, $orgCount, $table) {
+        // verify that passed $tkns match the expected field count
+        if (count($tkns) == $orgCount) {
+          // Declae an array
+          $curArry = array();
+
+          // Compact them into one array with utf8 encoding
+          for ($i = 0; $i<$orgCount; $i++) {
+            $curArry[ strval($clmnLst[ $i ]) ] = utf8_encode($tkns[ $i ]);
+          }
+
+          // add srchindex
+          $curArry[ 'srchindex' ] = (new customStringHelper)->createSrchIndex(implode(" ", $tkns));
+
+          //insert Record into database
+          $table->insertRecord($curArry);
+        }
+    }
+
     /**
     * Process employs following algorithm:
     * get all the column names from table name
@@ -400,6 +419,11 @@ class TableController extends Controller
     * 2. For each line
     *   1. Validate
     *   2. Insert into database
+
+     * @param string $$tblNme
+     * @param string $fltFlePath
+     * @param string $fltFleNmetype
+     * @param boolean $ignoreFirst 
     **/
     public function process($tblNme, $fltFlePath, $fltFleNme, $ignoreFirst = true) {
       //get table
@@ -420,6 +444,7 @@ class TableController extends Controller
       // Create an instance for the file
       $curFltFleObj = new \SplFileObject($fltFleFullPth);
 
+      // Detect delimiter used in file
       $delimiter = (new CSVHelper)->detectDelimiter($fltFleFullPth);
 
       //Check for an empty file
@@ -438,22 +463,7 @@ class TableController extends Controller
 
           $tkns = $this->prepareLine($curLine, $delimiter, $orgCount, $prcssd);
 
-          // verify that passed $tkns match the expected field count
-          if (count($tkns) == $orgCount) {
-            // Declae an array
-            $curArry = array();
-
-            // Compact them into one array with utf8 encoding
-            for ($i = 0; $i<$orgCount; $i++) {
-              $curArry[ strval($clmnLst[ $i ]) ] = utf8_encode($tkns[ $i ]);
-            }
-
-            // add srchindex
-            $curArry[ 'srchindex' ] = (new customStringHelper)->createSrchIndex(implode(" ", $tkns));
-
-            //insert Record into database
-            $table->insertRecord($curArry);
-          }
+          $this->processLine($tkns, $orgCount, $table);
 
           // Update the counter
           $prcssd += 1;
