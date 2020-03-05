@@ -9,9 +9,9 @@
 
 ## Quick Start
 
- [Presentation](ccdt.pdf) | [Documentation](https://github.com/wvulibraries/rockefeller-css/wiki)
+ [Presentation](https://docs.google.com/presentation/d/1FyzvqbXJCVkH5S1Af2u6OOTHvzqgfDztlYbq4fLybr4/edit?usp=sharing) | [Documentation](https://github.com/wvulibraries/rockefeller-css/wiki)
 ------------ | -------------
- [![Presentation](docs/images/i2.png)](ccdt.pdf) | [![Documentation](docs/images/i1.png)](https://github.com/wvulibraries/rockefeller-css/wiki)
+ [![Presentation](docs/images/i2.png)](https://docs.google.com/presentation/d/1FyzvqbXJCVkH5S1Af2u6OOTHvzqgfDztlYbq4fLybr4/edit?usp=sharing) | [![Documentation](docs/images/i1.png)](https://github.com/wvulibraries/rockefeller-css/wiki)
 
 ## Development and Contributing
 
