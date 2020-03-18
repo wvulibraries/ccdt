@@ -18,7 +18,7 @@
           <!-- cards -->
           <!-- Presentation -->
           <div class="col-xs-12 col-sm-6 col-md-3">
-            <a href="http://bitly.com/wvusystemscss">
+            <a href="https://docs.google.com/presentation/d/1FyzvqbXJCVkH5S1Af2u6OOTHvzqgfDztlYbq4fLybr4/edit#slide=id.g35f391192_00">
               <div class="well dashCard btn-circle">
                 <!-- heading -->
                 <div class="dashCardHeading">
@@ -33,7 +33,7 @@
             </a>
           </div>
           <div class="col-xs-12 col-sm-6 col-md-3">
-            <a href="https://github.com/wvulibraries/rockefeller-css/tree/master/src/project-css">
+            <a href="https://github.com/wvulibraries/ccdt/tree/master/src/project-css">
               <div class="well dashCard btn-circle">
                 <!-- heading -->
                 <div class="dashCardHeading">
@@ -48,7 +48,7 @@
             </a>
           </div>
           <div class="col-xs-12 col-sm-6 col-md-3">
-            <a href="https://github.com/wvulibraries/rockefeller-css/wiki">
+            <a href="https://github.com/wvulibraries/ccdt/wiki">
               <div class="well dashCard btn-circle">
                 <!-- heading -->
                 <div class="dashCardHeading">

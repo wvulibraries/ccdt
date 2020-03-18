@@ -1,4 +1,4 @@
-![Logo](docs/images/logo.jpg)
+![Logo](docs/images/logo.png)
 
 [Constituent Correspondence Data Tool](https://github.com/wvulibraries/ccdt) is a platform to transform **congressional data** into **information** and **information** into **insights.** The projects aims to provide a holistic interface for importing `flat-files` and provide tools to **research and visualize.**
 
@@ -11,7 +11,7 @@
 
  [Presentation](https://docs.google.com/presentation/d/1FyzvqbXJCVkH5S1Af2u6OOTHvzqgfDztlYbq4fLybr4/edit?usp=sharing) | [Documentation](https://github.com/wvulibraries/rockefeller-css/wiki)
 ------------ | -------------
- [![Presentation](docs/images/i2.png)](https://docs.google.com/presentation/d/1FyzvqbXJCVkH5S1Af2u6OOTHvzqgfDztlYbq4fLybr4/edit?usp=sharing) | [![Documentation](docs/images/i1.png)](https://github.com/wvulibraries/ccdt/wiki)
+ [![Presentation](docs/images/i2.png)](https://docs.google.com/presentation/d/1FyzvqbXJCVkH5S1Af2u6OOTHvzqgfDztlYbq4fLybr4/edit#slide=id.g35f391192_00/edit?usp=sharing) | [![Documentation](docs/images/i1.png)](https://github.com/wvulibraries/ccdt/wiki)
 
 ## Development and Contributing
 
