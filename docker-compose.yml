@@ -28,7 +28,7 @@ services:
         build:
             context: ./
             dockerfile: serverConfiguration/deploy/prod.app.docker
-        container_name: rockefeller-css_php
+        container_name: ccdt_php
         volumes:
             - /data/storage:/var/www/storage
         env_file: ./src/project-css/.env.prod
