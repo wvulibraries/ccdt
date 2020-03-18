@@ -156,7 +156,15 @@ class TableController extends Controller
     }
 
     public function importCMSDIS(Request $request) {
-      return (new TableHelper)->storeUploadsAndImport($this->strDir, $request->colID, $request->cmsdisFiles, true);
+        $data = [
+            'strDir' => $this->strDir,
+            'colID' => $request->colID,
+            'flatFiles' => $request->cmsdisFiles,
+            'cms' => true,
+            'tableName' => $request->imprtTblNme
+        ];
+
+        return (new TableHelper)->storeUploadsAndImport($data);
     }
 
     /**
@@ -217,7 +225,15 @@ class TableController extends Controller
     }
 
     public function selectCMSDIS(Request $request) {
-      return (new TableHelper)->selectFilesAndImport($this->strDir, $request->colID2, $request->cmsdisFiles2);
+        $data = [
+            'strDir' => $this->strDir,
+            'colID' => $request->colID2,
+            'flatFiles' => $request->cmsdisFiles2,
+            'cms' => true,
+            'tableName' => $request->slctTblNme
+        ];
+
+        return (new TableHelper)->selectFilesAndImport($data); 
     }
 
     /**
