@@ -76,6 +76,22 @@ Route::group([ 'prefix' => 'table' ], function() {
 
 /*
 |--------------------------------------------------------------------------
+| Controller for the import wizard
+|--------------------------------------------------------------------------
+*/
+Route::group([ 'prefix' => 'admin/wizard' ], function() {
+    Route::get('import', 'WizardController@import');
+    Route::get('import/collection/{colID}', 'WizardController@importTable');
+    Route::get('cms', 'WizardController@cms');
+    Route::get('flatfile', 'WizardController@flatfile');
+    Route::post('flatfile/upload', 'WizardController@flatfileUpload');
+    Route::post('flatfile/select', 'WizardController@flatfileSelect');    
+    Route::post('cms/upload', 'WizardController@cmsUpload');
+    Route::post('cms/select', 'WizardController@cmsSelect');     
+});
+
+/*
+|--------------------------------------------------------------------------
 | Controller for the user management
 |--------------------------------------------------------------------------
 */

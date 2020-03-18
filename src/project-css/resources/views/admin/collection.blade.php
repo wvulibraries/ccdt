@@ -42,16 +42,25 @@
           </div>
           <!-- Options for the collection -->
           <div class="col-xs-6 col-sm-8 col-md-8">
-            <!-- Option 1 Add tables -->
+            <!-- Option 1 Show tables -->
             <div class="colCardOpts">
-              <a href="{{url('table/create')}}">
+              <a href="{{url('table')}}">
+                <div class="icon hidden-xs hidden-sm">
+                  <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
+                </div>
+                <p>Show Tables</p>
+              </a>
+            </div>
+            <!-- Option 2 Add tables -->
+            <div class="colCardOpts">
+              <a href="{{url('admin/wizard/import/collection',['cmsID' => $collcntNm->id])}}">
                 <div class="icon hidden-xs hidden-sm">
                   <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                 </div>
                 <p>Add Tables</p>
               </a>
             </div>
-            <!-- Option 2 Edit Collection -->
+            <!-- Option 3 Edit Collection -->
             <div class="colCardOpts">
               <a href="#" data-toggle="modal" data-target="#editCllctn{{$collcntNm->id}}">
                 <div class="icon hidden-xs hidden-sm">
@@ -60,7 +69,7 @@
                 <p>Edit</p>
               </a>
             </div>
-            <!-- Option 3 Disable Collection -->
+            <!-- Option 4 Disable Collection -->
             <div class="colCardOpts">
               <a href="#" data-toggle="modal" data-target="#dsbleCllctn{{$collcntNm->id}}">
                 <div class="icon hidden-xs hidden-sm">
@@ -96,6 +105,8 @@
                     <div class="col-md-6">
                       <span for="clctnEditName_{{$key}}" class="control-label">Collection Name</span>
                       <input id="clctnEditName_{{$key}}" type="text" aria-label="Enter Collection Name" class="form-control" name="clctnName" value="{{$collcntNm->clctnName}}" required autofocus>
+                      <span for="clctnEditisCms_{{$key}}" class="control-label">is CMS</span>
+                      <input id="clctnEditisCms_{{$key}}" type="checkbox" class="form-control" name="isCms" {{ $collcntNm->isCms==1 ? 'checked="checked"' : '' }}>
                     </div>
                   </div>
 
@@ -231,6 +242,8 @@
                   <div class="col-md-12">
                     <label for="clctnCreateName" class="control-label">Collection Name</label>
                     <input id="clctnCreateName" type="text" class="form-control" name="clctnName" required autofocus>
+                    <label for="clctnCMS" class="control-label">is CMS</label>
+                    <input id="clctnCMS" type="checkbox" class="form-control" name="isCms">
                   </div>
                 </div>
 

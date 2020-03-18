@@ -61,6 +61,8 @@ class CollectionController extends Controller
     // Create the collection name
     $thisClctn = new Collection;
     $thisClctn->clctnName = $request->clctnName;
+    $thisClctn->isCms = $request->has('isCms') ? true : false;
+
     $thisClctn->save();
 
     // Take the form object and insert using model
@@ -72,15 +74,28 @@ class CollectionController extends Controller
   * Takes request validates the updated collection name and then updates the database
   */
   public function edit(Request $request) {
-    // Validate the request before storing the data
-    $this->validate($request, $this->rules, $this->messages);
-
-    // Create the collection name
+    // find the collection
     $thisClctn = Collection::findorFail($request->id);
-    $thisClctn->clctnName = $request->clctnName;
+
+    if ($thisClctn->clctnName == $request->clctnName) {
+      // Set isCms
+      $thisClctn->isCms = $request->has('isCms') ? true : false;
+    }
+    else {
+      // Validate the request before storing the data
+      $this->validate($request, $this->rules, $this->messages);
+
+      // Set new Collection Name
+      $thisClctn->clctnName = $request->clctnName;
+
+      // Set isCms
+      $thisClctn->isCms = $request->has('isCms') ? true : false;
+    }
+
+    // Save Updated items
     $thisClctn->save();
 
-    // Take the form object and insert using model
+    // Redirect back to collection page
     return redirect()->route('collection.index');
   }
 

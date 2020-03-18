@@ -324,4 +324,19 @@ class CSVHelper {
        // Returning tokens
        return $tkns;
      }
+
+     /**
+      *
+      * @author Tracy A. McCormick <tam0013@mail.wvu.edu>
+      */
+     public function createFlatTable($storageFolder, $thsFltFile, $collctnId, $tblNme) {
+       // detect fields we pass true if we have a header row,
+       // file location, number of rows to check
+       $fieldTypes = $this->determineTypes(true, $storageFolder.'/'.$thsFltFile, 1000);
+
+       // get 1st row from csv file
+       $schema = $this->schema($storageFolder.'/'.$thsFltFile);
+
+       (new TableHelper)->createTable($storageFolder, $thsFltFile, $tblNme, $schema, $fieldTypes, $collctnId);
+     }     
 }

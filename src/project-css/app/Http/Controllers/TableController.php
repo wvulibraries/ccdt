@@ -156,7 +156,7 @@ class TableController extends Controller
     }
 
     public function importCMSDIS(Request $request) {
-      return (new TableHelper)->storeUploadsAndImport($this->strDir, $request->colID, $request->cmsdisFiles);
+      return (new TableHelper)->storeUploadsAndImport($this->strDir, $request->colID, $request->cmsdisFiles, true);
     }
 
     /**
@@ -393,7 +393,16 @@ class TableController extends Controller
         return ($tkns);
     }
 
-    public function processLine($tkns, $orgCount, $table) {
+    /**
+    * takes array of tokens. Creates a search index and 
+    * inserts them into the table
+    * 
+    * @param array $tkns array containing all fields of record
+    * @param integer $orgCount number of expected fields in the record
+    * @param object $table table where new record is to be inserted
+    * @return void
+    */   
+    public function processLine($tkns, $orgCount, $table, $clmnLst) {
         // verify that passed $tkns match the expected field count
         if (count($tkns) == $orgCount) {
           // Declae an array
@@ -413,18 +422,17 @@ class TableController extends Controller
     }
 
     /**
-    * Process employs following algorithm:
-    * get all the column names from table name
-    * 1. Read the file as spl object
-    * 2. For each line
-    *   1. Validate
-    *   2. Insert into database
-
-     * @param string $$tblNme
+     * Process employs following algorithm:
+     * get all the column names from table name
+     * 1. Read the file as spl object
+     * 2. For each line
+     *   1. Validate
+     * @param string $tblNme
      * @param string $fltFlePath
      * @param string $fltFleNmetype
      * @param boolean $ignoreFirst 
-    **/
+     * @return void
+     */
     public function process($tblNme, $fltFlePath, $fltFleNme, $ignoreFirst = true) {
       //get table
       $table = Table::where('tblNme', $tblNme)->first();
@@ -446,7 +454,7 @@ class TableController extends Controller
 
       // Detect delimiter used in file
       $delimiter = (new CSVHelper)->detectDelimiter($fltFleFullPth);
-
+      
       //Check for an empty file
       if (filesize($fltFleFullPth)>0) {
 
@@ -463,7 +471,7 @@ class TableController extends Controller
 
           $tkns = $this->prepareLine($curLine, $delimiter, $orgCount, $prcssd);
 
-          $this->processLine($tkns, $orgCount, $table);
+          $this->processLine($tkns, $orgCount, $table, $clmnLst);
 
           // Update the counter
           $prcssd += 1;
