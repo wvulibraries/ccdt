@@ -22,7 +22,6 @@ services:
         container_name: ccdt_php
         volumes:
             - ./src/project-css:/var/www
-        env_file: ./src/project-css/.env.dev
         ports:
           - "9000:9000"
         links:
