@@ -31,11 +31,6 @@ abstract class BrowserKitTestCase extends BaseTestCase
 
         $app->make(Kernel::class)->bootstrap();
 
-        var_dump(getenv('APP_ENV'));
-        var_dump(getenv('DB_CONNECTION'));
-        var_dump(getenv('DB_DATABASE'));
-        die();
-
         return $app;
     }
 
