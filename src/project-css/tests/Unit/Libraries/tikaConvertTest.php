@@ -7,7 +7,7 @@ class tikaConvertTest extends BrowserKitTestCase
     protected $tikaConvert;
     private $singlefilewithpath;
 
-    protected function setUp(): void {
+    public function setUp(): void {
         parent::setUp();
         $this->tikaConvert = new tikaConvert();
         $this->singlefilewithpath = './storage/app/files/test/test_upload.doc';

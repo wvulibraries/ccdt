@@ -23,6 +23,6 @@
         </whitelist>
     </filter>
     <php>
-        <env name="DB_DATABASE" value="css_testing" force="true"/>
+        <server name="APP_ENV" value="testing"/>
     </php>
 </phpunit>
