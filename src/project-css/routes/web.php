@@ -48,6 +48,8 @@ Route::get('collection', 'CollectionController@index')->name('collection.index')
 Route::group([ 'prefix' => 'collection' ], function() {
     Route::post('create', 'CollectionController@create')->name('collection.create');
     Route::post('edit', 'CollectionController@edit')->name('collection.edit');
+    Route::get('show/{colID}', 'CollectionController@show'); 
+    Route::get('{colID}/table/create', 'CollectionController@tableCreate'); 
     Route::post('disable', 'CollectionController@disable')->name('collection.disable');;
     Route::post('enable', 'CollectionController@enable')->name('collection.enable');;
 });
@@ -80,14 +82,16 @@ Route::group([ 'prefix' => 'table' ], function() {
 |--------------------------------------------------------------------------
 */
 Route::group([ 'prefix' => 'admin/wizard' ], function() {
-    Route::get('import', 'WizardController@import');
-    Route::get('import/collection/{colID}', 'WizardController@importTable');
-    Route::get('cms', 'WizardController@cms');
-    Route::get('flatfile', 'WizardController@flatfile');
-    Route::post('flatfile/upload', 'WizardController@flatfileUpload');
-    Route::post('flatfile/select', 'WizardController@flatfileSelect');    
-    Route::post('cms/upload', 'WizardController@cmsUpload');
-    Route::post('cms/select', 'WizardController@cmsSelect');     
+    Route::get('import', 'WizardController@import')->name('wizard.import');
+    Route::get('import/collection/{colID}', 'WizardController@showCollection')->name('wizard.import.collection');
+
+    Route::get('flatfile', 'WizardController@flatfile')->name('wizard.flatfile');
+    Route::post('flatfile/upload', 'WizardController@flatfileUpload')->name('wizard.flatfile.upload');
+    Route::post('flatfile/select', 'WizardController@flatfileSelect')->name('wizard.flatfile.select');  
+    
+    Route::get('cms', 'WizardController@cms')->name('wizard.cms');
+    Route::post('cms/upload', 'WizardController@cmsUpload')->name('wizard.cms.upload');
+    Route::post('cms/select', 'WizardController@cmsSelect')->name('wizard.cms.select');     
 });
 
 /*

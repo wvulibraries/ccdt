@@ -44,7 +44,7 @@
           <div class="col-xs-6 col-sm-8 col-md-8">
             <!-- Option 1 Show tables -->
             <div class="colCardOpts">
-              <a href="{{url('table')}}">
+              <a href="{{url('collection/show',['cmsID' => $collcntNm->id])}}">
                 <div class="icon hidden-xs hidden-sm">
                   <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
                 </div>
@@ -53,7 +53,7 @@
             </div>
             <!-- Option 2 Add tables -->
             <div class="colCardOpts">
-              <a href="{{url('admin/wizard/import/collection',['cmsID' => $collcntNm->id])}}">
+              <a href="{{url('collection/'.$collcntNm->id.'/table/create')}}">
                 <div class="icon hidden-xs hidden-sm">
                   <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                 </div>

@@ -8,6 +8,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Collection;
+use App\Models\Table;
 
 class CollectionController extends Controller
 {
@@ -52,6 +53,24 @@ class CollectionController extends Controller
   }
 
   /**
+  * Returns view for collection
+  *
+  * @return view
+  */    
+  public function show($cmsID) {
+    // find the collection
+    $thisClctn = Collection::findorFail($cmsID);  
+
+    // Get all the tables of this collection
+    $tbls = $thisClctn->tables()->get();
+
+    // redirect to show page
+    return view('collection/show')->with('tbls', $tbls)
+                                  ->with('cmsID', $cmsID)
+                                  ->with('clctnName', $thisClctn->clctnName);
+  }    
+
+  /**
   * Takes request validates the collection name and saves new collection to database
   */
   public function create(Request $request) {
@@ -68,6 +87,19 @@ class CollectionController extends Controller
     // Take the form object and insert using model
     // Used a named route for better redirection
     return redirect()->route('collection.index');
+  }
+
+  public function tableCreate(Request $request) {
+    // find the collection
+    $thisClctn = Collection::findorFail($request->colID);
+    if ($thisClctn->isCms) {
+      // Redirect to wizard import for cms
+      return redirect()->route('wizard.cms');
+    }
+    else {
+      // Redirect to wizard import for cms
+      return redirect()->route('wizard.flatfile');
+    }
   }
 
   /**
