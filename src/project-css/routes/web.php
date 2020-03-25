@@ -48,10 +48,10 @@ Route::get('collection', 'CollectionController@index')->name('collection.index')
 Route::group([ 'prefix' => 'collection' ], function() {
     Route::post('create', 'CollectionController@create')->name('collection.create');
     Route::post('edit', 'CollectionController@edit')->name('collection.edit');
-    Route::get('show/{colID}', 'CollectionController@show'); 
-    Route::get('{colID}/table/create', 'CollectionController@tableCreate'); 
-    Route::post('disable', 'CollectionController@disable')->name('collection.disable');;
-    Route::post('enable', 'CollectionController@enable')->name('collection.enable');;
+    Route::get('show/{colID}', 'CollectionController@show')->name('collection.show'); 
+    Route::get('{colID}/table/create', 'CollectionController@tableCreate')->name('collection.table.create'); 
+    Route::post('disable', 'CollectionController@disable')->name('collection.disable');
+    Route::post('enable', 'CollectionController@enable')->name('collection.enable');
 });
 
 /*
@@ -61,6 +61,12 @@ Route::group([ 'prefix' => 'collection' ], function() {
 */
 Route::get('table', 'TableController@index')->name('tableIndex');
 Route::group([ 'prefix' => 'table' ], function() {
+    Route::get('edit/{curTable}', 'TableController@edit')->name('table.edit');
+    Route::post('update', 'TableController@update');
+
+    Route::get('edit/schema/{curTable}', 'TableController@editSchema')->name('table.edit.schema');
+    Route::post('update/schema', 'TableController@updateSchema');
+
     Route::get('create', 'TableController@wizard');
     Route::post('create/import', 'TableController@import');
     Route::post('create/importcmsdis', 'TableController@importCMSDIS')->name('importcmsdis');
@@ -83,7 +89,7 @@ Route::group([ 'prefix' => 'table' ], function() {
 */
 Route::group([ 'prefix' => 'admin/wizard' ], function() {
     Route::get('import', 'WizardController@import')->name('wizard.import');
-    Route::get('import/collection/{colID}', 'WizardController@showCollection')->name('wizard.import.collection');
+    Route::get('import/collection/{colID}', 'WizardController@importCollection')->name('wizard.import.collection');
 
     Route::get('flatfile', 'WizardController@flatfile')->name('wizard.flatfile');
     Route::post('flatfile/upload', 'WizardController@flatfileUpload')->name('wizard.flatfile.upload');

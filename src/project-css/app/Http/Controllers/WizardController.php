@@ -29,8 +29,9 @@ class WizardController extends Controller
       $this->sharedViewData = [
             'AuthUsr' => Auth::user(),
             'collcntNms' => Collection::all(),
-            'fltFleList' => $this->flatFileList()
-        ];
+            'fltFleList' => $this->flatFileList(),
+            'colID' => 1
+       ];
     }
 
    /**
@@ -40,6 +41,23 @@ class WizardController extends Controller
     */    
     public function import() {
         return view('admin/wizard/import')->with('AuthUsr', Auth::user());
+    }
+
+    public function importCollection($colID) {
+        // find the collection
+        $thisClctn = Collection::findorFail($colID);
+        // get shared view data
+        $data = $this->sharedViewData;
+        // set collection id to current
+        $data['colID'] = $colID;
+
+        if ($thisClctn->isCms) {
+            // return cms import wizard
+            return view('admin/wizard/cms')->with($data);
+        }
+
+        // return flatfile import wizard
+        return view('admin/wizard/flatfile')->with($data);
     }
 
     /**
@@ -66,7 +84,10 @@ class WizardController extends Controller
     *
     * @return view
     */      
-    public function flatfile() {
+    public function flatfile(Request $request) {
+        // var_dump($request->colID);
+        // die();
+
         return view('admin/wizard/flatfile')->with($this->sharedViewData);
     }
 

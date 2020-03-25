@@ -92,6 +92,71 @@ class TableHelper {
         return $table;
      }
 
+     public function changeTableField($tblNme, $curColNme, $curColType, $curColSze) {
+        Schema::table($tblNme, function ($table) use ($curColNme, $curColType, $curColSze) {
+          // Filter the data type and size and create the column
+          // Check for Strings
+          if (str_is($curColType, 'string')) {
+            // Check for the data type
+            // Default
+            if (str_is($curColSze, 'default')) {
+              // For String default is 30 characters
+              $table->string($curColNme, 30)->change();
+            }
+            // Medium
+            if (str_is($curColSze, 'medium')) {
+              // For String medium is 150 characters
+              $table->string($curColNme, 150)->change();
+            }
+            // Big
+            if (str_is($curColSze, 'big')) {
+              // For String big is 500 characters
+              $table->string($curColNme, 500)->change();
+            }
+          }
+
+          // Check for Text data type
+          if (str_is($curColType, 'text')) {
+            // Check for the data type
+            // Default
+            if (str_is($curColSze, 'default')) {
+              // For text default is text type
+              $table->text($curColNme)->change();
+            }
+            // Medium
+            if (str_is($curColSze, 'medium')) {
+              // For text medium is mediumtext type
+              $table->mediumText($curColNme)->change();
+            }
+            // Big
+            if (str_is($curColSze, 'big')) {
+              // For text big is longtext type
+              $table->longText($curColNme)->change();
+            }
+          }
+
+          // Check for Integer
+          if (str_is($curColType, 'integer')) {
+            // Check for the data type
+            // Default
+            if (str_is($curColSze, 'default')) {
+              // For Integer default integer type
+              $table->integer($curColNme)->change();
+            }
+            // Medium
+            if (str_is($curColSze, 'medium')) {
+              // For Integer medium is medium integer
+              $table->mediumInteger($curColNme)->change();
+            }
+            // Big
+            if (str_is($curColSze, 'big')) {
+              // For Integer big is big integer
+              $table->bigInteger($curColNme)->change();
+            }
+          }
+        });
+     }
+
      /**
      * Simple function to create the table within the collections
      * @param string $tblNme
@@ -100,12 +165,27 @@ class TableHelper {
      public function crteTblInCollctn($tblNme, $collctnId) {
        // declare a new table instance
        $thisTabl = new Table;
-       // Assign the table name and collctn id
+       // Assign the table name
        $thisTabl->tblNme = $tblNme;
+       // Set table to the collection
        $thisTabl->collection_id = $collctnId;
-       // Save the collection
+       // Save the table
        $thisTabl->save();
      }
+
+     /**
+     * Simple function to set the table to a collection
+     * @param integer $tblId
+     * @param string $collctnId
+     */
+     public function setTblInCollctn($tblId, $collctnId) {
+       // Get the table entry in meta table "tables"
+       $table = Table::findOrFail($tblId);
+       // Set collection id
+       $table->collection_id = $collctnId;
+       // Save the table
+       $table->save();
+     }     
 
      public function fileImport($tblNme, $fltFlePath, $fltFle) {
        // set messages array to empty
@@ -165,20 +245,13 @@ class TableHelper {
      // $cms true if uploaded files are apart of a cms set
      // $tblNme new table name to be used
      public function storeUploadsAndImport($data) {
-        // Set variables for passed data
-        $strDir = $data['strDir'];
-        $colID = $data['colID'];
-        $files = $data['flatFiles'];
-        $cms = $data['cms'];
-        $tblNme = $data['tableName'];
-
         // Get the list of files in the directory
         $fltFleList = Storage::allFiles($strDir);
 
         $errors = [];
 
         // Loop over them
-        foreach ($files as $file) {
+        foreach ($data['flatFiles'] as $file) {
           $thisFltFileNme = $file->getClientOriginalName();
           if (in_array($strDir.'/'.$thisFltFileNme, $fltFleList)) {
             array_push($errors, $thisFltFileNme . ' File already exists. Please select the file or rename and re-upload.');
@@ -186,70 +259,70 @@ class TableHelper {
           else {
             // Store in the directory inside storage/app
             $file->storeAs($strDir, $thisFltFileNme);
-            $fltFleAbsPth = $strDir.'/'.$thisFltFileNme;
-            $schema = (new CSVHelper)->schema($fltFleAbsPth);
-            if (!$schema) {
-              Storage::delete($fltFleAbsPth);
-              array_push($errors, [ 'The selected flat file must be of type: text/plain', 'The selected flat file should not be empty', 'File is deleted for security reasons' ]);
-            }
-            elseif ($cms) {
-              // filter record string
-              $filteredType = filter_var($schema[0], FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_HIGH);
-
-              // create table name
-              $tblNme = $filteredType . time();
-
-              // pass values to create file
-              (new CMSHelper)->createCMSTable($strDir, $thisFltFileNme, $colID, $tblNme);
-            }
-            else {
-              (new CSVHelper)->createFlatTable($strDir, $thisFltFileNme, $colID, $tblNme);
-            }
-         }
+            $result = importFile($data['strDir'], $thisFltFileNme, $data['tableName'], $data['colID'], $data['cms']);
+            // if error in importing push returned error to $errors
+            if ($result->error) {
+              array_push($errors, $result->errorList);
+            }   
+          }
        }
-
+       //return redirect()->route('tableIndex');
        return redirect()->route('tableIndex')->withErrors($errors);
-     }
+    }
 
      // $strDir is the storage folder
      // $colID is the collection id
      // $array of files
      public function selectFilesAndImport($data) {
-        // Set variables for passed data
-        $strDir = $data['strDir'];
-        $colID = $data['colID'];
-        $files = $data['flatFiles'];
-        $cms = $data['cms'];
-        $tblNme = $data['tableName'];
-
         // array for keeping errors that we will send to the user
         $errors = [];
 
         // Loop over them
-        foreach ($files as $file) {
-          $fltFleAbsPth = $strDir.'/'.$file;
-          // Calling schema will return an array containing the
-          // tokenized first row of our file to be imported
-          $schema = (new CSVHelper)->schema($fltFleAbsPth);
-          // if the array is not valid we will delete the file
-          // and push a error to the $errors array
-          if (!$schema) {
-            Storage::delete($fltFleAbsPth);
-            array_push($errors, [ 'The selected flat file must be of type: text/plain', 'The selected flat file should not be empty', 'File is deleted for security reasons' ]);
-          }
-          elseif ($cms) {
-            // filter record string
-            $filteredType = filter_var($schema[0], FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_HIGH);
-            // create table name
-            $tblNme = $filteredType . time();
-            // pass values to create file
-            (new CMSHelper)->createCMSTable($strDir, $file, $colID, $tblNme);
-          }
-          else {
-             (new CSVHelper)->createFlatTable($strDir, $file, $colID, $tblNme);;
-          }
+        foreach ($data['flatFiles'] as $file) {
+           $result = $this->importFile($data['strDir'], $file, $data['tableName'], $data['colID'], $data['cms']);
+           
+           // if error in importing push returned error to $errors
+           if ($result['error']) {
+            array_push($errors, $result['errorList']);
+           }   
         }
         return redirect()->route('tableIndex')->withErrors($errors);
      }
 
+     public function importFile($strDir, $file, $tblNme, $colID, $cms) {
+        $fltFleAbsPth = $strDir.'/'.$file;
+        // Calling schema will return an array containing the
+        // tokenized first row of our file to be imported
+        $schema = (new CSVHelper)->schema($fltFleAbsPth);
+        // if the array is not valid we will delete the file
+        // and push a error to the $errors array
+        if (!$schema) {
+          Storage::delete($fltFleAbsPth);
+
+          $errorArray = [
+            'error' => true,
+            'errorList' => [ 'The selected flat file must be of type: text/plain', 'The selected flat file should not be empty', 'File is deleted for security reasons' ]
+          ];
+
+          return ($errorArray);
+        }
+        elseif ($cms) {
+          // filter record string
+          $filteredType = filter_var($schema[0], FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_HIGH);
+          // create table name
+          $tblNme = $filteredType . time();
+          // pass values to create file
+          (new CMSHelper)->createCMSTable($strDir, $file, $colID, $tblNme);
+        }
+        else {
+            (new CSVHelper)->createFlatTable($strDir, $file, $colID, $tblNme);;
+        }
+
+        $errorArray = [
+          'error' => false,
+          'errorList' => []
+        ];
+
+        return ($errorArray);
+      }     
 }

@@ -7,6 +7,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use App\Models\Collection;
 use App\Models\Table;
 
@@ -84,22 +85,19 @@ class CollectionController extends Controller
 
     $thisClctn->save();
 
+    // create folder in storage that will contain any additional files associated to the collection
+    if (Storage::exists($thisClctn->clctnName) == FALSE) {
+      Storage::makeDirectory($thisClctn->clctnName, 0775);
+    }
+
     // Take the form object and insert using model
     // Used a named route for better redirection
     return redirect()->route('collection.index');
   }
 
   public function tableCreate(Request $request) {
-    // find the collection
-    $thisClctn = Collection::findorFail($request->colID);
-    if ($thisClctn->isCms) {
-      // Redirect to wizard import for cms
-      return redirect()->route('wizard.cms');
-    }
-    else {
-      // Redirect to wizard import for cms
-      return redirect()->route('wizard.flatfile');
-    }
+    // redirect to import wizard
+    return redirect('admin/wizard/import/collection/'.$request->colID);
   }
 
   /**

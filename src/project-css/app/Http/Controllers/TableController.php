@@ -45,9 +45,182 @@ class TableController extends Controller
     */
     public function index() {
       // Get all the table records
-      $tbls = Table::all();
+      $tbls = Table::all();      
       // return the index page
       return view('admin/table')->with('tbls', $tbls);
+    }
+
+    /**
+    * Render View that allows users to edit table
+    */
+    public function edit($curTable) {
+      $table = Table::findOrFail($curTable);
+
+      // Get the collection names
+      $collcntNms = Collection::all();
+
+      // redirect to show page
+      return view('table/edit')->with('tblId', $table->id)
+                               ->with('tblNme', $table->tblNme)
+                               ->with('colID', $table->collection_id)
+                               ->with('collcntNms', $collcntNms);
+    }    
+
+    public function update(Request $request) {
+      // get table from Tables
+      $table = Table::findOrFail($request->tblId);
+
+      // Do not update unless the table name has changed
+      if ($table->tblNme != $request->name) {
+        // Verify new table name doesn't already exist
+        if (Schema::hasTable($request->name)) {
+          return redirect()->back()->with('error', ['The table name has already been taken by current or disabled table']); 
+        }
+
+        // Rename table
+        Schema::rename($table->tblNme, $request->name);
+
+        // Update entry in tables 
+        $table->tblNme = $request->name;
+      }
+
+      $table->collection_id = $request->colID;
+      $table->save();
+
+      // redirect to edit schema page
+      return redirect()->route('table.edit.schema',  ['curTable' => $request->tblId]);
+    }
+    
+    public function setVarchar($size) {
+      switch ($size) {
+        case $size <= 30:
+            return (['type' => 'string', 'size' => 'default']);
+            break;   
+        case $size <= 150:
+            return (['type' => 'string', 'size' => 'medium']);
+            break;
+        default:
+            return (['type' => 'string', 'size' => 'big']);   
+      }
+    }
+ 
+    public function setInteger($size) {
+      switch ($size) {
+        case $size <= 2:
+          return (['type' => 'integer', 'size' => 'default']);
+          break;
+        case $size <= 7:
+          return (['type' => 'integer', 'size' => 'medium']);
+          break;
+        default:
+          return (['type' => 'integer', 'size' => 'big']);
+      }      
+    }    
+
+    public function editSchema($curTable) {
+      // Set Empty Field Type Array
+      $schema = [];
+
+      // Get the table entry in meta table "tables"
+      $table = Table::findOrFail($curTable);
+
+      // Get Description of table
+      $results = DB::select("DESCRIBE ".$table->tblNme);
+
+      // remove first item we do not change the id of the table
+      unset($results[0]);
+
+      // remmove the srchindex and timestamp fields we do not change these
+      $results = array_slice($results, 0, -3);
+
+      //loop over remaining table fields
+      foreach ($results as $col) {
+        // get varchar size
+        preg_match_all('!\d+!', $col->Type, $size);
+        if (count($size[0]) == 1) {
+          $type = explode("(", $col->Type, 2);
+          switch ($type[0]) {
+              case 'varchar':
+                  array_push($schema, [$col->Field => $this->setVarchar((int) $size[0][0])]);
+                  break;
+              case 'int':
+              case 'mediumint':
+              case 'bigint':
+                  array_push($schema, [$col->Field => $this->setInteger((int) $size[0][0])]);
+                  break;               
+          }
+        }
+      }
+      
+      // return view
+      return view('table.edit.schema')->with('tblId', $table->id)
+                                      ->with('schema', $schema)
+                                      ->with('tblNme', $table->tblNme)
+                                      ->with('collctnId', $table->collection_id);
+    }      
+
+    public function updateSchema(Request $request) {
+      //get table
+      $table = Table::where('tblNme', $request->tblNme)->first();
+
+      // Get Description of table
+      $results = DB::select("DESCRIBE ".$request->tblNme);
+
+      // remove first item we do not change the id of the table
+      unset($results[0]);
+
+      // remmove the srchindex and timestamp fields we do not change these
+      $results = array_slice($results, 0, -3);
+
+      for ($i = 0; $i<$request->kCnt; $i++) {
+        // Define current column name, type and size
+        $curColNme = strval($request->{'col-'.$i.'-name'});
+        $curColType = strval($request->{'col-'.$i.'-data'});
+        $curColSze = strval($request->{'col-'.$i.'-size'});
+
+        // var_dump($request);
+        // die();
+
+        $prevColNme = $results[$i]->Field;
+
+        // If the Current and Previous Field Names are Different Update the Table
+        if ($curColNme != $prevColNme) {
+          Schema::table($request->tblNme, function($table) use ($prevColNme, $curColNme)
+          {
+              $table->renameColumn($prevColNme, $curColNme);
+          });
+        }
+
+        Schema::table($request->tblNme, function ($table) use ($curColNme, $curColType, $curColSze) {
+          // Filter the data type and size and create the column
+          // Check for Strings
+          if (str_is($curColType, 'string')) {
+            // Check for the data type
+            // Default
+            if (str_is($curColSze, 'default')) {
+              // For String default is 30 characters
+              $table->string($curColNme, 30)->change();
+            }
+            // Medium
+            if (str_is($curColSze, 'medium')) {
+              // For String medium is 150 characters
+              $table->string($curColNme, 150)->change();
+            }
+            // Big
+            if (str_is($curColSze, 'big')) {
+              // For String big is 500 characters
+              $table->string($curColNme, 500)->change();
+            }
+          }
+        });
+
+        //(new TableHelper)->changeTableField($request->tblNme, $curColNme, $curColType, $curColSze);
+      }
+
+      //die();
+
+      // redirect to collection show page
+      return redirect()->route('collection.show', ['colID' => $table->collection_id]);
     }
 
     /**
@@ -291,11 +464,6 @@ class TableController extends Controller
       // Finally create the table
       // Save the table upon the schema
       (new TableHelper)->crteTblInCollctn($tblNme, $collctnId);
-
-      // create folder in storage that will contain any additional files associated to the table
-      if (Storage::exists($tblNme) == FALSE) {
-        Storage::makeDirectory($tblNme, 0775);
-      }
 
       // Finally return the view to load data
       return $this->load(True, $tblNme, $fltFile);

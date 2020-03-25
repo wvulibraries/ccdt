@@ -42,22 +42,22 @@
           </div>
           <!-- Options for the collection -->
           <div class="col-xs-6 col-sm-8 col-md-8">
-            <!-- Option 1 Show tables -->
+            <!-- Option 1 Add tables -->
+            <div class="colCardOpts">
+              <a href="{{url('/collection/'. $collcntNm->id . '/table/create') }}">
+                <div class="icon hidden-xs hidden-sm">
+                  <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                </div>
+                <p>Add Tables</p>
+              </a>
+            </div>          
+            <!-- Option 2 Show tables -->
             <div class="colCardOpts">
               <a href="{{url('collection/show',['cmsID' => $collcntNm->id])}}">
                 <div class="icon hidden-xs hidden-sm">
                   <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
                 </div>
-                <p>Show Tables</p>
-              </a>
-            </div>
-            <!-- Option 2 Add tables -->
-            <div class="colCardOpts">
-              <a href="{{url('collection/'.$collcntNm->id.'/table/create')}}">
-                <div class="icon hidden-xs hidden-sm">
-                  <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-                </div>
-                <p>Add Tables</p>
+                <p>Show</p>
               </a>
             </div>
             <!-- Option 3 Edit Collection -->

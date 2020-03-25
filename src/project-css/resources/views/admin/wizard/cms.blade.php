@@ -34,9 +34,13 @@
                             <select id="colID" type="text" class="form-control" name="colID" value="{{ old('colID') }}" required autofocus>
                               @foreach($collcntNms as $collcntNm)
                                 @if($collcntNm->isEnabled)
-                                  <option value="{{$collcntNm->id}}">{{$collcntNm->clctnName}}</option>
+                                  <option value="{{$collcntNm->id}}"
+                                  @if ($collcntNm->id == $colID)
+                                      selected="selected"
+                                  @endif
+                                  >{{$collcntNm->clctnName}}</option>
                                 @endif
-                              @endforeach
+                              @endforeach                                 
                             </select>
                           </div>
                       </div>
@@ -73,12 +77,16 @@
                           <label for="colID2" class="col-md-4 control-label">Select Collection</label>
 
                           <div class="col-md-6">
-                            <select id="colID2" type="text" class="form-control" name="colID2" value="{{ old('colID2') }}" required autofocus>
+                            <select id="colID2" type="text" class="form-control" name="colID2" value="{{ old('colID') }}" required autofocus>
                               @foreach($collcntNms as $collcntNm)
                                 @if($collcntNm->isEnabled)
-                                  <option value="{{$collcntNm->id}}">{{$collcntNm->clctnName}}</option>
+                                  <option value="{{$collcntNm->id}}"
+                                  @if ($collcntNm->id == $colID)
+                                      selected="selected"
+                                  @endif
+                                  >{{$collcntNm->clctnName}}</option>
                                 @endif
-                              @endforeach
+                              @endforeach                               
                             </select>
                           </div>
                       </div>

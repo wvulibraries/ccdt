@@ -55,15 +55,15 @@
             </p>
         </div>
 
+        <a href="{{ url('/table/edit',['tableId' => $tbl->id]) }}" class="table-item col-xs-12 col-sm-2 col-md-2 well dashCard">
+          <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+          <div><br/> Edit Table</div>
+        </a>  
+
         <a href="{{ url('/data',['tableId' => $tbl->id]) }}" class="table-item col-xs-12 col-sm-2 col-md-2 well dashCard">
           <span class="glyphicon glyphicon-cd" aria-hidden="true"></span>
           <div>{{DB::table($tbl->tblNme)->count()}} </div>
           <div> Records </div>
-        </a>
-
-        <a href="{{ url('/upload',['tableId' => $tbl->id]) }}" aria-labelledby="{{$tbl->tblNme}}" class="table-item col-xs-12 col-sm-2 col-md-2 well dashCard">
-          <span class="glyphicon glyphicon-upload" aria-hidden="true"></span>
-          <div><br/> Upload Files</div>
         </a>
       </div>
       @endif
