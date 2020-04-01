@@ -17,7 +17,7 @@ class AuthTest extends BrowserKitTestCase {
 
     public function setUp(): void {
         parent::setUp();
-        Artisan::call('migrate:refresh --seed');
+        //Artisan::call('migrate:refresh --seed');
 
         //credentials
         $this->adminEmail = "admin@admin.com";

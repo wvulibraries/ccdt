@@ -92,30 +92,43 @@ class TableController extends Controller
     }
     
     public function setVarchar($size) {
-      switch ($size) {
+      switch ($size) { 
         case $size <= 30:
-            return (['type' => 'string', 'size' => 'default']);
-            break;   
+            return (['type' => 'string', 'size' => 'default']); 
+            break;                     
         case $size <= 150:
             return (['type' => 'string', 'size' => 'medium']);
             break;
         default:
-            return (['type' => 'string', 'size' => 'big']);   
+            return (['type' => 'string', 'size' => 'big']);
       }
     }
  
-    public function setInteger($size) {
-      switch ($size) {
-        case $size <= 2:
-          return (['type' => 'integer', 'size' => 'default']);
-          break;
-        case $size <= 7:
+    public function setInteger($type) {
+      switch ($type) {
+        case 'mediumint':
           return (['type' => 'integer', 'size' => 'medium']);
           break;
-        default:
-          return (['type' => 'integer', 'size' => 'big']);
+        case 'bigint':
+          return (['type' => 'integer', 'size' => 'big']); 
+          break;
+        default:  
+          return (['type' => 'integer', 'size' => 'default']);      
       }      
     }    
+
+    public function setText($type) {
+      switch ($type) {
+        case 'mediumtext':  
+          return (['type' => 'text', 'size' => 'medium']);
+          break;
+        case 'longtext':
+          return (['type' => 'text', 'size' => 'big']);
+          break;
+        default:
+          return (['type' => 'text', 'size' => 'default']);
+      }      
+    }      
 
     public function editSchema($curTable) {
       // Set Empty Field Type Array
@@ -146,9 +159,13 @@ class TableController extends Controller
               case 'int':
               case 'mediumint':
               case 'bigint':
-                  array_push($schema, [$col->Field => $this->setInteger((int) $size[0][0])]);
-                  break;               
+                  array_push($schema, [$col->Field => $this->setInteger($type[0])]);
+                  break;                                      
           }
+        }
+        else {
+          // if size isn't present then field is a text field
+          array_push($schema, [$col->Field => $this->setText($col->Type)]);
         }
       }
       
@@ -175,11 +192,12 @@ class TableController extends Controller
       for ($i = 0; $i<$request->kCnt; $i++) {
         // Define current column name, type and size
         $curColNme = strval($request->{'col-'.$i.'-name'});
+        
+        // Ensure new column name is in proper format
+        $curColNme = (new CustomStringHelper)->formatFieldName($curColNme);
+
         $curColType = strval($request->{'col-'.$i.'-data'});
         $curColSze = strval($request->{'col-'.$i.'-size'});
-
-        // var_dump($request);
-        // die();
 
         $prevColNme = $results[$i]->Field;
 
@@ -191,30 +209,7 @@ class TableController extends Controller
           });
         }
 
-        Schema::table($request->tblNme, function ($table) use ($curColNme, $curColType, $curColSze) {
-          // Filter the data type and size and create the column
-          // Check for Strings
-          if (str_is($curColType, 'string')) {
-            // Check for the data type
-            // Default
-            if (str_is($curColSze, 'default')) {
-              // For String default is 30 characters
-              $table->string($curColNme, 30)->change();
-            }
-            // Medium
-            if (str_is($curColSze, 'medium')) {
-              // For String medium is 150 characters
-              $table->string($curColNme, 150)->change();
-            }
-            // Big
-            if (str_is($curColSze, 'big')) {
-              // For String big is 500 characters
-              $table->string($curColNme, 500)->change();
-            }
-          }
-        });
-
-        //(new TableHelper)->changeTableField($request->tblNme, $curColNme, $curColType, $curColSze);
+        (new TableHelper)->changeTableField($request->tblNme, $curColNme, $curColType, $curColSze);
       }
 
       //die();
@@ -448,7 +443,7 @@ class TableController extends Controller
           $curColType = strval($request->{'col-'.$i.'-data'});
           $curColSze = strval($request->{'col-'.$i.'-size'});
 
-          $table = (new TableHelper)->setupTableField($table, $curColNme, $curColType, $curColSze);
+          (new TableHelper)->setupTableField($table, $curColNme, $curColType, $curColSze);
         }
 
         // search index

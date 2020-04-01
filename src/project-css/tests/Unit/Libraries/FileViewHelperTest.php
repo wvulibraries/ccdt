@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\Collection;
+use App\Models\Table;
 use App\Libraries\CSVHelper;
 use App\Libraries\FileViewHelper;
 use App\Libraries\TableHelper;
@@ -11,13 +13,13 @@ class FileViewHelperTest extends BrowserKitTestCase
 
     public function setUp(): void {
          parent::setUp();
-         Artisan::call('migrate:refresh --seed');
+         //Artisan::call('migrate:refresh --seed');
          $this->fileViewHelper = new FileViewHelper();
          $this->singlefilewithpath = '..\documents\BlobExport\indivletters\114561.txt';
     }
 
     protected function tearDown(): void {
-         Artisan::call('migrate:reset');
+         //Artisan::call('migrate:reset');
          unset($this->singlefilewithpath);
          unset($this->fileViewHelper);
          parent::tearDown();
@@ -28,16 +30,16 @@ class FileViewHelperTest extends BrowserKitTestCase
         $folder = $this->fileViewHelper->getFolderName($this->singlefilewithpath);
         $filename = $this->fileViewHelper->getFilename($this->singlefilewithpath);
 
-        // create fake table storage
-        $tblNme = time();
-        $path = './storage/app/'.$tblNme;
+        // create fake collection storage
+        $colNme = time();
+        $path = './storage/app/'.$colNme;
         mkdir($path);
         mkdir($path.'/'.$folder);
         // create empty file
         touch($path.'/'.$folder.'/'.$filename, time() - (60 * 60 * 24 * 5));
 
         // check that file exists using our function
-        $this->assertTrue($this->fileViewHelper->fileExists($tblNme, $folder.'/'.$filename));
+        $this->assertTrue($this->fileViewHelper->fileExists($colNme, $folder.'/'.$filename));
 
         // cleanup delete folders and file that we created
         unlink($path.'/'.$folder.'/'.$filename);
@@ -49,16 +51,16 @@ class FileViewHelperTest extends BrowserKitTestCase
         $folder = $this->fileViewHelper->getFolderName($this->singlefilewithpath);
         $filename = $this->fileViewHelper->getFilename($this->singlefilewithpath);
 
-        // create fake table storage
-        $tblNme = time();
-        $path = './storage/app/'.$tblNme;
+        // create fake collection storage
+        $colNme = time();
+        $path = './storage/app/'.$colNme;
         mkdir($path);
         mkdir($path.'/'.$folder);
         // create empty file
         touch($path.'/'.$folder.'/'.$filename, time() - (60 * 60 * 24 * 5));
 
         // check that file exists using our function
-        $this->assertTrue($this->fileViewHelper->fileExistsInFolder($tblNme, $this->singlefilewithpath));
+        $this->assertTrue($this->fileViewHelper->fileExistsInFolder($colNme, $this->singlefilewithpath));
 
         // cleanup delete folders and file that we created
         unlink($path.'/'.$folder.'/'.$filename);
@@ -67,16 +69,16 @@ class FileViewHelperTest extends BrowserKitTestCase
     }
 
     public function testfileDoesNotExistsInFolder() {
-        // create fake table storage
-        $tblNme = time();
+        // create fake collection storage
+        $colNme = time();
         $folder = 'testfolder';
-        $path = './storage/app/'.$tblNme;
+        $path = './storage/app/'.$colNme;
 
         mkdir($path);
         mkdir($path.'/'.$folder);
 
         // check that file exists using our function
-        $this->assertFalse($this->fileViewHelper->fileExistsInFolder($tblNme, $folder.'/'.'notarealfile.txt'));
+        $this->assertFalse($this->fileViewHelper->fileExistsInFolder($colNme, $folder.'/'.'notarealfile.txt'));
 
         // cleanup delete folders that we created
         rmdir($path.'/'.$folder);
@@ -99,30 +101,30 @@ class FileViewHelperTest extends BrowserKitTestCase
     }
 
     public function testBuildFileLink() {
-        $tblNme = time(); // random table name
-        $output = $this->fileViewHelper->buildFileLink($tblNme, $this->singlefilewithpath);
-        $this->assertEquals($tblNme.'/indivletters/114561.txt', $output, 'buildFileLink failed to get generate the correct path');
+        $colNme = time(); // random collection name
+        $output = $this->fileViewHelper->buildFileLink($colNme, $this->singlefilewithpath);
+        $this->assertEquals($colNme.'/indivletters/114561.txt', $output, 'buildFileLink failed to get generate the correct path');
     }
 
     public function testBuildFileLinkWithoutFolder() {
-        $tblNme = time(); // random table name
-        $output = $this->fileViewHelper->buildFileLink($tblNme, '114561.txt');
-        $this->assertEquals($tblNme.'/114561.txt', $output, 'buildFileLink failed to get generate the correct path');
+        $colNme = time(); // random collection name
+        $output = $this->fileViewHelper->buildFileLink($colNme, '114561.txt');
+        $this->assertEquals($colNme.'/114561.txt', $output, 'buildFileLink failed to get generate the correct path');
     }
 
-    // public function testGetFileContents() {
-    //     $storageFolder = 'files/test';
-    //     // set location of file
-    //     $fileName = 'test_upload.doc';
-    //     $path = $storageFolder.'/'.$fileName;
-    //     $source = storage_path('app/'.$path);
-    //     $fileContents = $this->fileViewHelper->getFileContents($source);
+    public function testGetFileContents() {
+        $storageFolder = 'files/test';
+        // set location of file
+        $fileName = 'test_upload.doc';
+        $path = $storageFolder.'/'.$fileName;
+        $source = storage_path('app/'.$path);
+        $fileContents = $this->fileViewHelper->getFileContents($source);
 
-    //     // verify we have correct object type
-    //     $this->assertTrue(is_a($fileContents, 'Illuminate\Http\Response'));
-    //     // assert that content has the word testing
-    //     $this->assertRegexp('/testing/', $fileContents->content());
-    // }
+        // verify we have correct object type
+        $this->assertTrue(is_a($fileContents, 'Illuminate\Http\Response'));
+        // assert that content has the word testing
+        $this->assertRegexp('/testing/', $fileContents->content());
+    }
 
     public function testLocateFile() {
         // set storage location
@@ -136,21 +138,27 @@ class FileViewHelperTest extends BrowserKitTestCase
 
         $tableName = (new TestHelper)->createTable($storageFolder, $fileName, true);
 
-        mkdir('./storage/app'.'/'.$tableName.'/'.'testing');
+        //get table
+        $table = Table::where('tblNme', $tableName)->first();
 
-        copy('./storage/app'.'/'.$storageFolder.'/'.$testUpload, './storage/app'.'/'.$tableName.'/'.'testing'.'/'.$testUpload);
+        // find the collection
+        $collection = Collection::findorFail($table->collection_id); 
+
+        mkdir('./storage/app'.'/'.$collection->clctnName.'/'.'testing');
+
+        copy('./storage/app'.'/'.$storageFolder.'/'.$testUpload, './storage/app'.'/'.$collection->clctnName.'/'.'testing'.'/'.$testUpload);
 
         $path = $this->fileViewHelper->locateFile(1, $testUpload);
-        $this->assertEquals($path, $tableName.'/'.'testing'.'/'.$testUpload);
+        $this->assertEquals($path, $collection->clctnName.'/'.'testing'.'/'.$testUpload);
 
-        unlink('./storage/app'.'/'.$tableName.'/'.'testing'.'/'.$testUpload);
-        rmdir('./storage/app'.'/'.$tableName.'/'.'testing');
+        unlink('./storage/app'.'/'.$collection->clctnName.'/'.'testing'.'/'.$testUpload);
+        rmdir('./storage/app'.'/'.$collection->clctnName.'/'.'testing');
 
         // drop test table
         Schema::dropIfExists($tableName);
 
-        // clear folder that was created with the table
-        rmdir('./storage/app'.'/'.$tableName);
+        // clear folder that was created with the collection
+        File::deleteDirectory('./storage/app'.'/'.$collection->clctnName);    
     }
 
     public function testLocateFilewithinvalidFile() {
@@ -165,51 +173,57 @@ class FileViewHelperTest extends BrowserKitTestCase
 
         $tableName = (new TestHelper)->createTable($storageFolder, $fileName, true);
 
-        mkdir('./storage/app'.'/'.$tableName.'/'.'testing');
+        //get table
+        $table = Table::where('tblNme', $tableName)->first();
+
+        // find the collection
+        $collection = Collection::findorFail($table->collection_id); 
+
+        mkdir('./storage/app'.'/'.$collection->clctnName.'/'.'testing');
 
         $result = $this->fileViewHelper->locateFile(1, $testUpload);
         $this->assertFalse($result);
 
-        rmdir('./storage/app'.'/'.$tableName.'/'.'testing');
+        rmdir('./storage/app'.'/'.$collection->clctnName.'/'.'testing');
 
         // drop test table
         Schema::dropIfExists($tableName);
 
-        // clear folder that was created with the table
-        rmdir('./storage/app'.'/'.$tableName);
+        // clear folder that was created with the collection
+        File::deleteDirectory('./storage/app'.'/'.$collection->clctnName);  
   }
 
-  public function testGetFilePath() {
-        // set storage location
-        $storageFolder = 'files/test';
+//   public function testGetFilePath() {
+//         // set storage location
+//         $storageFolder = 'files/test';
 
-        // set location of file
-        $fileName = 'test.dat';
+//         // set location of file
+//         $fileName = 'test.dat';
 
-        // set fake filename to look for
-        $testUpload = '000006.txt';
+//         // set fake filename to look for
+//         $testUpload = '000006.txt';
 
-        $tableName = (new TestHelper)->createTable($storageFolder, $fileName, true);
+//         $tableName = (new TestHelper)->createTable($storageFolder, $fileName, true);
 
-        $folder = 'indivletters';
+//         $folder = 'indivletters';
 
-        mkdir('./storage/app'.'/'.$tableName.'/'.$folder);
+//         mkdir('./storage/app'.'/'.$tableName.'/'.$folder);
 
-        // create empty file
-        touch('./storage/app'.'/'.$tableName.'/'.$folder.'/'.$testUpload, time() - (60 * 60 * 24 * 5));
+//         // create empty file
+//         touch('./storage/app'.'/'.$tableName.'/'.$folder.'/'.$testUpload, time() - (60 * 60 * 24 * 5));
 
-        $result = $this->fileViewHelper->getFilePath(1, 1, $testUpload);
+//         $result = $this->fileViewHelper->getFilePath(1, 1, $testUpload);
 
-        $this->assertEquals($result, $tableName.'/'.$folder.'/000006.txt');
+//         $this->assertEquals($result, $tableName.'/'.$folder.'/000006.txt');
 
-        unlink('./storage/app'.'/'.$tableName.'/'.$folder.'/'.$testUpload);
+//         unlink('./storage/app'.'/'.$tableName.'/'.$folder.'/'.$testUpload);
 
-        // clear folder that was created with the table
-        rmdir('./storage/app'.'/'.$tableName.'/'.$folder);         
-        rmdir('./storage/app'.'/'.$tableName);
+//         // clear folder that was created with the table
+//         rmdir('./storage/app'.'/'.$tableName.'/'.$folder);         
+//         rmdir('./storage/app'.'/'.$tableName);
 
-        // drop test table
-        Schema::dropIfExists($tableName);
-  }
+//         // drop test table
+//         Schema::dropIfExists($tableName);
+//   }
 
 }

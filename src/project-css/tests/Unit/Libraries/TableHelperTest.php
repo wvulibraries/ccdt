@@ -1,5 +1,6 @@
 <?php
 use \Symfony\Component\HttpFoundation\File\UploadedFile;
+use App\Models\Collection;
 use App\Models\Table;
 use App\Libraries\CSVHelper;
 use App\Libraries\CMSHelper;
@@ -10,11 +11,11 @@ class TableHelperTest extends BrowserKitTestCase
 {
     public function setUp(): void {
         parent::setUp();
-        Artisan::call('migrate:fresh --seed');
+        //Artisan::call('migrate:fresh --seed');
     }
 
     protected function tearDown(): void {
-            Artisan::call('migrate:rollback');
+        //Artisan::call('migrate:rollback');
         parent::tearDown();
     }
 
@@ -36,10 +37,13 @@ class TableHelperTest extends BrowserKitTestCase
         $this->assertEquals($table->getOrgCount(), 7);
 
         // drop test table
-        Schema::dropIfExists($tableName);
-
-        // clear folder that was created with the table
-        rmdir('./storage/app'.'/'.$tableName);
+        Schema::dropIfExists($tableName);  
+        
+        // find the collection
+        $collection = Collection::findorFail($table->collection_id); 
+        
+        // remove folder that was created for the collection
+        rmdir('./storage/app'.'/'.$collection->clctnName);        
     }
 
     public function testCreateCMSTableWithoutHeader() {
@@ -57,13 +61,16 @@ class TableHelperTest extends BrowserKitTestCase
         $table = Table::where('tblNme', $tableName)->first();
 
         // assert field count is equal to 7
-        $this->assertEquals($table->getOrgCount(), 13);
+        $this->assertEquals($table->getOrgCount(), 13);       
 
         // drop test table
         Schema::dropIfExists($tableName);
 
-        // clear folder that was created with the table
-        rmdir('./storage/app'.'/'.$tableName);
+        // find the collection
+        $collection = Collection::findorFail($table->collection_id); 
+        
+        // remove folder that was created for the collection
+        rmdir('./storage/app'.'/'.$collection->clctnName);
     }
 
 }

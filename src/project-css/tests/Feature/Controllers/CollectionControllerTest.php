@@ -12,9 +12,12 @@
     private $admin;
     private $user;
 
+    // location of test files
+    private $filePath = './storage/app';
+
     public function setUp(): void {
       parent::setUp();
-      Artisan::call('migrate:refresh --seed');
+      //Artisan::call('migrate:refresh --seed');
 
       //admin credentials
       $this->adminEmail = "admin@admin.com";
@@ -26,7 +29,7 @@
     }
 
     protected function tearDown(): void {
-      Artisan::call('migrate:reset');
+      //Artisan::call('migrate:reset');
       parent::tearDown();
     }
 
@@ -45,6 +48,9 @@
            ->press('Create')
            ->see('Create, import and manage collections here.')
            ->see('collection1');
+
+      // clear folder that was created with the collection
+      rmdir($this->filePath.'/collection1');
     }
 
     public function testNonAdminCannotCreateCollection() {
@@ -84,6 +90,9 @@
         //check if collection was renamed
         $collection = Collection::find($collection->id);
         $this->assertEquals('collection2', $collection->clctnName);
+
+        // clear folder that was created with the collection
+        rmdir($this->filePath.'/collection2');        
     }
 
     public function testDisableThenEnableCollection() {
@@ -116,6 +125,9 @@
 
         $collection = Collection::find($collection->id);
         $this->assertEquals('1', $collection->hasAccess);
+     
+        // clear folder that was created with the collection
+        rmdir($this->filePath.'/collection1');        
     }
 
     public function testNonAdminDisableCollection() {
@@ -133,6 +145,9 @@
         // Verify Collection hasn't changed
         $collection = Collection::find($collection->id);
         $this->assertEquals('1', $collection->isEnabled);
+
+        // clear folder that was created with the collection
+        rmdir($this->filePath.'/collection1');
     }
 
   }

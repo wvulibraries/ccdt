@@ -12,8 +12,12 @@
     private $admin;
     private $user;
     private $tblname;
+    private $colname;
     private $path;
     private $file;
+    
+    // location of test files
+    private $filePath = './storage/app';
 
     /**
     * @var \Illuminate\Session\SessionManager
@@ -22,7 +26,7 @@
 
     public function setUp(): void {
            parent::setUp();
-           Artisan::call('migrate:fresh --seed');
+           //Artisan::call('migrate:fresh --seed');
            Session::setDefaultDriver('array');
            $this->manager = app('session');
 
@@ -44,19 +48,19 @@
               Storage::delete('/flatfiles/'.$this->file);
            } 
 
-           if ($this->tblname != NULL) {
+           if ($this->colname != NULL) {
               // cleanup remove directory for the test table
-              Storage::deleteDirectory($this->tblname);
+              Storage::deleteDirectory($this->colname);
 
-              // drop table after Testing
-              Schema::drop($this->tblname);
+              // // drop table after Testing
+              // Schema::drop($this->tblname);
            }
     }
 
     protected function tearDown(): void {
            $this->cleanup($this->tblname, $this->file);
 
-           Artisan::call('migrate:rollback');
+           //Artisan::call('migrate:rollback');
            parent::tearDown();
     }
 
@@ -127,6 +131,9 @@
                 ->visit('data/1/2000')
                 ->assertResponseStatus(200)
                 ->see('Search Yeilded No Results');
+
+           // clear folder that was created with the collection
+           File::deleteDirectory($this->filePath.'/collection1');
     }    
 
     public function testIndexWithInvalidTable() {
@@ -161,7 +168,10 @@
 
            $this->actingAs($this->admin)
                 ->visit('data/1')
-                ->see('Doe');       
+                ->see('Doe'); 
+                
+            // clear folder that was created with the collection
+            File::deleteDirectory($this->filePath.'/collection1');
     }
 
     public function uploadFileToDatabaseAndView($upload) {
@@ -170,16 +180,19 @@
             $this->actingAs($this->admin)
                  ->visit('upload/1')
                  ->assertResponseStatus(200)
-                 ->see('Upload files to '.$this->tblname.' Table')
+                 ->see('Upload files to collection1 Collection')
                  ->type('test', 'upFldNme')
                  ->attach(array($this->path.$upload), 'attachments[]')
                  ->press('Upload')
                  ->assertResponseStatus(200)
-                 ->see('Upload files to '.$this->tblname.' Table')
-                 ->assertFileExists(storage_path('app/'.$this->tblname.'/test/'.$upload));
+                 ->see('Upload files to collection1 Collection')
+                 ->assertFileExists(storage_path('app/collection1/test/'.$upload));
 
             $this->visit('data/1/1/view'.'/test/'.$upload)
                  ->assertResponseStatus(200);
+
+            // clear folder that was created with the collection
+            File::deleteDirectory($this->filePath.'/collection1');
     }
 
     public function testUploadAndViewUploadedTxtFile() {
@@ -212,6 +225,8 @@
                 ->assertResponseStatus(200)
                 ->see('Search Yeilded No Results');
 
+            // clear folder that was created with the collection
+            File::deleteDirectory($this->filePath.'/collection1');
     }
 
     public function testImportWithNoRecords() {
@@ -230,6 +245,8 @@
                 ->assertResponseStatus(200)
                 ->see('Table does not have any records.');
 
+           // clear folder that was created with the collection
+           File::deleteDirectory($this->filePath.'/collection1');
     }
 
     public function testNullShow() {

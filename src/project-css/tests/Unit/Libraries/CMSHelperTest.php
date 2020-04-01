@@ -4,10 +4,13 @@ use App\Libraries\CMSHelper;
 
 class CMSHelperTest extends BrowserKitTestCase
 {
+  // location of test files
+  private $filePath = './storage/app';
+
   public function setUp(): void {
        parent::setUp();
 
-       Artisan::call('migrate:refresh --seed');
+       //Artisan::call('migrate:refresh --seed');
 
        // create a test collection
        $this->testHelper->createCollection('collection1');
@@ -16,7 +19,12 @@ class CMSHelperTest extends BrowserKitTestCase
   }
 
   protected function tearDown(): void {
-       Artisan::call('migrate:reset');
+       // clear folder(s) that was created with the collection(s)
+       rmdir($this->filePath.'/collection1');
+       rmdir($this->filePath.'/collection2');
+       rmdir($this->filePath.'/collection3');
+
+       //Artisan::call('migrate:reset');
        parent::tearDown();
   }
 
@@ -100,7 +108,7 @@ class CMSHelperTest extends BrowserKitTestCase
     Schema::dropIfExists($tableName);
 
     // clear folder that was created with the table
-    rmdir($filePath.'/'.$tableName);
+    // rmdir($filePath.'/'.$tableName);
   }
 
   public function testcreate1Bcmstable() {
@@ -126,7 +134,7 @@ class CMSHelperTest extends BrowserKitTestCase
     Schema::dropIfExists($tableName);
 
     // clear folder that was created with the table
-    rmdir($filePath.'/'.$tableName);
+    // rmdir($filePath.'/'.$tableName);
   }
 
   public function testcreate3Dcmstable() {
@@ -152,7 +160,7 @@ class CMSHelperTest extends BrowserKitTestCase
     Schema::dropIfExists($tableName);
 
     // clear folder that was created with the table
-    rmdir($filePath.'/'.$tableName);
+    // rmdir($filePath.'/'.$tableName);
   }
 
   public function testcreate4Ecmstable() {
@@ -178,6 +186,6 @@ class CMSHelperTest extends BrowserKitTestCase
     Schema::dropIfExists($tableName);
 
     // clear folder that was created with the table
-    rmdir($filePath.'/'.$tableName);
+    // rmdir($filePath.'/'.$tableName);
   }
 }

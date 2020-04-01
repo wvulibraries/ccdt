@@ -8,7 +8,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-use App\Models\Table;
+use App\Models\Collection;
 
 class UploadController extends Controller {
     /**
@@ -23,13 +23,13 @@ class UploadController extends Controller {
     /**
      * Show the table index page
      */
-    public function index($curTable) {
-        // Get the table entry in meta table "tables"
-        $curTable = Table::find($curTable);
+    public function index($cmsID) {
+        // Get collection
+        $thisClctn = Collection::find($cmsID);
 
         // return the index page
-        return view('admin/upload')->with('tblNme', $curTable->tblNme)
-                                   ->with('tblId', $curTable);
+        return view('admin/upload')->with('cmsID', $cmsID)
+                                   ->with('clctnName', $thisClctn->clctnName);
     }
 
     /**
@@ -37,13 +37,17 @@ class UploadController extends Controller {
      *
      * @return Redirect
      */
-    public function storeFiles(Request $request, $curTable) {
+    public function storeFiles(Request $request, $curId) {
         // set messages array to empty
         $messages = [ ];
 
-        // Get the table entry in meta table "tables"
-        $curTable = Table::find($curTable);
-
+        try {
+            // find the collection
+            $thisClctn = Collection::findorFail($curId); 
+        } catch (ModelNotFoundException $exception) {
+            return back()->withError($exception->getMessage())->withInput();
+        }
+      
         // Request the file input named 'attachments'
         $files = $request->file('attachments');
         $upFldNme = $request->upFldNme;
@@ -52,7 +56,8 @@ class UploadController extends Controller {
         if ($files[ 0 ] != '') {
           foreach ($files as $file) {
             // Set the destination path
-            $destinationPath = $curTable->tblNme.'/'.$upFldNme;
+            $destinationPath = $thisClctn->clctnName.'/'.$upFldNme;
+
             Storage::makeDirectory($destinationPath);
             // Get the orginal filname or create the filename of your choice
             $filename = $file->getClientOriginalName();
@@ -70,12 +75,15 @@ class UploadController extends Controller {
             }
             array_push($messages, $message);
           }
-
-          session()->flash('messages', $messages);
-          return view('admin/upload')->with('tblNme', $curTable->tblNme)
-                                     ->with('tblId', $curTable);
         }
-        return(false);
+        else {
+          $message = [ 'content' => ' Error: No Files Attached', 'level' => 'warning' ];
+          array_push($messages, $message);
+        }
+
+        session()->flash('messages', $messages);
+        return view('admin/upload')->with('clctnName', $thisClctn->clctnName)
+                                    ->with('cmsID', $thisClctn->id);
     }
 
 }

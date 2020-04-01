@@ -1,5 +1,5 @@
 <?php
-    # app/tests/controllers/UploadControllerTest.php
+    # app/tests/controllers/JobsControllerTest.php
 
     use Illuminate\Support\Facades\Storage;
     use App\Models\Jobs;
@@ -15,7 +15,7 @@
 
     public function setUp(): void {
         parent::setUp();
-        Artisan::call('migrate:refresh --seed');
+        //Artisan::call('migrate:refresh --seed');
 
         // find admin and test user accounts
         $this->admin = User::where('name', '=', 'admin')->first();
@@ -25,7 +25,7 @@
     }
 
     protected function tearDown(): void {
-        Artisan::call('migrate:reset');
+        //Artisan::call('migrate:reset');
         parent::tearDown();
     }
 

@@ -6,14 +6,17 @@
 
   class TableControllerUnitTest extends BrowserKitTestCase
   {
+    // location of test files
+    private $filePath = './storage/app';
+
     public function setUp(): void 
     {
          parent::setUp();
-         Artisan::call('migrate:fresh --seed');
+         //Artisan::call('migrate:fresh --seed');
     }
 
     protected function tearDown(): void {
-         Artisan::call('migrate:rollback');
+         //Artisan::call('migrate:rollback');
          parent::tearDown();
     }
 
@@ -46,6 +49,9 @@
         
         // drop testtable1
         \Schema::drop($tableName);
+
+        // clear folder that was created with the collection
+        File::deleteDirectory($this->filePath.'/'.$collectionName);
 
     }
 

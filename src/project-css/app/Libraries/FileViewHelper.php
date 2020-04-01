@@ -7,6 +7,7 @@
 namespace App\Libraries;
 use Response;
 use Storage;
+use App\Models\Collection;
 use App\Models\Table;
 use App\Libraries\CustomStringHelper;
 use App\Libraries\TikaConvert;
@@ -34,8 +35,9 @@ class FileViewHelper {
 
      /**
       * Determines if the file currently exists in the storage
-      * folder under the current table name it uses the last
-      * folder and filename in the $str that is passed.
+      * folder for the current collection that table is set to
+      * and it uses the last folder and filename in the $str 
+      * that is passed.
       *
       * @param       string  $tblNme    Input string
       * @param       string  $str    Input string
@@ -83,20 +85,20 @@ class FileViewHelper {
      }
 
      /**
-      * Given Table name and a path we return a new valid
+      * Given Collection name and a path we return a new valid
       * path to our file.
-      * @param       string  $tblNme    Input string
+      * @param       string  $colNme    Input string
       * @param       string  $originalFilePath Input string
       * @return      string
       */
-     public function buildFileLink($tblNme, $originalFilePath) {
+     public function buildFileLink($colNme, $originalFilePath) {
        if ($this->getFolderName($originalFilePath) != '') {
          // return new path with folder tblNme/folder/filename
-         return ($tblNme.'/'.$this->getFolderName($originalFilePath).'/'.$this->getFilename($originalFilePath));
+         return ($colNme.'/'.$this->getFolderName($originalFilePath).'/'.$this->getFilename($originalFilePath));
        }
 
        // return new path with folder tblNme/folder/filename
-       return ($tblNme.'/'.$this->getFilename($originalFilePath));
+       return ($colNme.'/'.$this->getFilename($originalFilePath));
      }
 
       /**
@@ -158,13 +160,16 @@ class FileViewHelper {
        // Get the table entry in meta table "tables"
        $table = Table::findOrFail($tableId);
 
+       // find the collection
+       $collection = Collection::findorFail($table->collection_id);       
+
        // Check for file in root of the table
-       if (Storage::exists($table->tblNme.'/'.$filename)) {
-         return($table->tblNme.'/'.$filename);
+       if (Storage::exists($collection->clctnName.'/'.$filename)) {
+         return($collection->clctnName.'/'.$filename);
        }
 
        // get all subfolder
-       $ffs = Storage::disk('local')->directories($table->tblNme);
+       $ffs = Storage::disk('local')->directories($collection->clctnName);
        foreach ($ffs as &$value) {
         if (Storage::exists($value.'/'.$filename)) {
           return($value .'/'.$filename);
@@ -184,6 +189,9 @@ class FileViewHelper {
      public function getFilePath($curTable, $recId, $filename) {
        // Get the table entry in meta table "tables"
        $table = Table::findOrFail($curTable);
+      
+       // find the collection
+       $collection = Collection::findorFail($table->collection_id); 
 
        $originalFilePath = $this->getOriginalPath($curTable, $recId, $filename);
 
@@ -191,6 +199,6 @@ class FileViewHelper {
          return $this->locateFile($curTable, $filename);
        }
 
-       return $this->buildFileLink($table->tblNme, $originalFilePath);
+       return $this->buildFileLink($collection->clctnName, $originalFilePath);
      }
 }

@@ -49,6 +49,7 @@ Route::group([ 'prefix' => 'collection' ], function() {
     Route::post('create', 'CollectionController@create')->name('collection.create');
     Route::post('edit', 'CollectionController@edit')->name('collection.edit');
     Route::get('show/{colID}', 'CollectionController@show')->name('collection.show'); 
+    Route::get('upload/{colID}', 'CollectionController@upload')->name('collection.upload'); 
     Route::get('{colID}/table/create', 'CollectionController@tableCreate')->name('collection.table.create'); 
     Route::post('disable', 'CollectionController@disable')->name('collection.disable');
     Route::post('enable', 'CollectionController@enable')->name('collection.enable');
@@ -134,14 +135,22 @@ Route::group([ 'middleware' => [ 'checktableid' ] ], function() {
       Route::get('{curTable}/{recId}/view/{filename}', 'DataViewController@view')->name('dataFileView');
   });
 
+});
+
+/*
+|--------------------------------------------------------------------------
+| checkcollectionid middleware group for checking for a valid collection id
+|--------------------------------------------------------------------------
+*/
+Route::group([ 'middleware' => [ 'checkcollectionid' ] ], function() {
   /*
   |--------------------------------------------------------------------------
-  | Controller for managing file uploads to tables
+  | Controller for managing file uploads to collections
   |--------------------------------------------------------------------------
   */
   Route::group([ 'prefix' => 'upload' ], function() {
-      Route::get('{curTable}', 'UploadController@index');
-      Route::post('{curTable}', 'UploadController@storeFiles');
+      Route::get('{curCol}', 'UploadController@index');
+      Route::post('{curCol}', 'UploadController@storeFiles');
   });
 
 });

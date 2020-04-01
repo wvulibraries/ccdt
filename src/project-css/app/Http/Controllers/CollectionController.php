@@ -69,7 +69,21 @@ class CollectionController extends Controller
     return view('collection/show')->with('tbls', $tbls)
                                   ->with('cmsID', $cmsID)
                                   ->with('clctnName', $thisClctn->clctnName);
-  }    
+  }   
+  
+  /**
+  * Returns view for collection
+  *
+  * @return view
+  */    
+  public function upload($cmsID) {
+    // find the collection
+    $thisClctn = Collection::findorFail($cmsID);  
+
+    // redirect to show page
+    return view('collection/upload')->with('cmsID', $cmsID)
+                                    ->with('clctnName', $thisClctn->clctnName);
+  }   
 
   /**
   * Takes request validates the collection name and saves new collection to database
@@ -114,6 +128,11 @@ class CollectionController extends Controller
     else {
       // Validate the request before storing the data
       $this->validate($request, $this->rules, $this->messages);
+
+      // Rename Storage Folder
+      if ((Storage::exists($request->clctnName) == FALSE) && (Storage::exists($thisClctn->clctnName))) {
+        Storage::move($thisClctn->clctnName, $request->clctnName);
+      }      
 
       // Set new Collection Name
       $thisClctn->clctnName = $request->clctnName;

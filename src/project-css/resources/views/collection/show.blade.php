@@ -41,7 +41,7 @@
           </div>
       </a>
 
-      <a href="{{url('collection/upload')}}" data-toggle="modal" class="col-xs-4 col-sm-4 col-md-4">
+      <a href="{{url('collection/upload/'.$cmsID)}}" data-toggle="modal" class="col-xs-4 col-sm-4 col-md-4">
           <div class="well text-center">
             <div class="icon hidden-xs hidden-sm">
               <span class="glyphicon glyphicon-upload" aria-hidden="true"></span>

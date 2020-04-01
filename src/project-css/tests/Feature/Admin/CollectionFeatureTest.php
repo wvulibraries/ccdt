@@ -4,18 +4,21 @@
 
     class CollectionFeatureTest extends BrowserKitTestCase
     {
-        private $admin;      
+        private $admin;   
+        
+        // location of test files
+        private $filePath = './storage/app';
 
         public function setUp(): void {
             parent::setUp();
-            Artisan::call('migrate:fresh --seed');
+            //Artisan::call('migrate:fresh --seed');
 
             // find admin and test user accounts
             $this->admin = User::where('name', '=', 'admin')->first();
         }
 
         protected function tearDown(): void {
-            Artisan::call('migrate:rollback');
+            //Artisan::call('migrate:rollback');
             parent::tearDown();
         }  
         
@@ -47,6 +50,9 @@
                  
             // drop testtable1
             \Schema::drop('testtable1');
+
+            // clear folder that was created with the collection
+            rmdir($this->filePath.'/collection1');
         }        
 
         /** @test */
@@ -85,6 +91,9 @@
                  
             // drop testtable1
             \Schema::drop('testtable1');
+
+            // clear folder that was created with the collection
+            rmdir($this->filePath.'/collection1');
         }    
 
         /** @test */
@@ -107,6 +116,9 @@
                  ->click('Enable')
                  ->press('Confirm')
                  ->see('Disable');    
+
+            // clear folder that was created with the collection
+            rmdir($this->filePath.'/collection1');
         }        
 
         /** @test */
@@ -132,6 +144,9 @@
                  ->type('collection1', 'clctnName')
                  ->press('Confirm')
                  ->see('Enable');
+
+            // clear folder that was created with the collection
+            rmdir($this->filePath.'/collection1');
         }        
 
         /** @test */
@@ -146,6 +161,8 @@
                  ->see('Create, import and manage collections here.')
                  ->see('collection1');
 
+            // clear folder that was created with the collection
+            rmdir($this->filePath.'/collection1');
         }
 
         /** @test */

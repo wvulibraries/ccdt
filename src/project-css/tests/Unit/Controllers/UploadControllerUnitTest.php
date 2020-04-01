@@ -9,19 +9,19 @@
     public function setUp(): void 
     {
          parent::setUp();
-         Artisan::call('migrate');
+         //Artisan::call('migrate');
     }
 
     protected function tearDown(): void {
-          Artisan::call('migrate:reset');
+          //Artisan::call('migrate:reset');
           parent::tearDown();
     }
 
-    public function testStoreFiles() {
-          // testing store with no attached items should always fail
-          $request = new \Illuminate\Http\Request();
-          $this->assertFalse((new UploadController)->storeFiles($request, 1));
-    }
+    // public function testStoreFiles() {
+    //       // testing store with no attached items should always fail
+    //       $request = new \Illuminate\Http\Request();
+    //       $this->assertFalse((new UploadController)->storeFiles($request, 1));
+    // }
 
   }
 ?>

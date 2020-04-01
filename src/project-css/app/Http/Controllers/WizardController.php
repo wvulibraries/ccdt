@@ -84,10 +84,7 @@ class WizardController extends Controller
     *
     * @return view
     */      
-    public function flatfile(Request $request) {
-        // var_dump($request->colID);
-        // die();
-
+    public function flatfile() {
         return view('admin/wizard/flatfile')->with($this->sharedViewData);
     }
 

@@ -8,11 +8,11 @@
 
     public function setUp(): void {
          parent::setUp();
-         Artisan::call('migrate:refresh --seed');
+         //Artisan::call('migrate:refresh --seed');
     }
 
     protected function tearDown(): void {
-         Artisan::call('migrate:reset');
+         //Artisan::call('migrate:reset');
          parent::tearDown();
     }
 

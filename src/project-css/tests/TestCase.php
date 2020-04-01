@@ -10,6 +10,17 @@ abstract class TestCase extends Illuminate\Foundation\Testing\TestCase
     protected $baseUrl = 'http://localhost';
 
     /**
+     * Clears Laravel Cache.
+     */
+    protected function clearCache()
+    {
+        $commands = ['clear-compiled', 'cache:clear', 'view:clear', 'config:clear', 'route:clear'];
+        foreach ($commands as $command) {
+            \Illuminate\Support\Facades\Artisan::call($command);
+        }
+    }
+
+    /**
      * Creates the application.
      *
      * @return \Illuminate\Foundation\Application
@@ -18,7 +29,7 @@ abstract class TestCase extends Illuminate\Foundation\Testing\TestCase
         $app = require __DIR__.'/../bootstrap/app.php';
 
         $app->make(Illuminate\Contracts\Console\Kernel::class)->bootstrap();
-
+        $this->clearCache();
         return $app;
     }
 }

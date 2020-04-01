@@ -23,8 +23,14 @@ class TestHelper {
       */
      public function createCollection($name) {
           $collection = factory(Collection::class)->create([
-               'clctnName' => $name,
+            'clctnName' => $name,
           ]);
+
+          // Create Collection Storage Folder
+          if (Storage::exists($name) == FALSE) {
+            Storage::makeDirectory($name, 0775);
+          }
+
           return $collection;
      }
 
@@ -33,6 +39,12 @@ class TestHelper {
                'clctnName' => $name,
                'isEnabled' => '0',
           ]);
+
+          // Create Collection Storage Folder          
+          if (Storage::exists($name) == FALSE) {
+            Storage::makeDirectory($name, 0775);
+          }
+
           return $collection;
      }
 
@@ -108,7 +120,7 @@ class TestHelper {
 
        foreach ($tables as $table)
        {
-          \Storage::deleteDirectory($table->tblNme);
+          //\Storage::deleteDirectory($table->tblNme);
           \Schema::drop($table->tblNme);
        }
 
@@ -123,7 +135,10 @@ class TestHelper {
        $tableName = 'test'.time();
 
        // create test collection
-       $collection = $this->createCollection(time());
+       $collection = $this->createCollection(time()); 
+
+       // remove folder that was created for the collection
+       //rmdir('./storage/app'.'/'.$collection->clctnName);
 
        //pass true if contains header row, file location, number of rows to check
        $fieldTypes = (new CSVHelper)->determineTypes($headerRowExists, $storageFolder.'/'.$fileName, 10);

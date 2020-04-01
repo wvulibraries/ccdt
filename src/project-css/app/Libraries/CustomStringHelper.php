@@ -142,4 +142,18 @@ class CustomStringHelper {
         unset($tkns2[ 0 ]);
         return( (count($tkns2) > 0) ? array_merge($tkns1, $tkns2) : $tkns1 );
     }
+
+     /**
+     * Takes string and converts spaces to _, removes special characters,
+     * and converts string to lower case characters.
+     * @param string $string
+     * @return string
+     */      
+    function formatFieldName($string) {
+        $string = str_replace(' ', '_', $string); // Replaces all spaces with underscores.
+
+        $string = preg_replace('/[^A-Za-z0-9\-_]/', '', $string); // Removes special chars.
+
+        return strtolower($string);
+    }      
 }

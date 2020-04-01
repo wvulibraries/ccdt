@@ -17,145 +17,206 @@ use App\Models\CMSRecords;
 use App\Models\Table;
 use App\Libraries\CSVHelper;
 use App\Libraries\CMSHelper;
+use App\Libraries\CustomStringHelper;
 
 class TableHelper {
     /**
      * Table Helper
      *
      * These are various functions that help with dynamically
-     * creating tables that can be searched.
+     * creating and modifying tables without migrations.
      *
      */
 
-     public function setupTableField($table, $curColNme, $curColType, $curColSze) {
-        // Filter the data type and size and create the column
-        // Check for Strings
-        if (str_is($curColType, 'string')) {
-          // Check for the data type
-          // Default
-          if (str_is($curColSze, 'default')) {
-            // For String default is 30 characters
-            $table->string($curColNme, 30)->default("Null");
-          }
-          // Medium
-          if (str_is($curColSze, 'medium')) {
-            // For String medium is 150 characters
-            $table->string($curColNme, 150)->default("Null");
-          }
-          // Big
-          if (str_is($curColSze, 'big')) {
-            // For String big is 500 characters
-            $table->string($curColNme, 500)->default("Null");
-          }
-        }
-
-        // Check for Text data type
-        if (str_is($curColType, 'text')) {
-          // Check for the data type
-          // Default
-          if (str_is($curColSze, 'default')) {
-            // For text default is text type
-            $table->text($curColNme);
-          }
-          // Medium
-          if (str_is($curColSze, 'medium')) {
-            // For text medium is mediumtext type
-            $table->mediumText($curColNme);
-          }
-          // Big
-          if (str_is($curColSze, 'big')) {
-            // For text big is longtext type
-            $table->longText($curColNme);
-          }
-        }
-
-        // Check for Integer
-        if (str_is($curColType, 'integer')) {
-          // Check for the data type
-          // Default
-          if (str_is($curColSze, 'default')) {
-            // For Integer default integer type
-            $table->integer($curColNme)->default(0);
-          }
-          // Medium
-          if (str_is($curColSze, 'medium')) {
-            // For Integer medium is medium integer
-            $table->mediumInteger($curColNme)->default(0);
-          }
-          // Big
-          if (str_is($curColSze, 'big')) {
-            // For Integer big is big integer
-            $table->bigInteger($curColNme)->default(0);
-          }
-        }
-
-        return $table;
+     public function createStringField($table, $curColNme, $curColSze) {
+        // to do verify $curColNme is not already used
+        
+        switch ($curColSze) {
+            case 'medium':
+                // For String medium is 150 characters
+                $table->string($curColNme, 150)->default("Null");
+                break;
+            case 'big':
+                // For String big is 500 characters
+                $table->string($curColNme, 500)->default("Null");
+                break;
+            default:
+                // For String default is 30 characters
+                $table->string($curColNme, 30)->default("Null");                  
+        }                 
      }
 
-     public function changeTableField($tblNme, $curColNme, $curColType, $curColSze) {
-        Schema::table($tblNme, function ($table) use ($curColNme, $curColType, $curColSze) {
-          // Filter the data type and size and create the column
-          // Check for Strings
-          if (str_is($curColType, 'string')) {
-            // Check for the data type
-            // Default
-            if (str_is($curColSze, 'default')) {
-              // For String default is 30 characters
-              $table->string($curColNme, 30)->change();
-            }
-            // Medium
-            if (str_is($curColSze, 'medium')) {
+     public function createTextField($table, $curColNme, $curColSze) {
+        // to do verify $curColNme is not already used
+        
+        switch ($curColSze) {
+            case 'medium':
+                // For text medium is mediumtext type
+                $table->mediumText($curColNme);
+                break;
+            case 'big':
+                // For text big is longtext type
+                $table->longText($curColNme);
+                break;
+            default:
+                // For text default is text type
+                $table->text($curColNme);                  
+        }             
+     }    
+     
+     public function createIntegerField($table, $curColNme, $curColSze) {
+        // to do verify $curColNme is not already used
+
+        switch ($curColSze) {
+            case 'medium':
+                // For Integer medium is medium integer
+                $table->mediumInteger($curColNme)->default(0);
+                break;
+            case 'big':
+                // For Integer big is big integer
+                $table->bigInteger($curColNme)->default(0);
+                break;
+            default:
+                // For Integer default integer type
+                $table->integer($curColNme)->default(0);                  
+        }                 
+     }     
+     
+    public function setupTableField($table, $curColNme, $curColType, $curColSze) {
+      // Filter the data type and size and create the column
+      // Check for Strings
+      if (str_is($curColType, 'string')) {
+        // Check for the data type
+        $this->createStringField($table, $curColNme, $curColSze);
+      }
+
+      // Check for Text data type
+      if (str_is($curColType, 'text')) {
+        // Check for the data type
+        $this->createTextField($table, $curColNme, $curColSze);
+      }
+
+      // Check for Integer
+      if (str_is($curColType, 'integer')) {
+        // Check for the data type
+        $this->createIntegerField($table, $curColNme, $curColSze);
+      }
+
+     }
+
+    //  public function changeToStringField($tblNme, $curColNme, $curColSze) {          
+    //     switch ($curColSze) {
+    //         case 'medium':
+    //             $statement = "ALTER TABLE `{$tblNme}` MODIFY COLUMN `{$curColNme}` VARCHAR(150)";
+    //             break;
+    //         case 'big':
+    //             $statement = "ALTER TABLE `{$tblNme}` MODIFY COLUMN `{$curColNme}` VARCHAR(500)";              
+    //             break;
+    //         default:
+    //             $statement = "ALTER TABLE `{$tblNme}` MODIFY COLUMN `{$curColNme}` VARCHAR(30)";                               
+    //     }    
+    //     return DB::connection()->statement($statement);  
+    //  }
+
+    //  public function changeToTextField($tblNme, $curColNme, $curColSze) {       
+    //     switch ($curColSze) {
+    //         case 'medium':
+    //             $statement = "ALTER TABLE `{$tblNme}` MODIFY COLUMN `{$curColNme}` MEDIUMTEXT";               
+    //             break;
+    //         case 'big':
+    //             $statement = "ALTER TABLE `{$tblNme}` MODIFY COLUMN `{$curColNme}` LONGTEXT";               
+    //             break;
+    //         default:
+    //             $statement = "ALTER TABLE `{$tblNme}` MODIFY COLUMN `{$curColNme}` TEXT";                              
+    //     }   
+    //     return DB::connection()->statement($statement); 
+    //  }    
+     
+     public function changeToIntegerField($tblNme, $curColNme, $curColSze) {
+        switch ($curColSze) {
+            case 'medium':
+                $statement = "ALTER TABLE `{$tblNme}` MODIFY COLUMN `{$curColNme}` MEDIUMINT";               
+                break;
+            case 'big':
+                $statement = "ALTER TABLE `{$tblNme}` MODIFY COLUMN `{$curColNme}` BIGINT";               
+                break;
+            default:
+                $statement = "ALTER TABLE `{$tblNme}` MODIFY COLUMN `{$curColNme}` INT";                           
+        }
+
+        return DB::connection()->statement($statement);     
+     } 
+
+     public function schemaChangeToStringField($tblNme, $curColNme, $curColSze) {    
+      Schema::table($tblNme, function ($table) use ($curColNme, $curColType, $curColSze) {             
+        switch ($curColSze) {
+            case 'medium':
               // For String medium is 150 characters
               $table->string($curColNme, 150)->change();
-            }
-            // Big
-            if (str_is($curColSze, 'big')) {
+              break;
+            case 'big':
               // For String big is 500 characters
               $table->string($curColNme, 500)->change();
-            }
-          }
+              break;
+            default:
+              // For String default is 30 characters
+              $table->string($curColNme, 30)->change();                  
+        }
+      });
+     }
 
-          // Check for Text data type
-          if (str_is($curColType, 'text')) {
-            // Check for the data type
-            // Default
-            if (str_is($curColSze, 'default')) {
-              // For text default is text type
-              $table->text($curColNme)->change();
-            }
-            // Medium
-            if (str_is($curColSze, 'medium')) {
+     public function schemaChangeToTextField($tblNme, $curColNme, $curColSze) {  
+      Schema::table($tblNme, function ($table) use ($curColNme, $curColType, $curColSze) {
+        switch ($curColSze) {
+            case 'medium':
               // For text medium is mediumtext type
               $table->mediumText($curColNme)->change();
-            }
-            // Big
-            if (str_is($curColSze, 'big')) {
+              break;
+            case 'big':
               // For text big is longtext type
               $table->longText($curColNme)->change();
-            }
-          }
+              break;
+            default:
+              // For text default is text type
+              $table->text($curColNme)->change();                  
+        }    
+      });           
+     }    
+     
+    //  public function schemaChangeToIntegerField($tblNme, $curColNme, $curColSze) {
+    //     Schema::table($tblNme, function ($table) use ($curColNme, $curColType, $curColSze) {
+    //       switch ($curColSze) {
+    //           case 'medium':
+    //             // For Integer medium is medium integer
+    //             $table->mediumInteger($curColNme)->change();
+    //             break;
+    //           case 'big':
+    //             // For Integer big is big integer
+    //             $table->bigInteger($curColNme)->change();
+    //             break;
+    //           default:
+    //             // For Integer default integer type
+    //             $table->integer($curColNme)->change();                  
+    //       } 
+    //     });         
+    //  } 
 
-          // Check for Integer
-          if (str_is($curColType, 'integer')) {
-            // Check for the data type
-            // Default
-            if (str_is($curColSze, 'default')) {
-              // For Integer default integer type
-              $table->integer($curColNme)->change();
-            }
-            // Medium
-            if (str_is($curColSze, 'medium')) {
-              // For Integer medium is medium integer
-              $table->mediumInteger($curColNme)->change();
-            }
-            // Big
-            if (str_is($curColSze, 'big')) {
-              // For Integer big is big integer
-              $table->bigInteger($curColNme)->change();
-            }
-          }
-        });
-     }
+    public function changeTableField($tblNme, $curColNme, $curColType, $curColSze) {        
+        switch (strtolower($curColType)) {
+            case 'string':
+                // $this->changeToStringField($tblNme, $curColNme, $curColSze);
+                $this->schemaChangeToStringField($tblNme, $curColNme, $curColSze);
+                break;
+            case 'text':
+                // $this->changeToTextField($tblNme, $curColNme, $curColSze);
+                $this->schemaChangeToTextField($tblNme, $curColNme, $curColSze);
+                break;
+            case 'integer':
+                $this->changeToIntegerField($tblNme, $curColNme, $curColSze);
+                //$this->schemaChangeToIntegerField($table, $curColNme, $curColSze);
+                break;
+        }
+    }
 
      /**
      * Simple function to create the table within the collections
@@ -189,7 +250,7 @@ class TableHelper {
 
      public function fileImport($tblNme, $fltFlePath, $fltFle) {
        // set messages array to empty
-       $messages = [ ];
+       $messages = [];
 
        Log::info('File Import has been requested for table '.$tblNme.' using flat file '.$fltFle);
        // add job to queue
@@ -200,7 +261,7 @@ class TableHelper {
        ];
        array_push($messages, $message);
        session()->flash('messages', $messages);
-     }
+     }   
 
      public function createTable($filepath, $fileName, $tblNme, $fieldNames, $fieldTypes, $collctnId) {
          $fieldCount = count($fieldTypes);
@@ -213,7 +274,7 @@ class TableHelper {
            // Add all the dynamic columns
            for ($i = 0; $i<$fieldCount; $i++) {
              // Create Field from current column name, type and size
-             $table = $this->setupTableField($table, $fieldNames[$i], $fieldTypes[$i][0], $fieldTypes[$i][1]);
+             $this->setupTableField($table, (new CustomStringHelper)->formatFieldName($fieldNames[$i]), $fieldTypes[$i][0], $fieldTypes[$i][1]);
            }
 
            // search index
@@ -231,9 +292,9 @@ class TableHelper {
          $this->crteTblInCollctn($tblNme, $collctnId);
 
          // create folder in storage that will contain any additional files associated to the table
-         if (Storage::exists($tblNme) == FALSE) {
-           Storage::makeDirectory($tblNme, 0775);
-         }
+        //  if (Storage::exists($tblNme) == FALSE) {
+        //    Storage::makeDirectory($tblNme, 0775);
+        //  }
 
          // queue job for import
          $this->fileImport($tblNme, $filepath, $fileName);
