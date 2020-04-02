@@ -137,9 +137,6 @@ class TestHelper {
        // create test collection
        $collection = $this->createCollection(time()); 
 
-       // remove folder that was created for the collection
-       //rmdir('./storage/app'.'/'.$collection->clctnName);
-
        //pass true if contains header row, file location, number of rows to check
        $fieldTypes = (new CSVHelper)->determineTypes($headerRowExists, $storageFolder.'/'.$fileName, 10);
 
