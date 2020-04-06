@@ -579,9 +579,12 @@ class TableController extends Controller
     * @param array $tkns array containing all fields of record
     * @param integer $orgCount number of expected fields in the record
     * @param object $table table where new record is to be inserted
-    * @return void
+    * @param object $clmnLst array containing all field names for table
+    * @return boolean
     */   
     public function processLine($tkns, $orgCount, $table, $clmnLst) {
+        if(!is_array($tkns) && empty($tkns)) { return false; }
+        
         // verify that passed $tkns match the expected field count
         if (count($tkns) == $orgCount) {
           // Declae an array
@@ -597,7 +600,10 @@ class TableController extends Controller
 
           //insert Record into database
           $table->insertRecord($curArry);
+
+          return true;
         }
+        return false;
     }
 
     /**
@@ -650,10 +656,13 @@ class TableController extends Controller
 
           $tkns = $this->prepareLine($curLine, $delimiter, $orgCount, $prcssd);
 
-          $this->processLine($tkns, $orgCount, $table, $clmnLst);
+          $added = $this->processLine($tkns, $orgCount, $table, $clmnLst);
 
-          // Update the counter
-          $prcssd += 1;
+          if ($added) {
+            // Update the counter
+            $prcssd += 1;
+          }
+
           $curFltFleObj->next();
         }
       }
