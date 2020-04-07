@@ -12,7 +12,7 @@ class exportData extends Command
      *
      * @var string
      */
-    protected $signature = 'export:table';
+    protected $signature = 'table:export';
 
     /**
      * The console command description.

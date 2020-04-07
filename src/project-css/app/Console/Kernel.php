@@ -16,6 +16,11 @@ class Kernel extends ConsoleKernel
         //
         Commands\exportData::class,
         Commands\importData::class,
+        Commands\dropTable::class,
+        Commands\truncateTable::class,
+        Commands\createCollection::class,
+        Commands\renameCollection::class,        
+        Commands\deleteCollection::class,
     ];
 
     /**

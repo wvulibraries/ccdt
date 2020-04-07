@@ -17,11 +17,11 @@
           parent::tearDown();
     }
 
-    // public function testStoreFiles() {
-    //       // testing store with no attached items should always fail
-    //       $request = new \Illuminate\Http\Request();
-    //       $this->assertFalse((new UploadController)->storeFiles($request, 1));
-    // }
+    public function testStoreFiles() {
+          // testing store with no attached items should always fail
+          $request = new \Illuminate\Http\Request();
+          $this->assertFalse((new UploadController)->storeFiles($request, 1));
+    }
 
   }
 ?>

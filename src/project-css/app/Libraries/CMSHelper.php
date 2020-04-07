@@ -106,4 +106,8 @@ class CMSHelper {
 
        (new TableHelper)->createTable($storageFolder, $thsFltFile, $tblNme, $header, $fieldTypes, $collctnId);
      }
+
+     public function setCMSMainView() {
+       
+     }
 }

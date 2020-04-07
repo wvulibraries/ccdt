@@ -69,6 +69,7 @@ class TableController extends Controller
     public function update(Request $request) {
       // get table from Tables
       $table = Table::findOrFail($request->tblId);
+      $fieldUpdated = false;
 
       // Do not update unless the table name has changed
       if ($table->tblNme != $request->name) {
@@ -82,10 +83,18 @@ class TableController extends Controller
 
         // Update entry in tables 
         $table->tblNme = $request->name;
+
+        $fieldUpdated = true;
       }
 
-      $table->collection_id = $request->colID;
-      $table->save();
+      if ($table->collection_id != $request->colID) {      
+        $table->collection_id = $request->colID;
+        $fieldUpdated = true;
+      }
+
+      if ($fieldUpdated) {
+        $table->save();
+      }
 
       // redirect to edit schema page
       return redirect()->route('table.edit.schema',  ['curTable' => $request->tblId]);
@@ -211,8 +220,6 @@ class TableController extends Controller
 
         (new TableHelper)->changeTableField($request->tblNme, $curColNme, $curColType, $curColSze);
       }
-
-      //die();
 
       // redirect to collection show page
       return redirect()->route('collection.show', ['colID' => $table->collection_id]);
@@ -584,7 +591,7 @@ class TableController extends Controller
     */   
     public function processLine($tkns, $orgCount, $table, $clmnLst) {
         if(!is_array($tkns) && empty($tkns)) { return false; }
-        
+
         // verify that passed $tkns match the expected field count
         if (count($tkns) == $orgCount) {
           // Declae an array

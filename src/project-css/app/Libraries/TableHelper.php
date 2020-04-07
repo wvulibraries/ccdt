@@ -291,11 +291,6 @@ class TableHelper {
          // Save the table upon the schema
          $this->crteTblInCollctn($tblNme, $collctnId);
 
-         // create folder in storage that will contain any additional files associated to the table
-        //  if (Storage::exists($tblNme) == FALSE) {
-        //    Storage::makeDirectory($tblNme, 0775);
-        //  }
-
          // queue job for import
          $this->fileImport($tblNme, $filepath, $fileName);
      }
@@ -307,27 +302,27 @@ class TableHelper {
      // $tblNme new table name to be used
      public function storeUploadsAndImport($data) {
         // Get the list of files in the directory
-        $fltFleList = Storage::allFiles($strDir);
+        $fltFleList = Storage::allFiles($data['strDir']);
 
         $errors = [];
 
         // Loop over them
         foreach ($data['flatFiles'] as $file) {
           $thisFltFileNme = $file->getClientOriginalName();
-          if (in_array($strDir.'/'.$thisFltFileNme, $fltFleList)) {
+          if (in_array($data['strDir'].'/'.$thisFltFileNme, $fltFleList)) {
             array_push($errors, $thisFltFileNme . ' File already exists. Please select the file or rename and re-upload.');
           }
           else {
             // Store in the directory inside storage/app
-            $file->storeAs($strDir, $thisFltFileNme);
-            $result = importFile($data['strDir'], $thisFltFileNme, $data['tableName'], $data['colID'], $data['cms']);
+            $file->storeAs($data['strDir'], $thisFltFileNme);
+            $result = $this->importFile($data['strDir'], $thisFltFileNme, $data['tableName'], $data['colID'], $data['cms']);
+
             // if error in importing push returned error to $errors
-            if ($result->error) {
-              array_push($errors, $result->errorList);
+            if ($result['error']) {
+              array_push($errors, $result['errorList']);
             }   
           }
        }
-       //return redirect()->route('tableIndex');
        return redirect()->route('tableIndex')->withErrors($errors);
     }
 
@@ -351,10 +346,12 @@ class TableHelper {
      }
 
      public function importFile($strDir, $file, $tblNme, $colID, $cms) {
+        $csvHelper = (new CSVHelper);
+
         $fltFleAbsPth = $strDir.'/'.$file;
         // Calling schema will return an array containing the
         // tokenized first row of our file to be imported
-        $schema = (new CSVHelper)->schema($fltFleAbsPth);
+        $schema = $csvHelper->schema($fltFleAbsPth);
         // if the array is not valid we will delete the file
         // and push a error to the $errors array
         if (!$schema) {
@@ -376,7 +373,7 @@ class TableHelper {
           (new CMSHelper)->createCMSTable($strDir, $file, $colID, $tblNme);
         }
         else {
-            (new CSVHelper)->createFlatTable($strDir, $file, $colID, $tblNme);;
+            $csvHelper->createFlatTable($strDir, $file, $colID, $tblNme);;
         }
 
         $errorArray = [

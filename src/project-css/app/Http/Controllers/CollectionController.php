@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Collection;
 use App\Models\Table;
+use App\Helpers\CollectionHelper;
 
 class CollectionController extends Controller
 {
@@ -92,17 +93,14 @@ class CollectionController extends Controller
     // Validate the request before storing the data
     $this->validate($request, $this->rules, $this->messages);
 
-    // Create the collection name
-    $thisClctn = new Collection;
-    $thisClctn->clctnName = $request->clctnName;
-    $thisClctn->isCms = $request->has('isCms') ? true : false;
+    // Get required fields for collection
+    $data = [
+        'isCms' => $request->has('isCms') ? true : false,
+        'collectionName' => $request->clctnName
+    ];
 
-    $thisClctn->save();
-
-    // create folder in storage that will contain any additional files associated to the collection
-    if (Storage::exists($thisClctn->clctnName) == FALSE) {
-      Storage::makeDirectory($thisClctn->clctnName, 0775);
-    }
+    // Using Collection Helper Create a new collection
+    (new CollectionHelper)->create($data);
 
     // Take the form object and insert using model
     // Used a named route for better redirection
@@ -124,25 +122,24 @@ class CollectionController extends Controller
     if ($thisClctn->clctnName == $request->clctnName) {
       // Set isCms
       $thisClctn->isCms = $request->has('isCms') ? true : false;
+
+      // Save Updated items
+      $thisClctn->save();
     }
     else {
       // Validate the request before storing the data
       $this->validate($request, $this->rules, $this->messages);
 
-      // Rename Storage Folder
-      if ((Storage::exists($request->clctnName) == FALSE) && (Storage::exists($thisClctn->clctnName))) {
-        Storage::move($thisClctn->clctnName, $request->clctnName);
-      }      
+      // Get required fields for collection
+      $data = [
+          'isCms' => $request->has('isCms') ? true : false,
+          'id' => $request->id,
+          'name' => $request->clctnName
+      ];
 
-      // Set new Collection Name
-      $thisClctn->clctnName = $request->clctnName;
-
-      // Set isCms
-      $thisClctn->isCms = $request->has('isCms') ? true : false;
+      // Using Collection Helper Update collection
+      $result = (new CollectionHelper)->update($data);
     }
-
-    // Save Updated items
-    $thisClctn->save();
 
     // Redirect back to collection page
     return redirect()->route('collection.index');
@@ -156,7 +153,7 @@ class CollectionController extends Controller
     $thisClctn = Collection::findorFail($request->id);
     
     if (strcasecmp($thisClctn->clctnName, $request->clctnName) == 0) {
-      $this->updateCollectionFlag($request->id, false);
+      (new CollectionHelper)->updateCollectionFlag($request->id, false);
 
       // Take the form object and insert using model
       return redirect()->route('collection.index');
@@ -170,40 +167,9 @@ class CollectionController extends Controller
   * Sets the the state of the collection to enabled and updates database
   */
   public function enable(Request $request) {
-    $this->updateCollectionFlag($request->id, true);
+    (new CollectionHelper)->updateCollectionFlag($request->id, true);
 
     return redirect()->route('collection.index');
-  }
-
-  /**
-  * Sets the the state of the collection to the value in $flag
-  * then calls updateTableAccess to update all tables in the 
-  * collection
-  */
-  private function updateCollectionFlag($id, $flag) {
-    // Create the collection name
-    $thisClctn = Collection::findorFail($id);
-
-    // Updated all Tables in collection
-    $this->updateTableAccess($thisClctn, $flag);
-
-    # enable the collection
-    $thisClctn->isEnabled = $flag;
-    $thisClctn->save();
-  }
-
-  /**
-  * Sets hasAccess on all tables in collection
-  */  
-  private function updateTableAccess($collection, $access) {
-    // Get all the tables of this collection
-    $thisClctnTbls = $collection->tables()->get();
-
-    // Update all the tables of this collection
-    foreach ($thisClctnTbls as $tbl) {
-      $tbl->hasAccess = $access;
-      $tbl->save();
-    }
   }
 
 }

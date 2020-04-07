@@ -44,14 +44,13 @@ class WizardController extends Controller
     }
 
     public function importCollection($colID) {
-        // find the collection
-        $thisClctn = Collection::findorFail($colID);
         // get shared view data
         $data = $this->sharedViewData;
+        
         // set collection id to current
         $data['colID'] = $colID;
 
-        if ($thisClctn->isCms) {
+        if (Collection::findorFail($colID)->isCms) {
             // return cms import wizard
             return view('admin/wizard/cms')->with($data);
         }
@@ -60,15 +59,15 @@ class WizardController extends Controller
         return view('admin/wizard/flatfile')->with($data);
     }
 
-    /**
-    * Returns correct view for importing into a collection
-    *
-    * @return view
-    */    
-    public function importTable($colID) {
-        var_dump(Collection::find($colID));
-        die();
-    }   
+    // /**
+    // * Returns correct view for importing into a collection
+    // *
+    // * @return view
+    // */    
+    // public function importTable($colID) {
+    //     var_dump(Collection::find($colID));
+    //     die();
+    // }   
 
    /**
     * Returns view for the CMS Import
