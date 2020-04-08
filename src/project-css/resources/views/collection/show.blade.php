@@ -23,7 +23,7 @@
 
     <!-- Head Table Cards -->
     <div class="row">
-      <a href="{{url('/collection/'. $cmsID . '/table/create') }}" data-toggle="modal" class="col-xs-4 col-sm-4 col-md-4">
+      <a href="{{url('/collection/'. $cmsID . '/table/create') }}" data-toggle="modal" class="col-xs-3 col-sm-3 col-md-3">
           <div class="well text-center">
             <div class="icon hidden-xs hidden-sm">
               <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
@@ -32,7 +32,7 @@
           </div>
       </a>
 
-      <a href="{{url('table/load')}}" data-toggle="modal" class="col-xs-4 col-sm-4 col-md-4">
+      <a href="{{url('table/load')}}" data-toggle="modal" class="col-xs-3 col-sm-3 col-md-3">
           <div class="well text-center">
             <div class="icon hidden-xs hidden-sm">
               <span class="glyphicon glyphicon-import" aria-hidden="true"></span>
@@ -41,14 +41,23 @@
           </div>
       </a>
 
-      <a href="{{url('collection/upload/'.$cmsID)}}" data-toggle="modal" class="col-xs-4 col-sm-4 col-md-4">
+      <a href="{{url('collection/upload/'.$cmsID)}}" data-toggle="modal" class="col-xs-3 col-sm-3 col-md-3">
           <div class="well text-center">
             <div class="icon hidden-xs hidden-sm">
               <span class="glyphicon glyphicon-upload" aria-hidden="true"></span>
             </div>
             <span class="title">Upload Files</span>
           </div>
-      </a>      
+      </a>
+
+      <a href="{{url('collection/creator/'.$cmsID)}}" data-toggle="modal" class="col-xs-3 col-sm-3 col-md-3">
+          <div class="well text-center">
+            <div class="icon hidden-xs hidden-sm">
+              <span class="glyphicon glyphicon-wrench" aria-hidden="true"></span>
+            </div>
+            <span class="title">CMS View Creator</span>
+          </div>
+      </a>
 
     </div>
 

@@ -10,7 +10,7 @@ use App\Models\CMSRecords;
 use App\Models\Collection;
 
 use App\Libraries\CSVHelper;
-use App\Libraries\TableHelper;
+use App\Helpers\TableHelper;
 
 class CMSHelper {
     /**

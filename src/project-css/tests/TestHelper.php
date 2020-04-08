@@ -2,7 +2,7 @@
 
 use App\Libraries\CMSHelper;
 use App\Libraries\CSVHelper;
-use App\Libraries\TableHelper;
+use App\Helpers\TableHelper;
 use App\Models\Collection;
 
 class TestHelper {
@@ -21,9 +21,10 @@ class TestHelper {
       *
       * @author Tracy A. McCormick <tam0013@mail.wvu.edu>
       */
-     public function createCollection($name) {
+     public function createCollection($name, $isCms = false) {
           $collection = factory(Collection::class)->create([
             'clctnName' => $name,
+            'isCms' => $isCms,
           ]);
 
           // Create Collection Storage Folder

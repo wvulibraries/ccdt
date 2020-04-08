@@ -5,7 +5,7 @@ use App\Models\Table;
 use App\Libraries\CSVHelper;
 use App\Libraries\CMSHelper;
 use App\Libraries\FileViewHelper;
-use App\Libraries\TableHelper;
+use App\Helpers\TableHelper;
 
 class TableHelperTest extends BrowserKitTestCase
 {

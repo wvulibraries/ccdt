@@ -47,16 +47,7 @@ abstract class BrowserKitTestCase extends BaseTestCase
 
     public function setUp(): void {
         parent::setUp();
-        // var_dump(env('APP_ENV'));
-        // var_dump(env('DB_CONNECTION'));
-        // var_dump(env('DB_DATABASE'));
-        // var_dump(env('TESTING_DB_CONNECTION'));
-        // var_dump(env('TESTING_DB_DATABASE'));
-        //die();
-
-        //if ((env('DB_CONNECTION') != NULL) && (env('DB_DATABASE') != NULL)) {
-          Artisan::call('migrate:refresh --seed');
-        //}   
+        Artisan::call('migrate:refresh --seed');  
     }
 
     protected function tearDown(): void {

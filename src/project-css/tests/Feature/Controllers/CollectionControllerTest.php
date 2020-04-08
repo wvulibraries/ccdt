@@ -4,6 +4,7 @@
   use App\Models\User;
   use App\Models\Collection;
   use App\Models\Table;
+  use App\Helpers\CollectionHelper;
 
   class CollectionControllerTest extends BrowserKitTestCase {
 
@@ -80,7 +81,16 @@
 
     public function testEditingCollectionName() {
         // Generate Test Collection
-        $collection = $this->testHelper->createCollection('collection1');
+        //$collection = $this->testHelper->createCollection('collection1');
+
+        // Create Test Data Array
+        $data = [
+          'isCms' => false,
+          'collectionName' => 'collection1'
+        ];
+
+        // Call helper create
+        $collection = (new CollectionHelper)->create($data);
 
         // While using a admin account try to rename collection name
         $this->actingAs($this->admin)
@@ -91,8 +101,14 @@
         $collection = Collection::find($collection->id);
         $this->assertEquals('collection2', $collection->clctnName);
 
-        // clear folder that was created with the collection
-        rmdir($this->filePath.'/collection2');        
+        // delete storage folder
+        Storage::deleteDirectory($collection->clctnName);
+
+        // delete the collection
+        $collection->delete();        
+
+     //    // clear folder that was created with the collection
+     //    rmdir($this->filePath.'/collection2');        
     }
 
     public function testDisableThenEnableCollection() {

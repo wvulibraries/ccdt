@@ -41,7 +41,7 @@ Route::view('/help', 'help');
 
 /*
 |--------------------------------------------------------------------------
-| Controller for the admin dashboard page
+| Controller for the admin collection page
 |--------------------------------------------------------------------------
 */
 Route::get('collection', 'CollectionController@index')->name('collection.index');
@@ -49,7 +49,8 @@ Route::group([ 'prefix' => 'collection' ], function() {
     Route::post('create', 'CollectionController@create')->name('collection.create');
     Route::post('edit', 'CollectionController@edit')->name('collection.edit');
     Route::get('show/{colID}', 'CollectionController@show')->name('collection.show'); 
-    Route::get('upload/{colID}', 'CollectionController@upload')->name('collection.upload'); 
+    Route::get('upload/{colID}', 'CollectionController@upload')->name('collection.upload');
+    Route::get('creator/{colID}', 'CollectionController@creator')->name('collection.cms.creator'); 
     Route::get('{colID}/table/create', 'CollectionController@tableCreate')->name('collection.table.create'); 
     Route::post('disable', 'CollectionController@disable')->name('collection.disable');
     Route::post('enable', 'CollectionController@enable')->name('collection.enable');
@@ -143,6 +144,7 @@ Route::group([ 'middleware' => [ 'checktableid' ] ], function() {
 |--------------------------------------------------------------------------
 */
 Route::group([ 'middleware' => [ 'checkcollectionid' ] ], function() {
+
   /*
   |--------------------------------------------------------------------------
   | Controller for managing file uploads to collections
@@ -157,7 +159,7 @@ Route::group([ 'middleware' => [ 'checkcollectionid' ] ], function() {
 
 /*
 |--------------------------------------------------------------------------
-| Admin Controller for various admin functions
+| Admin Jobs Controller for displaying and managing the Job queue
 |--------------------------------------------------------------------------
 */
 Route::group([ 'prefix' => 'admin/jobs' ], function() {

@@ -4,7 +4,8 @@
  * @author Tracy A McCormick <tam0013@mail.wvu.edu>
  */
 
-namespace App\Libraries;
+namespace App\Helpers;
+
 use App\Jobs\FileImport;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;

@@ -9,7 +9,7 @@ use App\Models\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
-use App\Libraries\TableHelper;
+use App\Helpers\TableHelper;
 use Auth;
 
 class WizardController extends Controller

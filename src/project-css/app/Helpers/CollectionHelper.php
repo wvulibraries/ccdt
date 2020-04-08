@@ -29,6 +29,8 @@ class CollectionHelper {
         if (Storage::exists($thisClctn->clctnName) == FALSE) {
           Storage::makeDirectory($thisClctn->clctnName, 0775);
         }
+
+        return $thisClctn;
      }
 
      public function update($data) {
@@ -99,7 +101,7 @@ class CollectionHelper {
       * then calls updateTableAccess to update all tables in the 
       * collection
       */
-     private function updateCollectionFlag($id, $flag) {
+     public function updateCollectionFlag($id, $flag) {
         // Create the collection name
         $thisClctn = Collection::findorFail($id);
 

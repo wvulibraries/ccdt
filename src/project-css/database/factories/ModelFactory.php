@@ -25,5 +25,6 @@ $factory->define(App\Models\User::class, function(Faker\Generator $faker) {
 $factory->define(App\Models\Collection::class, function(Faker\Generator $faker) {
     return [
         'clctnName' => $faker->name,
+        'isCms' => false,
     ];
 });

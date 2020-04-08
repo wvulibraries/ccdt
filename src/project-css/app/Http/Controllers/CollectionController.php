@@ -172,4 +172,22 @@ class CollectionController extends Controller
     return redirect()->route('collection.index');
   }
 
+  /**
+  * Returns view for cms view creator
+  *
+  * @return view
+  */    
+  public function creator($cmsID) {
+    // find the collection
+    $thisClctn = Collection::findorFail($cmsID);  
+
+    if ($thisClctn->isCms) {
+      // redirect to show page
+      return view('collection/creator')->with('cmsID', $cmsID)
+                                      ->with('clctnName', $thisClctn->clctnName);
+    }
+
+    return redirect()->back()->withErrors('Current Collection is Not a CMS Database'); 
+  }  
+
 }

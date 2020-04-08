@@ -13,7 +13,7 @@ use App\Models\Table;
 use App\Libraries\CustomStringHelper;
 use App\Libraries\FileViewHelper;
 use App\Libraries\FullTextSearchFormatter;
-use App\Libraries\TableHelper;
+use App\Helpers\TableHelper;
 
 /**
  * The controller is responsible for showing the cards data
