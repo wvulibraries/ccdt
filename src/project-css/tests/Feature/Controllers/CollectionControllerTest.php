@@ -80,13 +80,10 @@
     }
 
     public function testEditingCollectionName() {
-        // Generate Test Collection
-        //$collection = $this->testHelper->createCollection('collection1');
-
         // Create Test Data Array
         $data = [
           'isCms' => false,
-          'collectionName' => 'collection1'
+          'name' => 'collection1'
         ];
 
         // Call helper create
@@ -105,10 +102,7 @@
         Storage::deleteDirectory($collection->clctnName);
 
         // delete the collection
-        $collection->delete();        
-
-     //    // clear folder that was created with the collection
-     //    rmdir($this->filePath.'/collection2');        
+        $collection->delete();               
     }
 
     public function testDisableThenEnableCollection() {

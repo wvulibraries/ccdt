@@ -3,8 +3,6 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Storage;
-use App\Models\Collection;
 use App\Helpers\CollectionHelper;
 
 class deleteCollection extends Command
@@ -22,7 +20,7 @@ class deleteCollection extends Command
      *
      * @var string
      */
-    protected $description = 'Drop a Collection';
+    protected $description = 'Delete a Collection';
 
     /**
      * Create a new command instance.
@@ -61,13 +59,7 @@ class deleteCollection extends Command
             }
         }
 
-        // find the collection
-        $thisClctn = Collection::where('clctnName', $this->argument('collectioname'))->first();
-
-        // delete the collection
-        $thisClctn->delete();
-
-        // delete storage folder
-        Storage::deleteDirectory($this->argument('collectioname'));
+        // call helper delete collection
+        $this->helper->deleteCollection($this->argument('collectioname'));
     }
 }

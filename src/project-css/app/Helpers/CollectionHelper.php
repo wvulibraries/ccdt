@@ -21,7 +21,7 @@ class CollectionHelper {
      public function create($data) {
         // Create the collection name
         $thisClctn = new Collection;
-        $thisClctn->clctnName = $data['collectionName'];
+        $thisClctn->clctnName = $data['name'];
         $thisClctn->isCms = $data['isCms'];
         $thisClctn->save();
 
@@ -37,31 +37,46 @@ class CollectionHelper {
         // find the collection
         $thisClctn = Collection::findorFail($data['id']);
 
-        // Set new Collection Name
-        $thisClctn->clctnName = $data['name'];
-
-        // Set isCms
-        $thisClctn->isCms = $data['isCms'];
-
-        // Save Updated items
-        $thisClctn->save();        
-
         // Rename Storage Folder
         if ((Storage::exists($data['name']) == FALSE) && (Storage::exists($thisClctn->clctnName))) {
           Storage::move($thisClctn->clctnName, $data['name']);
-        }      
+        }  
+
+        // Set new Collection Name
+        $thisClctn->clctnName = $data['name'];
+
+        // Save Updated items
+        $thisClctn->save();            
      }
-
-     //  public function setCMS($name, ) {
-
-     //  }
 
      public function disable($name) {
+        // verify collection exists
+        if ($this->isCollection($name)) {
+          // find the collection
+          $thisClctn = Collection::where('clctnName', $name)->first();
 
-     }
+          // reset collection to disabled
+          $this->updateCollectionFlag($thisClctn->id, false);
 
-     public function enable($name) {
+          return true;
+        }
 
+        return false;
+    }
+
+    public function enable($name) {
+      // verify collection exists
+      if ($this->isCollection($name)) {
+        // find the collection
+        $thisClctn = Collection::where('clctnName', $name)->first();
+
+        // reset collection to enabled
+        $this->updateCollectionFlag($thisClctn->id, true);
+
+        return true;
+      }
+
+      return false;
      }
 
      public function isCollection($name) {
@@ -70,6 +85,18 @@ class CollectionHelper {
         }
         return false;
      }
+
+     public function setCMS($name, $option) {
+        // find the collection
+        $thisClctn = Collection::where('clctnName', $name)->first();
+
+        // Set isCms
+        $thisClctn->isCms = $option;
+
+        // Save Updated items
+        $thisClctn->save();  
+     }
+
 
      // check and see if collection has Tables
      // associated to it.
@@ -115,6 +142,20 @@ class CollectionHelper {
         $thisClctn->save();
       }
 
+     /**
+      * Sets the the CMS Setting of the collection
+      */
+     public function updateCollectionCMSOption($id, $option = false) {
+        // Create the collection name
+        $thisClctn = Collection::findorFail($id);
+
+        // update status of the collection
+        $thisClctn->isCms = $option;
+
+        // Save the Collection
+        $thisClctn->save();
+      }
+
       /**
       * Sets hasAccess on all tables in collection
       */  
@@ -129,4 +170,17 @@ class CollectionHelper {
         }
       }    
 
+      /**
+       * Delete a collection
+       */
+      public function deleteCollection($name) {
+        // find the collection
+        $thisClctn = Collection::where('clctnName', $name)->first();
+
+        // delete the collection
+        $thisClctn->delete();
+
+        // delete storage folder
+        Storage::deleteDirectory($name);
+      }
 }

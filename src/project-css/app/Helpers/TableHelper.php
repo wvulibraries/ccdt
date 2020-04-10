@@ -374,7 +374,7 @@ class TableHelper {
           (new CMSHelper)->createCMSTable($strDir, $file, $colID, $tblNme);
         }
         else {
-            $csvHelper->createFlatTable($strDir, $file, $colID, $tblNme);;
+            $csvHelper->createFlatTable($strDir, $file, $colID, $tblNme);
         }
 
         $errorArray = [

@@ -46,7 +46,7 @@ class createCollection extends Command
             // Get required fields for collection
             $data = [
                 'isCms' => $this->option('iscms'),
-                'collectionName' => $this->argument('collectioname')
+                'name' => $this->argument('collectioname')
             ];
         
             // Using Collection Helper Create a new collection

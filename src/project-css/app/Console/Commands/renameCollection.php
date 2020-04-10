@@ -21,7 +21,7 @@ class renameCollection extends Command
      *
      * @var string
      */
-    protected $description = 'Rename/Update Collection';
+    protected $description = 'Rename Collection';
 
     /**
      * Create a new command instance.
@@ -55,12 +55,11 @@ class renameCollection extends Command
     
         // Get required fields for collection
         $data = [
-            'isCms' => $thisClctn->isCms,
             'id' => $thisClctn->id,
             'name' => $this->argument('newname'),
         ];
     
-        // Using Collection Helper Create a new collection
+        // Using Collection Helper Update collection
         $helper->update($data);        
     }
 }

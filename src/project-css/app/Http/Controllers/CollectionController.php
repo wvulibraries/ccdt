@@ -96,7 +96,7 @@ class CollectionController extends Controller
     // Get required fields for collection
     $data = [
         'isCms' => $request->has('isCms') ? true : false,
-        'collectionName' => $request->clctnName
+        'name' => $request->clctnName
     ];
 
     // Using Collection Helper Create a new collection
