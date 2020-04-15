@@ -34,6 +34,8 @@ jobs:
             sudo docker-php-ext-install pdo_mysql
             sudo apt install -y default-mysql-client            
 
+      - run: sudo composer self-update
+
       # Download and cache dependencies
       # - restore_cache:
       #     keys:
