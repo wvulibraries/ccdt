@@ -182,9 +182,13 @@ class CollectionController extends Controller
     $thisClctn = Collection::findorFail($cmsID);  
 
     if ($thisClctn->isCms) {
-      // redirect to show page
-      return view('collection/creator')->with('cmsID', $cmsID)
-                                      ->with('clctnName', $thisClctn->clctnName);
+      // Get all the tables of this collection
+      $tbls = $thisClctn->tables()->get();
+
+      // redirect to creators page
+      return view('collection/creator')->with('tbls', $tbls)
+                                    ->with('cmsID', $cmsID)
+                                    ->with('clctnName', $thisClctn->clctnName);
     }
 
     return redirect()->back()->withErrors('Current Collection is Not a CMS Database'); 

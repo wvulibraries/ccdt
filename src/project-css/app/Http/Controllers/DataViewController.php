@@ -11,8 +11,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Table;
 use App\Libraries\CustomStringHelper;
-use App\Libraries\FileViewHelper;
 use App\Libraries\FullTextSearchFormatter;
+use App\Helpers\FileViewHelper;
 use App\Helpers\TableHelper;
 
 /**
@@ -132,11 +132,6 @@ class DataViewController extends Controller {
      * view with a local application.
      */
     public function view($curTable, $recId, $filename) {
-      // var_dump($curTable);
-      // var_dump($recId);
-      // var_dump($filename);
-      // die();
-
         // Get the table entry in meta table "tables"
         $table = Table::findOrFail($curTable);
 

@@ -1,11 +1,8 @@
 <?php
-// use \Symfony\Component\HttpFoundation\File\UploadedFile;
 use App\Models\Collection;
-// use App\Models\Table;
-// use App\Libraries\CSVHelper;
-// use App\Libraries\CMSHelper;
-// use App\Libraries\FileViewHelper;
+use App\Models\Table;
 use App\Helpers\CollectionHelper;
+use App\Helpers\TableHelper;
 
 class CollectionHelperTest extends BrowserKitTestCase
 {
@@ -42,7 +39,7 @@ class CollectionHelperTest extends BrowserKitTestCase
      public function testUpdateCollection() {
         // Create Test Data Array
         $data = [
-          'isCms' => false,
+          'isCms' => 0,
           'name' => 'TestCollection'
         ];
 
@@ -51,7 +48,7 @@ class CollectionHelperTest extends BrowserKitTestCase
 
         // Set required fields for collection update
         $data = [
-          'isCms' => true,
+          'isCms' => 1,
           'id' => $collection->id,
           'name' => 'TestCollection2'
         ];
@@ -76,10 +73,10 @@ class CollectionHelperTest extends BrowserKitTestCase
         $this->assertFalse($this->helper->isCollection($data['name']));         
      }
         
-     public function testDisableEnableCollection() {
+     public function testDisableCollection() {
         // Create Test Data Array
         $data = [
-          'isCms' => false,
+          'isCms' => 1,
           'name' => 'TestCollection'
         ];
 
@@ -89,6 +86,26 @@ class CollectionHelperTest extends BrowserKitTestCase
         // Call helper disable
         $this->assertTrue($this->helper->disable($data['name']));    
 
+        // Cleanup Test Collection
+        $this->helper->deleteCollection($data['name']); 
+        
+        // Call helper isCollection Verify Collection Doesn't Exist
+        $this->assertFalse($this->helper->isCollection($data['name'])); 
+        
+        // Call helper disable collection that doesn't exist
+        $this->assertFalse($this->helper->disable($data['name']));         
+     }
+
+     public function testEnableCollection() {
+        // Create Test Data Array
+        $data = [
+          'isCms' => 0,
+          'name' => 'TestCollection'
+        ];
+
+        // Call helper create
+        $collection = $this->helper->create($data);   
+
         // Call helper enable
         $this->assertTrue($this->helper->enable($data['name']));    
 
@@ -96,8 +113,11 @@ class CollectionHelperTest extends BrowserKitTestCase
         $this->helper->deleteCollection($data['name']); 
         
         // Call helper isCollection Verify Collection Doesn't Exist
-        $this->assertFalse($this->helper->isCollection($data['name']));         
-     }
+        $this->assertFalse($this->helper->isCollection($data['name'])); 
+        
+        // Call helper enable collection that doesn't exist
+        $this->assertFalse($this->helper->enable($data['name']));         
+     }     
 
      public function testIsCollection() {
         // Create Test Data Array
@@ -119,7 +139,7 @@ class CollectionHelperTest extends BrowserKitTestCase
         $this->assertFalse($this->helper->isCollection($data['name'])); 
      }
 
-     public function testHasTables() {
+     public function testCollectionHasNoTables() {
         // Create Test Data Array
         $data = [
           'isCms' => false,
@@ -139,6 +159,41 @@ class CollectionHelperTest extends BrowserKitTestCase
         $this->assertFalse($this->helper->isCollection($data['name']));        
      }
 
+     public function testCollectionHasTables() {
+        // set storage location
+        $storageFolder = 'files/test';
+
+        // set location of file
+        $fileName = '1A-random.tab';  
+
+        // Create Test Data Array
+        $data = [
+          'isCms' => true,
+          'name' => 'TestCollection'
+        ];
+
+        // Call helper create
+        $collection = $this->helper->create($data);       
+        
+        // Test Table Name
+        $tableName = 'test'.time();
+
+        // Create/Import New Table
+        (new TableHelper)->importFile($storageFolder, $fileName, $tableName, $collection->id, $collection->isCms);
+       
+        // Call helper to see that no tables are assoicated to the collection
+        $this->assertTrue($this->helper->hasTables($collection->clctnName));   
+
+        // drop test table
+        Schema::dropIfExists($tableName);
+
+        // Delete Test Collection
+        $this->helper->deleteCollection($collection->clctnName);   
+        
+        // Call helper isCollection Verify Collection Doesn't Exist
+        $this->assertFalse($this->helper->isCollection($collection->clctnName));         
+     }     
+
      public function testHasFiles() {
         // Create Test Data Array
         $data = [
@@ -151,12 +206,70 @@ class CollectionHelperTest extends BrowserKitTestCase
 
         // Call helper to see that no files exist
         $this->assertFalse($this->helper->hasFiles($data['name']));   
+
+        // create a empty file in collection
+        $emptyFile = './storage/app/' . $data['name'] . '/empty.txt';
+        touch($emptyFile);        
+
+        // Call helper to see that files exist
+        $this->assertTrue($this->helper->hasFiles($data['name'])); 
         
         // Delete Test Collection
         $this->helper->deleteCollection($data['name']);
         
         // Call helper isCollection Verify Collection Doesn't Exist
-        $this->assertFalse($this->helper->isCollection($data['name']));         
+        $this->assertFalse($this->helper->isCollection($data['name']));     
      }     
 
+     public function testSetCMS() {
+        // Create Test Data Array
+        $data = [
+          'isCms' => false,
+          'name' => 'TestCollection'
+        ];
+
+        // Call helper create
+        $collection = $this->helper->create($data);
+
+        // Call setCMS
+        $this->helper->setCMS($data['name'], true);    
+        
+        // get current collection since it was updated
+        $collection = Collection::find($collection->id);
+
+        // check if collection isCms set to 1
+        $this->assertEquals($collection->isCms, true);
+
+        // Cleanup Test Collection
+        $this->helper->deleteCollection($data['name']);  
+        
+        // Call helper isCollection Verify Collection Doesn't Exist
+        $this->assertFalse($this->helper->isCollection($data['name']));         
+     }
+
+     public function testunSetCMS() {
+        // Create Test Data Array
+        $data = [
+          'isCms' => true,
+          'name' => 'TestCollection'
+        ];
+
+        // Call helper create
+        $collection = $this->helper->create($data);
+
+        // Call setCMS
+        $this->helper->setCMS($data['name'], false);    
+        
+        // get current collection since it was updated
+        $collection = Collection::find($collection->id);
+
+        // check if collection isCms set to 1
+        $this->assertEquals($collection->isCms, false);
+
+        // Cleanup Test Collection
+        $this->helper->deleteCollection($data['name']);  
+        
+        // Call helper isCollection Verify Collection Doesn't Exist
+        $this->assertFalse($this->helper->isCollection($data['name']));         
+     }
 }

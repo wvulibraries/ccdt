@@ -103,35 +103,7 @@ class TableHelper {
         $this->createIntegerField($table, $curColNme, $curColSze);
       }
 
-     }
-
-    //  public function changeToStringField($tblNme, $curColNme, $curColSze) {          
-    //     switch ($curColSze) {
-    //         case 'medium':
-    //             $statement = "ALTER TABLE `{$tblNme}` MODIFY COLUMN `{$curColNme}` VARCHAR(150)";
-    //             break;
-    //         case 'big':
-    //             $statement = "ALTER TABLE `{$tblNme}` MODIFY COLUMN `{$curColNme}` VARCHAR(500)";              
-    //             break;
-    //         default:
-    //             $statement = "ALTER TABLE `{$tblNme}` MODIFY COLUMN `{$curColNme}` VARCHAR(30)";                               
-    //     }    
-    //     return DB::connection()->statement($statement);  
-    //  }
-
-    //  public function changeToTextField($tblNme, $curColNme, $curColSze) {       
-    //     switch ($curColSze) {
-    //         case 'medium':
-    //             $statement = "ALTER TABLE `{$tblNme}` MODIFY COLUMN `{$curColNme}` MEDIUMTEXT";               
-    //             break;
-    //         case 'big':
-    //             $statement = "ALTER TABLE `{$tblNme}` MODIFY COLUMN `{$curColNme}` LONGTEXT";               
-    //             break;
-    //         default:
-    //             $statement = "ALTER TABLE `{$tblNme}` MODIFY COLUMN `{$curColNme}` TEXT";                              
-    //     }   
-    //     return DB::connection()->statement($statement); 
-    //  }    
+     }   
      
      public function changeToIntegerField($tblNme, $curColNme, $curColSze) {
         switch ($curColSze) {
@@ -149,7 +121,7 @@ class TableHelper {
      } 
 
      public function schemaChangeToStringField($tblNme, $curColNme, $curColSze) {    
-      Schema::table($tblNme, function ($table) use ($curColNme, $curColType, $curColSze) {             
+      Schema::table($tblNme, function ($table) use ($curColNme, $curColSze) {             
         switch ($curColSze) {
             case 'medium':
               // For String medium is 150 characters
@@ -167,7 +139,7 @@ class TableHelper {
      }
 
      public function schemaChangeToTextField($tblNme, $curColNme, $curColSze) {  
-      Schema::table($tblNme, function ($table) use ($curColNme, $curColType, $curColSze) {
+      Schema::table($tblNme, function ($table) use ($curColNme, $curColSze) {
         switch ($curColSze) {
             case 'medium':
               // For text medium is mediumtext type
@@ -183,24 +155,6 @@ class TableHelper {
         }    
       });           
      }    
-     
-    //  public function schemaChangeToIntegerField($tblNme, $curColNme, $curColSze) {
-    //     Schema::table($tblNme, function ($table) use ($curColNme, $curColType, $curColSze) {
-    //       switch ($curColSze) {
-    //           case 'medium':
-    //             // For Integer medium is medium integer
-    //             $table->mediumInteger($curColNme)->change();
-    //             break;
-    //           case 'big':
-    //             // For Integer big is big integer
-    //             $table->bigInteger($curColNme)->change();
-    //             break;
-    //           default:
-    //             // For Integer default integer type
-    //             $table->integer($curColNme)->change();                  
-    //       } 
-    //     });         
-    //  } 
 
     public function changeTableField($tblNme, $curColNme, $curColType, $curColSze) {        
         switch (strtolower($curColType)) {
@@ -249,7 +203,7 @@ class TableHelper {
        $table->save();
      }     
 
-     public function fileImport($tblNme, $fltFlePath, $fltFle) {
+     public function dispatchImportJob($tblNme, $fltFlePath, $fltFle) {
        // set messages array to empty
        $messages = [];
 
@@ -267,6 +221,7 @@ class TableHelper {
      public function createTable($filepath, $fileName, $tblNme, $fieldNames, $fieldTypes, $collctnId) {
          $fieldCount = count($fieldTypes);
 
+         // create the table
          Schema::connection('mysql')->create($tblNme, function(Blueprint $table) use($fieldNames, $fieldTypes, $fieldCount, $collctnId) {
 
            // Default primary key
@@ -288,12 +243,11 @@ class TableHelper {
          // modify table for fulltext search using the srchindex column
          DB::connection()->getPdo()->exec('ALTER TABLE `'.$tblNme.'` ADD FULLTEXT fulltext_index (srchindex)');
 
-         // Finally create the table
-         // Save the table upon the schema
+         // Set table collection id
          $this->crteTblInCollctn($tblNme, $collctnId);
 
          // queue job for import
-         $this->fileImport($tblNme, $filepath, $fileName);
+         $this->dispatchImportJob($tblNme, $filepath, $fileName);
      }
 
      // $strDir is the storage folder
@@ -346,7 +300,7 @@ class TableHelper {
         return redirect()->route('tableIndex')->withErrors($errors);
      }
 
-     public function importFile($strDir, $file, $tblNme, $colID, $cms) {
+     public function importFile($strDir, $file, $tblNme = null, $colID, $cms) {
         $csvHelper = (new CSVHelper);
 
         $fltFleAbsPth = $strDir.'/'.$file;
@@ -366,10 +320,14 @@ class TableHelper {
           return ($errorArray);
         }
         elseif ($cms) {
-          // filter record string
-          $filteredType = filter_var($schema[0], FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_HIGH);
-          // create table name
-          $tblNme = $filteredType . time();
+          // Generate Table Name if $tblNme is null
+          if ($tblNme == null) {
+            // filter record string
+            $filteredType = filter_var($schema[0], FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_HIGH);
+            // create table name
+            $tblNme = $filteredType . time();
+          }
+
           // pass values to create file
           (new CMSHelper)->createCMSTable($strDir, $file, $colID, $tblNme);
         }
@@ -383,5 +341,45 @@ class TableHelper {
         ];
 
         return ($errorArray);
-      }     
+      }
+
+    public function setVarchar($size) {
+      switch ($size) { 
+        case $size <= 30:
+            return (['type' => 'string', 'size' => 'default']); 
+            break;                     
+        case $size <= 150:
+            return (['type' => 'string', 'size' => 'medium']);
+            break;
+        default:
+            return (['type' => 'string', 'size' => 'big']);
+      }
+    }
+ 
+    public function setInteger($type) {
+      switch ($type) {
+        case 'mediumint':
+          return (['type' => 'integer', 'size' => 'medium']);
+          break;
+        case 'bigint':
+          return (['type' => 'integer', 'size' => 'big']); 
+          break;
+        default:  
+          return (['type' => 'integer', 'size' => 'default']);      
+      }      
+    }    
+
+    public function setText($type) {
+      switch ($type) {
+        case 'mediumtext':  
+          return (['type' => 'text', 'size' => 'medium']);
+          break;
+        case 'longtext':
+          return (['type' => 'text', 'size' => 'big']);
+          break;
+        default:
+          return (['type' => 'text', 'size' => 'default']);
+      }      
+    }      
+
 }

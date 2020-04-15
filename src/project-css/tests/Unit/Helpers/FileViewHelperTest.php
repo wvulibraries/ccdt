@@ -3,8 +3,9 @@
 use App\Models\Collection;
 use App\Models\Table;
 use App\Libraries\CSVHelper;
-use App\Libraries\FileViewHelper;
+use App\Helpers\FileViewHelper;
 use App\Helpers\TableHelper;
+
 
 class FileViewHelperTest extends BrowserKitTestCase
 {

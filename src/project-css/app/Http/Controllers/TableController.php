@@ -100,45 +100,6 @@ class TableController extends Controller
       return redirect()->route('table.edit.schema',  ['curTable' => $request->tblId]);
     }
     
-    public function setVarchar($size) {
-      switch ($size) { 
-        case $size <= 30:
-            return (['type' => 'string', 'size' => 'default']); 
-            break;                     
-        case $size <= 150:
-            return (['type' => 'string', 'size' => 'medium']);
-            break;
-        default:
-            return (['type' => 'string', 'size' => 'big']);
-      }
-    }
- 
-    public function setInteger($type) {
-      switch ($type) {
-        case 'mediumint':
-          return (['type' => 'integer', 'size' => 'medium']);
-          break;
-        case 'bigint':
-          return (['type' => 'integer', 'size' => 'big']); 
-          break;
-        default:  
-          return (['type' => 'integer', 'size' => 'default']);      
-      }      
-    }    
-
-    public function setText($type) {
-      switch ($type) {
-        case 'mediumtext':  
-          return (['type' => 'text', 'size' => 'medium']);
-          break;
-        case 'longtext':
-          return (['type' => 'text', 'size' => 'big']);
-          break;
-        default:
-          return (['type' => 'text', 'size' => 'default']);
-      }      
-    }      
-
     public function editSchema($curTable) {
       // Set Empty Field Type Array
       $schema = [];
@@ -163,18 +124,18 @@ class TableController extends Controller
           $type = explode("(", $col->Type, 2);
           switch ($type[0]) {
               case 'varchar':
-                  array_push($schema, [$col->Field => $this->setVarchar((int) $size[0][0])]);
+                  array_push($schema, [$col->Field => (new TableHelper)->setVarchar((int) $size[0][0])]);
                   break;
               case 'int':
               case 'mediumint':
               case 'bigint':
-                  array_push($schema, [$col->Field => $this->setInteger($type[0])]);
+                  array_push($schema, [$col->Field => (new TableHelper)->setInteger($type[0])]);
                   break;                                      
           }
         }
         else {
           // if size isn't present then field is a text field
-          array_push($schema, [$col->Field => $this->setText($col->Type)]);
+          array_push($schema, [$col->Field => (new TableHelper)->setText($col->Type)]);
         }
       }
       
@@ -532,7 +493,7 @@ class TableController extends Controller
       $this->validate($request, $rules);
 
       //Queue Job for Import
-      (new TableHelper)->fileImport($request->tblNme, $this->strDir, $request->fltFle);
+      (new TableHelper)->dispatchImportJob($request->tblNme, $this->strDir, $request->fltFle);
 
       return redirect()->route('tableIndex');
     }

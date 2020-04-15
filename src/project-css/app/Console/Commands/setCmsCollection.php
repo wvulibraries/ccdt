@@ -46,7 +46,7 @@ class setCmsCollection extends Command
             return $this->error('Collection ' . $this->argument('collectioname') . ' Doesn\'t Exist');
         }
 
-        // Using Collection Helper set CMS in collection to false
+        // Using Collection Helper set collection cms option
         $helper->setCMS($this->argument('collectioname'), true);         
     }
 }

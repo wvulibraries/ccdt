@@ -4,7 +4,8 @@
  * @author Tracy A McCormick <tam0013@mail.wvu.edu>
  */
 
-namespace App\Libraries;
+namespace App\Helpers;
+
 use Response;
 use Storage;
 use App\Models\Collection;

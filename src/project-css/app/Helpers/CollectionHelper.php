@@ -37,6 +37,7 @@ class CollectionHelper {
         // find the collection
         $thisClctn = Collection::findorFail($data['id']);
 
+      if ($thisClctn->clctnName != $data['name']) {
         // Rename Storage Folder
         if ((Storage::exists($data['name']) == FALSE) && (Storage::exists($thisClctn->clctnName))) {
           Storage::move($thisClctn->clctnName, $data['name']);
@@ -44,9 +45,15 @@ class CollectionHelper {
 
         // Set new Collection Name
         $thisClctn->clctnName = $data['name'];
+      }
 
-        // Save Updated items
-        $thisClctn->save();            
+      if ($thisClctn->isCms != $data['isCms']) {
+        // Set CMS State
+        $thisClctn->isCms = $data['isCms'];
+      }
+
+      // Save Updated items
+      $thisClctn->save();            
      }
 
      public function disable($name) {
@@ -86,7 +93,7 @@ class CollectionHelper {
         return false;
      }
 
-     public function setCMS($name, $option) {
+     public function setCMS($name, $option = false) {
         // find the collection
         $thisClctn = Collection::where('clctnName', $name)->first();
 
@@ -113,8 +120,12 @@ class CollectionHelper {
         return false;
      }
 
-     // check and see if collection has Files
-     // associated to it.
+    /**
+    * Returns true if files exist in collection. False otherwise.
+    *
+    * @param  string  $name    
+    * @return boolean
+    */         
      public function hasFiles($name) {
         $files = Storage::allFiles($name);
         if (empty($files)) {
@@ -127,6 +138,9 @@ class CollectionHelper {
       * Sets the the state of the collection to the value in $flag
       * then calls updateTableAccess to update all tables in the 
       * collection
+      *
+      * @param  integer $id   
+      * @param  boolean  $flag   
       */
      public function updateCollectionFlag($id, $flag) {
         // Create the collection name
@@ -137,20 +151,6 @@ class CollectionHelper {
 
         // update status of the collection
         $thisClctn->isEnabled = $flag;
-
-        // Save the Collection
-        $thisClctn->save();
-      }
-
-     /**
-      * Sets the the CMS Setting of the collection
-      */
-     public function updateCollectionCMSOption($id, $option = false) {
-        // Create the collection name
-        $thisClctn = Collection::findorFail($id);
-
-        // update status of the collection
-        $thisClctn->isCms = $option;
 
         // Save the Collection
         $thisClctn->save();

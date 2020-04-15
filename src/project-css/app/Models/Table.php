@@ -9,6 +9,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
+use App\Helpers\TableHelper;
 
 class Table extends Model
 {
@@ -65,6 +66,36 @@ class Table extends Model
         return DB::table($this->tblNme)
                     ->where('id', '=', $id)
                     ->get();
+    }
+
+    // Return field type for column name passed
+    public function getColumnType($name) {
+        // Get Description of table
+        $columns = DB::select("DESCRIBE `{$this->tblNme}`");
+        // Return Type for Field
+        foreach ($columns as $col) {            
+            if ($name == $col->Field) {
+                // get varchar size
+                preg_match_all('!\d+!', $col->Type, $size);
+                if (count($size[0]) == 1) {
+                    $type = explode("(", $col->Type, 2);
+                    switch ($type[0]) {
+                        case 'varchar':
+                            return (new TableHelper)->setVarchar((int) $size[0][0]);
+                            break;
+                        case 'int':
+                        case 'mediumint':
+                        case 'bigint':
+                            return (new TableHelper)->setInteger($type[0]);
+                            break;                                      
+                    }
+                }
+                else {
+                    // if size isn't present then field is a text field
+                    return (new TableHelper)->setText($col->Type);
+                }
+            }
+        }
     }
 
      /**
