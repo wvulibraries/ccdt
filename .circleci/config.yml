@@ -23,7 +23,8 @@ jobs:
     working_directory: ~/laravel/src/project-css
 
     steps:
-      - checkout
+      - checkout:
+          path: ~/laravel
 
       - run:
           name: "Prepare Environment"
@@ -45,10 +46,10 @@ jobs:
           name: "Install Dependencies"
           command: composer install -n --prefer-dist
 
-      - save_cache:
-          key: v1-dependencies-{{ checksum "composer.json" }}
-          paths:
-            - ./vendor
+      # - save_cache:
+      #     key: v1-dependencies-{{ checksum "composer.json" }}
+      #     paths:
+      #       - ./vendor
 
       # prepare the database
       - run:
