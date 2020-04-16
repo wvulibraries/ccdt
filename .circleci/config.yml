@@ -66,7 +66,7 @@ jobs:
             php artisan migrate
 
       - run:
-          name: Setup Code Climate test-reporter
+          name: "Setup Code Climate test-reporter"
           command: |
             # download test reporter as a static binary
             curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
@@ -75,5 +75,6 @@ jobs:
       # run tests with phpunit
       - run:
           name: "Run Tests"
-          command: ./vendor/bin/phpunit --coverage-clover clover.xml
-                   ./cc-test-reporter after-build --coverage-input-type clover --exit-code $?          
+          command: |
+            ./vendor/bin/phpunit --coverage-clover clover.xml
+            ./cc-test-reporter after-build --coverage-input-type clover --exit-code $?          
