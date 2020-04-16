@@ -19,7 +19,7 @@ jobs:
       - image: logicalspark/docker-tikaserver
         ports:
             - "9998:9998"
-            
+
     working_directory: ~/laravel/src/project-css
 
     steps:
@@ -35,21 +35,21 @@ jobs:
             sudo apt install -y default-mysql-client
 
       # Download and cache dependencies
-      - restore_cache:
-          keys:
-            # "composer.lock" can be used if it is committed to the repo
-            - v1-dependencies-{{ checksum "composer.json" }}
-            # fallback to using the latest cache if no exact match is found
-            - v1-dependencies-
+      # - restore_cache:
+      #     keys:
+      #       # "composer.lock" can be used if it is committed to the repo
+      #       - v1-dependencies-{{ checksum "composer.json" }}
+      #       # fallback to using the latest cache if no exact match is found
+      #       - v1-dependencies-
 
       - run:
           name: "Install Dependencies"
           command: composer install -n --prefer-dist
 
-      - save_cache:
-          key: v1-dependencies-{{ checksum "composer.json" }}
-          paths:
-            - ./vendor
+      # - save_cache:
+      #     key: v1-dependencies-{{ checksum "composer.json" }}
+      #     paths:
+      #       - ./vendor
 
       # prepare the database
       - run:
