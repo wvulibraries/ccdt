@@ -19,12 +19,12 @@ jobs:
       - image: logicalspark/docker-tikaserver
         ports:
             - "9998:9998"
-
+            
     working_directory: ~/laravel/src/project-css
 
     steps:
       - checkout:
-          path: ~/laravel
+          path: ~/laravel    
 
       - run:
           name: "Prepare Environment"
@@ -32,26 +32,24 @@ jobs:
             sudo apt update
             sudo docker-php-ext-install zip
             sudo docker-php-ext-install pdo_mysql
-            sudo apt install -y default-mysql-client            
-
-      - run: sudo composer self-update
+            sudo apt install -y default-mysql-client
 
       # Download and cache dependencies
-      # - restore_cache:
-      #     keys:
-      #       # "composer.lock" can be used if it is committed to the repo
-      #       - v1-dependencies-{{ checksum "composer.json" }}
-      #       # fallback to using the latest cache if no exact match is found
-      #       - v1-dependencies-
+      - restore_cache:
+          keys:
+            # "composer.lock" can be used if it is committed to the repo
+            - v1-dependencies-{{ checksum "composer.json" }}
+            # fallback to using the latest cache if no exact match is found
+            - v1-dependencies-
 
       - run:
           name: "Install Dependencies"
           command: composer install -n --prefer-dist
 
-      # - save_cache:
-      #     key: v1-dependencies-{{ checksum "composer.json" }}
-      #     paths:
-      #       - ./vendor
+      - save_cache:
+          key: v1-dependencies-{{ checksum "composer.json" }}
+          paths:
+            - ./vendor
 
       # prepare the database
       - run:
@@ -66,15 +64,10 @@ jobs:
             php artisan migrate
 
       - run:
-          name: "Setup Code Climate test-reporter"
-          command: |
-            # download test reporter as a static binary
-            curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
-            chmod +x ./cc-test-reporter
+          name: "Generate Passport encryption keys"
+          command: php artisan passport:install
 
       # run tests with phpunit
       - run:
           name: "Run Tests"
-          command: |
-            ./vendor/bin/phpunit --coverage-clover clover.xml
-            ./cc-test-reporter after-build --coverage-input-type clover --exit-code $?          
+          command: ./vendor/bin/phpunit
