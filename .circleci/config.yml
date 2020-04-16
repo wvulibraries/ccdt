@@ -71,7 +71,7 @@ jobs:
       - run:
           name: "Create database and run migration"
           command: |
-            php artisan migrate
+            php artisan migrate --force
 
       # - run:
       #     name: "Generate Passport encryption keys"
