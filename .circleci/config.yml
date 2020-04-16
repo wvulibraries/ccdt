@@ -63,9 +63,9 @@ jobs:
           command: |
             php artisan migrate
 
-      - run:
-          name: "Generate Passport encryption keys"
-          command: php artisan passport:install
+      # - run:
+      #     name: "Generate Passport encryption keys"
+      #     command: php artisan passport:install
 
       # run tests with phpunit
       - run:
