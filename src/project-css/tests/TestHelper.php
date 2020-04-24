@@ -1,7 +1,7 @@
 <?php
 
 use App\Libraries\CMSHelper;
-use App\Libraries\CSVHelper;
+use App\Helpers\CSVHelper;
 use App\Helpers\TableHelper;
 use App\Models\Collection;
 

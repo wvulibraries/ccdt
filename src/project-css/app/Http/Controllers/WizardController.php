@@ -32,7 +32,7 @@ class WizardController extends Controller
             'fltFleList' => $this->flatFileList(),
             'colID' => 1
        ];
-    }
+    } 
 
    /**
     * Returns view for the Import Wizard Main Page
@@ -58,16 +58,6 @@ class WizardController extends Controller
         // return flatfile import wizard
         return view('admin/wizard/flatfile')->with($data);
     }
-
-    // /**
-    // * Returns correct view for importing into a collection
-    // *
-    // * @return view
-    // */    
-    // public function importTable($colID) {
-    //     var_dump(Collection::find($colID));
-    //     die();
-    // }   
 
    /**
     * Returns view for the CMS Import

@@ -1,16 +1,9 @@
 <?php
 
-use App\Libraries\CSVHelper;
+use App\Helpers\CSVHelper;
 
 class CSVHelperTest extends BrowserKitTestCase
 {
-    public function setUp(): void {
-         parent::setUp();
-    }
-
-    protected function tearDown(): void {
-         parent::tearDown();
-    }
 
     public function testSchema() {
         // check for a valid file

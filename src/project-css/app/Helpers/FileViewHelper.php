@@ -40,12 +40,12 @@ class FileViewHelper {
       * and it uses the last folder and filename in the $str 
       * that is passed.
       *
-      * @param       string  $tblNme    Input string
+      * @param       string  $tblNme Input string
       * @param       string  $str    Input string
       * @return      boolean
       */
-     public function fileExistsInFolder($tblNme, $str) {
-         return Storage::exists($this->buildFileLink($tblNme, $str));
+     public function fileExistsInFolder($colNme, $str) {
+         return Storage::exists($this->buildFileLink($colNme, $str));
      }
 
      /**
@@ -60,14 +60,8 @@ class FileViewHelper {
          $tokens = explode('\\', $str);
          // get filename from end of string
          $filename = end($tokens);
-         // get the last folder the file exists in
-         $subfolder = prev($tokens);
-
-         if (count((array) $subfolder) > 0) {
-           return $subfolder;
-         }
-
-         return false;
+         // return prev($tokens) this contains the folder
+         return prev($tokens);
      }
 
      /**
@@ -190,15 +184,15 @@ class FileViewHelper {
      public function getFilePath($curTable, $recId, $filename) {
        // Get the table entry in meta table "tables"
        $table = Table::findOrFail($curTable);
-      
-       // find the collection
-       $collection = Collection::findorFail($table->collection_id); 
 
        $originalFilePath = $this->getOriginalPath($curTable, $recId, $filename);
 
        if ($originalFilePath == null) {
          return $this->locateFile($curTable, $filename);
        }
+
+       // find the collection
+       $collection = Collection::findorFail($table->collection_id);        
 
        return $this->buildFileLink($collection->clctnName, $originalFilePath);
      }

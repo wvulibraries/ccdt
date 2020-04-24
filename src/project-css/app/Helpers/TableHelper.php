@@ -16,7 +16,7 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use App\Models\Collection;
 use App\Models\CMSRecords;
 use App\Models\Table;
-use App\Libraries\CSVHelper;
+use App\Helpers\CSVHelper;
 use App\Libraries\CMSHelper;
 use App\Libraries\CustomStringHelper;
 
@@ -29,83 +29,113 @@ class TableHelper {
      *
      */
 
-     public function createStringField($table, $curColNme, $curColSze) {
-        // to do verify $curColNme is not already used
-        
-        switch ($curColSze) {
-            case 'medium':
-                // For String medium is 150 characters
-                $table->string($curColNme, 150)->default("Null");
-                break;
-            case 'big':
-                // For String big is 500 characters
-                $table->string($curColNme, 500)->default("Null");
-                break;
-            default:
-                // For String default is 30 characters
-                $table->string($curColNme, 30)->default("Null");                  
-        }                 
-     }
+    /** 
+    * Inserts New String field into the passed table
+    *
+    * @param table $table - Current Table object
+    * @param string $curColNme - String name of new field
+    * @param string $curColSze - String Size either 'default', 'medium' or 'big'
+    * @author Tracy A McCormick
+    */     
+    public function createStringField($table, $curColNme, $curColSze) {
+      switch ($curColSze) {
+          case 'medium':
+              // For String medium is 150 characters
+              $table->string($curColNme, 150)->default("Null");
+              break;
+          case 'big':
+              // For String big is 500 characters
+              $table->string($curColNme, 500)->default("Null");
+              break;
+          default:
+              // For String default is 30 characters
+              $table->string($curColNme, 30)->default("Null");                  
+      }                 
+    }
 
-     public function createTextField($table, $curColNme, $curColSze) {
-        // to do verify $curColNme is not already used
-        
-        switch ($curColSze) {
-            case 'medium':
-                // For text medium is mediumtext type
-                $table->mediumText($curColNme);
-                break;
-            case 'big':
-                // For text big is longtext type
-                $table->longText($curColNme);
-                break;
-            default:
-                // For text default is text type
-                $table->text($curColNme);                  
-        }             
-     }    
-     
-     public function createIntegerField($table, $curColNme, $curColSze) {
-        // to do verify $curColNme is not already used
+    /** 
+    * Inserts New Text field into the passed table
+    *
+    * @param table $table - Current Table object
+    * @param string $curColNme - String name of new field
+    * @param string $curColSze - String Size either 'default', 'medium' or 'big'
+    * @author Tracy A McCormick
+    */     
+    public function createTextField($table, $curColNme, $curColSze) {
+      switch ($curColSze) {
+          case 'medium':
+              // For text medium is mediumtext type
+              $table->mediumText($curColNme);
+              break;
+          case 'big':
+              // For text big is longtext type
+              $table->longText($curColNme);
+              break;
+          default:
+              // For text default is text type
+              $table->text($curColNme);                  
+      }             
+    }    
+    
+    /** 
+    * Inserts New Integer field into the passed table
+    *
+    * @param table $table - Current Table object
+    * @param string $curColNme - String name of new field
+    * @param string $curColSze - String Size either 'default', 'medium' or 'big'
+    * @author Tracy A McCormick
+    */ 
+    public function createIntegerField($table, $curColNme, $curColSze) {
+      switch ($curColSze) {
+          case 'medium':
+              // For Integer medium is medium integer
+              $table->mediumInteger($curColNme)->default(0);
+              break;
+          case 'big':
+              // For Integer big is big integer
+              $table->bigInteger($curColNme)->default(0);
+              break;
+          default:
+              // For Integer default integer type
+              $table->integer($curColNme)->default(0);                  
+      }                 
+    }     
 
-        switch ($curColSze) {
-            case 'medium':
-                // For Integer medium is medium integer
-                $table->mediumInteger($curColNme)->default(0);
-                break;
-            case 'big':
-                // For Integer big is big integer
-                $table->bigInteger($curColNme)->default(0);
-                break;
-            default:
-                // For Integer default integer type
-                $table->integer($curColNme)->default(0);                  
-        }                 
-     }     
-     
+    /** 
+    * Function checks $curColType and calls the correct function to create
+    * the field.
+    *
+    * @param string $table - current table object  
+    * @param string $curColNme - String name of field
+    * @param string $curColType - String type of field    
+    * @param string $curColSze - String Size either 'default', 'medium' or 'big'
+    * @author Tracy A McCormick
+    */      
     public function setupTableField($table, $curColNme, $curColType, $curColSze) {
-      // Filter the data type and size and create the column
-      // Check for Strings
-      if (str_is($curColType, 'string')) {
-        // Check for the data type
-        $this->createStringField($table, $curColNme, $curColSze);
-      }
-
-      // Check for Text data type
-      if (str_is($curColType, 'text')) {
-        // Check for the data type
-        $this->createTextField($table, $curColNme, $curColSze);
-      }
-
-      // Check for Integer
-      if (str_is($curColType, 'integer')) {
-        // Check for the data type
-        $this->createIntegerField($table, $curColNme, $curColSze);
-      }
-
-     }   
+        // Call correct create function based on $curColType
+        switch ($curColType) {
+            case 'string':
+                $this->createStringField($table, $curColNme, $curColSze);              
+                break;
+            case 'text':
+                $this->createTextField($table, $curColNme, $curColSze);              
+                break;
+            case 'integer':
+                $this->createIntegerField($table, $curColNme, $curColSze);
+                break;                         
+        }
+    }   
      
-     public function changeToIntegerField($tblNme, $curColNme, $curColSze) {
+    /** 
+    * Basic Switch function to call correct update 
+    * function to change type of field in the table.
+    *
+    * @param string $tblNme - String name of table   
+    * @param string $curColNme - String name of field
+    * @param string $curColSze - String Size either 'default', 'medium' or 'big'
+    * @author Tracy A McCormick
+    */  
+    public function changeToIntegerField($tblNme, $curColNme, $curColSze) {
         switch ($curColSze) {
             case 'medium':
                 $statement = "ALTER TABLE `{$tblNme}` MODIFY COLUMN `{$curColNme}` MEDIUMINT";               
@@ -118,9 +148,18 @@ class TableHelper {
         }
 
         return DB::connection()->statement($statement);     
-     } 
+    } 
 
-     public function schemaChangeToStringField($tblNme, $curColNme, $curColSze) {    
+    /** 
+    * Basic Switch function to call correct update 
+    * function to change type of field in the table.
+    *
+    * @param string $tblNme - String name of table   
+    * @param string $curColNme - String name of field
+    * @param string $curColSze - String Size either 'default', 'medium' or 'big'
+    * @author Tracy A McCormick
+    */         
+    public function schemaChangeToStringField($tblNme, $curColNme, $curColSze) {    
       Schema::table($tblNme, function ($table) use ($curColNme, $curColSze) {             
         switch ($curColSze) {
             case 'medium':
@@ -136,9 +175,18 @@ class TableHelper {
               $table->string($curColNme, 30)->change();                  
         }
       });
-     }
+    }
 
-     public function schemaChangeToTextField($tblNme, $curColNme, $curColSze) {  
+    /** 
+    * Basic Switch function to call correct update 
+    * function to change type of field in the table.
+    *
+    * @param string $tblNme - String name of table   
+    * @param string $curColNme - String name of field
+    * @param string $curColSze - String Size either 'default', 'medium' or 'big'
+    * @author Tracy A McCormick
+    */      
+    public function schemaChangeToTextField($tblNme, $curColNme, $curColSze) {  
       Schema::table($tblNme, function ($table) use ($curColNme, $curColSze) {
         switch ($curColSze) {
             case 'medium':
@@ -154,8 +202,18 @@ class TableHelper {
               $table->text($curColNme)->change();                  
         }    
       });           
-     }    
+    }    
 
+    /** 
+    * Basic Switch function to call correct update 
+    * function to change type of field in the table.
+    *
+    * @param string $tblNme - String name of table   
+    * @param string $curColNme - String name of field
+    * @param string $curColType - String type that field will be changed to   
+    * @param string $curColSze - String Size either 'default', 'medium' or 'big'
+    * @author Tracy A McCormick
+    */      
     public function changeTableField($tblNme, $curColNme, $curColType, $curColSze) {        
         switch (strtolower($curColType)) {
             case 'string':
@@ -203,6 +261,15 @@ class TableHelper {
        $table->save();
      }     
 
+     /**
+     * Function takes the tablename, filepath and the filename
+     * and calls dispatch on the FileImport function to queue 
+     * the file for import into the table.
+     * 
+     * @param string $tblNme - table name
+     * @param string $fltFlePath - path to file to be imported
+     * @param string $fltFle - filename of file 
+     */     
      public function dispatchImportJob($tblNme, $fltFlePath, $fltFle) {
        // set messages array to empty
        $messages = [];
@@ -218,44 +285,66 @@ class TableHelper {
        session()->flash('messages', $messages);
      }   
 
-     public function createTable($filepath, $fileName, $tblNme, $fieldNames, $fieldTypes, $collctnId) {
-         $fieldCount = count($fieldTypes);
+    /** 
+    * 
+    *
+    * @param string $filepath
+    * @param string $fileName
+    * @param string $tblNme
+    * @param array $fieldNames
+    * @param array $fieldTypes
+    * @param integer $collctnId - the collection id  
+    * @author Tracy A McCormick
+    * @return redirect to table index
+    */    
+    public function createTable($filepath, $fileName, $tblNme, $fieldNames, $fieldTypes, $collctnId) {
+      $fieldCount = count($fieldTypes);
 
-         // create the table
-         Schema::connection('mysql')->create($tblNme, function(Blueprint $table) use($fieldNames, $fieldTypes, $fieldCount, $collctnId) {
+      // create the table
+      Schema::connection('mysql')->create($tblNme, function(Blueprint $table) use($fieldNames, $fieldTypes, $fieldCount, $collctnId) {
 
-           // Default primary key
-           $table->increments('id');
+        // Default primary key
+        $table->increments('id');
 
-           // Add all the dynamic columns
-           for ($i = 0; $i<$fieldCount; $i++) {
-             // Create Field from current column name, type and size
-             $this->setupTableField($table, (new CustomStringHelper)->formatFieldName($fieldNames[$i]), $fieldTypes[$i][0], $fieldTypes[$i][1]);
-           }
+        // Add all the dynamic columns
+        for ($i = 0; $i<$fieldCount; $i++) {
+          // Create Field from current column name, type and size
+          $this->setupTableField($table, (new CustomStringHelper)->formatFieldName($fieldNames[$i]), $fieldTypes[$i][0], $fieldTypes[$i][1]);
+        }
 
-           // search index
-           $table->longText('srchindex');
+        // search index
+        $table->longText('srchindex');
 
-           // Time stamps
-           $table->timestamps();
-         });
+        // Time stamps
+        $table->timestamps();
+      });
 
-         // modify table for fulltext search using the srchindex column
-         DB::connection()->getPdo()->exec('ALTER TABLE `'.$tblNme.'` ADD FULLTEXT fulltext_index (srchindex)');
+      // modify table for fulltext search using the srchindex column
+      DB::connection()->getPdo()->exec('ALTER TABLE `'.$tblNme.'` ADD FULLTEXT fulltext_index (srchindex)');
 
-         // Set table collection id
-         $this->crteTblInCollctn($tblNme, $collctnId);
+      // Set table collection id
+      $this->crteTblInCollctn($tblNme, $collctnId);
 
-         // queue job for import
-         $this->dispatchImportJob($tblNme, $filepath, $fileName);
-     }
+      // queue job for import
+      $this->dispatchImportJob($tblNme, $filepath, $fileName);
+    }
 
-     // $strDir is the storage folder
-     // $colID is the collection id
-     // $array of files
-     // $cms true if uploaded files are apart of a cms set
-     // $tblNme new table name to be used
-     public function storeUploadsAndImport($data) {
+    /** 
+    * Store each file(s) in the $data['flatFiles'] and queue 
+    * each one for import.
+    *
+    * @param array $data - array of values used by function
+    *
+    * List of fields in $data that are expected
+    *
+    * @param string $data['strDir'] - is the storage folder
+    * @param array $data['flatFiles'] - files to be stored and imported
+    * @param string $data['tableName'] - new table name to be used
+    * @param boolean $data['cms'] - true if uploaded files are apart of a cms set
+    * @author Tracy A McCormick
+    * @return redirect to table index
+    */      
+    public function storeUploadsAndImport($data) {
         // Get the list of files in the directory
         $fltFleList = Storage::allFiles($data['strDir']);
 
@@ -281,9 +370,19 @@ class TableHelper {
        return redirect()->route('tableIndex')->withErrors($errors);
     }
 
-     // $strDir is the storage folder
-     // $colID is the collection id
-     // $array of files
+    /** 
+    * Queue each file(s) in the $data['flatFiles'] for import.
+    *
+    * @param array $data - array of values used by function
+    *
+    * List of fields in $data that are expected
+    *
+    * @param string $data['strDir'] - is the storage folder
+    * @param array $data['flatFiles'] - files to be imported
+    * @param integer $data['colID'] - the collection id    
+    * @author Tracy A McCormick
+    * @return redirect to table index
+    */         
      public function selectFilesAndImport($data) {
         // array for keeping errors that we will send to the user
         $errors = [];
@@ -300,49 +399,70 @@ class TableHelper {
         return redirect()->route('tableIndex')->withErrors($errors);
      }
 
-     public function importFile($strDir, $file, $tblNme = null, $colID, $cms) {
-        $csvHelper = (new CSVHelper);
+    /** 
+    * Import file into correct collection. Create a tablename if one is 
+    * not provided.
+    *
+    * @param string $strDir - is the storage folder
+    * @param string $file - file to be imported
+    * @param string $tblNme - new table name to be used
+    * @param integer $colID - the collection id 
+    * @param boolean $cms - true if uploaded files are apart of a cms set       
+    * @author Tracy A McCormick
+    * @return redirect to table index
+    */       
+    public function importFile($strDir, $file, $tblNme = null, $colID, $cms) {
+      $csvHelper = (new CSVHelper);
 
-        $fltFleAbsPth = $strDir.'/'.$file;
-        // Calling schema will return an array containing the
-        // tokenized first row of our file to be imported
-        $schema = $csvHelper->schema($fltFleAbsPth);
-        // if the array is not valid we will delete the file
-        // and push a error to the $errors array
-        if (!$schema) {
-          Storage::delete($fltFleAbsPth);
-
-          $errorArray = [
-            'error' => true,
-            'errorList' => [ 'The selected flat file must be of type: text/plain', 'The selected flat file should not be empty', 'File is deleted for security reasons' ]
-          ];
-
-          return ($errorArray);
-        }
-        elseif ($cms) {
-          // Generate Table Name if $tblNme is null
-          if ($tblNme == null) {
-            // filter record string
-            $filteredType = filter_var($schema[0], FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_HIGH);
-            // create table name
-            $tblNme = $filteredType . time();
-          }
-
-          // pass values to create file
-          (new CMSHelper)->createCMSTable($strDir, $file, $colID, $tblNme);
-        }
-        else {
-            $csvHelper->createFlatTable($strDir, $file, $colID, $tblNme);
-        }
+      $fltFleAbsPth = $strDir.'/'.$file;
+      // Calling schema will return an array containing the
+      // tokenized first row of our file to be imported
+      $schema = $csvHelper->schema($fltFleAbsPth);
+      // if the array is not valid we will delete the file
+      // and push a error to the $errors array
+      if (!$schema) {
+        Storage::delete($fltFleAbsPth);
 
         $errorArray = [
-          'error' => false,
-          'errorList' => []
+          'error' => true,
+          'errorList' => [ 'The selected flat file must be of type: text/plain', 'The selected flat file should not be empty', 'File is deleted for security reasons' ]
         ];
 
         return ($errorArray);
       }
+      elseif ($cms) {
+        // Generate Table Name if $tblNme is null
+        if ($tblNme == null) {
+          // filter record string
+          $filteredType = filter_var($schema[0], FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_HIGH);
+          // create table name
+          $tblNme = $filteredType . time();
+        }
 
+        // pass values to create file
+        (new CMSHelper)->createCMSTable($strDir, $file, $colID, $tblNme);
+      }
+      else {
+          $csvHelper->createFlatTable($strDir, $file, $colID, $tblNme);
+      }
+
+      $errorArray = [
+        'error' => false,
+        'errorList' => []
+      ];
+
+      return ($errorArray);
+    }
+
+    /** 
+    * Function is used to create array of 2 items
+    * type and size used in the view. The mysql database
+    * defines strings as varchar and has a length.
+    *
+    * @param string $type - mysql type string  
+    * @author Tracy A McCormick
+    * @return array type info
+    */      
     public function setVarchar($size) {
       switch ($size) { 
         case $size <= 30:
@@ -355,7 +475,17 @@ class TableHelper {
             return (['type' => 'string', 'size' => 'big']);
       }
     }
- 
+
+    /** 
+    * Function is used to create array of 2 items
+    * type and size used in the view. The mysql database
+    * defines fields differently ie (mediumint, bigint, integer)
+    * than how they are used in the views.
+    *
+    * @param string $type - mysql type string  
+    * @author Tracy A McCormick
+    * @return array type info
+    */      
     public function setInteger($type) {
       switch ($type) {
         case 'mediumint':
@@ -369,6 +499,16 @@ class TableHelper {
       }      
     }    
 
+    /** 
+    * Function is used to create array of 2 items
+    * type and size used in the view. The mysql database
+    * defines fields differently ie (mediumtext, longtext, text)
+    * than how they are used in the views.
+    *
+    * @param string $type - mysql type string  
+    * @author Tracy A McCormick
+    * @return array type info
+    */      
     public function setText($type) {
       switch ($type) {
         case 'mediumtext':  

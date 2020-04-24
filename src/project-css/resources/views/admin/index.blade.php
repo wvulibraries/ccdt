@@ -18,6 +18,25 @@
 <!-- Dashboard cards -->
 <div class="container cardsWrapper" role="main">
   <div id="access" class="row">
+
+    <a href="{{ url('/users') }}">
+      <div class="col-xs-12 col-sm-6 col-md-3">
+        <div class="well dashCard">
+          <div class="dashCardHeading">
+            <span class="glyphicon glyphicon-user visible-xs visible-sm smallIcon" aria-hidden="true"></span>
+            <span class="navigation-cards"> User(s) </span>
+          </div>
+          <div class="icon hidden-xs hidden-sm">
+            <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+          </div>
+          <div class="desc hidden-xs">
+            <var>{{$usrCnt}}</var>
+            <span> User(s) </span>
+          </div>
+        </div>
+      </div>
+    </a> 
+
     <a href="{{ url('/collection') }}">
       <div class="col-xs-12 col-sm-6 col-md-3">
         <div class="well dashCard">
@@ -53,24 +72,7 @@
         </div>
       </div>
     </a>
-
-    <a href="{{ url('/users') }}">
-      <div class="col-xs-12 col-sm-6 col-md-3">
-        <div class="well dashCard">
-          <div class="dashCardHeading">
-            <span class="glyphicon glyphicon-user visible-xs visible-sm smallIcon" aria-hidden="true"></span>
-            <span class="navigation-cards"> User(s) </span>
-          </div>
-          <div class="icon hidden-xs hidden-sm">
-            <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
-          </div>
-          <div class="desc hidden-xs">
-            <var>{{$usrCnt}}</var>
-            <span> User(s) </span>
-          </div>
-        </div>
-      </div>
-    </a>    
+   
 
     <div class="col-xs-12 col-sm-6 col-md-3">
       <div class="well dashCard">

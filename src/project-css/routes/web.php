@@ -74,6 +74,7 @@ Route::group([ 'prefix' => 'table' ], function() {
     Route::post('create/importcmsdis', 'TableController@importCMSDIS')->name('importcmsdis');
     Route::post('create/select', 'TableController@select');
     Route::post('create/selectCMSDIS', 'TableController@selectCMSDIS')->name('selectcmsdis');
+
     // Forward route in case for error
     Route::get('create/select', 'TableController@wizard');
     Route::post('create/finalize', 'TableController@finalize');
@@ -83,6 +84,19 @@ Route::group([ 'prefix' => 'table' ], function() {
     Route::post('load/status', 'TableController@status');
     Route::post('restrict', 'TableController@restrict');
 });
+
+
+/*
+|--------------------------------------------------------------------------
+| Controller for the export wizard
+|--------------------------------------------------------------------------
+*/
+Route::group([ 'prefix' => 'admin/wizard' ], function() {    
+    Route::get('export', 'ExportController@export')->name('wizard.export');
+    Route::get('export/table', 'ExportController@exportTable')->name('wizard.export.table');
+    Route::get('export/collection', 'ExportController@exportCollection')->name('wizard.export.collection');        
+});
+
 
 /*
 |--------------------------------------------------------------------------
@@ -99,8 +113,10 @@ Route::group([ 'prefix' => 'admin/wizard' ], function() {
     
     Route::get('cms', 'WizardController@cms')->name('wizard.cms');
     Route::post('cms/upload', 'WizardController@cmsUpload')->name('wizard.cms.upload');
-    Route::post('cms/select', 'WizardController@cmsSelect')->name('wizard.cms.select');     
+    Route::post('cms/select', 'WizardController@cmsSelect')->name('wizard.cms.select');    
 });
+
+
 
 /*
 |--------------------------------------------------------------------------

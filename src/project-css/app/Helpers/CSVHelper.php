@@ -4,7 +4,7 @@
  * @author Tracy A McCormick <tam0013@mail.wvu.edu>
  */
 
-namespace App\Libraries;
+namespace App\Helpers;
 
 use Illuminate\Support\Facades\Storage;
 use App\Helpers\TableHelper;
@@ -333,7 +333,7 @@ class CSVHelper {
      public function createFlatTable($storageFolder, $thsFltFile, $collctnId, $tblNme) {
        // detect fields we pass true if we have a header row,
        // file location, number of rows to check
-       $fieldTypes = $this->determineTypes(true, $storageFolder.'/'.$thsFltFile, 1000);
+       $fieldTypes = $this->determineTypes(true, $storageFolder.'/'.$thsFltFile, 2000);
 
        // get 1st row from csv file
        $schema = $this->schema($storageFolder.'/'.$thsFltFile);
