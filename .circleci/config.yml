@@ -25,7 +25,7 @@ jobs:
       - run:
           name: Setup dependencies
           command: |
-            sudo composer self-update
+            composer self-update
             composer install -n --prefer-dist
       - run:
           name: Setup Code Climate test-reporter
@@ -35,7 +35,7 @@ jobs:
       - run:
           name: Run tests
           command: |
-            sudo docker-php-ext-enable xdebug
+            docker-php-ext-enable xdebug
             ./cc-test-reporter before-build
-            sudo vendor/bin/phpunit --coverage-clover clover.xml
+            vendor/bin/phpunit --coverage-clover clover.xml
             ./cc-test-reporter after-build --coverage-input-type clover --exit-code $?
