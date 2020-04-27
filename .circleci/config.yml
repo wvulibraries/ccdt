@@ -57,5 +57,4 @@ jobs: # a collection of steps
       - run:
           name: Run tests
           command: |
-            sudo vendor/bin/phpunit --coverage-clover clover.xml
-            ./cc-test-reporter after-build --coverage-input-type clover --exit-code $?
+            sudo vendor/bin/phpunit
