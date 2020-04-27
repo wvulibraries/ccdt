@@ -6,7 +6,7 @@
 <!-- Search engine -->
 @include('user/searchbox')
 
-@inject('strhelper', \App\Libraries\CustomStringHelper)
+@inject('strhelper', \App\Helpers\CustomStringHelper)
 @inject('filehelper', \App\Helpers\FileViewHelper)
 <!-- Separation -->
 <hr/>

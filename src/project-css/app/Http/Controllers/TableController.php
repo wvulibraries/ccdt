@@ -16,9 +16,9 @@ use Illuminate\Database\Schema\Blueprint;
 use App\Models\Table;
 use App\Models\Collection;
 use App\Models\CMSRecords;
-use App\Libraries\CustomStringHelper;
-use App\Libraries\CMSHelper;
+use App\Helpers\CMSHelper;
 use App\Helpers\CSVHelper;
+use App\Helpers\CustomStringHelper;
 use App\Helpers\TableHelper;
 
 class TableController extends Controller

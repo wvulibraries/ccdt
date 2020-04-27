@@ -4,7 +4,7 @@
  * @author Tracy A McCormick <tam0013@mail.wvu.edu>
  */
 
-namespace App\Libraries;
+namespace App\Helpers;
 
 use Illuminate\Support\Facades\DB;
 use App\Models\StopWords;

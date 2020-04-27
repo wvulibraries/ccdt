@@ -8,13 +8,7 @@ class FullTextSearchFormatterTest extends BrowserKitTestCase
 
     public function setUp(): void {
          parent::setUp();
-         //Artisan::call('migrate:refresh --seed');
          $this->fullTextHelper = new fullTextSearchFormatter();
-    }
-
-    protected function tearDown(): void {
-         //Artisan::call('migrate:reset');
-         parent::tearDown();
     }
 
     /**

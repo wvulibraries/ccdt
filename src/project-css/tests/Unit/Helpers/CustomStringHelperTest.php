@@ -1,6 +1,6 @@
 <?php
 
-use App\Libraries\CustomStringHelper;
+use App\Helpers\CustomStringHelper;
 
 class CustomStringHelperTest extends BrowserKitTestCase
 {
@@ -9,13 +9,11 @@ class CustomStringHelperTest extends BrowserKitTestCase
 
     public function setUp(): void {
          parent::setUp();
-         //Artisan::call('migrate:refresh --seed');
          $this->stringHelper = new customStringHelper();
          $this->singlefilewithpath = '..\documents\BlobExport\indivletters\114561.txt';
     }
 
     protected function tearDown(): void {
-         //Artisan::call('migrate:reset');
          unset($this->singlefilewithpath);
          unset($this->stringHelper);
          parent::tearDown();

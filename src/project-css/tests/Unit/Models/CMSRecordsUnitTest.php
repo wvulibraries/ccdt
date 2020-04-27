@@ -6,16 +6,6 @@
   class CMSRecordsUnitTest extends BrowserKitTestCase
   {
 
-    public function setUp(): void {
-         parent::setUp();
-         //Artisan::call('migrate:refresh --seed');
-    }
-
-    protected function tearDown(): void {
-         //Artisan::call('migrate:reset');
-         parent::tearDown();
-    }
-
     public function testIsCMSRecord() {
          $this->assertFalse(CMSRecords::isCMSRecord('A1'));
          //verify 1A is identified as a CMS Record

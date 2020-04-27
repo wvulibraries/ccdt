@@ -12,16 +12,6 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
  */
 class RegFormTest extends BrowserKitTestCase
 {
-    public function setUp(): void {
-      parent::setUp();
-      //Artisan::call('migrate:refresh --seed');
-    }
-
-    // protected function tearDown(): void {
-    //   Artisan::call('migrate:reset');
-    //   parent::tearDown();
-    // }
-
     /**
      * Testing for the password in registration form
      *

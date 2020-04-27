@@ -333,7 +333,7 @@ class CSVHelper {
      public function createFlatTable($storageFolder, $thsFltFile, $collctnId, $tblNme) {
        // detect fields we pass true if we have a header row,
        // file location, number of rows to check
-       $fieldTypes = $this->determineTypes(true, $storageFolder.'/'.$thsFltFile, 2000);
+       $fieldTypes = $this->determineTypes(true, $storageFolder.'/'.$thsFltFile, 10000);
 
        // get 1st row from csv file
        $schema = $this->schema($storageFolder.'/'.$thsFltFile);

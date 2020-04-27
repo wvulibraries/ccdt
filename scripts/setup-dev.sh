@@ -10,5 +10,5 @@ docker exec -t ccdt_php npm install
 docker exec -t ccdt_php php artisan key:generate
 # setup main database
 docker exec -t ccdt_php php artisan migrate --seed --database=mysql
-# setup testing database
-# docker exec -t ccdt_php php artisan migrate --seed --database=mysql_testing
+# update the loaded enviromental
+docker exec -t ccdt_php php artisan config:clear

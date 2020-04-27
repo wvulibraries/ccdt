@@ -1,6 +1,6 @@
 <?php
 
-use App\Libraries\TikaConvert;
+use App\Adapters\TikaConvert;
 
 class tikaConvertTest extends BrowserKitTestCase
 {
@@ -19,10 +19,10 @@ class tikaConvertTest extends BrowserKitTestCase
         parent::tearDown();
     }
 
-    // public function testConvertValidFile() {
-    //     $contents = $this->tikaConvert->convert($this->singlefilewithpath);
-    //     $this->assertTrue(strpos($contents, 'testing') !== false);
-    // }
+    public function testConvertValidFile() {
+        $contents = $this->tikaConvert->convert($this->singlefilewithpath);
+        $this->assertTrue(strpos($contents, 'testing') !== false);
+    }
 
     public function testConvertInvalidFile() {
         $contents = $this->tikaConvert->convert('invalid.doc');

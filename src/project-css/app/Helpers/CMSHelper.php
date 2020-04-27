@@ -4,7 +4,7 @@
  * @author Tracy A McCormick <tam0013@mail.wvu.edu>
  */
 
-namespace App\Libraries;
+namespace App\Helpers;
 
 use App\Models\CMSRecords;
 use App\Models\Collection;
@@ -89,7 +89,7 @@ class CMSHelper {
      public function createCMSTable($storageFolder, $thsFltFile, $collctnId, $tblNme) {
        // detect fields we pass false if we do not have a header row,
        // file location, number of rows to check
-       $fieldTypes = (new CSVHelper)->determineTypes(false, $storageFolder.'/'.$thsFltFile, 1000);
+       $fieldTypes = (new CSVHelper)->determineTypes(false, $storageFolder.'/'.$thsFltFile, 10000);
 
        // get 1st row from csv file
        $schema = (new CSVHelper)->schema($storageFolder.'/'.$thsFltFile);

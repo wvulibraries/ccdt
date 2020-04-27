@@ -5,7 +5,7 @@
  */
 
 namespace App\Libraries;
-use App\Libraries\CustomStringHelper;
+use App\Helpers\CustomStringHelper;
 
 class FullTextSearchFormatter {
 // class contains functions that will check and properly Format

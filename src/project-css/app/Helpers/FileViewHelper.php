@@ -8,10 +8,11 @@ namespace App\Helpers;
 
 use Response;
 use Storage;
+use App\Adapters\TikaConvert;
 use App\Models\Collection;
 use App\Models\Table;
-use App\Libraries\CustomStringHelper;
-use App\Libraries\TikaConvert;
+use App\Helpers\CustomStringHelper;
+
 
 class FileViewHelper {
     /**
@@ -155,45 +156,45 @@ class FileViewHelper {
        // Get the table entry in meta table "tables"
        $table = Table::findOrFail($tableId);
 
-       // find the collection
-       $collection = Collection::findorFail($table->collection_id);       
+      // find the collection
+      $collection = Collection::findorFail($table->collection_id);       
 
-       // Check for file in root of the table
-       if (Storage::exists($collection->clctnName.'/'.$filename)) {
-         return($collection->clctnName.'/'.$filename);
-       }
+      // Check for file in root of the table
+      if (Storage::exists($collection->clctnName.'/'.$filename)) {
+        return($collection->clctnName.'/'.$filename);
+      }
 
-       // get all subfolder
-       $ffs = Storage::disk('local')->directories($collection->clctnName);
-       foreach ($ffs as &$value) {
+      // get all subfolder
+      $ffs = Storage::disk('local')->directories($collection->clctnName);
+      foreach ($ffs as &$value) {
         if (Storage::exists($value.'/'.$filename)) {
           return($value .'/'.$filename);
         }
-       }
+      }
 
-       return false;
-     }
+      return false;
+    }
      
-      /**
-      * return returns string with correct path to file
-      * @param       integer $curTable Input integer
-      * @param       integer $recId    Input integer
-      * @param       string  $filename Input string
-      * @return      string
-      */   
-     public function getFilePath($curTable, $recId, $filename) {
-       // Get the table entry in meta table "tables"
-       $table = Table::findOrFail($curTable);
+    /**
+     * return returns string with correct path to file
+     * @param       integer $curTable Input integer
+     * @param       integer $recId    Input integer
+     * @param       string  $filename Input string
+     * @return      string
+     */   
+    public function getFilePath($curTable, $recId, $filename) {
+      // Get the table entry in meta table "tables"
+      $table = Table::findOrFail($curTable);
 
-       $originalFilePath = $this->getOriginalPath($curTable, $recId, $filename);
+      $originalFilePath = $this->getOriginalPath($curTable, $recId, $filename);
 
-       if ($originalFilePath == null) {
-         return $this->locateFile($curTable, $filename);
-       }
+      if ($originalFilePath == null) {
+        return $this->locateFile($curTable, $filename);
+      }
 
-       // find the collection
-       $collection = Collection::findorFail($table->collection_id);        
+      // find the collection
+      $collection = Collection::findorFail($table->collection_id);        
 
-       return $this->buildFileLink($collection->clctnName, $originalFilePath);
-     }
+      return $this->buildFileLink($collection->clctnName, $originalFilePath);
+    }
 }

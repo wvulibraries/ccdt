@@ -1,6 +1,6 @@
 <?php
 
-use App\Libraries\CMSHelper;
+use App\Helpers\CMSHelper;
 
 class CMSHelperTest extends BrowserKitTestCase
 {

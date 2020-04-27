@@ -17,8 +17,8 @@ use App\Models\Collection;
 use App\Models\CMSRecords;
 use App\Models\Table;
 use App\Helpers\CSVHelper;
-use App\Libraries\CMSHelper;
-use App\Libraries\CustomStringHelper;
+use App\Helpers\CMSHelper;
+use App\Helpers\CustomStringHelper;
 
 class TableHelper {
     /**

@@ -1,8 +1,8 @@
 <?php
 use App\Helpers\CollectionHelper;
+use App\Helpers\CustomStringHelper;
 use App\Helpers\TableHelper;
 use App\Models\Table;
-use App\Libraries\CustomStringHelper;
 
 class TableHelperTest extends BrowserKitTestCase
 {
