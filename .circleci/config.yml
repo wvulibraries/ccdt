@@ -1,9 +1,9 @@
-version: 2
-jobs:
-  build:
-    docker:
-      # Specify the version you desire here
-      - image: circleci/php:7.3-stretch-node-browsers  
+version: 2 # use CircleCI 2.0
+
+jobs: # a collection of steps
+  build: # runs not using Workflows must have a `build` job as entry point
+    docker: # run the steps with Docker 
+      - image: circleci/php:7.1-node-browsers # ...with this image as the primary container; this is where all `steps` will run
         environment:
           CC_TEST_REPORTER_ID: c1a64ac787169d1117a84825b352a83fb9aefc6fa5aa6a72753e3ecd5587a950
       - image: circleci/mysql:5.7
@@ -14,40 +14,33 @@ jobs:
           MYSQL_PASSWORD: circleci
       - image: logicalspark/docker-tikaserver
         ports:
-            - "9998:9998"
-
-    working_directory: ~/laravel/src/project-css
-
-    steps:
-      - checkout:
-          path: ~/laravel    
-      - run:
-          name: Copy .env.circleci to .env
-          command: |
-            cp .env.circleci .env                  
-          
-      - run:
-          name: Install PHP exts
-          command: |
-            sudo apt update
-            sudo docker-php-ext-install zip
-            sudo docker-php-ext-install pdo_mysql
-            sudo apt install -y default-mysql-client
+            - "9998:9998"      
+    working_directory: ~/laravel/src/project-css # directory where steps will run
+    steps: # a set of executable commands
+      - checkout # special step to check out source code to working directory
+      - run: sudo apt install -y default-mysql-client zlib1g-dev
+      - run: sudo docker-php-ext-install zip
       - run: sudo composer self-update
-
-      # Download and cache dependencies
-      # - restore_cache:
-      #     keys:
-      #     - v1-dependencies-{{ checksum "composer.json" }}
-      #     # fallback to using the latest cache if no exact match is found
-      #     - v1-dependencies-
-
+      - restore_cache: # special step to restore the dependency cache if `composer.lock` does not change
+          keys:
+            - composer-v1-{{ checksum "composer.lock" }}
+            # fallback to using the latest cache if no exact match is found (See https://circleci.com/docs/2.0/caching/)
+            - composer-v1-
       - run: composer install -n --prefer-dist
-
-      # - save_cache:
-      #     paths:
-      #       - ./vendor
-      #     key: v1-dependencies-{{ checksum "composer.json" }}
+      - save_cache: # special step to save the dependency cache with the `composer.lock` cache key template
+          key: composer-v1-{{ checksum "composer.lock" }}
+          paths:
+            - vendor
+      - restore_cache: # special step to restore the dependency cache if `package-lock.json` does not change
+          keys:
+            - node-v1-{{ checksum "package-lock.json" }}
+            # fallback to using the latest cache if no exact match is found (See https://circleci.com/docs/2.0/caching/)
+            - node-v1-
+      - run: yarn install
+      - save_cache: # special step to save the dependency cache with the `package-lock.json` cache key template
+          key: node-v1-{{ checksum "package-lock.json" }}
+          paths:
+            - node_modules
 
       - run:
           name: install dockerize
@@ -57,20 +50,9 @@ jobs:
 
       - run:
           name: Wait for db
-          command: dockerize -wait tcp://localhost:3306 -timeout 1m
+          command: dockerize -wait tcp://localhost:3306 -timeout 1m            
 
-      - run:
-          name: Set the key
-          command: php artisan key:generate
-
-      - run:
-          name: Reset Cached Config
-          command: php artisan config:cache
-
-      - run:
-          name: Database Migrate
-          command: |          
-            php artisan migrate --force
+      - run: php artisan migrate --env=testing --database=css_testing --force
 
       # Tests
       - run:
@@ -85,9 +67,3 @@ jobs:
           command: |
             sudo vendor/bin/phpunit --coverage-clover clover.xml
             ./cc-test-reporter after-build --coverage-input-type clover --exit-code $?
-
-workflows:
-  version: 2
-  notify_deploy:
-    jobs:
-      - build
