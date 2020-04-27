@@ -1,59 +1,42 @@
-version: 2 # use CircleCI 2.0
-
-jobs: # a collection of steps
-  build: # runs not using Workflows must have a `build` job as entry point
-    docker: # run the steps with Docker 
-      - image: circleci/php:7.3-stretch-node-browsers # ...with this image as the primary container; this is where all `steps` will run
-        environment:
-          CC_TEST_REPORTER_ID: c1a64ac787169d1117a84825b352a83fb9aefc6fa5aa6a72753e3ecd5587a950
-      - image: circleci/mysql:5.7
+version: 2.0
+jobs:
+  build:
+    environment:
+      CC_TEST_REPORTER_ID: c1a64ac787169d1117a84825b352a83fb9aefc6fa5aa6a72753e3ecd5587a950
+    docker:
+      - image: "mileschou/xdebug:7.3"
+      - image: "circleci/mysql:5.7"
         environment:
           MYSQL_ROOT_PASSWORD: rootpw
           MYSQL_DATABASE: css_testing
           MYSQL_USER: user
           MYSQL_PASSWORD: circleci
-      - image: logicalspark/docker-tikaserver
+      - image: "logicalspark/docker-tikaserver"
         ports:
-            - "9998:9998"      
-    working_directory: ~/laravel/src/project-css # directory where steps will run
-    steps: # a set of executable commands
+            - "9998:9998"  
+    working_directory: ~/laravel/src/project-css
+    steps:
       - checkout:
-          path: ~/laravel    
+          path: ~/laravel 
       - run:
           name: Copy .env.circleci to .env
           command: |
-            cp .env.circleci .env 
-      - run: sudo apt update
-      - run: sudo apt install -y default-mysql-client
-      - run: sudo docker-php-ext-install zip
-      - run: sudo docker-php-ext-install pdo_mysql
-      - run: sudo composer self-update
-      - run: composer install -n --prefer-dist
-      - run: yarn install
-
+            cp .env.circleci .env           
       - run:
-          name: install dockerize
-          command: wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && sudo tar -C /usr/local/bin -xzvf dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && rm dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz
-          environment:
-            DOCKERIZE_VERSION: v0.3.0
-
-      - run:
-          name: Wait for db
-          command: dockerize -wait tcp://localhost:3306 -timeout 1m            
-
-      - run:
-          name: Database Migrate
-          command: |          
-            php artisan migrate --force
-
-      # Tests
+          name: Setup dependencies
+          command: |
+            sudo composer self-update
+            composer install -n --prefer-dist
       - run:
           name: Setup Code Climate test-reporter
           command: |
-            # download test reporter as a static binary
+          # download test reporter as a static binary
             curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
             chmod +x ./cc-test-reporter
-
       - run:
           name: Run tests
-          command: vendor/bin/phpunit
+          command: |
+            sudo docker-php-ext-enable xdebug
+            ./cc-test-reporter before-build
+            sudo vendor/bin/phpunit --coverage-clover clover.xml
+            ./cc-test-reporter after-build --coverage-input-type clover --exit-code $?
