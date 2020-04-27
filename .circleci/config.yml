@@ -1,40 +1,90 @@
-version: 2.0
+version: 2
 jobs:
   build:
-    environment:
-      CC_TEST_REPORTER_ID: c1a64ac787169d1117a84825b352a83fb9aefc6fa5aa6a72753e3ecd5587a950
     docker:
-      - image: "circleci/php:7.1-stretch-node-browsers"
-      - image: "circleci/mysql:5.7"
+      # Specify the version you desire here
+      - image: circleci/php:7.3-stretch-node-browsers  
+        environment:
+          CC_TEST_REPORTER_ID: c1a64ac787169d1117a84825b352a83fb9aefc6fa5aa6a72753e3ecd5587a950
+      - image: circleci/mysql:5.7
         environment:
           MYSQL_ROOT_PASSWORD: rootpw
           MYSQL_DATABASE: css_testing
           MYSQL_USER: user
           MYSQL_PASSWORD: circleci
-      - image: "logicalspark/docker-tikaserver"
+      - image: logicalspark/docker-tikaserver
         ports:
-            - "9998:9998"       
+            - "9998:9998"
+
     working_directory: ~/laravel/src/project-css
+
     steps:
       - checkout:
-          path: ~/laravel 
+          path: ~/laravel    
       - run:
           name: Copy .env.circleci to .env
           command: |
-            cp .env.circleci .env        
+            cp .env.circleci .env                  
+          
       - run:
-          name: Setup dependencies
+          name: Install PHP exts
           command: |
-            sudo composer self-update
-            composer install -n --prefer-dist
+            sudo apt update
+            sudo docker-php-ext-install zip
+            sudo docker-php-ext-install pdo_mysql
+            sudo apt install -y default-mysql-client
+      - run: sudo composer self-update
+
+      # Download and cache dependencies
+      - restore_cache:
+          keys:
+          - v1-dependencies-{{ checksum "composer.json" }}
+          # fallback to using the latest cache if no exact match is found
+          - v1-dependencies-
+
+      - run: composer install -n --prefer-dist
+
+      - save_cache:
+          paths:
+            - ./vendor
+          key: v1-dependencies-{{ checksum "composer.json" }}
+
+      - run:
+          name: install dockerize
+          command: wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && sudo tar -C /usr/local/bin -xzvf dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && rm dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz
+          environment:
+            DOCKERIZE_VERSION: v0.3.0
+
+      - run:
+          name: Wait for db
+          command: dockerize -wait tcp://localhost:3306 -timeout 1m
+
+      - run:
+          name: Set the key
+          command: php artisan key:generate
+
+      - run:
+          name: Reset Cached Config
+          command: php artisan config:cache
+
+      - run:
+          name: Database Migrate
+          command: |          
+            php artisan migrate --force
+      # Tests
       - run:
           name: Setup Code Climate test-reporter
           command: |
+            # download test reporter as a static binary
             curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
             chmod +x ./cc-test-reporter
       - run:
           name: Run tests
           command: |
-            ./cc-test-reporter before-build
             sudo vendor/bin/phpunit --coverage-clover clover.xml
             ./cc-test-reporter after-build --coverage-input-type clover --exit-code $?
+workflows:
+  version: 2
+  notify_deploy:
+    jobs:
+      - build
