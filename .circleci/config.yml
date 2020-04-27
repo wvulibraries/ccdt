@@ -18,8 +18,9 @@ jobs: # a collection of steps
     working_directory: ~/laravel/src/project-css # directory where steps will run
     steps: # a set of executable commands
       - checkout # special step to check out source code to working directory
-      - run: sudo apt install -y default-mysql-client zlib1g-dev
+      - run: sudo apt install -y default-mysql-client
       - run: sudo docker-php-ext-install zip
+      - run: sudo docker-php-ext-install pdo_mysql
       - run: sudo composer self-update
       - restore_cache: # special step to restore the dependency cache if `composer.lock` does not change
           keys:
