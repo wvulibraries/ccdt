@@ -9,6 +9,10 @@ jobs:
     steps:
       - checkout
       - run:
+          name: Copy .env.circleci to .env
+          command: |
+            cp .env.circleci .env        
+      - run:
           name: Setup dependencies
           command: |
             sudo composer self-update
