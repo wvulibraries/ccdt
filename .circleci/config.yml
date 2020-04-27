@@ -52,6 +52,10 @@ jobs:
           command: php artisan key:generate
 
       - run:
+          name: Reset Cached Config
+          command: php artisan config:cache
+
+      - run:
           name: Database Migrate
           command: |          
             php artisan migrate --force
