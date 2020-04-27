@@ -7,7 +7,8 @@ jobs:
       - image: "circleci/php:7.3-stretch-node-browsers"
     working_directory: ~/laravel/src/project-css
     steps:
-      - checkout
+      - checkout:
+          path: ~/laravel 
       - run:
           name: Copy .env.circleci to .env
           command: |
