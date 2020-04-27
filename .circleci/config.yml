@@ -4,7 +4,7 @@ jobs:
     environment:
       CC_TEST_REPORTER_ID: c1a64ac787169d1117a84825b352a83fb9aefc6fa5aa6a72753e3ecd5587a950
     docker:
-      - image: "mileschou/xdebug:7.3"
+      - image: "circleci/php:7.3-stretch-node-browsers "
       - image: "circleci/mysql:5.7"
         environment:
           MYSQL_ROOT_PASSWORD: rootpw
@@ -25,7 +25,7 @@ jobs:
       - run:
           name: Setup dependencies
           command: |
-            composer self-update
+            sudo composer self-update
             composer install -n --prefer-dist
       - run:
           name: Setup Code Climate test-reporter
@@ -35,7 +35,7 @@ jobs:
       - run:
           name: Run tests
           command: |
-            docker-php-ext-enable xdebug
+            sudo docker-php-ext-enable xdebug
             ./cc-test-reporter before-build
-            vendor/bin/phpunit --coverage-clover clover.xml
+            sudo vendor/bin/phpunit --coverage-clover clover.xml
             ./cc-test-reporter after-build --coverage-input-type clover --exit-code $?
