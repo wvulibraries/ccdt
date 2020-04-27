@@ -4,24 +4,10 @@ jobs:
     environment:
       CC_TEST_REPORTER_ID: c1a64ac787169d1117a84825b352a83fb9aefc6fa5aa6a72753e3ecd5587a950
     docker:
-      - image: "circleci/php:7.3-stretch-node-browsers"
-      - image: "circleci/mysql:5.7"
-        environment:
-          MYSQL_ROOT_PASSWORD: rootpw
-          MYSQL_DATABASE: css_testing
-          MYSQL_USER: user
-          MYSQL_PASSWORD: circleci
-      - image: "logicalspark/docker-tikaserver"
-        ports:
-            - "9998:9998"  
+      - image: "mileschou/xdebug:7.3"
     working_directory: ~/laravel/src/project-css
     steps:
-      - checkout:
-          path: ~/laravel 
-      - run:
-          name: Copy .env.circleci to .env
-          command: |
-            cp .env.circleci .env           
+      - checkout
       - run:
           name: Setup dependencies
           command: |
@@ -30,6 +16,7 @@ jobs:
       - run:
           name: Setup Code Climate test-reporter
           command: |
+          # download test reporter as a static binary
             curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
             chmod +x ./cc-test-reporter
       - run:
