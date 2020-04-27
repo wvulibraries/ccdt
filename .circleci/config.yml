@@ -32,17 +32,21 @@ jobs:
             sudo docker-php-ext-install zip
             sudo docker-php-ext-install pdo_mysql
             sudo apt install -y default-mysql-client
-
       - run: sudo composer self-update
+
+      # Download and cache dependencies
+      # - restore_cache:
+      #     keys:
+      #     - v1-dependencies-{{ checksum "composer.json" }}
+      #     # fallback to using the latest cache if no exact match is found
+      #     - v1-dependencies-
 
       - run: composer install -n --prefer-dist
 
-      - run:
-          name: Setup Code Climate test-reporter
-          command: |
-            # download test reporter as a static binary
-            curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
-            chmod +x ./cc-test-reporter      
+      # - save_cache:
+      #     paths:
+      #       - ./vendor
+      #     key: v1-dependencies-{{ checksum "composer.json" }}
 
       # - run:
       #     name: install dockerize
@@ -52,7 +56,7 @@ jobs:
 
       # - run:
       #     name: Wait for db
-      #     command: dockerize -wait tcp://127.0.0.1:3306 -timeout 1m
+      #     command: dockerize -wait tcp://localhost:3306 -timeout 1m
 
       - run:
           name: Set the key
@@ -66,7 +70,13 @@ jobs:
           name: Database Migrate
           command: |          
             php artisan migrate --force
-            
+      # Tests
+      - run:
+          name: Setup Code Climate test-reporter
+          command: |
+            # download test reporter as a static binary
+            curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+            chmod +x ./cc-test-reporter
       - run:
           name: Run tests
           command: sudo vendor/bin/phpunit ./tests/AuthTest.php
