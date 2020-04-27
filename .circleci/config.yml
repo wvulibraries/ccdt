@@ -85,3 +85,9 @@ jobs:
           command: |
             sudo vendor/bin/phpunit --coverage-clover clover.xml
             ./cc-test-reporter after-build --coverage-input-type clover --exit-code $?
+
+workflows:
+  version: 2
+  notify_deploy:
+    jobs:
+      - build
