@@ -22,13 +22,11 @@ jobs:
           path: ~/laravel    
       - run:
           name: Copy .env.circleci to .env
-          command: |
-            cp .env.circleci .env  
+          command: cp .env.circleci .env  
             
       - run:
           name: Delete .env.testing
-          command: |
-            unlink .env.testing               
+          command: unlink .env.testing               
           
       - run:
           name: Install PHP exts
@@ -39,25 +37,7 @@ jobs:
             sudo apt install -y default-mysql-client
       - run: sudo composer self-update
 
-      # Download and cache dependencies
-      # - restore_cache:
-      #     keys:
-      #     - v1-dependencies-{{ checksum "composer.json" }}
-      #     # fallback to using the latest cache if no exact match is found
-      #     - v1-dependencies-
-
       - run: composer install -n --prefer-dist
-
-      # - save_cache:
-      #     paths:
-      #       - ./vendor
-      #     key: v1-dependencies-{{ checksum "composer.json" }}
-
-      - run:
-          name: install dockerize
-          command: wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && sudo tar -C /usr/local/bin -xzvf dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && rm dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz
-          environment:
-            DOCKERIZE_VERSION: v0.3.0
 
       - run:
           name: Wait for db
@@ -73,8 +53,7 @@ jobs:
 
       - run:
           name: Database Migrate
-          command: |          
-            php artisan migrate --force
+          command: php artisan migrate --force
       # Tests
       - run:
           name: Setup Code Climate test-reporter
@@ -84,7 +63,6 @@ jobs:
             chmod +x ./cc-test-reporter
       - run:
           name: Run tests
-          command: sudo vendor/bin/phpunit ./tests/AuthTest.php
-          # command: |
-          #   sudo vendor/bin/phpunit --coverage-clover clover.xml
-          #   ./cc-test-reporter after-build --coverage-input-type clover --exit-code $?
+          command: |
+            sudo vendor/bin/phpunit --coverage-clover clover.xml
+            ./cc-test-reporter after-build --coverage-input-type clover --exit-code $?
