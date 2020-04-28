@@ -20,7 +20,9 @@ class tikaConvertTest extends BrowserKitTestCase
     }
 
     public function testConvertValidFile() {
+        var_dump($this->singlefilewithpath);
         $contents = $this->tikaConvert->convert($this->singlefilewithpath);
+        var_dump($contents);
         $this->assertTrue(strpos($contents, 'testing') !== false);
     }
 
