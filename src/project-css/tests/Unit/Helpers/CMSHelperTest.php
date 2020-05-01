@@ -10,8 +10,6 @@ class CMSHelperTest extends BrowserKitTestCase
   public function setUp(): void {
        parent::setUp();
 
-       //Artisan::call('migrate:refresh --seed');
-
        // create a test collection
        $this->testHelper->createCollection('collection1');
        $this->testHelper->createCollection('collection2');
@@ -24,7 +22,6 @@ class CMSHelperTest extends BrowserKitTestCase
        rmdir($this->filePath.'/collection2');
        rmdir($this->filePath.'/collection3');
 
-       //Artisan::call('migrate:reset');
        parent::tearDown();
   }
 
@@ -101,14 +98,8 @@ class CMSHelperTest extends BrowserKitTestCase
     // check for Table collection18E
     $this->assertTrue(Schema::hasTable($tableName));
 
-    // check to see if records are loaded
-    // get set expected record count and assert they are equal
-
     // drop test table
     Schema::dropIfExists($tableName);
-
-    // clear folder that was created with the table
-    // rmdir($filePath.'/'.$tableName);
   }
 
   public function testcreate1Bcmstable() {
@@ -132,9 +123,6 @@ class CMSHelperTest extends BrowserKitTestCase
 
     // drop test table
     Schema::dropIfExists($tableName);
-
-    // clear folder that was created with the table
-    // rmdir($filePath.'/'.$tableName);
   }
 
   public function testcreate3Dcmstable() {
@@ -158,9 +146,6 @@ class CMSHelperTest extends BrowserKitTestCase
 
     // drop test table
     Schema::dropIfExists($tableName);
-
-    // clear folder that was created with the table
-    // rmdir($filePath.'/'.$tableName);
   }
 
   public function testcreate4Ecmstable() {
@@ -184,8 +169,5 @@ class CMSHelperTest extends BrowserKitTestCase
 
     // drop test table
     Schema::dropIfExists($tableName);
-
-    // clear folder that was created with the table
-    // rmdir($filePath.'/'.$tableName);
   }
 }

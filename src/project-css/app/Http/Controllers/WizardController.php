@@ -120,7 +120,10 @@ class WizardController extends Controller
             'tableName' => $request->slctTblNme
         ];
 
-        return (new TableHelper)->selectFilesAndImport($data);       
+        // Call helper to create table and dispatch job for import
+        // Routine returns array of errors if their is any.
+        $errors = (new TableHelper)->selectFilesAndImport($data); 
+        return redirect()->route('collection.show', ['colID' => $data['colID']])->withErrors($errors);      
     }
 
    /**

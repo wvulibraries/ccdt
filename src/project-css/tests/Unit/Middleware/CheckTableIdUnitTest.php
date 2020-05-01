@@ -7,7 +7,6 @@
 
     public function setUp(): void {
          parent::setUp();
-         //Artisan::call('migrate');
 
          \DB::insert('insert into collections (clctnName, isEnabled, hasAccess) values(?, ?, ?)',['collection1', true, true]);
 
@@ -15,11 +14,6 @@
          \DB::insert('insert into tables (tblNme, collection_id, hasAccess) values(?, ?, ?)',['testtable1', 1, true]);
          \DB::insert('insert into tables (tblNme, collection_id, hasAccess) values(?, ?, ?)',['testtable2', 1, false]);
     }
-
-    // protected function tearDown(): void {
-    //      Artisan::call('migrate:reset');
-    //      parent::tearDown();
-    // }
 
     public function testIsValidTable() {
         $response =  (new CheckTableId)->isValidTable('invalid');

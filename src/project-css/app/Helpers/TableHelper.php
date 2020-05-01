@@ -381,7 +381,7 @@ class TableHelper {
     * @param array $data['flatFiles'] - files to be imported
     * @param integer $data['colID'] - the collection id    
     * @author Tracy A McCormick
-    * @return redirect to table index
+    * @return error array
     */         
      public function selectFilesAndImport($data) {
         // array for keeping errors that we will send to the user
@@ -396,7 +396,9 @@ class TableHelper {
             array_push($errors, $result['errorList']);
            }   
         }
-        return redirect()->route('tableIndex')->withErrors($errors);
+
+        // return error array so they can be displayed to the user in the view
+        return $errors;
      }
 
     /** 

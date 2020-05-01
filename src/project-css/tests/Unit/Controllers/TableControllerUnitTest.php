@@ -9,17 +9,6 @@
     // location of test files
     private $filePath = './storage/app';
 
-    public function setUp(): void 
-    {
-         parent::setUp();
-         //Artisan::call('migrate:fresh --seed');
-    }
-
-    protected function tearDown(): void {
-         //Artisan::call('migrate:rollback');
-         parent::tearDown();
-    }
-
     public function testLoad() {
         // calling load should return the list of files
         // in the flatfile directory under Storage
