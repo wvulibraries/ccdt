@@ -144,4 +144,19 @@ class CSVHelperTest extends BrowserKitTestCase
       $this->assertEquals($result[12][1], 'default');
     }
 
+    /**
+     * test generating header
+     * creates random $fieldCount between 5 and 30
+     * tests the response from generateHeader
+     * counts items and verifys that the first item
+     * in the array equals 'Field0'
+     */
+    public function testgenerateHeader() {
+      $fieldCount = rand(5, 30);
+      $helper = (new CSVHelper);
+
+      $response = $helper->generateHeader($fieldCount);
+      $this->assertEquals(count( (array) $response), $fieldCount);
+      $this->assertEquals($response[0], 'Field0');
+    }    
 }

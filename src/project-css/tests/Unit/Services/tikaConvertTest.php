@@ -1,6 +1,6 @@
 <?php
 
-use App\Adapters\TikaConvert;
+use App\Services\TikaConvert;
 
 class tikaConvertTest extends BrowserKitTestCase
 {

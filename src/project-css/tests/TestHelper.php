@@ -149,7 +149,7 @@ class TestHelper {
 
           if ($schema == null) {
             // generate header using number of detected fields
-            $schema = (new CMSHelper)->generateHeader(count($fieldTypes));
+            $schema = (new CSVHelper)->generateHeader(count($fieldTypes));
           }
        }
 

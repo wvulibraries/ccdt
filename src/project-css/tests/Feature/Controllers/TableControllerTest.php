@@ -32,10 +32,6 @@
           $this->collectionHelper = new CollectionHelper;
     }
 
-    protected function tearDown(): void {
-           parent::tearDown();
-    }
-
     public function testTableIndexView() {
          $this->actingAs($this->admin)
               ->get('/table')
@@ -137,6 +133,40 @@
         $this->collectionHelper->deleteCollection($collection->clctnName);  
     }    
 
+    public function testTableUpdateCollection() {
+        // Create Test Collection        
+        $collection = $this->createTestCollection('TestCollection', false);
+        $collection2 = $this->createTestCollection('TestCollection2', false);        
+
+        // Create Test Table
+        $tableName = $this->createTestTable($collection);
+
+        // get newly created tables
+        $table = Table::where('tblNme', $tableName)->first();
+
+        $this->actingAs($this->admin)
+             ->visit('/table/edit/' . $table->id)
+             ->assertResponseStatus(200)
+             ->see('Step1: Confirm or Update Table Item(s)')
+             ->see('Update Table')
+             ->see('Select Collection')
+             ->select($collection2->id, 'colID')
+             ->press('Update');
+
+        // fetch current table
+        $table = Table::where('id', $table->id)->first();
+
+        // verify rename failed and we still have our original name
+        $this->assertEquals($table->collection_id, $collection2->id);
+
+        // drop test table
+        Schema::dropIfExists($tableName);
+
+        // Delete Test Collection(s)
+        $this->collectionHelper->deleteCollection($collection->clctnName);  
+        $this->collectionHelper->deleteCollection($collection2->clctnName); 
+    }      
+
     public function testTableEditSchemaView() {
         // Create Test Collection        
         $collection = $this->createTestCollection('TestCollection', false);
@@ -158,33 +188,52 @@
         $this->collectionHelper->deleteCollection($collection->clctnName);  
     }    
     
-//     public function testTableEditSchemaUpdate() {
-//         // Create Test Collection        
-//         $collection = $this->createTestCollection('TestCollection', false);
+    public function testTableEditSchemaUpdate() {
+        // Create Test Collection        
+        $collection = $this->createTestCollection('TestCollection', false);
 
-//         // Create Test Table
-//         $tableName = $this->createTestTable($collection);
+        // Create Test Table
+        $tableName = $this->createTestTable($collection);
 
-//         // get newly created table
-//         $table = Table::where('tblNme', $tableName)->first();
+        // get newly created table
+        $table = Table::where('tblNme', $tableName)->first();
 
-//         $this->actingAs($this->admin)
-//              ->get('/table/edit/schema/' . $table->id)
-//              ->assertResponseStatus(200)
-//              ->see('Column Name')
-//              ->see('Default')
-//              ->press('Submit');
+        $this->actingAs($this->admin)
+             ->visit('/table/edit/schema/' . $table->id)
+             ->assertResponseStatus(200)
+             ->see('Edit Table Schema')
+             ->submitForm('Submit', [ 'col-0-name' => 'index', 'col-0-data' => 'integer', 'col-0-size' => 'big',
+                                   'col-1-name' => 'living_space_sq_ft', 'col-1-data' => 'integer', 'col-1-size' => 'big',
+                                   'col-2-name' => 'beds', 'col-2-data' => 'integer', 'col-2-size' => 'big',
+                                   'col-3-name' => 'baths', 'col-3-data' => 'integer', 'col-3-size' => 'big',
+                                   'col-4-name' => 'zip', 'col-4-data' => 'integer', 'col-4-size' => 'big',
+                                   'col-5-name' => 'year', 'col-5-data' => 'string', 'col-5-size' => 'default',
+                                   'col-6-name' => 'list_price', 'col-6-data' => 'text', 'col-6-size' => 'default'])             
+             ->assertResponseStatus(200);
 
-//              //->select('Medium', 'col-0-size')
-//              //->submitForm('Submit');
+        $this->actingAs($this->admin)
+             ->visit('/table/edit/schema/' . $table->id)
+             ->assertResponseStatus(200)
+             ->see('string');
 
+        // drop test table
+        Schema::dropIfExists($tableName);
 
-//         // drop test table
-//         Schema::dropIfExists($tableName);
+        // Delete Test Collection
+        $this->collectionHelper->deleteCollection($collection->clctnName);  
+    }   
 
-//         // Delete Test Collection
-//         $this->collectionHelper->deleteCollection($collection->clctnName);  
-//     }   
+    public function testNonAdminCannotCreateTable() {
+           // try to get to the user(s) page
+           $this->actingAs($this->user)
+                ->get('table')
+                //invalid user gets redirected
+                ->assertResponseStatus(302);
+    }
+
+//     public function testFileUploadAndTableCreate() {
+
+//     }
 
 
 // Route::group([ 'prefix' => 'table' ], function() {
@@ -209,12 +258,9 @@
 //     Route::post('load/status', 'TableController@status');
 //     Route::post('restrict', 'TableController@restrict');
     
-    private function createTestTable($collection) {
+    private function createTestTable($collection, $fileName = 'zillow.csv') {
         // set storage location
         $storageFolder = 'files/test';
-
-        // set location of file
-        $fileName = 'zillow.csv'; 
         
         // Create Test Table Name
         $tableName = 'test'.time();
@@ -317,28 +363,6 @@
 //                 ->assertResponseStatus(200);
 //     }
 
-//     public function testNonAdminCannotCreateTable() {
-//            // try to get to the user(s) page
-//            $this->actingAs($this->user)
-//                 ->get('table')
-//                 //invalid user gets redirected
-//                 ->assertResponseStatus(302);
-//     }
-
-//     public function testFileUploadAndTableCreate() {
-//            $tblname = 'importtest'.mt_rand();
-//            $path = './storage/app/files/test/';
-//            $file = 'test.dat';
-
-//            $this->createTestTable($tblname, $path, $file);
-
-//            // test tables, files and folders that were created
-//            $this->testHelper->cleanupTestTables([$file]);
-
-//            // clear folder that was created with the collection
-//            rmdir($this->filePath.'/collection1');
-//     }
-
 //     public function testCMSSelectFileAndTableCreate() {
 //             $path = './storage/app/files/test/';
 //             $file = '1A-random.tab';
@@ -438,12 +462,12 @@
 //             rmdir($this->filePath.'/collection1');
 //     }
 
-//     public function testCheckFlatFiles() {
-//             // test to see if 'test.dat' is available
-//             // using getFiles
-//             $filesArray = (new TableController)->getFiles('.');
-//             $this->assertContains('files/test/test.dat', $filesArray);
-//     }
+    public function testCheckFlatFiles() {
+            // test to see if 'test.dat' is available
+            // using getFiles
+            $filesArray = (new TableController)->getFiles('.');
+            $this->assertContains('files/test/test.dat', $filesArray);
+    }
 
 //     public function testSelect() {
 //             $tblname = 'importtest'.mt_rand();

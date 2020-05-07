@@ -228,17 +228,18 @@ class CSVHelper {
        return $fieldType;
      }
 
-
      /**
-      * Generate Table Header
-      * 
-      * @param integer $fieldCount number of fields in table
-      * @return array $header array that contains generic header names
-      */     
+      * return array of generated field names
+      *
+      * @param integer $fieldCount Contains number of fields Requried for the Table
+      *
+      * @author Tracy A. McCormick <tam0013@mail.wvu.edu>
+      * @return Array
+      */    
      public function generateHeader($fieldCount) {
        $header = array();
        for ($pos = 0; $pos < $fieldCount; $pos++) {
-         array_push($header, 'field'.$pos);
+         array_push($header, 'Field'.$pos);
        }
        return $header;
      }
@@ -326,18 +327,18 @@ class CSVHelper {
        return $tkns;
      }
 
-     /**
-      *
-      * @author Tracy A. McCormick <tam0013@mail.wvu.edu>
-      */
-     public function createFlatTable($storageFolder, $thsFltFile, $collctnId, $tblNme) {
-       // detect fields we pass true if we have a header row,
-       // file location, number of rows to check
-       $fieldTypes = $this->determineTypes(true, $storageFolder.'/'.$thsFltFile, 10000);
+    //  /**
+    //   *
+    //   * @author Tracy A. McCormick <tam0013@mail.wvu.edu>
+    //   */
+    //  public function createFlatTable($storageFolder, $thsFltFile, $collctnId, $tblNme) {
+    //    // detect fields we pass true if we have a header row,
+    //    // file location, number of rows to check
+    //    $fieldTypes = $this->determineTypes(true, $storageFolder.'/'.$thsFltFile, 10000);
 
-       // get 1st row from csv file
-       $schema = $this->schema($storageFolder.'/'.$thsFltFile);
+    //    // get 1st row from csv file
+    //    $schema = $this->schema($storageFolder.'/'.$thsFltFile);
 
-       (new TableHelper)->createTable($storageFolder, $thsFltFile, $tblNme, $schema, $fieldTypes, $collctnId);
-     }     
+    //    (new TableHelper)->createTable($storageFolder, $thsFltFile, $tblNme, $schema, $fieldTypes, $collctnId);
+    //  }     
 }

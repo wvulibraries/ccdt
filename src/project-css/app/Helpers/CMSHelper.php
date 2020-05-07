@@ -60,22 +60,19 @@ class CMSHelper {
        return null;
      }
 
-     /**
-      * return array of generated field names
-      *
-      * @param integer $fieldCount Contains number of fields Requried for the Table
-      *
-      * @author Tracy A. McCormick <tam0013@mail.wvu.edu>
-      * @return Array
-      */
-     public function generateHeader($fieldCount) {
-       $headerArray = [];
-       for ($arrayPos = 0; $arrayPos < $fieldCount; $arrayPos++) {
-         array_push($headerArray, 'Field'.$arrayPos);
-       }
-       return $headerArray;
-     }
+     public function cmsHeader($collctnId, $schema, $fieldCount) {
+       // get header from database pass record type and detected field count
+       $header = $this->getCMSFields($collctnId, $schema[0], $fieldCount);
 
+       // if we get a null header then we generate one
+       if ($header == null) {
+         // generate header since we couldn't find a match
+         $header = (new CSVHelper)->generateHeader($fieldCount);
+       }
+
+       return $header;
+     }
+   
      /**
       * Check the Record Types table for a matching header for the table
       *
@@ -86,27 +83,21 @@ class CMSHelper {
       *
       * @author Tracy A. McCormick <tam0013@mail.wvu.edu>
       */
-     public function createCMSTable($storageFolder, $thsFltFile, $collctnId, $tblNme) {
-       // detect fields we pass false if we do not have a header row,
-       // file location, number of rows to check
-       $fieldTypes = (new CSVHelper)->determineTypes(false, $storageFolder.'/'.$thsFltFile, 10000);
+    //  public function createCMSTable($storageFolder, $thsFltFile, $collctnId, $tblNme) {
+    //    // detect fields we pass false if we do not have a header row,
+    //    // file location, number of rows to check
+    //    $fieldTypes = (new CSVHelper)->determineTypes(false, $storageFolder.'/'.$thsFltFile, 10000);
 
-       // get 1st row from csv file
-       $schema = (new CSVHelper)->schema($storageFolder.'/'.$thsFltFile);
+    //    // get 1st row from csv file
+    //    $schema = (new CSVHelper)->schema($storageFolder.'/'.$thsFltFile);
 
-       // get header from database pass record type and detected field count
-       $header = $this->getCMSFields($collctnId, $schema[0], count($fieldTypes));
+    //    // get or create header
+    //    $header = $this->getCMSFields($collctnId , $schema, count($fieldTypes));
 
-       // if we get a null header then we generate one
-       if ($header == null) {
-         // generate header since we couldn't find a match
-         $header = (new CSVHelper)->generateHeader(count($fieldTypes));
-       }
+    //    (new TableHelper)->createTable($storageFolder, $thsFltFile, $tblNme, $header, $fieldTypes, $collctnId);
+    //  }
 
-       (new TableHelper)->createTable($storageFolder, $thsFltFile, $tblNme, $header, $fieldTypes, $collctnId);
-     }
-
-     public function setCMSMainView() {
+    //  public function setCMSMainView() {
        
-     }
+    //  }
 }

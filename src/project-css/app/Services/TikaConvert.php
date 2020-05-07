@@ -3,7 +3,7 @@
  * @author Tracy A McCormick <tam0013@mail.wvu.edu>
  */
 
-namespace App\Adapters;
+namespace App\Services;
 
 class TikaConvert {
     /**

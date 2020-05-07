@@ -68,7 +68,7 @@
                               selected="selected"
                           @endif
                           >String</option>
-                          <option value="Text"
+                          <option value="text"
                           @if ("text" == $value)
                               selected="selected"
                           @endif

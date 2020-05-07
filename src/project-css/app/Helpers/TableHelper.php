@@ -441,11 +441,15 @@ class TableHelper {
           $tblNme = $filteredType . time();
         }
 
-        // pass values to create file
-        (new CMSHelper)->createCMSTable($strDir, $file, $colID, $tblNme);
+        $fieldTypes = $csvHelper->determineTypes(false, $fltFleAbsPth, 10000);
+        // get header from database pass record type and detected field count
+        $header = (new CMSHelper)->cmsHeader($colID, $schema, count($fieldTypes));
+        $this->createTable($strDir, $file, $tblNme, $header, $fieldTypes, $colID);
       }
       else {
-          $csvHelper->createFlatTable($strDir, $file, $colID, $tblNme);
+          $fieldTypes = $csvHelper->determineTypes(true, $fltFleAbsPth, 10000);
+          //$schema = $csvHelper->schema($strDir.'/'.$file)
+          $this->createTable($strDir, $file, $tblNme, $schema, $fieldTypes, $colID);
       }
 
       $errorArray = [

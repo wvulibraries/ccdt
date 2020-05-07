@@ -8,11 +8,10 @@ namespace App\Helpers;
 
 use Response;
 use Storage;
-use App\Adapters\TikaConvert;
 use App\Models\Collection;
 use App\Models\Table;
 use App\Helpers\CustomStringHelper;
-
+use App\Services\TikaConvert;
 
 class FileViewHelper {
     /**
