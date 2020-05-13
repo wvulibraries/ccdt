@@ -41,7 +41,7 @@ class CMSHelper {
 
         // if only one item is found we return that result
         if (count($response) == 1) {
-          // set cmsID in Collection is not already set
+          // set cmsID in Collection if not already set
           if ($thisClctn->cmdId == null) {
             $thisClctn->setCMSId($collctnId, $response[0]->cmsId);
           }
@@ -60,9 +60,14 @@ class CMSHelper {
        return null;
      }
 
-     public function cmsHeader($collctnId, $schema, $fieldCount) {
-       // get header from database pass record type and detected field count
-       $header = $this->getCMSFields($collctnId, $schema[0], $fieldCount);
+     public function cmsHeader($collctnId, $schema = null, $fieldCount) {
+       $header = null;
+       
+       // verify $schema is not null
+       if ($schema != null) {
+        // get header from database pass record type and detected field count
+        $header = $this->getCMSFields($collctnId, $schema[0], $fieldCount);
+       }
 
        // if we get a null header then we generate one
        if ($header == null) {
@@ -73,31 +78,4 @@ class CMSHelper {
        return $header;
      }
    
-     /**
-      * Check the Record Types table for a matching header for the table
-      *
-      * @param string $storageFolder location of the file to be imported to a table
-      * @param string $thsFltFile filename of file to be imported
-      * @param integer $collctnID Contains the collection ID
-      * @param string $tblNme name to be used when creating the new table
-      *
-      * @author Tracy A. McCormick <tam0013@mail.wvu.edu>
-      */
-    //  public function createCMSTable($storageFolder, $thsFltFile, $collctnId, $tblNme) {
-    //    // detect fields we pass false if we do not have a header row,
-    //    // file location, number of rows to check
-    //    $fieldTypes = (new CSVHelper)->determineTypes(false, $storageFolder.'/'.$thsFltFile, 10000);
-
-    //    // get 1st row from csv file
-    //    $schema = (new CSVHelper)->schema($storageFolder.'/'.$thsFltFile);
-
-    //    // get or create header
-    //    $header = $this->getCMSFields($collctnId , $schema, count($fieldTypes));
-
-    //    (new TableHelper)->createTable($storageFolder, $thsFltFile, $tblNme, $header, $fieldTypes, $collctnId);
-    //  }
-
-    //  public function setCMSMainView() {
-       
-    //  }
 }

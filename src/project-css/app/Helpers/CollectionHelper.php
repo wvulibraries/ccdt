@@ -23,6 +23,12 @@ class CollectionHelper {
         $thisClctn = new Collection;
         $thisClctn->clctnName = $data['name'];
         $thisClctn->isCms = $data['isCms'];
+
+        // set cmsId if it exists
+        if (array_key_exists('cmsId', $data)) {
+          $thisClctn->cmsId = $data['cmsId'];
+        }
+
         $thisClctn->save();
 
         // create folder in storage that will contain any additional files associated to the collection
@@ -34,8 +40,8 @@ class CollectionHelper {
      }
 
      public function update($data) {
-        // find the collection
-        $thisClctn = Collection::findorFail($data['id']);
+      // find the collection
+      $thisClctn = Collection::findorFail($data['id']);
 
       if ($thisClctn->clctnName != $data['name']) {
         // Rename Storage Folder
