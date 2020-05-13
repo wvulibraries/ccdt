@@ -1,174 +1,238 @@
 <?php
 
+use App\Helpers\CollectionHelper;
 use App\Helpers\CMSHelper;
-use App\Helpers\TableHelper;
 
 class CMSHelperTest extends BrowserKitTestCase
 {
-  // location of test files
-  private $filePath = './storage/app';
-  public $tableHelper;
+  public $cmsHelper;
+  public $collectionHelper;
 
   public function setUp(): void {
-       parent::setUp();
-
-       // create new table helper instance
-       $this->tableHelper = new TableHelper;
-
-       // create a test collection
-       $this->testHelper->createCollection('collection1');
-       $this->testHelper->createCollection('collection2');
-       $this->testHelper->createCollection('collection3');
+    parent::setUp();
+    $this->cmsHelper = new CMSHelper;  
+    $this->collectionHelper = new CollectionHelper;
   }
 
-  protected function tearDown(): void {
-       // clear folder(s) that was created with the collection(s)
-       rmdir($this->filePath.'/collection1');
-       rmdir($this->filePath.'/collection2');
-       rmdir($this->filePath.'/collection3');
+  // protected function tearDown(): void {
+  //       // Delete Test Collection
+  //       $this->collectionHelper->deleteCollection($collection->clctnName);  
+  //      parent::tearDown();
+  // }
 
-       parent::tearDown();
-  }
+    public function testgetCMSFields1A() {
+      // Create Test Collection        
+      $collection = $this->createTestCollection('TestCollection', true);  
 
-  public function testgetCMSFields1A() {
-    $fieldType = '1A';
-    $helper = (new CMSHelper);
+      $fieldType = '1A';
+      $header = array('Record Type', 'Constituent ID', 'Individual Type', 'Prefix', 'First Name', 'Middle Name', 'Last Name', 'Suffix', 'Appellation', 'Salutation', 'Date of Birth', 'No Mail Flag', 'Deceased Flag');
+      $response = $this->cmsHelper->getCMSFields($collection->id, $fieldType, count( (array) $header));
 
-    // by sending 13 as the field count we should get the original header
-    $response = $helper->getCMSFields(1, $fieldType, 13);
-    $this->assertEquals(count((array) $response), 13);
+      // compare with the $header to verify we have what we expected
+      $this->assertEquals($response, $header);
+      $this->assertEquals(count( (array) $response), count( (array) $header));
 
-    $response = $helper->getCMSFields(1, '3E', 4);
-    $this->assertEquals($response[1], 'Constituent ID');
+      // Delete Test Collection
+      $this->collectionHelper->deleteCollection($collection->clctnName);  
+    }
+    
+    public function testgetCMSFields1BWithCMSType() {
+      // Create Test Collection        
+      $collection = $this->createTestCollection('TestCollection', true, 2); 
+      
+      // verify cmsId is set to 2
+      $this->assertEquals($collection->cmsId, 2);
+      
+      $fieldType = '1B';
+      $header = array('Record Type', 'Person ID', 'Address ID', 'Address Type', 'Primary Flag', 'Default Address Flag', 'Title', 'Organization Name', 'Address line 1', 'Address line 2', 'Address line 3', 'Address line 4', 'City', 'State', 'Zip Code', 'Carrier Route', 'County', 'Country', 'District', 'Precinct', 'No Mail Flag', 'Deliverability');
+      $response = $this->cmsHelper->getCMSFields($collection->id, $fieldType, count( (array) $header));
 
-    $response = $helper->getCMSFields(2, $fieldType, 16);
-    $this->assertEquals(count((array) $response), 16);
+      // compare with the $header to verify we have what we expected
+      $this->assertEquals($response, $header);
+      $this->assertEquals(count( (array) $response), count( (array) $header));
 
-    // sending an invalid count will not return any results
-    $response = $helper->getCMSFields(2, $fieldType, 9);
-    $this->assertEquals(count((array) $response), 0);
-  }
+      // Delete Test Collection
+      $this->collectionHelper->deleteCollection($collection->clctnName);  
+    }      
 
-  public function testgetCMSFields2A() {
-    $fieldType = '2A';
-    $helper = (new CMSHelper);
+    public function testgetCMSFields1B() {
+      // Create Test Collection        
+      $collection = $this->createTestCollection('TestCollection', true);  
 
-    // by sending 13 as the field count we should get the original header
-    $response = $helper->getCMSFields(3, $fieldType, 13);
-    $this->assertEquals(count((array) $response), 13);
-  }
+      $fieldType = '1B';
+      $header = array('Record Type', 'Constituent ID', 'Address ID', 'Address Type', 'Primary Flag', 'Default Address Flag', 'Title', 'Organization Name', 'Address line 1', 'Address line 2', 'Address line 3', 'Address line 4', 'City', 'State', 'Zip Code', 'Carrier Route', 'County', 'Country', 'District', 'Precinct', 'No Mail Flag', 'Agency Code');
+      $response = $this->cmsHelper->getCMSFields($collection->id, $fieldType, count( (array) $header));
 
-  public function testgetheader() {
-    $fieldType = '1A';
-    $header = array('Record Type', 'Constituent ID', 'Individual Type', 'Prefix', 'First Name', 'Middle Name', 'Last Name', 'Suffix', 'Appellation', 'Salutation', 'Date of Birth', 'No Mail Flag', 'Deceased Flag');
-    $response = (new CMSHelper)->getCMSFields(1, $fieldType, count( (array) $header));
+      // in our record types 2 1B records exist both with 22 fields
+      // function cannot determine which to use so null is returned.
+      $this->assertNull($response);
 
-    // compare with the $header to verify we have what we expected
-    $this->assertEquals($response, $header);
-    $this->assertEquals(count( (array) $response), count( (array) $header));
-  }
+      // Delete Test Collection
+      $this->collectionHelper->deleteCollection($collection->clctnName);  
+    }       
 
-  public function testcreate1Acmstable() {
-    // location of test files
-    $filePath = './storage/app';
-    $testFilesFolder = 'files/test';
+    public function testCreateCmsHeader() {
+        // Create Test Collection        
+        $collection = $this->createTestCollection('TestCollection', true);     
+        
+        // Random Field Count
+        $fieldCount = rand(1, 50);
 
-    $thsFltFile = '1A-random.tab';
+        // Pass null to force the function to generate a generic header
+        $header = $this->cmsHelper->cmsHeader($collection->id, null, $fieldCount);
 
-    $collctnId = 1;
-    $tableName = 'collection11A';
+        // Verify Array Items Match $fieldCount
+        $this->assertEquals(count($header), $fieldCount); 
 
-    // table should not currently exist
-    $this->assertFalse(Schema::hasTable($tableName));
+        // Verify First Array Item is correct
+        $this->assertEquals($header[0], 'Field0');
+        
+        // Delete Test Collection
+        $this->collectionHelper->deleteCollection($collection->clctnName);  
+    }
 
-    // pass values to create file
-    //(new CMSHelper)->createCMSTable($testFilesFolder, $thsFltFile, $collctnId, $tableName);
+    private function createTestCollection($name, $isCms, $cmsId = null) {
+        // Create Collection Test Data Array
+        $data = [
+          'isCms' => $isCms,
+          'name' => $name,
+        ];
 
-    // pass values to import table
-    $this->tableHelper->importFile($testFilesFolder, $thsFltFile, $tableName, $collctnId, true);
+        // include $cmsId if not null
+        if ($cmsId != null) {
+          $data['cmsId'] = $cmsId;
+        }
 
-    // check for Table collection18E
-    $this->assertTrue(Schema::hasTable($tableName));
+        // Call collection helper create
+        return($this->collectionHelper->create($data));         
+    }  
 
-    // drop test table
-    Schema::dropIfExists($tableName);
-  }
 
-  public function testcreate1Bcmstable() {
-    // location of test files
-    $filePath = './storage/app';
-    $testFilesFolder = 'files/test';
 
-    $thsFltFile = '1B-random.tab';
 
-    $collctnId = 1;
-    $tableName = 'collection11B';
 
-    // table should not currently exist
-    $this->assertFalse(Schema::hasTable($tableName));
 
-    // // pass values to create file
-    // (new CMSHelper)->createCMSTable($testFilesFolder, $thsFltFile, $collctnId, $tableName);
 
-    // pass values to import table
-    $this->tableHelper->importFile($testFilesFolder, $thsFltFile, $tableName, $collctnId, true);    
 
-    // check for Table collection11B
-    $this->assertTrue(Schema::hasTable($tableName));
+  // public function testgetCMSFields1A() {
+  //   $fieldType = '1A';
+  //   $helper = (new CMSHelper);
 
-    // drop test table
-    Schema::dropIfExists($tableName);
-  }
+  //   // by sending 13 as the field count we should get the original header
+  //   $response = $helper->getCMSFields(1, $fieldType, 13);
+  //   $this->assertEquals(count((array) $response), 13);
 
-  public function testcreate3Dcmstable() {
-    // location of test files
-    $filePath = './storage/app';
-    $testFilesFolder = 'files/test';
+  //   $response = $helper->getCMSFields(1, '3E', 4);
+  //   $this->assertEquals($response[1], 'Constituent ID');
 
-    $thsFltFile = '3D-random.tab';
+  //   $response = $helper->getCMSFields(2, $fieldType, 16);
+  //   $this->assertEquals(count((array) $response), 16);
 
-    $collctnId = 1;
-    $tableName = 'collection13D';
+  //   // sending an invalid count will not return any results
+  //   $response = $helper->getCMSFields(2, $fieldType, 9);
+  //   $this->assertEquals(count((array) $response), 0);
+  // }
 
-    // table should not currently exist
-    $this->assertFalse(Schema::hasTable($tableName));
+  // public function testgetCMSFields2A() {
+  //   $fieldType = '2A';
+  //   $helper = (new CMSHelper);
 
-    // // pass values to create file
-    // (new CMSHelper)->createCMSTable($testFilesFolder, $thsFltFile, $collctnId, $tableName);
+  //   // by sending 13 as the field count we should get the original header
+  //   $response = $helper->getCMSFields(3, $fieldType, 13);
+  //   $this->assertEquals(count((array) $response), 13);
+  // }
 
-    // pass values to import table
-    $this->tableHelper->importFile($testFilesFolder, $thsFltFile, $tableName, $collctnId, true);    
 
-    // check for Table collection13D
-    $this->assertTrue(Schema::hasTable($tableName));
 
-    // drop test table
-    Schema::dropIfExists($tableName);
-  }
+  // public function testcreate1Acmstable() {
+  //   // location of test files
+  //   $filePath = './storage/app';
+  //   $testFilesFolder = 'files/test';
 
-  public function testcreate4Ecmstable() {
-    // location of test files
-    $filePath = './storage/app';
-    $testFilesFolder = 'files/test';
+  //   $thsFltFile = '1A-random.tab';
 
-    $thsFltFile = '4E-random.tab';
+  //   $collctnId = 1;
+  //   $tableName = 'collection11A';
 
-    $collctnId = 1;
-    $tableName = 'collection14E';
+  //   // table should not currently exist
+  //   $this->assertFalse(Schema::hasTable($tableName));
 
-    // table should not currently exist
-    $this->assertFalse(Schema::hasTable($tableName));
+  //   // pass values to import table
+  //   $this->tableHelper->importFile($testFilesFolder, $thsFltFile, $tableName, $collctnId, true);
 
-    // // pass values to create file
-    // (new CMSHelper)->createCMSTable($testFilesFolder, $thsFltFile, $collctnId, $tableName);
+  //   // check for Table collection18E
+  //   $this->assertTrue(Schema::hasTable($tableName));
 
-    // pass values to import table
-    $this->tableHelper->importFile($testFilesFolder, $thsFltFile, $tableName, $collctnId, true);    
+  //   // drop test table
+  //   Schema::dropIfExists($tableName);
+  // }
 
-    // check for Table collection14E
-    $this->assertTrue(Schema::hasTable($tableName));
+  // public function testcreate1Bcmstable() {
+  //   // location of test files
+  //   $filePath = './storage/app';
+  //   $testFilesFolder = 'files/test';
 
-    // drop test table
-    Schema::dropIfExists($tableName);
-  }
+  //   $thsFltFile = '1B-random.tab';
+
+  //   $collctnId = 1;
+  //   $tableName = 'collection11B';
+
+  //   // table should not currently exist
+  //   $this->assertFalse(Schema::hasTable($tableName));
+
+  //   // pass values to import table
+  //   $this->tableHelper->importFile($testFilesFolder, $thsFltFile, $tableName, $collctnId, true);    
+
+  //   // check for Table collection11B
+  //   $this->assertTrue(Schema::hasTable($tableName));
+
+  //   // drop test table
+  //   Schema::dropIfExists($tableName);
+  // }
+
+  // public function testcreate3Dcmstable() {
+  //   // location of test files
+  //   $filePath = './storage/app';
+  //   $testFilesFolder = 'files/test';
+
+  //   $thsFltFile = '3D-random.tab';
+
+  //   $collctnId = 1;
+  //   $tableName = 'collection13D';
+
+  //   // table should not currently exist
+  //   $this->assertFalse(Schema::hasTable($tableName));
+
+  //   // pass values to import table
+  //   $this->tableHelper->importFile($testFilesFolder, $thsFltFile, $tableName, $collctnId, true);    
+
+  //   // check for Table collection13D
+  //   $this->assertTrue(Schema::hasTable($tableName));
+
+  //   // drop test table
+  //   Schema::dropIfExists($tableName);
+  // }
+
+  // public function testcreate4Ecmstable() {
+  //   // location of test files
+  //   $filePath = './storage/app';
+  //   $testFilesFolder = 'files/test';
+
+  //   $thsFltFile = '4E-random.tab';
+
+  //   $collctnId = 1;
+  //   $tableName = 'collection14E';
+
+  //   // table should not currently exist
+  //   $this->assertFalse(Schema::hasTable($tableName));
+
+  //   // pass values to import table
+  //   $this->tableHelper->importFile($testFilesFolder, $thsFltFile, $tableName, $collctnId, true);    
+
+  //   // check for Table collection14E
+  //   $this->assertTrue(Schema::hasTable($tableName));
+
+  //   // drop test table
+  //   Schema::dropIfExists($tableName);
+  // }
 }

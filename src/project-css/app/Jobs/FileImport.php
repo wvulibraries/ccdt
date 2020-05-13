@@ -5,7 +5,7 @@
 
 namespace App\Jobs;
 
-use App\Http\Controllers\TableController;
+use App\Adapters\ImportAdapter;
 use Illuminate\Bus\Queueable;
 use Illuminate\Http\Request;
 use Illuminate\Queue\SerializesModels;
@@ -36,7 +36,7 @@ class FileImport implements ShouldQueue
     public function handle()
     {
         try{
-            (new TableController)->process($this->tblNme, $this->fltFlePath, $this->fltFle);
+            (new ImportAdapter)->process($this->tblNme, $this->fltFlePath, $this->fltFle);
         }catch(\Exception $e){
             Log::error($e->getMessage());
         }          

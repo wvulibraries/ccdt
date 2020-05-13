@@ -325,8 +325,11 @@ class TableHelper {
       // Set table collection id
       $this->crteTblInCollctn($tblNme, $collctnId);
 
+      // find the collection
+      $thisClctn = Collection::findorFail($collctnId);
+
       // queue job for import
-      $this->dispatchImportJob($tblNme, $filepath, $fileName);
+      $this->dispatchImportJob($tblNme, $filepath, $fileName, $thisClctn->isCms);
     }
 
     /** 
