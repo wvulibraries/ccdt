@@ -274,6 +274,14 @@
         // Create Table and Dispatch file Import
         $this->tableHelper->importFile($storageFolder, $fileName, $tableName, $collection->id, $collection->isCms);
         
+        // check and see if table was created
+        // while (Schema::hasTable($tableName) == false) {
+        //     echo "Table " . $tableName . ' hasn\'t finished being created';
+        //     sleep(3);
+        // }
+
+        $this->assertTrue(Schema::hasTable($tableName));
+
         // return table name
         return ($tableName);
     }

@@ -18,6 +18,9 @@
         // find admin and test user accounts
         $this->admin = User::where('name', '=', 'admin')->first();
         $this->user = User::where('name', '=', 'test')->first();
+
+        // make sure test csv doesn't already exist
+        \Storage::delete('/flatfiles/mlb_players.csv');
     }
 
     protected function tearDown(): void {

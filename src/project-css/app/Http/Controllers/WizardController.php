@@ -97,7 +97,8 @@ class WizardController extends Controller
             'tableName' => $request->imprtTblNme
         ];
 
-        return (new TableHelper)->storeUploadsAndImport($data);
+        $errors = (new TableHelper)->storeUploadsAndImport($data);
+        return redirect()->route('tableIndex')->withErrors($errors);
     }    
 
    /**
@@ -147,7 +148,8 @@ class WizardController extends Controller
             'tableName' => $request->imprtTblNme
         ];
 
-        return (new TableHelper)->storeUploadsAndImport($data);
+        $errors = (new TableHelper)->storeUploadsAndImport($data);
+        return redirect()->route('collection.show', ['colID' => $data['colID']])->withErrors($errors); 
     }    
 
    /**

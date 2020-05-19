@@ -37,7 +37,7 @@
           <th>{{$job->id}}</th>
           <th>{{$job->connection}}</th>
           <th>{{$job->queue}}</th>
-          <th>{{ str_limit($job->exception, $limit = 100, $end = '...') }}</th>
+          <th>{{ str_limit($job->exception, $limit = 400, $end = '...') }}</th>
           <th><?php if ($job->failed_at > 0) { echo gmdate("F j Y, g:i a", (strtotime($job->failed_at)-18000)); }?></th>
           <th><a href="{{ url('admin/jobs/retry', [$job->id]) }}" class="btn btn-primary">Retry Job</a></th>
           <th><a href="{{ url('admin/jobs/forget', [$job->id]) }}" class="btn btn-primary">Delete Job</a></th>

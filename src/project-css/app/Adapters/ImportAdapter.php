@@ -16,6 +16,8 @@ use Log;
 class ImportAdapter {
     public $savedTkns;
     public $lastErrRow;
+    public $tkns;
+    public $curArry;
 
     /**
      * takes a string and prepares it to be used inserted as a new record
@@ -52,12 +54,12 @@ class ImportAdapter {
             $this->savedTkns = NULL;
         }
 
-        // if token count doesn't match what is exptected save the tkns and last row position
+        // if token count doesn't match what is expected save the tkns and last row position
         if (count($tkns) != $orgCount) {
           // save the last row position and the Tokenized row
           $this->lastErrRow = $prcssd;
           $this->savedTkns = $tkns;
-          return (null);
+          return false;
         }
 
         return ($tkns);
@@ -72,26 +74,22 @@ class ImportAdapter {
     * @param object $clmnLst array containing all field names for table
     * @return boolean
     */   
-    public function processLine($tkns, $orgCount, $clmnLst) {
-        if(!is_array($tkns) && empty($tkns)) { return false; }
+    public function processLine($orgCount, $clmnLst) {
+        if(!is_array($this->tkns) && empty($this->tkns)) { return false; }
 
         // verify that passed $tkns match the expected field count
-        if (count($tkns) == $orgCount) {
+        if (count($this->tkns) == $orgCount) {
           // Declae an array
-          $curArry = array();
+          $this->curArry = array();
 
           // Compact them into one array with utf8 encoding
           for ($i = 0; $i<$orgCount; $i++) {
-            $curArry[ strval($clmnLst[ $i ]) ] = utf8_encode($tkns[ $i ]);
+            $this->curArry[ strval($clmnLst[ $i ]) ] = utf8_encode($this->tkns[ $i ]);
           }
 
           // add srchindex
-          $curArry[ 'srchindex' ] = (new customStringHelper)->createSrchIndex(implode(" ", $tkns));
-
-          // return new record to be inserted
-          return $curArry;
+          $this->curArry[ 'srchindex' ] = (new customStringHelper)->createSrchIndex(implode(" ", $this->tkns));
         }
-        return false;
     }
 
     /**
@@ -146,27 +144,29 @@ class ImportAdapter {
         // For each line
         while ($curFltFleObj->valid()) {
           // Call prepareLine to process the next line of the file
-          $tkns = $this->prepareLine($curFltFleObj->current(), $delimiter, $orgCount, $prcssd);
+          $this->tkns = $this->prepareLine($curFltFleObj->current(), $delimiter, $orgCount, $prcssd);
         
-          // process $tkns 
-          $curArry = $this->processLine($tkns, $orgCount, $clmnLst);
+          if ($this->tkns != false) {
+            // process $tkns 
+            $this->processLine($orgCount, $clmnLst);
 
-          // save line to be inserted later
-          if ($curArry) {
-            // add row to data array to insert it later
-            array_push($data, $curArry);
+            // save line to be inserted later
+            if ($this->curArry) {
+              // add row to data array to insert it later
+              array_push($data, $this->curArry);
 
-            // Update the counter if the line was inserted
-            $prcssd += 1;
-          }
+              // Update the counter if the line was inserted
+              $prcssd += 1;
+            }
 
-          // insert records once we reach 500
-          if (count($data) >= 1000) {
-            //insert Record into database
-            $table->insertRecord($data);
+            // insert records once we reach 500
+            if (count($data) >= 500) {
+              //insert Record into database
+              $table->insertRecord($data);
 
-            // clear $data array
-            $data = [];
+              // clear $data array
+              $data = [];
+            }
           }
 
           $curFltFleObj->next();
@@ -182,36 +182,6 @@ class ImportAdapter {
       else {
         throw new \Exception("Cannot Import a Empty File.");
       }
-    }
-
-    public function mysql_load($tblNme, $fltFlePath, $fltFleNme, $ignoreFirst = true) {   
-        $fltFleAbsPth = $fltFlePath.'/'.$fltFleNme;
-        $fltFleFullPth = storage_path('app/'.$fltFleAbsPth);
-
-        // Detect delimiter used in file
-        $delimiter = (new CSVHelper)->detectDelimiter($fltFleFullPth);
-
-        //get table
-        $table = Table::where('tblNme', $tblNme)->first();
-
-        // find the collection
-        $thisClctn = Collection::findorFail($table->collection_id);
-
-        if ($thisClctn->isCms == false) {
-            $statement = <<<eof
-                LOAD DATA INFILE '$fltFleFullPth' INTO TABLE '$tblNme'
-                FIELDS TERMINATED BY '$delimiter'
-                IGNORE 1 LINES            
-            eof;
-        }
-        else {
-            $statement = <<<eof
-                LOAD DATA INFILE '$fltFleFullPth' INTO TABLE '$tblNme'
-                FIELDS TERMINATED BY '$delimiter'            
-            eof;
-        }
-
-        return DB::connection()->statement($statement);        
     }
 
 }

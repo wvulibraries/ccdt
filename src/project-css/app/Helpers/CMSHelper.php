@@ -60,13 +60,13 @@ class CMSHelper {
        return null;
      }
 
-     public function cmsHeader($collctnId, $schema = null, $fieldCount) {
+     public function cmsHeader($collctnId, $recordType = null, $fieldCount) {
        $header = null;
        
        // verify $schema is not null
-       if ($schema != null) {
+       if ($recordType != null) {
         // get header from database pass record type and detected field count
-        $header = $this->getCMSFields($collctnId, $schema[0], $fieldCount);
+        $header = $this->getCMSFields($collctnId, $recordType, $fieldCount);
        }
 
        // if we get a null header then we generate one

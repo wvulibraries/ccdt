@@ -283,7 +283,7 @@ class TableHelper {
        ];
        array_push($messages, $message);
        session()->flash('messages', $messages);
-     }   
+     }      
 
     /** 
     * 
@@ -324,12 +324,6 @@ class TableHelper {
 
       // Set table collection id
       $this->crteTblInCollctn($tblNme, $collctnId);
-
-      // find the collection
-      $thisClctn = Collection::findorFail($collctnId);
-
-      // queue job for import
-      $this->dispatchImportJob($tblNme, $filepath, $fileName, $thisClctn->isCms);
     }
 
     /** 
@@ -370,7 +364,7 @@ class TableHelper {
             }   
           }
        }
-       return redirect()->route('tableIndex')->withErrors($errors);
+       return $errors;
     }
 
     /** 
@@ -435,25 +429,24 @@ class TableHelper {
 
         return ($errorArray);
       }
-      elseif ($cms) {
-        // Generate Table Name if $tblNme is null
-        if ($tblNme == null) {
-          // filter record string
-          $filteredType = filter_var($schema[0], FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_HIGH);
-          // create table name
-          $tblNme = $filteredType . time();
-        }
 
-        $fieldTypes = $csvHelper->determineTypes(false, $fltFleAbsPth, 10000);
-        // get header from database pass record type and detected field count
-        $header = (new CMSHelper)->cmsHeader($colID, $schema, count($fieldTypes));
-        $this->createTable($strDir, $file, $tblNme, $header, $fieldTypes, $colID);
+      // Generate Table Name if $tblNme is null
+      if ($tblNme == null) {
+        // filter record string
+        $filteredType = filter_var($schema[0], FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_HIGH);
+
+        // create table name
+        $tblNme = $filteredType . time();
       }
-      else {
-          $fieldTypes = $csvHelper->determineTypes(true, $fltFleAbsPth, 10000);
-          //$schema = $csvHelper->schema($strDir.'/'.$file)
-          $this->createTable($strDir, $file, $tblNme, $schema, $fieldTypes, $colID);
-      }
+
+      $fieldTypes = $csvHelper->determineTypes(!$cms, $fltFleAbsPth, 10000);
+     
+      $fieldNames = ($cms ? (new CMSHelper)->cmsHeader($colID, $schema[0], count($fieldTypes)) : $schema);
+
+      $this->createTable($strDir, $file, $tblNme, $fieldNames, $fieldTypes, $colID);
+
+      // queue job for import
+      $this->dispatchImportJob($tblNme, $strDir, $file);
 
       $errorArray = [
         'error' => false,

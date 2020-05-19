@@ -108,8 +108,11 @@ class CustomStringHelper {
       // remove extra spaces and make string all lower case
       $cleanString = strtolower(preg_replace('/\s+/', ' ', $cleanString));
 
-      // remove duplicate keywords in the srchindex
+      // Convert String to Array
       $srchArr = explode(' ', $cleanString);
+
+      // remove common words from the srchArr
+      $srchArr = $this->removeCommonWords($srchArr);
 
       // remove any items less than 2 characters
       // as fulltext searches need at least 2 characters
@@ -123,7 +126,8 @@ class CustomStringHelper {
 
       // remove duplicate keywords from the srchIndex
       $srchArr = array_unique($srchArr);
-      return(implode(' ', $this->removeCommonWords($srchArr)));
+
+      return(implode(' ', $srchArr));
     }
     
      /**
