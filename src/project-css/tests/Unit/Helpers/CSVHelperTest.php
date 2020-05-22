@@ -6,13 +6,8 @@ class CSVHelperTest extends BrowserKitTestCase
 {
 
     public function testSchema() {
-        // check for a valid file
-        if (File::exists(storage_path('/flatfiles/mlb_players.csv'))) {
-          // if a header row exists running schema will return an array
-          // containing field names.
-          $result = (new CSVHelper)->schema('/files/test/mlb_players.csv');
-          $this->assertEquals($result[ 0 ], 'Name');
-        }
+        $result = (new CSVHelper)->schema('/files/test/mlb_players.csv');
+        $this->assertEquals($result[ 0 ], 'Name');
 
         // passing a filename that doesn't exits should produce false result
         $this->assertFalse((new CSVHelper)->schema('/files/test/unknown.csv'));

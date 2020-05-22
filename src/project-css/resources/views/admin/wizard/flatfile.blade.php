@@ -65,7 +65,7 @@
                               <label for="cmsdisFiles" class="col-md-4 control-label">Import CMS Files</label>
 
                               <div class="col-md-6">
-                                  <input id="flatFiles" type="file" class="form-control" name="flatFiles[]" multiple required autofocus>
+                                  <input id="fltFile" type="file" class="form-control" name="fltFile" required autofocus>
                               </div>
                           </div>
 
@@ -125,7 +125,7 @@
                                 <label for="fltFile2" class="col-md-4 control-label">Import</label>
 
                                 <div class="col-md-6">
-                                  <select id="flatFiles2" type="text" class="form-control" name="flatFiles2[]" multiple required autofocus>
+                                  <select id="fltFile2" type="text" class="form-control" name="fltFile2" required autofocus>
                                     @foreach($fltFleList as $fltFile)
                                       @if($fltFile)
                                         <option value="{{$fltFile}}">{{$fltFile}}</option>

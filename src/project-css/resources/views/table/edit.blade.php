@@ -17,7 +17,7 @@
 
 <!-- Form to edit the table -->
 <div class="container" role="main">
-  <h2 class="text-center">Step1: Confirm or Update Table Item(s)</h2>
+  <h2 class="text-center">Confirm or Update Table Item(s)</h2>
   <!-- Separator -->
   <hr/>
     <div class="row">

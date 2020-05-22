@@ -46,10 +46,10 @@
                       </div>
                       <!-- Select File -->
                       <div class="form-group{{ $errors->has('multipleFiles') ? ' has-error' : '' }}">
-                          <label for="cmsdisFiles" class="col-md-4 control-label">Import CMS Files</label>
+                          <label for="cmsFile" class="col-md-4 control-label">Import CMS Files</label>
 
                           <div class="col-md-6">
-                              <input id="cmsdisFiles" type="file" class="form-control" name="cmsdisFiles[]" multiple required autofocus>
+                              <input id="cmsFile" type="file" class="form-control" name="cmsFile" required autofocus>
                           </div>
                       </div>
                       <div class="form-group">
@@ -95,7 +95,7 @@
                           <label for="fltFile2" class="col-md-4 control-label">Import</label>
 
                           <div class="col-md-6">
-                            <select id="cmsdisFiles2" type="text" class="form-control" name="cmsdisFiles2[]" multiple required autofocus>
+                            <select id="cmsFile2" type="text" class="form-control" name="cmsFiles2" required autofocus>
                               @foreach($fltFleList as $fltFile)
                                 @if($fltFile)
                                   <option value="{{$fltFile}}">{{$fltFile}}</option>

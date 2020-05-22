@@ -11,16 +11,10 @@
 
         public function setUp(): void {
             parent::setUp();
-            //Artisan::call('migrate:fresh --seed');
 
             // find admin and test user accounts
             $this->admin = User::where('name', '=', 'admin')->first();
         }
-
-        protected function tearDown(): void {
-            //Artisan::call('migrate:rollback');
-            parent::tearDown();
-        }  
         
         /** @test */
         public function it_can_enable_a_collection_with_tables()
@@ -31,7 +25,7 @@
             // Go to collection page and enable collection
             $this->actingAs($this->admin)
                  ->visit('/collection')
-                 ->see('Collection Name')
+                 ->see('Collection(s)')
                  ->see('Create, import and manage collections here.')
                  ->see('collection1')
                  ->see('Enable');

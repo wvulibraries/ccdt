@@ -37,7 +37,11 @@ class FileImport implements ShouldQueue
     public function handle()
     {
         try{
-            (new ImportAdapter)->process($this->tblNme, $this->fltFlePath, $this->fltFle);
+            $adapter = new ImportAdapter;
+            // import file into table
+            $adapter->process($this->tblNme, $this->fltFlePath, $this->fltFle);
+            // create search index
+            //$adapter->buildSearchIndex();
         }catch(\Exception $e){
             Log::error($e->getMessage());
         }          

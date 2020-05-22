@@ -2,10 +2,20 @@
 
 use App\Helpers\CMSHelper;
 use App\Helpers\CSVHelper;
+use App\Helpers\CollectionHelper;
 use App\Helpers\TableHelper;
 use App\Models\Collection;
 
 class TestHelper {
+    private $admin;
+    private $user;
+    private $collection;   
+    public $tableHelper;
+    public $collectionHelper;
+
+    // location of test files
+    private $filePath = './storage/app';
+
     /**
      * test Helper
      *
@@ -13,6 +23,18 @@ class TestHelper {
      * the application
      *
      */
+
+    public function setUp(): void {
+          parent::setUp();
+
+          // find admin and test user accounts
+          $this->admin = User::where('name', '=', 'admin')->first();
+          $this->user = User::where('name', '=', 'test')->first();
+
+          // init helpers
+          $this->tableHelper = new TableHelper;  
+          $this->collectionHelper = new CollectionHelper;
+    }     
 
      /**
       * creates a collection used for Testing
@@ -49,7 +71,7 @@ class TestHelper {
           return $collection;
      }
 
-     public function createTestTable($tblNme, $collection_id = 1, $hasAccess = 1) {
+     public function createEmptyTestTable($tblNme, $collection_id = 1, $hasAccess = 1) {
         //insert record into table for testing
         \DB::insert('insert into tables (tblNme, collection_id, hasAccess) values(?, ?, ?)',[$tblNme, $collection_id, $hasAccess]);
 
@@ -94,7 +116,7 @@ class TestHelper {
         $this->createCollection($colNme);
 
         // create empty table
-        $this->createTestTable($tblNme);
+        $this->createEmptyTestTable($tblNme);
      }
 
      public function createCollectionWithTableAndRecords($colNme, $tblNme) {
@@ -102,7 +124,7 @@ class TestHelper {
         $this->createCollection($colNme);
 
         // create empty table        
-        $this->createTestTable($tblNme);
+        $this->createEmptyTestTable($tblNme);
 
         // populate table
         $this->seedTestTable($tblNme, 100);
@@ -113,7 +135,7 @@ class TestHelper {
         $this->createDisabledCollection($colNme);
 
         // create empty table with disabled access
-        $this->createTestTable($tblNme, 1, 0);
+        $this->createEmptyTestTable($tblNme, 1, 0);
      }
      
      public function cleanupTestTables($files = []) {
@@ -121,7 +143,6 @@ class TestHelper {
 
        foreach ($tables as $table)
        {
-          //\Storage::deleteDirectory($table->tblNme);
           \Schema::drop($table->tblNme);
        }
 
@@ -159,5 +180,41 @@ class TestHelper {
        // return name of test table created
        return $tableName;
      }
+
+    public function createTestTable($collection, $fileName = 'zillow.csv') {
+        // set storage location
+        $storageFolder = 'files/test';
+        
+        // Create Test Table Name
+        $tableName = 'test'.time();
+
+        // Create New Name if tableName exists
+        // Loop until we generate one that is not in use
+        while(Schema::hasTable($tableName)) {
+          $tableName = 'test'.time();
+        } 
+
+        // Create Table and Dispatch file Import
+        (new TableHelper)->importFile($storageFolder, $fileName, $tableName, $collection->id, $collection->isCms);
+
+        // return table name
+        return ($tableName);
+    }
+    
+    public function createTestCollection($name, $isCms) {
+        // Create Collection Test Data Array
+        $data = [
+          'isCms' => $isCms,
+          'name' => $name
+        ];
+
+        // Call collection helper create
+        return((new CollectionHelper)->create($data));         
+    }
+
+    public function deleteCollection($name) {
+        // Call collection helper create
+        return((new CollectionHelper)->deleteCollection($name));    
+    }
 
 }

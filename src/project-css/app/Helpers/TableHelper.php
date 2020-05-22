@@ -327,72 +327,67 @@ class TableHelper {
     }
 
     /** 
-    * Store each file(s) in the $data['flatFiles'] and queue 
-    * each one for import.
+    * Store file in the $data['fltFile'] and queue 
+    * for import.
     *
     * @param array $data - array of values used by function
     *
     * List of fields in $data that are expected
     *
     * @param string $data['strDir'] - is the storage folder
-    * @param array $data['flatFiles'] - files to be stored and imported
+    * @param string $data['fltFile'] - file to be imported
     * @param string $data['tableName'] - new table name to be used
     * @param boolean $data['cms'] - true if uploaded files are apart of a cms set
     * @author Tracy A McCormick
     * @return redirect to table index
     */      
-    public function storeUploadsAndImport($data) {
-        // Get the list of files in the directory
-        $fltFleList = Storage::allFiles($data['strDir']);
+    public function storeUploadAndImport($data) {
+      // Get the list of files in the directory
+      $fltFleList = Storage::allFiles($data['strDir']);
 
-        $errors = [];
+      $errors = [];
 
-        // Loop over them
-        foreach ($data['flatFiles'] as $file) {
-          $thisFltFileNme = $file->getClientOriginalName();
-          if (in_array($data['strDir'].'/'.$thisFltFileNme, $fltFleList)) {
-            array_push($errors, $thisFltFileNme . ' File already exists. Please select the file or rename and re-upload.');
-          }
-          else {
-            // Store in the directory inside storage/app
-            $file->storeAs($data['strDir'], $thisFltFileNme);
-            $result = $this->importFile($data['strDir'], $thisFltFileNme, $data['tableName'], $data['colID'], $data['cms']);
+      $thisFltFileNme = $data['fltFile']->getClientOriginalName();
+      if (in_array($data['strDir'].'/'.$thisFltFileNme, $fltFleList)) {
+        array_push($errors, $thisFltFileNme . ' File already exists. Please select the file or rename and re-upload.');
+      }
+      else {
+        // Store in the directory inside storage/app
+        $data['fltFile']->storeAs($data['strDir'], $thisFltFileNme);
+        $result = $this->importFile($data['strDir'], $thisFltFileNme, $data['tableName'], $data['colID'], $data['cms']);
 
-            // if error in importing push returned error to $errors
-            if ($result['error']) {
-              array_push($errors, $result['errorList']);
-            }   
-          }
-       }
-       return $errors;
+        // if error in importing push returned error to $errors
+        if ($result['error']) {
+          array_push($errors, $result['errorList']);
+        }   
+      }
+
+      return $errors;
     }
 
     /** 
-    * Queue each file(s) in the $data['flatFiles'] for import.
+    * Queue file in the $data['fltFile'] for import.
     *
     * @param array $data - array of values used by function
     *
     * List of fields in $data that are expected
     *
     * @param string $data['strDir'] - is the storage folder
-    * @param array $data['flatFiles'] - files to be imported
+    * @param string $data['fltFile'] - file to be imported
     * @param integer $data['colID'] - the collection id    
     * @author Tracy A McCormick
     * @return error array
     */         
-     public function selectFilesAndImport($data) {
+     public function selectFileAndImport($data) {
         // array for keeping errors that we will send to the user
         $errors = [];
 
-        // Loop over them
-        foreach ($data['flatFiles'] as $file) {
-           $result = $this->importFile($data['strDir'], $file, $data['tableName'], $data['colID'], $data['cms']);
-           
-           // if error in importing push returned error to $errors
-           if ($result['error']) {
-            array_push($errors, $result['errorList']);
-           }   
-        }
+        $result = $this->importFile($data['strDir'], $data['fltFile'], $data['tableName'], $data['colID'], $data['cms']);
+        
+        // if error in importing push returned error to $errors
+        if ($result['error']) {
+        array_push($errors, $result['errorList']);
+        }   
 
         // return error array so they can be displayed to the user in the view
         return $errors;

@@ -1,5 +1,5 @@
 <?php
-  # app/tests/Unit/controllers/TableControllerUnitTest.php
+  # app/tests/Unit/controllers/ImportAdapterControllerUnitTest.php
 
   use Illuminate\Support\Facades\Storage;
   use App\Adapters\ImportAdapter;
@@ -33,7 +33,6 @@
 
         // clear folder that was created with the collection
         File::deleteDirectory($this->filePath.'/'.$collectionName);
-
     }
 
   }

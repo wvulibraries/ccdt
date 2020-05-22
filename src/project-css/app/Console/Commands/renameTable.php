@@ -41,7 +41,7 @@ class renameTable extends Command
     {
         // Rename Table
         Schema::rename($this->argument('tablename'), $this->argument('newname'));
-        // Drop Entry in tables table
-        DB::table('tables')->where('tblNme', '=', $this->argument('tablename'))->delete();
+        // Rename table name in tables
+        DB::table('tables')->where('tblNme', '=', $this->argument('tablename'))->update(['tblNme' => $this->argument('newname')]);
     }
 }

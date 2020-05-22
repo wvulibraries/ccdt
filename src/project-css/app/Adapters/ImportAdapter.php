@@ -19,6 +19,23 @@ class ImportAdapter {
     public $tkns;
     public $curArry;
 
+     /**
+     * Takes 2 arrays of tokens and merges them.
+     * Designed around the Rockefeller data their was instances where a
+     * incorrect character caused a break in reading the line. When this 
+     * is detected due to a inconsistent field count we will attempt to 
+     * merge the 2 lines.
+     * @param array $tkns1
+     * @param array $tkns2
+     * @return array
+     */    
+    public function mergeLines() {
+        $numItem = count($this->savedTkns) - 1;
+        $this->savedTkns[ $numItem ] = $this->savedTkns[ $numItem ] . ' ' . $this->tkns[ 0 ];
+        unset($this->tkns[ 0 ]);
+        return( (count($this->tkns) > 0) ? array_merge($this->savedTkns, $this->tkns) : $this->savedTkns );
+    }
+
     /**
      * takes a string and prepares it to be used inserted as a new record
      * if we do not find enough items in the line we will check and see if
@@ -40,29 +57,32 @@ class ImportAdapter {
         $curLine = str_replace('"', "", $curLine);
 
         // Tokenize the line
-        $tkns = $csvHelper->tknze($curLine, $delimiter);
+        $this->tkns = $csvHelper->tknze($curLine, $delimiter);
 
         // Validate the tokens and filter them
-        $tkns = $csvHelper->fltrTkns($tkns);
+        foreach ($this->tkns as $key => $tkn) {
+          // trim the token
+          $tkns[ $key ] = trim($tkn);
+        }
 
         // if lastErrRow is the previous row try to combine the lines
-        if ((count($tkns) != $orgCount) && ($this->lastErrRow == $prcssd - 1) && ($this->savedTkns != NULL)) {
-            $tkns = $stringHelper->mergeLines($this->savedTkns, $tkns);
+        if ((count($this->tkns) != $orgCount) && ($this->lastErrRow == $prcssd - 1) && ($this->savedTkns != NULL)) {
+          $this->tkns = $this->mergeLines();
 
-            // clear last saved line since we did a merge
-            $this->lastErrRow = NULL;
-            $this->savedTkns = NULL;
+          // clear last saved line since we did a merge
+          $this->lastErrRow = NULL;
+          $this->savedTkns = NULL;
         }
 
         // if token count doesn't match what is expected save the tkns and last row position
-        if (count($tkns) != $orgCount) {
+        if (count($this->tkns) != $orgCount) {
           // save the last row position and the Tokenized row
           $this->lastErrRow = $prcssd;
-          $this->savedTkns = $tkns;
+          $this->savedTkns = $this->tkns;
           return false;
         }
 
-        return ($tkns);
+        return true;
     }
 
     /**
@@ -87,8 +107,6 @@ class ImportAdapter {
             $this->curArry[ strval($clmnLst[ $i ]) ] = utf8_encode($this->tkns[ $i ]);
           }
 
-          // add srchindex
-          $this->curArry[ 'srchindex' ] = (new customStringHelper)->createSrchIndex(implode(" ", $this->tkns));
         }
     }
 
@@ -144,9 +162,7 @@ class ImportAdapter {
         // For each line
         while ($curFltFleObj->valid()) {
           // Call prepareLine to process the next line of the file
-          $this->tkns = $this->prepareLine($curFltFleObj->current(), $delimiter, $orgCount, $prcssd);
-        
-          if ($this->tkns != false) {
+          if ($this->prepareLine($curFltFleObj->current(), $delimiter, $orgCount, $prcssd)) {
             // process $tkns 
             $this->processLine($orgCount, $clmnLst);
 
@@ -160,7 +176,7 @@ class ImportAdapter {
             }
 
             // insert records once we reach 500
-            if (count($data) >= 500) {
+            if (count($data) >= 2000) {
               //insert Record into database
               $table->insertRecord($data);
 
@@ -183,5 +199,20 @@ class ImportAdapter {
         throw new \Exception("Cannot Import a Empty File.");
       }
     }
+
+    // function buildSearchIndex() {
+    //   //get table
+    //   $table = Table::where('tblNme', $tblNme)->first();
+
+    //   $clmnLst = $table->getColumnList();
+
+    //   // modify table for fulltext search using the srchindex column
+    //   \DB::connection()->getPdo()->exec('SELECT CONCAT(`' '`) AS Address FROM `'.$this->tblNme.'`');
+
+
+    //       // add srchindex
+    //       //$this->curArry[ 'srchindex' ] = (new customStringHelper)->createSrchIndex(implode(" ", $this->tkns));
+
+    // }
 
 }

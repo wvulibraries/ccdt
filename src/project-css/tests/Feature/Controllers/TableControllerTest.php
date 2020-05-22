@@ -40,10 +40,10 @@
 
     public function testTableEditView() {
         // Create Test Collection        
-        $collection = $this->createTestCollection('TestCollection', false);
+        $collection = $this->testHelper->createTestCollection('TestCollection', false);
 
         // Create Test Table
-        $tableName = $this->createTestTable($collection);
+        $tableName = $this->testHelper->createTestTable($collection);
 
         // get newly created table
         $table = Table::where('tblNme', $tableName)->first();
@@ -61,10 +61,10 @@
 
     public function testTableUpdateView() {
         // Create Test Collection        
-        $collection = $this->createTestCollection('TestCollection', false);
+        $collection = $this->testHelper->createTestCollection('TestCollection', false);
 
         // Create Test Table
-        $tableName = $this->createTestTable($collection);
+        $tableName = $this->testHelper->createTestTable($collection);
 
         // get newly created table
         $table = Table::where('tblNme', $tableName)->first();
@@ -72,7 +72,7 @@
         $this->actingAs($this->admin)
              ->visit('/table/edit/' . $table->id)
              ->assertResponseStatus(200)
-             ->see('Step1: Confirm or Update Table Item(s)')
+             ->see('Confirm or Update Table Item(s)')
              ->see('Update Table')
              ->see('Name')
              ->type('NewTableName', 'name')
@@ -96,13 +96,13 @@
     
     public function testTableUpdateViewWithUsedName() {
         // Create Test Collection        
-        $collection = $this->createTestCollection('TestCollection', false);
+        $collection = $this->testHelper->createTestCollection('TestCollection', false);
 
         // Create Test Table
-        $tableName1 = $this->createTestTable($collection);
+        $tableName1 = $this->testHelper->createTestTable($collection);
 
         // Create Test Table 2
-        $tableName2 = $this->createTestTable($collection);
+        $tableName2 = $this->testHelper->createTestTable($collection);
 
         // get newly created tables
         $table = Table::where('tblNme', $tableName1)->first();
@@ -110,7 +110,7 @@
         $this->actingAs($this->admin)
              ->visit('/table/edit/' . $table->id)
              ->assertResponseStatus(200)
-             ->see('Step1: Confirm or Update Table Item(s)')
+             ->see('Confirm or Update Table Item(s)')
              ->see('Update Table')
              ->see('Name')
              // Try Updating table1 with table 2's Name
@@ -135,11 +135,11 @@
 
     public function testTableUpdateCollection() {
         // Create Test Collection        
-        $collection = $this->createTestCollection('TestCollection', false);
-        $collection2 = $this->createTestCollection('TestCollection2', false);        
+        $collection = $this->testHelper->createTestCollection('TestCollection', false);
+        $collection2 = $this->testHelper->createTestCollection('TestCollection2', false);        
 
         // Create Test Table
-        $tableName = $this->createTestTable($collection);
+        $tableName = $this->testHelper->createTestTable($collection);
 
         // get newly created tables
         $table = Table::where('tblNme', $tableName)->first();
@@ -147,7 +147,7 @@
         $this->actingAs($this->admin)
              ->visit('/table/edit/' . $table->id)
              ->assertResponseStatus(200)
-             ->see('Step1: Confirm or Update Table Item(s)')
+             ->see('Confirm or Update Table Item(s)')
              ->see('Update Table')
              ->see('Select Collection')
              ->select($collection2->id, 'colID')
@@ -169,10 +169,10 @@
 
     public function testTableEditSchemaView() {
         // Create Test Collection        
-        $collection = $this->createTestCollection('TestCollection', false);
+        $collection = $this->testHelper->createTestCollection('TestCollection', false);
 
         // Create Test Table
-        $tableName = $this->createTestTable($collection);
+        $tableName = $this->testHelper->createTestTable($collection);
 
         // get newly created table
         $table = Table::where('tblNme', $tableName)->first();
@@ -190,10 +190,10 @@
     
     public function testTableEditSchemaUpdate() {
         // Create Test Collection        
-        $collection = $this->createTestCollection('TestCollection', false);
+        $collection = $this->testHelper->createTestCollection('TestCollection', false);
 
         // Create Test Table
-        $tableName = $this->createTestTable($collection);
+        $tableName = $this->testHelper->createTestTable($collection);
 
         // get newly created table
         $table = Table::where('tblNme', $tableName)->first();
@@ -258,45 +258,6 @@
 //     Route::post('load/status', 'TableController@status');
 //     Route::post('restrict', 'TableController@restrict');
     
-    private function createTestTable($collection, $fileName = 'zillow.csv') {
-        // set storage location
-        $storageFolder = 'files/test';
-        
-        // Create Test Table Name
-        $tableName = 'test'.time();
-
-        // Create New Name if tableName exists
-        // Loop until we generate one that is not in use
-        while(Schema::hasTable($tableName)) {
-          $tableName = 'test'.time();
-        } 
-
-        // Create Table and Dispatch file Import
-        $this->tableHelper->importFile($storageFolder, $fileName, $tableName, $collection->id, $collection->isCms);
-        
-        // check and see if table was created
-        // while (Schema::hasTable($tableName) == false) {
-        //     echo "Table " . $tableName . ' hasn\'t finished being created';
-        //     sleep(3);
-        // }
-
-        $this->assertTrue(Schema::hasTable($tableName));
-
-        // return table name
-        return ($tableName);
-    }
-    
-    private function createTestCollection($name, $isCms) {
-        // Create Collection Test Data Array
-        $data = [
-          'isCms' => $isCms,
-          'name' => $name
-        ];
-
-        // Call collection helper create
-        return($this->collectionHelper->create($data));         
-    }
-
 
 //  index 	
 //  edit 	

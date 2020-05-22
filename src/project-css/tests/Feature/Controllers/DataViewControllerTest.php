@@ -12,7 +12,8 @@
     private $admin;
     private $user;
     private $tblname;
-    private $colname;
+    private $collection;
+
     private $path;
     private $file;
     
@@ -26,7 +27,6 @@
 
     public function setUp(): void {
            parent::setUp();
-           //Artisan::call('migrate:fresh --seed');
            Session::setDefaultDriver('array');
            $this->manager = app('session');
 
@@ -48,78 +48,33 @@
               Storage::delete('/flatfiles/'.$this->file);
            } 
 
-           if ($this->colname != NULL) {
+           if ($this->collection != NULL) {
               // cleanup remove directory for the test table
-              Storage::deleteDirectory($this->colname);
+              Storage::deleteDirectory($this->collection->clctnName);
 
-              // // drop table after Testing
-              // Schema::drop($this->tblname);
+              // drop table after Testing
+              Schema::drop($this->tblname);
            }
     }
 
     protected function tearDown(): void {
-           $this->cleanup($this->tblname, $this->file);
+           $this->cleanup();
 
-           //Artisan::call('migrate:rollback');
            parent::tearDown();
     }
 
-    public function createTestTable($path = './storage/app/files/test/', $file = 'test.dat') {
-            $this->tblname = 'importtest'.mt_rand();
-            $this->path = $path;
-            $this->file = $file;
+    public function createTestTable() {
+       $this->path = './storage/app/files/test/';
+       $this->file = 'test.dat';
 
-            // create a test collection
-            $this->testHelper->createCollection('collection1');
-            $this->actingAs($this->admin)
-                 ->visit('table/create')
-                 ->see('collection1')
-                 ->type($this->tblname, 'imprtTblNme')
-                 ->type('1', 'colID')
-                 ->attach($this->path . $this->file, 'fltFile')
-                 ->press('Import')
-                 ->assertResponseStatus(200)
-                 ->see('Edit Schema')
-                 ->submitForm('Submit', [ 'col-0-data' => 'string', 'col-0-size' => 'default',
-                                         'col-1-data' => 'string', 'col-1-size' => 'default',
-                                         'col-2-data' => 'string', 'col-2-size' => 'default',
-                                         'col-3-data' => 'string', 'col-3-size' => 'default',
-                                         'col-4-data' => 'string', 'col-4-size' => 'default',
-                                         'col-5-data' => 'string', 'col-5-size' => 'default',
-                                         'col-6-data' => 'string', 'col-6-size' => 'default',
-                                         'col-7-data' => 'string', 'col-7-size' => 'default',
-                                         'col-8-data' => 'string', 'col-8-size' => 'default',
-                                         'col-9-data' => 'string', 'col-9-size' => 'default',
-                                         'col-10-data' => 'string', 'col-10-size' => 'default',
-                                         'col-11-data' => 'string', 'col-11-size' => 'default',
-                                         'col-12-data' => 'string', 'col-12-size' => 'default',
-                                         'col-13-data' => 'string', 'col-13-size' => 'default',
-                                         'col-14-data' => 'string', 'col-14-size' => 'default',
-                                         'col-15-data' => 'string', 'col-15-size' => 'default',
-                                         'col-16-data' => 'string', 'col-16-size' => 'default',
-                                         'col-17-data' => 'string', 'col-17-size' => 'default',
-                                         'col-18-data' => 'string', 'col-18-size' => 'default',
-                                         'col-19-data' => 'string', 'col-19-size' => 'default',
-                                         'col-20-data' => 'string', 'col-20-size' => 'big',
-                                         'col-21-data' => 'text', 'col-21-size' => 'default',
-                                         'col-22-data' => 'text', 'col-22-size' => 'default',
-                                         'col-23-data' => 'string', 'col-23-size' => 'default',
-                                         'col-24-data' => 'string', 'col-24-size' => 'default',
-                                         'col-25-data' => 'string', 'col-25-size' => 'default',
-                                         'col-26-data' => 'string', 'col-26-size' => 'default',
-                                         'col-27-data' => 'string', 'col-27-size' => 'default',
-                                         'col-28-data' => 'string', 'col-28-size' => 'big',
-                                         'col-29-data' => 'text', 'col-29-size' => 'default',
-                                         'col-30-data' => 'text', 'col-30-size' => 'default',
-                                         'col-31-data' => 'string', 'col-31-size' => 'default' ])
-                 ->assertResponseStatus(200)
-                 ->see('Load Data')
-                 ->press('Load Data')
-                 ->see('Table(s)')
-                 ->assertResponseStatus(200);
+        // Create Test Collection        
+        $this->collection = $this->testHelper->createTestCollection(time(), false);
 
-              // tests running too fast let job queue import
-              sleep(5);  
+        // Create Test Table
+        $this->tblname = $this->testHelper->createTestTable($this->collection, $this->file);       
+
+       // tests running too fast let job queue import
+       sleep(5);  
     }
 
     public function testInvalidId() {
@@ -128,12 +83,11 @@
            // view specific record with a invalid id
            // should produce error messsage that no results
            $this->actingAs($this->admin)
+                ->visit('table')
+                ->see($this->tblname)
                 ->visit('data/1/2000')
                 ->assertResponseStatus(200)
                 ->see('Search Yeilded No Results');
-
-           // clear folder that was created with the collection
-           File::deleteDirectory($this->filePath.'/collection1');
     }    
 
     public function testIndexWithInvalidTable() {
@@ -169,9 +123,6 @@
            $this->actingAs($this->admin)
                 ->visit('data/1')
                 ->see('Doe'); 
-                
-            // clear folder that was created with the collection
-            File::deleteDirectory($this->filePath.'/collection1');
     }
 
     public function uploadFileToDatabaseAndView($upload) {
@@ -180,19 +131,16 @@
             $this->actingAs($this->admin)
                  ->visit('upload/1')
                  ->assertResponseStatus(200)
-                 ->see('Upload files to collection1 Collection')
+                 ->see('Upload files to ' . $this->collection->clctnName . ' Collection')
                  ->type('test', 'upFldNme')
                  ->attach(array($this->path.$upload), 'attachments[]')
                  ->press('Upload')
                  ->assertResponseStatus(200)
-                 ->see('Upload files to collection1 Collection')
-                 ->assertFileExists(storage_path('app/collection1/test/'.$upload));
+                 ->see('Upload files to ' . $this->collection->clctnName . ' Collection')
+                 ->assertFileExists(storage_path('app/'.$this->collection->clctnName.'/test/'.$upload));
 
             $this->visit('data/1/1/view'.'/test/'.$upload)
                  ->assertResponseStatus(200);
-
-            // clear folder that was created with the collection
-            File::deleteDirectory($this->filePath.'/collection1');
     }
 
     public function testUploadAndViewUploadedTxtFile() {
@@ -213,7 +161,7 @@
 
     public function testUploadAndViewUploadedPngFile() {
            $this->uploadFileToDatabaseAndView('images.png');
-    }
+   }
 
     public function testViewInvalidRecord() {
            $this->createTestTable();
@@ -224,9 +172,6 @@
                 ->visit('data/1/2000')
                 ->assertResponseStatus(200)
                 ->see('Search Yeilded No Results');
-
-            // clear folder that was created with the collection
-            File::deleteDirectory($this->filePath.'/collection1');
     }
 
     public function testImportWithNoRecords() {
@@ -244,9 +189,6 @@
            $this->visit('data/1')
                 ->assertResponseStatus(200)
                 ->see('Table does not have any records.');
-
-           // clear folder that was created with the collection
-           File::deleteDirectory($this->filePath.'/collection1');
     }
 
     public function testNullShow() {

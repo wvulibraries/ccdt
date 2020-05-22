@@ -89,15 +89,41 @@ class WizardController extends Controller
     * @return redirect
     */       
     public function flatfileUpload(Request $request) {
+        // 1. Input the table name in the meta Directory
+        //Rules for validation
+        $rules = array(
+            'imprtTblNme' => 'required|unique:tables,tblNme|max:30|min:6|alpha_num',
+            'colID' => 'required|Integer',
+            'fltFile' => 'required|file|mimetypes:text/plain|mimes:txt,dat,csv,tab',
+        );
+
+        //Customize the error messages
+        $messages = array(
+            'imprtTblNme.required' => 'Please enter a table name',
+            'imprtTblNme.unique' => 'The table name has already been taken by current or disabled table',
+            'imprtTblNme.max' => 'The table name cannot exceed 30 characters',
+            'imprtTblNme.min' => 'The table name should be 6 characters or more',
+            'imprtTblNme.alpha_num' => 'The table name can only have alphabets or numbers without spaces',
+            'colID.required' => 'Please select a collection',
+            'colID.Integer' => 'Please select an existing collection',
+            'fltFile.required' => 'Please select a valid flat file',
+            'fltFile.file' => 'Please select a valid flat file',
+            'fltFile.mimetypes' => 'The flat file must be a file of type: text/plain.',
+            'fltFile.mimes' => 'The flat file must have an extension: txt, dat, csv, tab.',
+        );
+
+        // Validate the request before storing the data
+        $this->validate($request, $rules, $messages);
+
         $data = [
             'strDir' => $this->strDir,
             'colID' => $request->colID,
-            'flatFiles' => $request->flatFiles,
+            'fltFile' => $request->fltFile,
             'cms' => false,
             'tableName' => $request->imprtTblNme
         ];
 
-        $errors = (new TableHelper)->storeUploadsAndImport($data);
+        $errors = (new TableHelper)->storeUploadAndImport($data);
         return redirect()->route('tableIndex')->withErrors($errors);
     }    
 
@@ -113,17 +139,41 @@ class WizardController extends Controller
     * @return redirect
     */       
     public function flatfileSelect(Request $request) {
+        // 1. Get the file name and validate file, if not validated remove it
+        //Rules for validation
+        $rules = array(
+            'slctTblNme' => 'required|unique:tables,tblNme|max:30|min:6|alpha_num',
+            'colID2' => 'required|Integer',
+            'fltFile2' => 'required|string',
+        );
+
+        //Customize the error messages
+        $messages = array(
+            'slctTblNme.required' => 'Please enter a table name',
+            'slctTblNme.unique' => 'The table name has already been taken by current or disabled table',
+            'slctTblNme.max' => 'The table name cannot exceed 30 characters',
+            'slctTblNme.min' => 'The table name should be 6 characters or more',
+            'slctTblNme.alpha_num' => 'The table name can only have alphabets or numbers without spaces',
+            'colID2.required' => 'Please select a collection',
+            'colID2.Integer' => 'Please select an existing collection',
+            'fltFile2.required' => 'Please select a valid flat file',
+            'fltFile2.string' => 'Please select a valid flat file',
+        );
+
+        // Validate the request before storing the data
+        $this->validate($request, $rules, $messages);
+
         $data = [
             'strDir' => $this->strDir,
             'colID' => $request->colID2,
-            'flatFiles' => $request->flatFiles2,
+            'fltFile' => $request->fltFile2,
             'cms' => false,
             'tableName' => $request->slctTblNme
         ];
 
         // Call helper to create table and dispatch job for import
         // Routine returns array of errors if their is any.
-        $errors = (new TableHelper)->selectFilesAndImport($data); 
+        $errors = (new TableHelper)->selectFileAndImport($data); 
         return redirect()->route('collection.show', ['colID' => $data['colID']])->withErrors($errors);      
     }
 
@@ -140,15 +190,41 @@ class WizardController extends Controller
     * @return redirect
     */      
     public function cmsUpload(Request $request) {
+        // 1. Input the table name in the meta Directory
+        //Rules for validation
+        $rules = array(
+            'imprtTblNme' => 'required|unique:tables,tblNme|max:30|min:6|alpha_num',
+            'colID' => 'required|Integer',
+            'cmsFile' => 'required|file|mimetypes:text/plain|mimes:txt,dat,csv,tab',
+        );
+
+        //Customize the error messages
+        $messages = array(
+            'imprtTblNme.required' => 'Please enter a table name',
+            'imprtTblNme.unique' => 'The table name has already been taken by current or disabled table',
+            'imprtTblNme.max' => 'The table name cannot exceed 30 characters',
+            'imprtTblNme.min' => 'The table name should be 6 characters or more',
+            'imprtTblNme.alpha_num' => 'The table name can only have alphabets or numbers without spaces',
+            'colID.required' => 'Please select a collection',
+            'colID.Integer' => 'Please select an existing collection',
+            'cmsFile.required' => 'Please select a valid cms file',
+            'cmsFile.file' => 'Please select a valid cms file',
+            'cmsFile.mimetypes' => 'The cms file must be a file of type: text/plain.',
+            'cmsFile.mimes' => 'The cms file must have an extension: txt, dat, csv, tab.',
+        );
+
+        // Validate the request before storing the data
+        $this->validate($request, $rules, $messages);
+
         $data = [
             'strDir' => $this->strDir,
             'colID' => $request->colID,
-            'flatFiles' => $request->cmsdisFiles,
+            'fltFile' => $request->cmsFile,
             'cms' => true,
             'tableName' => $request->imprtTblNme
         ];
 
-        $errors = (new TableHelper)->storeUploadsAndImport($data);
+        $errors = (new TableHelper)->storeUploadAndImport($data);
         return redirect()->route('collection.show', ['colID' => $data['colID']])->withErrors($errors); 
     }    
 
@@ -165,16 +241,40 @@ class WizardController extends Controller
     * @return redirect
     */         
     public function cmsSelect(Request $request) {
+        // 1. Get the file name and validate file, if not validated remove it
+        //Rules for validation
+        $rules = array(
+            'slctTblNme' => 'required|unique:tables,tblNme|max:30|min:6|alpha_num',
+            'colID2' => 'required|Integer',
+            'cmsFile2' => 'required|string',
+        );
+
+        //Customize the error messages
+        $messages = array(
+            'slctTblNme.required' => 'Please enter a table name',
+            'slctTblNme.unique' => 'The table name has already been taken by current or disabled table',
+            'slctTblNme.max' => 'The table name cannot exceed 30 characters',
+            'slctTblNme.min' => 'The table name should be 6 characters or more',
+            'slctTblNme.alpha_num' => 'The table name can only have alphabets or numbers without spaces',
+            'colID2.required' => 'Please select a collection',
+            'colID2.Integer' => 'Please select an existing collection',
+            'cmsFile2.required' => 'Please select a valid flat file',
+            'cmsFile2.string' => 'Please select a valid flat file',
+        );
+
+        // Validate the request before storing the data
+        $this->validate($request, $rules, $messages);
+
         $data = [
             'strDir' => $this->strDir,
             'colID' => $request->colID2,
-            'flatFiles' => $request->cmsdisFiles2,
+            'fltFile' => $request->cmsFile2,
             'cms' => true,
             'tableName' => $request->slctTblNme
         ];
 
         // call selectFilesAndImport
-        $errors = (new TableHelper)->selectFilesAndImport($data);
+        $errors = (new TableHelper)->selectFileAndImport($data);
         return redirect()->route('collection.show', ['colID' => $data['colID']])->withErrors($errors);       
     }      
 

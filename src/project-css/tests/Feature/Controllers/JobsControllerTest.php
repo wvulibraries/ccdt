@@ -15,18 +15,12 @@
 
     public function setUp(): void {
         parent::setUp();
-        //Artisan::call('migrate:refresh --seed');
 
         // find admin and test user accounts
         $this->admin = User::where('name', '=', 'admin')->first();
         $this->user = User::where('name', '=', 'test')->first();
 
         $this->faker = Faker\Factory::create();
-    }
-
-    protected function tearDown(): void {
-        //Artisan::call('migrate:reset');
-        parent::tearDown();
     }
 
     public function testViewPendingJobs() {

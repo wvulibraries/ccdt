@@ -185,37 +185,18 @@ class TableController extends Controller
     }
 
     /**
-    * Show the wizard page
+    * Return the admin/collection page to create tables
     */
-    public function wizard() {
+    public function create() {
       // Get the collection names
       $collcntNms = Collection::all();
 
-      // Get the list of files in the directory
-      $fltFleList = Storage::allFiles($this->strDir);
-
-      // Format the file names by truncating the dir
-      foreach ($fltFleList as $key => $value) {
-        // check if directory string exists in the path
-        if (str_contains($value, $this->strDir.'/')) {
-          // replace the string
-          $fltFleList[ $key ] = str_replace($this->strDir.'/', '', $value);
-        }
-      }
-
-      // Compact everything into array
-      $wizrdData = array(
-        'collcntNms' => $collcntNms,
-        'fltFleList' => $fltFleList
-      );
-
-      // Check for the countflatfiles
+      // route to collection page to create tables
       if ($collcntNms->where('isEnabled', '1')->count()>0) {
-        // return the wizard page by passing the collections
-        return view('admin/wizard')->with($wizrdData);
+        return view('admin/collection')->with('collcntNms', $collcntNms);
       }
 
-      // return the wizard page by passing the collections and list of files
+      // route to collection page with errors if no collection exists or is active
       return view('admin/collection')->with('collcntNms', $collcntNms)->withErrors([ 'Please create active collection here first' ]);
     }
 
@@ -289,17 +270,17 @@ class TableController extends Controller
                                  ->with('collctnId', $request->colID);
     }
 
-    public function importCMSDIS(Request $request) {
-        $data = [
-            'strDir' => $this->strDir,
-            'colID' => $request->colID,
-            'flatFiles' => $request->cmsdisFiles,
-            'cms' => true,
-            'tableName' => $request->imprtTblNme
-        ];
+    // public function importCMSDIS(Request $request) {
+    //     $data = [
+    //         'strDir' => $this->strDir,
+    //         'colID' => $request->colID,
+    //         'flatFiles' => $request->cmsdisFiles,
+    //         'cms' => true,
+    //         'tableName' => $request->imprtTblNme
+    //     ];
 
-        return (new TableHelper)->storeUploadsAndImport($data);
-    }
+    //     return (new TableHelper)->storeUploadsAndImport($data);
+    // }
 
     /**
     * Use the existing file to import the records:
@@ -358,17 +339,17 @@ class TableController extends Controller
                                  ->with('collctnId', $request->colID2);
     }
 
-    public function selectCMSDIS(Request $request) {
-        $data = [
-            'strDir' => $this->strDir,
-            'colID' => $request->colID2,
-            'flatFiles' => $request->cmsdisFiles2,
-            'cms' => true,
-            'tableName' => $request->slctTblNme
-        ];
+    // public function selectCMSDIS(Request $request) {
+    //     $data = [
+    //         'strDir' => $this->strDir,
+    //         'colID' => $request->colID2,
+    //         'flatFiles' => $request->cmsdisFiles2,
+    //         'cms' => true,
+    //         'tableName' => $request->slctTblNme
+    //     ];
 
-        return (new TableHelper)->selectFilesAndImport($data); 
-    }
+    //     return (new TableHelper)->selectFilesAndImport($data); 
+    // }
 
     /**
     * Method to read input from the schema and start actual data import
