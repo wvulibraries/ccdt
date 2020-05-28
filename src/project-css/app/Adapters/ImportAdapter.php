@@ -18,6 +18,8 @@ class ImportAdapter {
     public $lastErrRow;
     public $tkns;
     public $curArry;
+    public $clmnLst;
+    public $tblNme;
 
      /**
      * Takes 2 arrays of tokens and merges them.
@@ -65,21 +67,23 @@ class ImportAdapter {
           $tkns[ $key ] = trim($tkn);
         }
 
-        // if lastErrRow is the previous row try to combine the lines
-        if ((count($this->tkns) != $orgCount) && ($this->lastErrRow == $prcssd - 1) && ($this->savedTkns != NULL)) {
-          $this->tkns = $this->mergeLines();
-
-          // clear last saved line since we did a merge
-          $this->lastErrRow = NULL;
-          $this->savedTkns = NULL;
-        }
-
-        // if token count doesn't match what is expected save the tkns and last row position
         if (count($this->tkns) != $orgCount) {
-          // save the last row position and the Tokenized row
-          $this->lastErrRow = $prcssd;
-          $this->savedTkns = $this->tkns;
-          return false;
+          // if lastErrRow is the previous row try to combine the lines
+          if (($this->lastErrRow == $prcssd - 1) && ($this->savedTkns != NULL)) {
+            $this->tkns = $stringHelper->mergeLines($this->savedTkns, $this->tkns);
+
+            // clear last saved line since we did a merge
+            $this->lastErrRow = NULL;
+            $this->savedTkns = NULL;
+          }
+
+          // if token count doesn't match what is expected save the tkns and last row position
+          else {
+            // save the last row position and the Tokenized row
+            $this->lastErrRow = $prcssd;
+            $this->savedTkns = $this->tkns;
+            return false;
+          }
         }
 
         return true;
@@ -94,7 +98,7 @@ class ImportAdapter {
     * @param object $clmnLst array containing all field names for table
     * @return boolean
     */   
-    public function processLine($orgCount, $clmnLst) {
+    public function processLine($orgCount) {
         if(!is_array($this->tkns) && empty($this->tkns)) { return false; }
 
         // verify that passed $tkns match the expected field count
@@ -104,7 +108,7 @@ class ImportAdapter {
 
           // Compact them into one array with utf8 encoding
           for ($i = 0; $i<$orgCount; $i++) {
-            $this->curArry[ strval($clmnLst[ $i ]) ] = utf8_encode($this->tkns[ $i ]);
+            $this->curArry[ strval($this->clmnLst[ $i ]) ] = utf8_encode($this->tkns[ $i ]);
           }
 
         }
@@ -123,19 +127,24 @@ class ImportAdapter {
      * @return void
      */
     public function process($tblNme, $fltFlePath, $fltFleNme) {
+      $this->lastErrRow = NULL;
+      $this->savedTkns = NULL;
+
+      $this->tblNme = $tblNme;
+
       //get table
       $table = Table::where('tblNme', $tblNme)->first();
 
       // find the collection
       $thisClctn = Collection::findorFail($table->collection_id);
 
-      $clmnLst = $table->getColumnList();
+      $this->clmnLst = $table->getColumnList();
 
       // remove the id and time stamps
-      $clmnLst = array_splice($clmnLst, 1, count($clmnLst) - 3);
+      $this->clmnLst = array_splice($this->clmnLst, 1, count($this->clmnLst) - 3);
 
       // determine number of fields without the srchIndex
-      $orgCount = count($clmnLst) - 1;
+      $orgCount = count($this->clmnLst) - 1;
 
       // 1. Read the file as spl object
       $fltFleAbsPth = $fltFlePath.'/'.$fltFleNme;
@@ -164,7 +173,7 @@ class ImportAdapter {
           // Call prepareLine to process the next line of the file
           if ($this->prepareLine($curFltFleObj->current(), $delimiter, $orgCount, $prcssd)) {
             // process $tkns 
-            $this->processLine($orgCount, $clmnLst);
+            $this->processLine($orgCount);
 
             // save line to be inserted later
             if ($this->curArry) {
@@ -177,7 +186,7 @@ class ImportAdapter {
 
             // insert records once we reach 500
             if (count($data) >= 2000) {
-              //insert Record into database
+              //insert Record(s) into database
               $table->insertRecord($data);
 
               // clear $data array
@@ -190,7 +199,7 @@ class ImportAdapter {
 
         // insert records at the end of file
         if (count($data) > 0) {
-            //insert Record into database
+            //insert Record(s) into database
             $table->insertRecord($data);
         }        
 
@@ -199,20 +208,5 @@ class ImportAdapter {
         throw new \Exception("Cannot Import a Empty File.");
       }
     }
-
-    // function buildSearchIndex() {
-    //   //get table
-    //   $table = Table::where('tblNme', $tblNme)->first();
-
-    //   $clmnLst = $table->getColumnList();
-
-    //   // modify table for fulltext search using the srchindex column
-    //   \DB::connection()->getPdo()->exec('SELECT CONCAT(`' '`) AS Address FROM `'.$this->tblNme.'`');
-
-
-    //       // add srchindex
-    //       //$this->curArry[ 'srchindex' ] = (new customStringHelper)->createSrchIndex(implode(" ", $this->tkns));
-
-    // }
 
 }

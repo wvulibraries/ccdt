@@ -26,6 +26,7 @@ class Kernel extends ConsoleKernel
         Commands\deleteCollection::class,
         Commands\unsetCmsCollection::class,
         Commands\setCmsCollection::class,
+        Commands\createSrchIndex::class,
     ];
 
     /**

@@ -193,18 +193,12 @@ class WizardController extends Controller
         // 1. Input the table name in the meta Directory
         //Rules for validation
         $rules = array(
-            'imprtTblNme' => 'required|unique:tables,tblNme|max:30|min:6|alpha_num',
             'colID' => 'required|Integer',
             'cmsFile' => 'required|file|mimetypes:text/plain|mimes:txt,dat,csv,tab',
         );
 
         //Customize the error messages
         $messages = array(
-            'imprtTblNme.required' => 'Please enter a table name',
-            'imprtTblNme.unique' => 'The table name has already been taken by current or disabled table',
-            'imprtTblNme.max' => 'The table name cannot exceed 30 characters',
-            'imprtTblNme.min' => 'The table name should be 6 characters or more',
-            'imprtTblNme.alpha_num' => 'The table name can only have alphabets or numbers without spaces',
             'colID.required' => 'Please select a collection',
             'colID.Integer' => 'Please select an existing collection',
             'cmsFile.required' => 'Please select a valid cms file',
@@ -221,7 +215,7 @@ class WizardController extends Controller
             'colID' => $request->colID,
             'fltFile' => $request->cmsFile,
             'cms' => true,
-            'tableName' => $request->imprtTblNme
+            'tableName' => null
         ];
 
         $errors = (new TableHelper)->storeUploadAndImport($data);
@@ -244,18 +238,12 @@ class WizardController extends Controller
         // 1. Get the file name and validate file, if not validated remove it
         //Rules for validation
         $rules = array(
-            'slctTblNme' => 'required|unique:tables,tblNme|max:30|min:6|alpha_num',
             'colID2' => 'required|Integer',
             'cmsFile2' => 'required|string',
         );
 
         //Customize the error messages
         $messages = array(
-            'slctTblNme.required' => 'Please enter a table name',
-            'slctTblNme.unique' => 'The table name has already been taken by current or disabled table',
-            'slctTblNme.max' => 'The table name cannot exceed 30 characters',
-            'slctTblNme.min' => 'The table name should be 6 characters or more',
-            'slctTblNme.alpha_num' => 'The table name can only have alphabets or numbers without spaces',
             'colID2.required' => 'Please select a collection',
             'colID2.Integer' => 'Please select an existing collection',
             'cmsFile2.required' => 'Please select a valid flat file',
@@ -270,7 +258,7 @@ class WizardController extends Controller
             'colID' => $request->colID2,
             'fltFile' => $request->cmsFile2,
             'cms' => true,
-            'tableName' => $request->slctTblNme
+            'tableName' => null
         ];
 
         // call selectFilesAndImport

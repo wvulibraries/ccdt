@@ -6,6 +6,7 @@
 
 namespace App\Helpers;
 
+use App\Jobs\CreateSearchIndex;
 use App\Jobs\FileImport;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -276,7 +277,8 @@ class TableHelper {
 
        Log::info('File Import has been requested for table '.$tblNme.' using flat file '.$fltFle);
        // add job to queue
-       dispatch(new FileImport($tblNme, $fltFlePath, $fltFle));
+       dispatch(new FileImport($tblNme, $fltFlePath, $fltFle))->onQueue('importQueue');
+       dispatch(new CreateSearchIndex($tblNme))->onQueue('indexQueue');
        $message = [
          'content'  =>  $fltFle.' has been queued for import to '.$tblNme.' table. It will be available shortly.',
          'level'    =>  'success',
@@ -301,7 +303,11 @@ class TableHelper {
       $fieldCount = count($fieldTypes);
 
       // create the table
-      Schema::connection('mysql')->create($tblNme, function(Blueprint $table) use($fieldNames, $fieldTypes, $fieldCount, $collctnId) {
+      Schema::connection('mysql')->create($tblNme, function(Blueprint $table) use($fieldNames, $fieldTypes, $fieldCount, $collctnId) {        
+        // // if index exist rename to id
+        // if ($fieldNames[0] == 'index') {
+        //   $fieldNames[0] = 'id';
+        // }
 
         // Default primary key
         $table->increments('id');
@@ -386,7 +392,7 @@ class TableHelper {
         
         // if error in importing push returned error to $errors
         if ($result['error']) {
-        array_push($errors, $result['errorList']);
+          array_push($errors, $result['errorList']);
         }   
 
         // return error array so they can be displayed to the user in the view

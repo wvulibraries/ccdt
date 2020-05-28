@@ -206,69 +206,69 @@ class TableController extends Controller
     * 2. Store the file on to Storage Directory if uploaded
     * 3. Show the users schema for further verification
     */
-    public function import(Request $request) {
+    // public function import(Request $request) {
 
-      // 1. Input the table name in the meta Directory
-      //Rules for validation
-      $rules = array(
-        'imprtTblNme' => 'required|unique:tables,tblNme|max:30|min:6|alpha_num',
-        'colID' => 'required|Integer',
-        'fltFile' => 'required|file|mimetypes:text/plain|mimes:txt,dat,csv,tab',
-      );
+    //   // 1. Input the table name in the meta Directory
+    //   //Rules for validation
+    //   $rules = array(
+    //     'imprtTblNme' => 'required|unique:tables,tblNme|max:30|min:6|alpha_num',
+    //     'colID' => 'required|Integer',
+    //     'fltFile' => 'required|file|mimetypes:text/plain|mimes:txt,dat,csv,tab',
+    //   );
 
-      //Customize the error messages
-      $messages = array(
-        'imprtTblNme.required' => 'Please enter a table name',
-        'imprtTblNme.unique' => 'The table name has already been taken by current or disabled table',
-        'imprtTblNme.max' => 'The table name cannot exceed 30 characters',
-        'imprtTblNme.min' => 'The table name should be 6 characters or more',
-        'imprtTblNme.alpha_num' => 'The table name can only have alphabets or numbers without spaces',
-        'colID.required' => 'Please select a collection',
-        'colID.Integer' => 'Please select an existing collection',
-        'fltFile.required' => 'Please select a valid flat file',
-        'fltFile.file' => 'Please select a valid flat file',
-        'fltFile.mimetypes' => 'The flat file must be a file of type: text/plain.',
-        'fltFile.mimes' => 'The flat file must have an extension: txt, dat, csv, tab.',
-      );
+    //   //Customize the error messages
+    //   $messages = array(
+    //     'imprtTblNme.required' => 'Please enter a table name',
+    //     'imprtTblNme.unique' => 'The table name has already been taken by current or disabled table',
+    //     'imprtTblNme.max' => 'The table name cannot exceed 30 characters',
+    //     'imprtTblNme.min' => 'The table name should be 6 characters or more',
+    //     'imprtTblNme.alpha_num' => 'The table name can only have alphabets or numbers without spaces',
+    //     'colID.required' => 'Please select a collection',
+    //     'colID.Integer' => 'Please select an existing collection',
+    //     'fltFile.required' => 'Please select a valid flat file',
+    //     'fltFile.file' => 'Please select a valid flat file',
+    //     'fltFile.mimetypes' => 'The flat file must be a file of type: text/plain.',
+    //     'fltFile.mimes' => 'The flat file must have an extension: txt, dat, csv, tab.',
+    //   );
 
-      // Validate the request before storing the data
-      $this->validate($request, $rules, $messages);
+    //   // Validate the request before storing the data
+    //   $this->validate($request, $rules, $messages);
 
-      // Validate the file before upload
-      // Get the file
-      $thisFltFile = $request->fltFile;
+    //   // Validate the file before upload
+    //   // Get the file
+    //   $thisFltFile = $request->fltFile;
 
-      // Get the file name
-      $thisFltFileNme = $thisFltFile->getClientOriginalName();
+    //   // Get the file name
+    //   $thisFltFileNme = $thisFltFile->getClientOriginalName();
 
-      // check if the file exists
-      // Get the list of files in the directory
-      $fltFleList = Storage::allFiles($this->strDir);
+    //   // check if the file exists
+    //   // Get the list of files in the directory
+    //   $fltFleList = Storage::allFiles($this->strDir);
 
-      // check the file name in the file list array
-      if (in_array($this->strDir.'/'.$thisFltFileNme, $fltFleList)) {
-        return redirect()->route('tableIndex')->withErrors([ 'File already exists. Please select the file or rename and re-upload.' ]);
-      }
+    //   // check the file name in the file list array
+    //   if (in_array($this->strDir.'/'.$thisFltFileNme, $fltFleList)) {
+    //     return redirect()->route('tableIndex')->withErrors([ 'File already exists. Please select the file or rename and re-upload.' ]);
+    //   }
 
-      // 2. Store the file on to Storage Directory if uploaded
-      // Store in the directory inside storage/app
-      $thisFltFile->storeAs($this->strDir, $thisFltFileNme);
+    //   // 2. Store the file on to Storage Directory if uploaded
+    //   // Store in the directory inside storage/app
+    //   $thisFltFile->storeAs($this->strDir, $thisFltFileNme);
 
-      // 3. Show the users schema for further verification
-      $schema = (new CSVHelper)->schema($this->strDir.'/'.$thisFltFileNme);
+    //   // 3. Show the users schema for further verification
+    //   $schema = (new CSVHelper)->schema($this->strDir.'/'.$thisFltFileNme);
 
-      // If the file isn't valid return with an error
-      if (!$schema) {
-        Storage::delete($fltFleAbsPth);
-        return redirect()->route('tableIndex')->withErrors([ 'The selected flat file must be of type: text/plain', 'The selected flat file should not be empty', 'File is deleted for security reasons' ]);
-      }
+    //   // If the file isn't valid return with an error
+    //   if (!$schema) {
+    //     Storage::delete($fltFleAbsPth);
+    //     return redirect()->route('tableIndex')->withErrors([ 'The selected flat file must be of type: text/plain', 'The selected flat file should not be empty', 'File is deleted for security reasons' ]);
+    //   }
 
-      // Return the view with filename and schema
-      return view('admin.schema')->with('schema', $schema)
-                                 ->with('tblNme', $request->imprtTblNme)
-                                 ->with('fltFile', $thisFltFileNme)
-                                 ->with('collctnId', $request->colID);
-    }
+    //   // Return the view with filename and schema
+    //   return view('admin.schema')->with('schema', $schema)
+    //                              ->with('tblNme', $request->imprtTblNme)
+    //                              ->with('fltFile', $thisFltFileNme)
+    //                              ->with('collctnId', $request->colID);
+    // }
 
     // public function importCMSDIS(Request $request) {
     //     $data = [
@@ -289,55 +289,55 @@ class TableController extends Controller
     * 2. Create the table with schema
     * 3. Show the users with the schema
     */
-    public function select(Request $request) {
+    // public function select(Request $request) {
 
-      // 1. Get the file name and validate file, if not validated remove it
-      //Rules for validation
-      $rules = array(
-        'slctTblNme' => 'required|unique:tables,tblNme|max:30|min:6|alpha_num',
-        'colID2' => 'required|Integer',
-        'fltFile2' => 'required|string',
-      );
+    //   // 1. Get the file name and validate file, if not validated remove it
+    //   //Rules for validation
+    //   $rules = array(
+    //     'slctTblNme' => 'required|unique:tables,tblNme|max:30|min:6|alpha_num',
+    //     'colID2' => 'required|Integer',
+    //     'fltFile2' => 'required|string',
+    //   );
 
-      //Customize the error messages
-      $messages = array(
-        'slctTblNme.required' => 'Please enter a table name',
-        'slctTblNme.unique' => 'The table name has already been taken by current or disabled table',
-        'slctTblNme.max' => 'The table name cannot exceed 30 characters',
-        'slctTblNme.min' => 'The table name should be 6 characters or more',
-        'slctTblNme.alpha_num' => 'The table name can only have alphabets or numbers without spaces',
-        'colID2.required' => 'Please select a collection',
-        'colID2.Integer' => 'Please select an existing collection',
-        'fltFile2.required' => 'Please select a valid flat file',
-        'fltFile2.string' => 'Please select a valid flat file',
-      );
+    //   //Customize the error messages
+    //   $messages = array(
+    //     'slctTblNme.required' => 'Please enter a table name',
+    //     'slctTblNme.unique' => 'The table name has already been taken by current or disabled table',
+    //     'slctTblNme.max' => 'The table name cannot exceed 30 characters',
+    //     'slctTblNme.min' => 'The table name should be 6 characters or more',
+    //     'slctTblNme.alpha_num' => 'The table name can only have alphabets or numbers without spaces',
+    //     'colID2.required' => 'Please select a collection',
+    //     'colID2.Integer' => 'Please select an existing collection',
+    //     'fltFile2.required' => 'Please select a valid flat file',
+    //     'fltFile2.string' => 'Please select a valid flat file',
+    //   );
 
-      // Validate the request before storing the data
-      $this->validate($request, $rules, $messages);
+    //   // Validate the request before storing the data
+    //   $this->validate($request, $rules, $messages);
 
-      // Get the absolute file path
-      $thsFltFile = $request->fltFile2;
-      $fltFleAbsPth = $this->strDir.'/'.$thsFltFile;
-      // validate the file
-      if (!Storage::has($fltFleAbsPth)) {
-        // if the file doesn't exist
-        return redirect()->route('tableIndex')->withErrors([ 'The selected flat file does not exist' ]);
-      }
+    //   // Get the absolute file path
+    //   $thsFltFile = $request->fltFile2;
+    //   $fltFleAbsPth = $this->strDir.'/'.$thsFltFile;
+    //   // validate the file
+    //   if (!Storage::has($fltFleAbsPth)) {
+    //     // if the file doesn't exist
+    //     return redirect()->route('tableIndex')->withErrors([ 'The selected flat file does not exist' ]);
+    //   }
 
-      // 2. Check for file validity and Create the table with schema
-      $schema = (new CSVHelper)->schema($fltFleAbsPth);
-      // If the file isn't valid return with an error
-      if (!$schema) {
-        Storage::delete($fltFleAbsPth);
-        return redirect()->route('tableIndex')->withErrors([ 'The selected flat file must be of type: text/plain', 'The selected flat file should not be empty', 'File is deleted for security reasons' ]);
-      }
+    //   // 2. Check for file validity and Create the table with schema
+    //   $schema = (new CSVHelper)->schema($fltFleAbsPth);
+    //   // If the file isn't valid return with an error
+    //   if (!$schema) {
+    //     Storage::delete($fltFleAbsPth);
+    //     return redirect()->route('tableIndex')->withErrors([ 'The selected flat file must be of type: text/plain', 'The selected flat file should not be empty', 'File is deleted for security reasons' ]);
+    //   }
 
-      // 3. Show the users with the schema
-      return view('admin.schema')->with('schema', $schema)
-                                 ->with('tblNme', $request->slctTblNme)
-                                 ->with('fltFile', $request->fltFile2)
-                                 ->with('collctnId', $request->colID2);
-    }
+    //   // 3. Show the users with the schema
+    //   return view('admin.schema')->with('schema', $schema)
+    //                              ->with('tblNme', $request->slctTblNme)
+    //                              ->with('fltFile', $request->fltFile2)
+    //                              ->with('collctnId', $request->colID2);
+    // }
 
     // public function selectCMSDIS(Request $request) {
     //     $data = [

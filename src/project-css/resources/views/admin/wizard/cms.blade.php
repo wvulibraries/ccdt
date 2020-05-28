@@ -46,7 +46,7 @@
                       </div>
                       <!-- Select File -->
                       <div class="form-group{{ $errors->has('multipleFiles') ? ' has-error' : '' }}">
-                          <label for="cmsFile" class="col-md-4 control-label">Import CMS Files</label>
+                          <label for="cmsFile" class="col-md-4 control-label">Import CMS File</label>
 
                           <div class="col-md-6">
                               <input id="cmsFile" type="file" class="form-control" name="cmsFile" required autofocus>
@@ -67,10 +67,10 @@
       </div>
       <div class="col-md-6">
           <div class="panel panel-default formPanel">
-              <div class="panel-heading"><a data-toggle="collapse" href="#selectCMSFilesPanel"><h3>Select CMS Files from directory</h3></a></div>
-              <div id="selectCMSFilesPanel" class="panel-collapse collapse">
+              <div class="panel-heading"><a data-toggle="collapse" href="#selectCMSFilePanel"><h3>Select CMS Files from directory</h3></a></div>
+              <div id="selectCMSFilePanel" class="panel-collapse collapse">
                 <div class="panel-body">
-                  <form class="form-horizontal" name="selectCMSDISFiles" aria-label="selectCMSDISFiles" role="form" method="POST" action="{{ url('/admin/wizard/cms/select') }}">
+                  <form class="form-horizontal" name="selectCMSDISFile" aria-label="selectCMSDISFile" role="form" method="POST" action="{{ url('/admin/wizard/cms/select') }}">
                       {{ csrf_field() }}
                       <!-- Select Collection Name -->
                       <div class="form-group{{ $errors->has('colID2') ? ' has-error' : '' }}">
@@ -95,7 +95,7 @@
                           <label for="fltFile2" class="col-md-4 control-label">Import</label>
 
                           <div class="col-md-6">
-                            <select id="cmsFile2" type="text" class="form-control" name="cmsFiles2" required autofocus>
+                            <select id="cmsFile2" type="text" class="form-control" name="cmsFile2" required autofocus>
                               @foreach($fltFleList as $fltFile)
                                 @if($fltFile)
                                   <option value="{{$fltFile}}">{{$fltFile}}</option>

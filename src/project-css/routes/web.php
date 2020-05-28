@@ -79,9 +79,7 @@ Route::group([ 'prefix' => 'table' ], function() {
     // Route::get('create/select', 'TableController@wizard');
     Route::post('create/finalize', 'TableController@finalize');
     Route::get('load', 'TableController@load');
-    Route::post('load/worker', 'TableController@worker');
     Route::post('load/store', 'TableController@store');
-    // Route::post('load/status', 'TableController@status');
     Route::post('restrict', 'TableController@restrict');
 });
 

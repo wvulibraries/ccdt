@@ -6,20 +6,20 @@ class CSVHelperTest extends BrowserKitTestCase
 {
 
     public function testSchema() {
-        $result = (new CSVHelper)->schema('/files/test/mlb_players.csv');
-        $this->assertEquals($result[ 0 ], 'Name');
+      $result = (new CSVHelper)->schema('/files/test/mlb_players.csv');
+      $this->assertEquals($result[ 0 ], 'Name');
 
-        // passing a filename that doesn't exits should produce false result
-        $this->assertFalse((new CSVHelper)->schema('/files/test/unknown.csv'));
+      // passing a filename that doesn't exits should produce false result
+      $this->assertFalse((new CSVHelper)->schema('/files/test/unknown.csv'));
 
-        // passing a file that isn't of the correct type should produce false result
-        $this->assertFalse((new CSVHelper)->schema('/files/test/images.png'));
+      // passing a file that isn't of the correct type should produce false result
+      $this->assertFalse((new CSVHelper)->schema('/files/test/images.png'));
 
-        //passing a empty file should produce a false result
-        $emptyFile = './storage/app/files/test/empty.csv';
-        touch($emptyFile);
-        $this->assertFalse((new CSVHelper)->schema('/files/test/empty.csv'));
-        unlink($emptyFile);
+      //passing a empty file should produce a false result
+      $emptyFile = './storage/app/files/test/empty.csv';
+      touch($emptyFile);
+      $this->assertFalse((new CSVHelper)->schema('/files/test/empty.csv'));
+      unlink($emptyFile);
     }
 
     public function testgetTypesFromCSVwithmlbplayers() {
