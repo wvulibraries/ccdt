@@ -8,6 +8,7 @@ namespace App\Helpers;
 
 use App\Jobs\CreateSearchIndex;
 use App\Jobs\FileImport;
+use App\Jobs\OptimizeSearchIndex;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
@@ -278,7 +279,8 @@ class TableHelper {
        Log::info('File Import has been requested for table '.$tblNme.' using flat file '.$fltFle);
        // add job to queue
        dispatch(new FileImport($tblNme, $fltFlePath, $fltFle))->onQueue('importQueue');
-       dispatch(new CreateSearchIndex($tblNme))->onQueue('indexQueue');
+       dispatch(new CreateSearchIndex($tblNme))->onQueue('importQueue');
+       dispatch(new OptimizeSearchIndex($tblNme))->onQueue('importQueue');
        $message = [
          'content'  =>  $fltFle.' has been queued for import to '.$tblNme.' table. It will be available shortly.',
          'level'    =>  'success',

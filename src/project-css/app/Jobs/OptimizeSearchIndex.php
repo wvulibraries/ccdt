@@ -5,7 +5,7 @@
 
 namespace App\Jobs;
 
-use App\Adapters\SearchIndexAdapter;
+use App\Adapters\OptimizeSearchAdapter;
 use Illuminate\Bus\Queueable;
 use Illuminate\Http\Request;
 use Illuminate\Queue\SerializesModels;
@@ -13,7 +13,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Log;
 
-class CreateSearchIndex implements ShouldQueue
+class OptimizeSearchIndex implements ShouldQueue
 {
     use InteractsWithQueue, Queueable, SerializesModels;
 
@@ -33,7 +33,7 @@ class CreateSearchIndex implements ShouldQueue
     public function handle()
     {
         try{
-            $adapter = new SearchIndexAdapter;
+            $adapter = new OptimizeSearchAdapter;
             // Build search index on all records in table
             $adapter->process($this->tblNme);
         }catch(\Exception $e){

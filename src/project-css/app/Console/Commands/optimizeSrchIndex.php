@@ -2,25 +2,26 @@
 
 namespace App\Console\Commands;
 
-use App\Jobs\CreateSearchIndex;
+use App\Jobs\OptimizeSearchIndex;
+use App\Adapters\OptimizeSearchAdapter;
 use Illuminate\Console\Command;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 
-class createSrchIndex extends Command
+class optimizeSrchIndex extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'table:create:search {tablename}';
+    protected $signature = 'table:optimize:search {tablename}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Generate Search Index for all records in the table';
+    protected $description = 'Optimize Search Index In Records';
 
     /**
      * Create a new command instance.
@@ -39,6 +40,11 @@ class createSrchIndex extends Command
      */
     public function handle()
     {
-        dispatch(new CreateSearchIndex($this->argument('tablename')))->onQueue('importQueue');
+        //dispatch(new OptimizeSearchIndex($this->argument('tablename')))->onQueue('importQueue');
+
+        $adapter = new OptimizeSearchAdapter();
+        $adapter->process($this->argument('tablename'));
+
+        //new OptimizeSearchIndex($this->argument('tablename'));
     }
 }
