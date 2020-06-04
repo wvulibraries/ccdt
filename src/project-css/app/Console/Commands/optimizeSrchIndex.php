@@ -40,11 +40,7 @@ class optimizeSrchIndex extends Command
      */
     public function handle()
     {
-        //dispatch(new OptimizeSearchIndex($this->argument('tablename')))->onQueue('importQueue');
-
-        $adapter = new OptimizeSearchAdapter();
-        $adapter->process($this->argument('tablename'));
-
-        //new OptimizeSearchIndex($this->argument('tablename'));
+        dispatch(new OptimizeSearchIndex($this->argument('tablename')))->onQueue('importQueue');
+        //(new OptimizeSearchAdapter())->process($this->argument('tablename'));
     }
 }

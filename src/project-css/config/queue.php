@@ -41,6 +41,20 @@ return [
             'retry_after' => 90,
         ],
 
+        'importQueue' => [
+            'driver' => 'database',
+            'table' => 'jobs',
+            'queue' => 'importQueue',
+            'retry_after' => 90,
+        ],
+        
+        'indexQueue' => [
+            'driver' => 'database',
+            'table' => 'jobs',
+            'queue' => 'indexQueue',
+            'retry_after' => 90,
+        ],        
+
         'beanstalkd' => [
             'driver' => 'beanstalkd',
             'host' => 'localhost',
