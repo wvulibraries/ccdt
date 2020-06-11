@@ -38,6 +38,7 @@ class UpdateSearchIndex implements ShouldQueue
     {
         try{
             $adapter = new UpdateSearchAdapter;
+
             foreach ($this->records as $record) {
                 // Build search index on all records in table
                 $adapter->process($this->tblNme, $record->id, $record->srchindex);

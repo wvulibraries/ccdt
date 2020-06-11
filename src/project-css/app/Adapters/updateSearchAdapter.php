@@ -6,30 +6,11 @@
 namespace App\Adapters;
 
 use Illuminate\Support\Facades\DB;
-use Illuminate\Foundation\Bus\DispatchesJobs;
-
-use App\Jobs\UpdateSearchIndex;
-
 use App\Models\StopWords;
-
 use Log;
 
 class UpdateSearchAdapter {
-    private $items;
-
-    /**
-     * loop over search array and remove any words that
-     * are in the StopWords table.
-     * @param       array $search Input array
-     * @return      array of strings
-     */    
-    public function removeCommonWords() {
-      foreach($this->items as $key => $word) {
-        if (StopWords::isStopWord(strtolower($word))) {
-          unset($this->items[$key]);
-        }
-      }
-    }    
+    private $items;  
 
     /**
      * optimizes $this->items to be used in full text search
@@ -38,18 +19,15 @@ class UpdateSearchAdapter {
         // remove duplicate keywords from the srchIndex
         $this->items = array_unique($this->items);
 
-        // remove any items less than 2 characters
-        // as fulltext searches need at least 2 characters
-        $counter = 0;
-        foreach ($this->items as $value) {
-            if (strlen($value)<2) {
-                unset($this->items[ $counter ]);
-            }
-            $counter++;
+        // loop over each item
+        foreach ($this->items as $key => $word) {
+          // remove any items less than 2 characters
+          // as fulltext searches need at least 2 characters
+          // and remove any words that are in the StopWords table.
+          if ((strlen($word)<2) || (StopWords::isStopWord($word))) {
+            unset($this->items[$key]);
+          }
         }
-
-        // remove common words from search index
-        $this->removeCommonWords(); 
 
         return (implode(" ", $this->items));
     }        
@@ -64,8 +42,6 @@ class UpdateSearchAdapter {
         $this->items = explode(' ', (trim(preg_replace('/\s+/', ' ', $cleanString))));
   
         $index = $this->optimizeSrchIndex();
-        // echo '<pre>' , var_dump($index) , '</pre>';  
-        // die();
         
         DB::table($tblNme)
                 ->where('id', $id)

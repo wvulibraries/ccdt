@@ -22,7 +22,7 @@ class SearchIndexAdapter {
 
       // create srchindex by using mysql concat_ws
       $sql = 'UPDATE `'.$tblNme.'` SET srchindex = LOWER(CONCAT_WS(" ", `' . implode('`, `', $clmnLst) . '`))';
-      \DB::connection()->getPdo()->exec($sql); 
+      DB::connection()->getPdo()->exec($sql); 
     }
 
 }

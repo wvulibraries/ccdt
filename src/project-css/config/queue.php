@@ -15,7 +15,7 @@ return [
     |
     */
 
-    'default' => env('QUEUE_DRIVER', 'sync'),
+    'default' => env('QUEUE_DRIVER', 'database'),
 
     /*
     |--------------------------------------------------------------------------
@@ -41,17 +41,17 @@ return [
             'retry_after' => 90,
         ],
 
-        'importQueue' => [
+        'high' => [
             'driver' => 'database',
             'table' => 'jobs',
-            'queue' => 'importQueue',
+            'queue' => 'high',
             'retry_after' => 90,
         ],
         
-        'indexQueue' => [
+        'low' => [
             'driver' => 'database',
             'table' => 'jobs',
-            'queue' => 'indexQueue',
+            'queue' => 'low',
             'retry_after' => 90,
         ],        
 

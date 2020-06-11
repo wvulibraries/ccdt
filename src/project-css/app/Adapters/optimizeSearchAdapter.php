@@ -21,9 +21,7 @@ class OptimizeSearchAdapter {
       $this->tblNme = $tblNme;
 
       DB::table($tblNme)->orderBy('id')->chunk(1000, function ($records) {        
-          // using rand split updates between queues
-          //dispatch(new UpdateSearchIndex($this->tblNme, $records))->onQueue('indexQueue' . rand(0, 9));  
-          dispatch(new UpdateSearchIndex($this->tblNme, $records))->onQueue('indexQueue');  
+          dispatch(new UpdateSearchIndex($this->tblNme, $records))->onQueue('low');  
       });
     }
 

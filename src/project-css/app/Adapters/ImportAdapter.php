@@ -35,7 +35,7 @@ class ImportAdapter {
         $numItem = count($this->savedTkns) - 1;
         $this->savedTkns[ $numItem ] = $this->savedTkns[ $numItem ] . ' ' . $this->tkns[ 0 ];
         unset($this->tkns[ 0 ]);
-        return( (count($this->tkns) > 0) ? array_merge($this->savedTkns, $this->tkns) : $this->savedTkns );
+        $this->tkns = ( (count($this->tkns) > 0) ? array_merge($this->savedTkns, $this->tkns) : $this->savedTkns );
     }
 
     /**
@@ -51,39 +51,30 @@ class ImportAdapter {
      * @return string
      */
     public function prepareLine($curLine, $delimiter, $orgCount, $prcssd) {
-        // setup helper instances
-        $csvHelper = (new CSVHelper);
-        $stringHelper = (new customStringHelper);
-
         // Strip out Quotes that are sometimes seen in csv files around each item
         $curLine = str_replace('"', "", $curLine);
 
         // Tokenize the line
-        $this->tkns = $csvHelper->tknze($curLine, $delimiter);
+        $this->tkns = (new CSVHelper)->tknze($curLine, $delimiter);
 
         // Validate the tokens and filter them
-        foreach ($this->tkns as $key => $tkn) {
-          // trim the token
-          $tkns[ $key ] = trim($tkn);
-        }
+        $this->tkns = (new CSVHelper)->fltrTkns($this->tkns);
 
-        if (count($this->tkns) != $orgCount) {
-          // if lastErrRow is the previous row try to combine the lines
-          if (($this->lastErrRow == $prcssd - 1) && ($this->savedTkns != NULL)) {
-            $this->tkns = $stringHelper->mergeLines($this->savedTkns, $this->tkns);
+        // if lastErrRow is the previous row try to combine the lines
+        if ((count($this->tkns) != $orgCount) && ($this->lastErrRow == $prcssd) && ($this->savedTkns != NULL)) {
+            $this->mergeLines();
 
             // clear last saved line since we did a merge
             $this->lastErrRow = NULL;
             $this->savedTkns = NULL;
-          }
+        }
 
-          // if token count doesn't match what is expected save the tkns and last row position
-          else {
-            // save the last row position and the Tokenized row
-            $this->lastErrRow = $prcssd;
-            $this->savedTkns = $this->tkns;
-            return false;
-          }
+        // if token count doesn't match what is exptected save the tkns and last row position
+        if (is_array($this->tkns) && (count($this->tkns) != $orgCount)) {
+          // save the last row position and the Tokenized row
+          $this->lastErrRow = $prcssd;
+          $this->savedTkns = $this->tkns;
+          return false;
         }
 
         return true;
@@ -127,6 +118,9 @@ class ImportAdapter {
      * @return void
      */
     public function process($tblNme, $fltFlePath, $fltFleNme) {
+      $this->errorCount = 0;
+      $this->mergeCount = 0;
+
       $this->lastErrRow = NULL;
       $this->savedTkns = NULL;
 
@@ -201,7 +195,7 @@ class ImportAdapter {
         if (count($data) > 0) {
             //insert Record(s) into database
             $table->insertRecord($data);
-        }        
+        }  
 
       }
       else {

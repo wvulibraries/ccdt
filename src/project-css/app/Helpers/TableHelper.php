@@ -6,15 +6,18 @@
 
 namespace App\Helpers;
 
-use App\Jobs\CreateSearchIndex;
-use App\Jobs\FileImport;
-use App\Jobs\OptimizeSearchIndex;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Foundation\Bus\DispatchesJobs;
+
+use App\Jobs\CreateSearchIndex;
+use App\Jobs\FileImport;
+use App\Jobs\OptimizeSearchIndex;
+use App\Jobs\UpdateSearchIndex;
+
 use App\Models\Collection;
 use App\Models\CMSRecords;
 use App\Models\Table;
@@ -277,10 +280,12 @@ class TableHelper {
        $messages = [];
 
        Log::info('File Import has been requested for table '.$tblNme.' using flat file '.$fltFle);
+
        // add job to queue
-       dispatch(new FileImport($tblNme, $fltFlePath, $fltFle))->onQueue('importQueue');
-       dispatch(new CreateSearchIndex($tblNme))->onQueue('importQueue');
-       dispatch(new OptimizeSearchIndex($tblNme))->onQueue('importQueue');
+       dispatch(new FileImport($tblNme, $fltFlePath, $fltFle))->onQueue('high');
+       dispatch(new CreateSearchIndex($tblNme))->onQueue('high');
+       dispatch(new OptimizeSearchIndex($tblNme))->onQueue('high');
+
        $message = [
          'content'  =>  $fltFle.' has been queued for import to '.$tblNme.' table. It will be available shortly.',
          'level'    =>  'success',
