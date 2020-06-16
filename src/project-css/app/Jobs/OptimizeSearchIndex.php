@@ -5,12 +5,17 @@
 
 namespace App\Jobs;
 
-use App\Adapters\OptimizeSearchAdapter;
 use Illuminate\Bus\Queueable;
 use Illuminate\Http\Request;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
+
+use Illuminate\Support\Facades\DB;
+use Illuminate\Foundation\Bus\DispatchesJobs;
+
+use App\Jobs\OptimizeSearch;
+
 use Log;
 
 class OptimizeSearchIndex implements ShouldQueue
@@ -33,9 +38,20 @@ class OptimizeSearchIndex implements ShouldQueue
     public function handle()
     {
         try{
-            $adapter = new OptimizeSearchAdapter;
-            // Build search index on all records in table
-            $adapter->process($this->tblNme);
+            $recordCount = DB::table($this->tblNme)->count();
+            $recordsRemaining = true;
+            $lookupsCompleted = 0;
+            $chunkSize = 500;
+
+            while($recordsRemaining){
+                dispatch(new OptimizeSearch($this->tblNme, $chunkSize*$lookupsCompleted, $chunkSize))->onQueue('low');              
+
+                if($recordCount < $chunkSize + ($chunkSize*$lookupsCompleted)){
+                    $recordsRemaining = false;
+                }
+
+                $lookupsCompleted++;
+            }  
         }catch(\Exception $e){
             Log::error($e->getMessage());
         }          

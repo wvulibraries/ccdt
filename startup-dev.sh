@@ -8,10 +8,10 @@ php artisan key:generate
 # jobs do not start processing using this
 #nohup php artisan queue:work --queue=high, default, low --daemon --sleep=3 --tries=3 > /dev/null &
 
-nohup php artisan queue:work database --queue=high --daemon --sleep=3 --timeout=86400 --tries=3 > /dev/null &
+nohup php artisan queue:work database --queue=high,low --daemon --sleep=3 --timeout=86400 --tries=3 > /dev/null &
 nohup php artisan queue:work database --queue=low --daemon --sleep=3 --timeout=86400 --tries=3 > /dev/null &
 nohup php artisan queue:work database --queue=low --daemon --sleep=3 --timeout=86400 --tries=3 > /dev/null &
-nohup php artisan queue:work database --queue=default --daemon --sleep=3 --timeout=86400 --tries=3 > /dev/null &
+nohup php artisan queue:work database --queue=default,low --daemon --sleep=3 --timeout=86400 --tries=3 > /dev/null &
 
 # Clear generated config so phpunit can use css_testing as the database
 php artisan config:clear
