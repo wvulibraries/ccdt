@@ -86,8 +86,7 @@ class Table extends Model
                         case 'int':
                         case 'mediumint':
                         case 'bigint':
-                            return (new TableHelper)->setInteger($type[0]);
-                            break;                                      
+                            return (new TableHelper)->setInteger($type[0]);                                     
                     }
                 }
                 else {
