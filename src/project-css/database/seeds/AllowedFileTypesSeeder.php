@@ -10,7 +10,7 @@ class AllowedFileTypesSeeder extends Seeder
      * @return void
      */
     public function run() {
-        // insert stopwords into table
+        // insert file types into table
         $AllowedFileTypes = array("txt", "doc", "docx", "pdf", "xls", "xlsx", "ppt", "pptx", "jpg");
 
         foreach ($AllowedFileTypes as $key => $extension) {
