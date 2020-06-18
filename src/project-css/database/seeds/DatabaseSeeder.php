@@ -12,7 +12,6 @@ class DatabaseSeeder extends Seeder
     public function run() {
         // Call the user table seed
         $this->call(UsersTableSeeder::class);
-        $this->call(StopWordsSeeder::class);
         $this->call(AllowedFileTypesSeeder::class);
         $this->call(RecordTypesSeeder::class);      
     }
