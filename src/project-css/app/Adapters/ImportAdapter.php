@@ -162,6 +162,9 @@ class ImportAdapter {
         // Temporary store of items to be inserted into the
         $data = [];
 
+        // number of records to insert based on field count
+        $insertCount = 2000 * (32 / $orgCount);
+
         // For each line
         while ($curFltFleObj->valid()) {
           // Call prepareLine to process the next line of the file
@@ -178,10 +181,9 @@ class ImportAdapter {
               $prcssd += 1;
             }
 
-            // insert records once we reach 500
-            if (count($data) >= 2000) {
+            if (count($data) >= $insertCount) {
               //insert Record(s) into database
-              $table->insertRecord($data);
+              $result = $table->insertRecord($data);
 
               // clear $data array
               $data = [];
