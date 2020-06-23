@@ -406,19 +406,8 @@ class TableHelper {
         return $errors;
      }
 
-    /** 
-    * Import file into correct collection. Create a tablename if one is 
-    * not provided.
-    *
-    * @param string $strDir - is the storage folder
-    * @param string $file - file to be imported
-    * @param string $tblNme - new table name to be used
-    * @param integer $colID - the collection id 
-    * @param boolean $cms - true if uploaded files are apart of a cms set       
-    * @author Tracy A McCormick
-    * @return redirect to table index
-    */       
-    public function importFile($strDir, $file, $tblNme = null, $colID, $cms) {
+
+    public function setupNewTable($strDir, $file, $tblNme, $colID, $cms = false) {
       $csvHelper = (new CSVHelper);
 
       $fltFleAbsPth = $strDir.'/'.$file;
@@ -453,13 +442,32 @@ class TableHelper {
 
       $this->createTable($strDir, $file, $tblNme, $fieldNames, $fieldTypes, $colID);
 
-      // queue job for import
-      $this->dispatchImportJob($tblNme, $strDir, $file);
-
       $errorArray = [
         'error' => false,
         'errorList' => []
       ];
+
+      return ($errorArray);
+    }
+
+    /** 
+    * Import file into correct collection. Create a tablename if one is 
+    * not provided.
+    *
+    * @param string $strDir - is the storage folder
+    * @param string $file - file to be imported
+    * @param string $tblNme - new table name to be used
+    * @param integer $colID - the collection id 
+    * @param boolean $cms - true if uploaded files are apart of a cms set       
+    * @author Tracy A McCormick
+    * @return redirect to table index
+    */       
+    public function importFile($strDir, $file, $tblNme = null, $colID, $cms) {
+      $errorArray = $this->setupNewTable($strDir, $file, $tblNme, $colID, $cms);
+      if ($errorArray['error'] == true) { return $errorArray; }
+
+      // queue job for import
+      $this->dispatchImportJob($tblNme, $strDir, $file);
 
       return ($errorArray);
     }
