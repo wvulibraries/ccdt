@@ -8,21 +8,30 @@ class CMSHelperTest extends BrowserKitTestCase
   public $cmsHelper;
   public $collectionHelper;
 
+  private $colName;     
+
   public function setUp(): void {
     parent::setUp();
     $this->cmsHelper = new CMSHelper;  
     $this->collectionHelper = new CollectionHelper;
+
+    // Generate Collection Name
+    $this->colName = $this->testHelper->generateCollectionName();  
   }
 
-  // protected function tearDown(): void {
-  //       // Delete Test Collection
-  //       $this->collectionHelper->deleteCollection($collection->clctnName);  
-  //      parent::tearDown();
-  // }
+  protected function tearDown(): void {
+      // test tables, files and folders that were created
+      $this->testHelper->cleanupTestTables();
+
+      // Delete Test Collections
+      $this->testHelper->deleteTestCollections();         
+
+      parent::tearDown();
+  } 
 
     public function testgetCMSFields1A() {
       // Create Test Collection        
-      $collection = $this->createTestCollection('TestCollection', true);  
+      $collection = $this->testHelper->createCollection($this->colName, 1, true);  
 
       $fieldType = '1A';
       $header = array('Record Type', 'Constituent ID', 'Individual Type', 'Prefix', 'First Name', 'Middle Name', 'Last Name', 'Suffix', 'Appellation', 'Salutation', 'Date of Birth', 'No Mail Flag', 'Deceased Flag');
@@ -31,14 +40,11 @@ class CMSHelperTest extends BrowserKitTestCase
       // compare with the $header to verify we have what we expected
       $this->assertEquals($response, $header);
       $this->assertEquals(count( (array) $response), count( (array) $header));
-
-      // Delete Test Collection
-      $this->collectionHelper->deleteCollection($collection->clctnName);  
     }
     
     public function testgetCMSFields1BWithCMSType() {
       // Create Test Collection        
-      $collection = $this->createTestCollection('TestCollection', true, 2); 
+      $collection = $this->testHelper->createCollection($this->colName, 1, true, 2); 
       
       // verify cmsId is set to 2
       $this->assertEquals($collection->cmsId, 2);
@@ -49,15 +55,12 @@ class CMSHelperTest extends BrowserKitTestCase
 
       // compare with the $header to verify we have what we expected
       $this->assertEquals($response, $header);
-      $this->assertEquals(count( (array) $response), count( (array) $header));
-
-      // Delete Test Collection
-      $this->collectionHelper->deleteCollection($collection->clctnName);  
+      $this->assertEquals(count( (array) $response), count( (array) $header));  
     }      
 
     public function testgetCMSFields1B() {
       // Create Test Collection        
-      $collection = $this->createTestCollection('TestCollection', true);  
+      $collection = $this->testHelper->createCollection($this->colName, 1, true);  
 
       $fieldType = '1B';
       $header = array('Record Type', 'Constituent ID', 'Address ID', 'Address Type', 'Primary Flag', 'Default Address Flag', 'Title', 'Organization Name', 'Address line 1', 'Address line 2', 'Address line 3', 'Address line 4', 'City', 'State', 'Zip Code', 'Carrier Route', 'County', 'Country', 'District', 'Precinct', 'No Mail Flag', 'Agency Code');
@@ -66,14 +69,11 @@ class CMSHelperTest extends BrowserKitTestCase
       // in our record types 2 1B records exist both with 22 fields
       // function cannot determine which to use so null is returned.
       $this->assertNull($response);
-
-      // Delete Test Collection
-      $this->collectionHelper->deleteCollection($collection->clctnName);  
     }       
 
     public function testCreateCmsHeader() {
         // Create Test Collection        
-        $collection = $this->createTestCollection('TestCollection', true);     
+        $collection = $this->testHelper->createCollection($this->colName, 1, true);     
         
         // Random Field Count
         $fieldCount = rand(1, 50);
@@ -86,26 +86,23 @@ class CMSHelperTest extends BrowserKitTestCase
 
         // Verify First Array Item is correct
         $this->assertEquals($header[0], 'Field0');
-        
-        // Delete Test Collection
-        $this->collectionHelper->deleteCollection($collection->clctnName);  
     }
 
-    private function createTestCollection($name, $isCms, $cmsId = null) {
-        // Create Collection Test Data Array
-        $data = [
-          'isCms' => $isCms,
-          'name' => $name,
-        ];
+    // private function createTestCollection($name, $isCms, $cmsId = null) {
+    //     // Create Collection Test Data Array
+    //     $data = [
+    //       'isCms' => $isCms,
+    //       'name' => $name,
+    //     ];
 
-        // include $cmsId if not null
-        if ($cmsId != null) {
-          $data['cmsId'] = $cmsId;
-        }
+    //     // include $cmsId if not null
+    //     if ($cmsId != null) {
+    //       $data['cmsId'] = $cmsId;
+    //     }
 
-        // Call collection helper create
-        return($this->collectionHelper->create($data));         
-    }  
+    //     // Call collection helper create
+    //     return($this->collectionHelper->create($data));         
+    // }  
 
 
 

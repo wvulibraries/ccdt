@@ -12,15 +12,33 @@ class FileViewHelperTest extends BrowserKitTestCase
     protected $fileViewHelper;
     private $singlefilewithpath;
     public $collectionHelper;
-    public $tableHelper;    
+    public $tableHelper;
+    private $colName;
+    private $tableName;     
 
     public function setUp(): void {
         parent::setUp();
         $this->fileViewHelper = new FileViewHelper;
         $this->singlefilewithpath = '..\documents\BlobExport\indivletters\114561.txt';
         $this->tableHelper = new TableHelper;  
-        $this->collectionHelper = new CollectionHelper;         
+        $this->collectionHelper = new CollectionHelper; 
+        
+        // Generate Collection Name
+        $this->colName = $this->testHelper->generateCollectionName();
+
+        // Generate Table Name
+        $this->tableName = $this->testHelper->createTableName();         
     }
+
+    protected function tearDown(): void {
+        // test tables, files and folders that were created
+        $this->testHelper->cleanupTestTables();
+
+        // Delete Test Collections
+        $this->testHelper->deleteTestCollections();         
+
+        parent::tearDown();
+    }        
 
     public function testGetFolderName() {
       // Test with Correctly formatted path
@@ -43,15 +61,14 @@ class FileViewHelperTest extends BrowserKitTestCase
         $filename = $this->fileViewHelper->getFilename($this->singlefilewithpath);
 
         // create fake collection storage
-        $colNme = time();
-        $path = './storage/app/'.$colNme;
+        $path = './storage/app/'.$this->colName;
         mkdir($path);
         mkdir($path.'/'.$folder);
         // create empty file
         touch($path.'/'.$folder.'/'.$filename, time() - (60 * 60 * 24 * 5));
 
         // check that file exists using our function
-        $this->assertTrue($this->fileViewHelper->fileExists($colNme, $folder.'/'.$filename));
+        $this->assertTrue($this->fileViewHelper->fileExists($this->colName, $folder.'/'.$filename));
 
         // cleanup delete folders that we created
         File::deleteDirectory($path);  
@@ -62,15 +79,14 @@ class FileViewHelperTest extends BrowserKitTestCase
         $filename = $this->fileViewHelper->getFilename($this->singlefilewithpath);
 
         // create fake collection storage
-        $colNme = time();
-        $path = './storage/app/'.$colNme;
+        $path = './storage/app/'.$this->colName;
         mkdir($path);
         mkdir($path.'/'.$folder);
         // create empty file
         touch($path.'/'.$folder.'/'.$filename, time() - (60 * 60 * 24 * 5));
 
         // check that file exists using our function
-        $this->assertTrue($this->fileViewHelper->fileExistsInFolder($colNme, $this->singlefilewithpath));
+        $this->assertTrue($this->fileViewHelper->fileExistsInFolder($this->colName, $this->singlefilewithpath));
 
         // cleanup delete folders that we created
         File::deleteDirectory($path);     
@@ -78,15 +94,14 @@ class FileViewHelperTest extends BrowserKitTestCase
 
     public function testfileDoesNotExistsInFolder() {
         // create fake collection storage
-        $colNme = time();
         $folder = 'testfolder';
-        $path = './storage/app/'.$colNme;
+        $path = './storage/app/'.$this->colName;
 
         mkdir($path);
         mkdir($path.'/'.$folder);
 
         // check that file exists using our function
-        $this->assertFalse($this->fileViewHelper->fileExistsInFolder($colNme, $folder.'/'.'notarealfile.txt'));
+        $this->assertFalse($this->fileViewHelper->fileExistsInFolder($this->colName, $folder.'/'.'notarealfile.txt'));
 
         // cleanup delete folders that we created
         File::deleteDirectory($path);        
@@ -98,16 +113,14 @@ class FileViewHelperTest extends BrowserKitTestCase
     }
 
     public function testBuildFileLink() {
-        $colNme = time(); // random collection name
-        $output = $this->fileViewHelper->buildFileLink($colNme, $this->singlefilewithpath);
-        $this->assertEquals($colNme.'/indivletters/114561.txt', $output, 'buildFileLink failed to get generate the correct path');
+        $output = $this->fileViewHelper->buildFileLink($this->colName, $this->singlefilewithpath);
+        $this->assertEquals($this->colName.'/indivletters/114561.txt', $output, 'buildFileLink failed to get generate the correct path');
     }
 
     public function testBuildFileLinkWithoutFolder() {
-        $colNme = time(); // random collection name
         $fileName = '114561.txt';
-        $output = $this->fileViewHelper->buildFileLink($colNme, $fileName);
-        $this->assertEquals($colNme.'/'.$fileName, $output, 'buildFileLink failed to get generate the correct path');
+        $output = $this->fileViewHelper->buildFileLink($this->colName, $fileName);
+        $this->assertEquals($this->colName.'/'.$fileName, $output, 'buildFileLink failed to get generate the correct path');
     }
 
     public function testGetFileContents() {
@@ -126,10 +139,10 @@ class FileViewHelperTest extends BrowserKitTestCase
 
     public function testLocateFile() {
         // Create Test Collection        
-        $collection = $this->createTestCollection('TestCollection', false);
+        $collection = $this->testHelper->createCollection($this->colName, 1, false);
 
         // Create Test Table
-        $tableName = $this->createTestTable($collection, 'zillow.csv');
+        $tableName = $this->testHelper->createTestTable($collection, 'zillow.csv');
 
         //get table
         $table = Table::where('tblNme', $tableName)->first();
@@ -146,20 +159,14 @@ class FileViewHelperTest extends BrowserKitTestCase
 
         $path = $this->fileViewHelper->locateFile(1, $testUpload);
         $this->assertEquals($path, $collection->clctnName.'/'.'testing'.'/'.$testUpload);
-
-        // drop test table
-        Schema::dropIfExists($tableName);
-
-        // clear folder that was created with the collection
-        File::deleteDirectory('./storage/app'.'/'.$collection->clctnName);    
     }
 
     public function testLocateFilewithinvalidFile() {
         // Create Test Collection        
-        $collection = $this->createTestCollection('TestCollection', false);
+        $collection = $this->testHelper->createCollection($this->colName, 1, false);
 
         // Create Test Table
-        $tableName = $this->createTestTable($collection, 'zillow.csv');
+        $tableName = $this->testHelper->createTestTable($collection, 'zillow.csv');
 
         //get table
         $table = Table::where('tblNme', $tableName)->first();
@@ -171,20 +178,14 @@ class FileViewHelperTest extends BrowserKitTestCase
 
         $result = $this->fileViewHelper->locateFile(1, $testUpload);
         $this->assertFalse($result);
-
-        // drop test table
-        Schema::dropIfExists($tableName);
-
-        // clear folder that was created with the collection
-        File::deleteDirectory('./storage/app'.'/'.$collection->clctnName);  
   }
 
   public function testGetFilePathNoRecord() {
         // Call helper create
-        $collection = $this->createTestCollection('TestCollection', false);
+        $collection = $this->testHelper->createCollection($this->colName, 1, false);
 
         // Create Test Table
-        $tableName = $this->createTestTable($collection, 'test.dat');
+        $tableName = $this->testHelper->createTestTable($collection, 'test.dat');
 
         //get table
         $table = Table::where('tblNme', $tableName)->first();
@@ -201,26 +202,18 @@ class FileViewHelperTest extends BrowserKitTestCase
 
         $result = $this->fileViewHelper->getFilePath($table->id, 1, $testUpload);
 
-        $this->assertEquals($result, $collection->clctnName.'/'.$folder.'/'.$testUpload);
-
-        // drop test table
-        Schema::dropIfExists($tableName);
-
-        // clear folder that was created with the collection
-        File::deleteDirectory('./storage/app'.'/'.$collection->clctnName);          
+        $this->assertEquals($result, $collection->clctnName.'/'.$folder.'/'.$testUpload);         
   }
 
 //   public function testgetOriginalPath() {
-//         // Call helper create
-//         $collection = $this->createTestCollection('TestCollection', false);
+//         // Generate Test Collection
+//         $collection = $this->testHelper->createCollection($this->colName, 0);
 
 //         // Create Test Table
-//         $tableName = $this->createTestTable($collection, 'test.dat');
+//         $tableName = $this->testHelper->createTestTable($collection, 'test.dat');
 
 //         //get table
 //         $table = Table::where('tblNme', $tableName)->first();
-
-//         var_dump($table->all());
         
 //         // set fake filename to look for
 //         $testUpload = 'feds0101_dc_statehood_1990.doc';        
@@ -234,39 +227,30 @@ class FileViewHelperTest extends BrowserKitTestCase
 
 //         $result = $this->fileViewHelper->getOriginalPath($table->id, 1, $testUpload);
 
-//         $this->assertEquals($result, $collection->clctnName.'/'.$folder.'/'.$testUpload);
-
-//         // drop test table
-//         Schema::dropIfExists($tableName);
-
-//         // delete folder and contents that was created for the test
-//         File::deleteDirectory('./storage/app'.'/'.$collection->clctnName);          
+//         $this->assertEquals($result, $collection->clctnName.'/'.$folder.'/'.$testUpload);       
 //   }
 
-    private function createTestTable($collection, $fileName) {
-        // set storage location
-        $storageFolder = 'files/test';
-        
-        // Test Table Name
-        $tableName = 'test'.time();
+    // private function createTestTable($collection, $fileName) {
+    //     // set storage location
+    //     $storageFolder = 'files/test';
 
-        // Create Table and Dispatch file Import
-        $this->tableHelper->importFile($storageFolder, $fileName, $tableName, $collection->id, $collection->isCms);
+    //     // Create Table and Dispatch file Import
+    //     $this->tableHelper->importFile($storageFolder, $fileName, $this->tableName, $collection->id, $collection->isCms);
         
-        // return table name
-        return ($tableName);
-    }
+    //     // return table name
+    //     return ($this->tableName);
+    // }
     
-    private function createTestCollection($name, $isCms) {
-        // Create Collection Test Data Array
-        $data = [
-          'isCms' => $isCms,
-          'name' => $name
-        ];
+    // private function createTestCollection($name, $isCms) {
+    //     // Create Collection Test Data Array
+    //     $data = [
+    //       'isCms' => $isCms,
+    //       'name' => $name
+    //     ];
 
-        // Call collection helper create
-        return($this->collectionHelper->create($data));         
-    }  
+    //     // Call collection helper create
+    //     return($this->collectionHelper->create($data));         
+    // }  
 
 
 }

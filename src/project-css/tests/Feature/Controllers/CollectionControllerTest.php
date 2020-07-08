@@ -16,42 +16,50 @@
     // location of test files
     private $filePath = './storage/app';
 
-    public function setUp(): void {
-      parent::setUp();
-      //Artisan::call('migrate:refresh --seed');
+     private $colName;
+     private $colName2;   
 
-      //admin credentials
-      $this->adminEmail = "admin@admin.com";
-      $this->adminPass = "testing";
+     public function setUp(): void {
+          parent::setUp();
 
-      // find admin and test user accounts
-      $this->admin = User::where('name', '=', 'admin')->first();
-      $this->user = User::where('name', '=', 'test')->first();
+          //admin credentials
+          $this->adminEmail = "admin@admin.com";
+          $this->adminPass = "testing";
+
+          // find admin and test user accounts
+          $this->admin = User::where('name', '=', 'admin')->first();
+          $this->user = User::where('name', '=', 'test')->first();
+
+          // Generate Collection Name
+          $this->colName = $this->testHelper->generateCollectionName();
+          $this->colName2 = $this->colName+1;
     }
 
-    protected function tearDown(): void {
-      //Artisan::call('migrate:reset');
-      parent::tearDown();
-    }
+     protected function tearDown(): void {
+          // test tables, files and folders that were created
+          $this->testHelper->cleanupTestTables();
+
+          // Delete Test Collections
+          $this->testHelper->deleteTestCollections();         
+
+          parent::tearDown();
+     }     
 
     public function testCreateCollection() {
-      // Go to login page and enter credentials
-      $this->visit('/login')
-           ->type($this->adminEmail, 'email')
-           ->type($this->adminPass, 'password')
-           ->press('Login')
-           ->seePageIs('/home');
+          // Go to login page and enter credentials
+          $this->visit('/login')
+               ->type($this->adminEmail, 'email')
+               ->type($this->adminPass, 'password')
+               ->press('Login')
+               ->seePageIs('/home');
 
-      // Go to collection and create new collection
-      $this->visit('/collection')
-           ->see('Collection Name')
-           ->type('collection1', 'clctnName')
-           ->press('Create')
-           ->see('Create, import and manage collections here.')
-           ->see('collection1');
-
-      // clear folder that was created with the collection
-      rmdir($this->filePath.'/collection1');
+          // Go to collection and create new collection
+          $this->visit('/collection')
+               ->see('Collection Name')
+               ->type($this->colName, 'clctnName')
+               ->press('Create')
+               ->see('Create, import and manage collections here.')
+               ->see($this->colName);
     }
 
     public function testNonAdminCannotCreateCollection() {
@@ -80,84 +88,72 @@
     }
 
     public function testEditingCollectionName() {
-        // Create Test Data Array
-        $data = [
-          'isCms' => false,
-          'name' => 'collection1'
-        ];
+          // Create Test Data Array
+          $data = [
+               'isCms' => false,
+               'name' => $this->colName
+          ];
 
-        // Call helper create
-        $collection = (new CollectionHelper)->create($data);
+          // Call helper create
+          $collection = (new CollectionHelper)->create($data);
 
-        // While using a admin account try to rename collection name
-        $this->actingAs($this->admin)
-             ->withoutMiddleware()
-             ->post('collection/edit', [ 'id' => $collection->id, 'clctnName' => 'collection2' ]);
+          // While using a admin account try to rename collection name
+          $this->actingAs($this->admin)
+               ->withoutMiddleware()
+               ->post('collection/edit', [ 'id' => $collection->id, 'clctnName' => $this->colName2 ]);
 
-        //check if collection was renamed
-        $collection = Collection::find($collection->id);
-        $this->assertEquals('collection2', $collection->clctnName);
-
-        // delete storage folder
-        Storage::deleteDirectory($collection->clctnName);
-
-        // delete the collection
-        $collection->delete();               
+          //check if collection was renamed
+          $collection = Collection::find($collection->id);
+          $this->assertEquals($this->colName2, $collection->clctnName);     
     }
 
     public function testDisableThenEnableCollection() {
-        // Generate Test Collection
-        $collection = $this->testHelper->createCollection('collection1');
+          // Generate Test Collection
+          $collection = $this->testHelper->createCollection($this->colName);
 
-        // While using a admin account try to disable a collection with invalid name (should be redirected)
-        $this->actingAs($this->admin)
-             ->withoutMiddleware()        
-             ->post('collection/disable', [ 'id' => $collection->id, 'clctnName' => 'collection' ])->assertResponseStatus(302);
+          // While using a admin account try to disable a collection with invalid name (should be redirected)
+          $this->actingAs($this->admin)
+               ->withoutMiddleware()        
+               ->post('collection/disable', [ 'id' => $collection->id, 'clctnName' => 'collection' ])->assertResponseStatus(302);
 
-        // While using a admin account try to disable a collection
-        $this->actingAs($this->admin)
-              ->withoutMiddleware()    
-              ->post('collection/disable', [ 'id' => $collection->id, 'clctnName' => $collection->clctnName ]);
+          // While using a admin account try to disable a collection
+          $this->actingAs($this->admin)
+               ->withoutMiddleware()    
+               ->post('collection/disable', [ 'id' => $collection->id, 'clctnName' => $collection->clctnName ]);
 
-        // Verify Collection is disabled
-        $collection = Collection::find($collection->id);
-        $this->assertEquals('0', $collection->isEnabled);
+          // Verify Collection is disabled
+          $collection = Collection::find($collection->id);
+          $this->assertEquals('0', $collection->isEnabled);
 
-        // While using a admin account try to enable a collection with invalid name (should be redirected)
-        $this->actingAs($this->admin)
-             ->withoutMiddleware()    
-             ->post('collection/enable', [ 'id' => $collection->id, 'clctnName' => 'collection' ])->assertResponseStatus(302);
+          // While using a admin account try to enable a collection with invalid name (should be redirected)
+          $this->actingAs($this->admin)
+               ->withoutMiddleware()    
+               ->post('collection/enable', [ 'id' => $collection->id, 'clctnName' => 'collection' ])->assertResponseStatus(302);
 
-        // While using a admin account try to enable a collection
-        $this->actingAs($this->admin)
-             ->withoutMiddleware()    
-             ->post('collection/enable', [ 'id' => $collection->id ]);
+          // While using a admin account try to enable a collection
+          $this->actingAs($this->admin)
+               ->withoutMiddleware()    
+               ->post('collection/enable', [ 'id' => $collection->id ]);
 
-        $collection = Collection::find($collection->id);
-        $this->assertEquals('1', $collection->hasAccess);
-     
-        // clear folder that was created with the collection
-        rmdir($this->filePath.'/collection1');        
+          $collection = Collection::find($collection->id);
+          $this->assertEquals('1', $collection->hasAccess);   
     }
 
     public function testNonAdminDisableCollection() {
-        // Generate Test Collection
-        $collection = $this->testHelper->createCollection('collection1');
+          // Generate Test Collection
+          $collection = $this->testHelper->createCollection($this->colName);
 
-        // Verify Collection isEnabled
-        $collection = Collection::find($collection->id);
-        $this->assertEquals('1', $collection->isEnabled);
+          // Verify Collection isEnabled
+          $collection = Collection::find($collection->id);
+          $this->assertEquals('1', $collection->isEnabled);
 
-        // While using a admin account try to disable a collection
-        $this->actingAs($this->user)  
-             ->post('collection/disable', [ 'id' => $collection->id, 'clctnName' => $collection->clctnName ]);
+          // While using a admin account try to disable a collection
+          $this->actingAs($this->user)  
+               ->post('collection/disable', [ 'id' => $collection->id, 'clctnName' => $collection->clctnName ]);
 
-        // Verify Collection hasn't changed
-        $collection = Collection::find($collection->id);
-        $this->assertEquals('1', $collection->isEnabled);
-
-        // clear folder that was created with the collection
-        rmdir($this->filePath.'/collection1');
+          // Verify Collection hasn't changed
+          $collection = Collection::find($collection->id);
+          $this->assertEquals('1', $collection->isEnabled);
     }
 
   }

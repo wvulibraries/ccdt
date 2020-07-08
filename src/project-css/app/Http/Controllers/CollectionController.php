@@ -59,16 +59,16 @@ class CollectionController extends Controller
   *
   * @return view
   */    
-  public function show($cmsID) {
+  public function show($colID) {
     // find the collection
-    $thisClctn = Collection::findorFail($cmsID);  
+    $thisClctn = Collection::findorFail($colID);  
 
     // Get all the tables of this collection
     $tbls = $thisClctn->tables()->get();
 
     // redirect to show page
     return view('collection/show')->with('tbls', $tbls)
-                                  ->with('cmsID', $cmsID)
+                                  ->with('colID', $colID)
                                   ->with('clctnName', $thisClctn->clctnName);
   }   
   
@@ -77,12 +77,12 @@ class CollectionController extends Controller
   *
   * @return view
   */    
-  public function upload($cmsID) {
+  public function upload($colID) {
     // find the collection
-    $thisClctn = Collection::findorFail($cmsID);  
+    $thisClctn = Collection::findorFail($colID);  
 
     // redirect to show page
-    return view('collection/upload')->with('cmsID', $cmsID)
+    return view('collection/upload')->with('colID', $colID)
                                     ->with('clctnName', $thisClctn->clctnName);
   }   
 
@@ -177,9 +177,9 @@ class CollectionController extends Controller
   *
   * @return view
   */    
-  public function creator($cmsID) {
+  public function creator($colID) {
     // find the collection
-    $thisClctn = Collection::findorFail($cmsID);  
+    $thisClctn = Collection::findorFail($colID);  
 
     if ($thisClctn->isCms) {
       // Get all the tables of this collection
@@ -187,7 +187,7 @@ class CollectionController extends Controller
 
       // redirect to creators page
       return view('collection/creator')->with('tbls', $tbls)
-                                    ->with('cmsID', $cmsID)
+                                    ->with('colID', $colID)
                                     ->with('clctnName', $thisClctn->clctnName);
     }
 

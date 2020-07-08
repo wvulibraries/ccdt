@@ -42,7 +42,7 @@ class CMSHelper {
         // if only one item is found we return that result
         if (count($response) == 1) {
           // set cmsID in Collection if not already set
-          if ($thisClctn->cmdId == null) {
+          if ($thisClctn->cmsId == null) {
             $thisClctn->setCMSId($collctnId, $response[0]->cmsId);
           }
 
@@ -63,7 +63,7 @@ class CMSHelper {
      public function cmsHeader($collctnId, $recordType = null, $fieldCount) {
        $header = null;
        
-       // verify $schema is not null
+       // verify $recordType is not null
        if ($recordType != null) {
         // get header from database pass record type and detected field count
         $header = $this->getCMSFields($collctnId, $recordType, $fieldCount);

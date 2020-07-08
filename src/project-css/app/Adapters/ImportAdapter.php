@@ -179,7 +179,7 @@ class ImportAdapter {
 
               // Update the counter if the line was inserted
               $prcssd += 1;
-            }
+            } 
 
             if (count($data) >= $insertCount) {
               //insert Record(s) into database

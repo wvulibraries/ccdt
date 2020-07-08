@@ -74,10 +74,33 @@ class CSVHelper {
 
        // Return the filtered tokens
        return $tkns;
+     }    
+
+     public function createFltFleObj($fltFleAbsPth) {
+       if (Storage::has($fltFleAbsPth) == false) {
+         // If the file doesn't exists return with error
+         return false;
+       }
+
+       // create flt file object
+       $fltFleObj = new \SplFileObject(\storage_path()."/app/".$fltFleAbsPth);
+
+       // Create a finfo instance
+       $fleInf = new \finfo(FILEINFO_MIME_TYPE);
+
+       // Get the file type
+       $fleMime = $fleInf->file($fltFleObj->getRealPath());
+
+       // Check the mimetype
+       if (!str_is($fleMime, "text/plain")) {
+         return false;
+       }
+       
+       return $fltFleObj;
      }
 
      /**
-      * Returns Multideminsional Array
+      * Returns Multidimensional Array
       * function determines if the field is numeric or string type
       * along with the max character count detected in the column
       *
@@ -89,32 +112,9 @@ class CSVHelper {
       * @return Array that contains type and character count for each detected field
       */
      public function checkFile($hasheader, $fltFleAbsPth, $readCount) {
-       // 1. Get the flatfile instance
-       // Check if the file exists
-       if (!Storage::has($fltFleAbsPth)) {
-         // If the file doesn't exists return with error
-         return false;
-       }
-       // Create an instance for the file
-       $fltFleObj = new \SplFileObject(\storage_path()."/app/".$fltFleAbsPth);
+       $fltFleObj = $this->createFltFleObj($fltFleAbsPth);
 
-       // 2. Validate the file type
-       // Create a finfo instance
-       $fleInf = new \finfo(FILEINFO_MIME_TYPE);
-
-       // Get the file type
-       $fleMime = $fleInf->file($fltFleObj->getRealPath());
-
-       // Check the mimetype
-       if (!str_is($fleMime, "text/plain")) {
-         // If the file isn't a text file return false
-         return false;
-       }
-
-       // Check if the file is empty
-       if (!$this->isEmpty($fltFleObj)>0) {
-         return false;
-       }
+       if ($fltFleObj == false) { return false; }
 
        $hasheader ? $fltFleObj->seek(1) : $fltFleObj->seek(0);
 
@@ -141,6 +141,7 @@ class CSVHelper {
          // Validate the tokens and filter them
          $tkns = $this->fltrTkns($tkns);
 
+         // Set check array to all numeric values for field count
          $fieldcount = count($tkns);
          if (count($checkArray) < $fieldcount) {
            for ($pos = count($checkArray); $pos < $fieldcount; $pos++) {
@@ -150,9 +151,12 @@ class CSVHelper {
          }
 
          foreach($tkns as $x=>$x_value) {
+           //var_dump($checkArray[$x][1] . ' ' . $x_value . ' ' . strlen($x_value));
+           //die();  
+
            // change type if we detect any that the string isn't numeric
            if (is_numeric($x_value) && ($x_value != "")) {
-             $checkArray[$x][0] = 1;
+             $checkArray[$x][0] = 1;           
            }
            // save character count if higher than last pass
            if ($checkArray[$x][1] < strlen($x_value)) {
@@ -161,6 +165,7 @@ class CSVHelper {
          }
 
        }
+
        // Returning detected fields
        return $checkArray;
      }
@@ -185,44 +190,44 @@ class CSVHelper {
          {
            // if integer is detected and character count is greater than
            // 10 we will store it as text
-           if (($x_value[0] == 1) && ($x_value[1] > 10)) {
-             $x_value[0] = 0;
-           }
+          //  if (($x_value[0] == 1) && ($x_value[1] > 20)) {
+          //    $x_value[0] = 0;
+          //  }
 
-           if ($x_value[0] == 0) {
-             switch ($x_value[1]) {
-                 case 0:
-                 case $x_value[1] < 30:
-                     array_push($fieldType, ['string', 'default', $x_value[1]]);
-                     break;
-                 case $x_value[1] < 150:
-                     array_push($fieldType, ['string', 'medium', $x_value[1]]);
-                     break;
-                 case $x_value[1] < 500:
-                     array_push($fieldType, ['string', 'big', $x_value[1]]);
-                     break;
-                 case $x_value[1] < 2000:
-                     array_push($fieldType, ['text', 'default', $x_value[1]]);
-                     break;
-                 case $x_value[1] < 8000:
-                     array_push($fieldType, ['text', 'medium', $x_value[1]]);
-                     break;
-                 default:
-                     array_push($fieldType, ['text', 'big', $x_value[1]]);
-             }
-           }
-           elseif ($x_value[0] == 1) {
-             switch ($x_value[1]) {
-                 case $x_value[1] <= 2:
-                   array_push($fieldType, ['integer', 'default', $x_value[1]]);
-                   break;
-                 case $x_value[1] <= 7:
-                   array_push($fieldType, ['integer', 'medium', $x_value[1]]);
-                   break;
-                 default:
-                     array_push($fieldType, ['integer', 'big', $x_value[1]]);
-             }
-           }
+          if ($x_value[0] == 0) {
+            switch ($x_value[1]) {
+              case 0:
+              case $x_value[1] < 30:
+                  array_push($fieldType, ['string', 'default', $x_value[1]]);
+                  break;
+              case $x_value[1] < 150:
+                  array_push($fieldType, ['string', 'medium', $x_value[1]]);
+                  break;
+              case $x_value[1] < 500:
+                  array_push($fieldType, ['string', 'big', $x_value[1]]);
+                  break;
+              case $x_value[1] < 2000:
+                  array_push($fieldType, ['text', 'default', $x_value[1]]);
+                  break;
+              case $x_value[1] < 8000:
+                  array_push($fieldType, ['text', 'medium', $x_value[1]]);
+                  break;
+              default:
+                  array_push($fieldType, ['text', 'big', $x_value[1]]);
+            }
+          }
+          elseif ($x_value[0] == 1) {
+            switch ($x_value[1]) {
+              case $x_value[1] < 4:
+                array_push($fieldType, ['integer', 'default', $x_value[1]]);                  
+                break;              
+              case $x_value[1] < 8:
+                array_push($fieldType, ['integer', 'medium', $x_value[1]]);                  
+                break;
+              default:
+                array_push($fieldType, ['integer', 'big', $x_value[1]]);
+            }
+          }
        }
 
        return $fieldType;
@@ -234,7 +239,7 @@ class CSVHelper {
       * @param integer $fieldCount Contains number of fields Requried for the Table
       *
       * @author Tracy A. McCormick <tam0013@mail.wvu.edu>
-      * @return Array
+      * @return Array of generated headers
       */    
      public function generateHeader($fieldCount) {
        $header = array();
@@ -242,36 +247,6 @@ class CSVHelper {
          array_push($header, 'Field'.$pos);
        }
        return $header;
-     }
-
-     /**
-     * return the number of lines in a file
-     * 
-     * @param \SplFileObject $fltFleObj
-     * @return integer $len
-     */
-     public function isEmpty($fltFleObj) {
-       // Before anything set to seek first line
-       $fltFleObj->seek(0);
-
-       // Variable to count the length
-       $len = 0;
-
-       // Loop till EOF
-       while (!$fltFleObj->eof()) {
-         // Check if the file has at least one line
-         if ($len>=1) {
-           // Break here so that it's not reading huge files
-           break;
-         }
-         // Increament variable
-         $len += 1;
-         // Seek the next item
-         $fltFleObj->next();
-       }
-
-       // Return the length
-       return $len;
      }
 
      /**
@@ -286,29 +261,10 @@ class CSVHelper {
      * @return array of field headers
      */
      public function schema($fltFlePth) {
-       // 1. Get the flatfile instance
-       // Check if the file exists
-       if (!Storage::has($fltFlePth)) {
-         // If the file doesn't exists return with error
-         return false;
-       }
-       // Create an instance for the file
-       $fltFleObj = new \SplFileObject(\storage_path()."/app/".$fltFlePth);
+       // create flat file object
+       $fltFleObj = $this->createFltFleObj($fltFlePth);
 
-       // 2. Validate the file type
-       // Create a finfo instance
-       $fleInf = new \finfo(FILEINFO_MIME_TYPE);
-       // Get the file type
-       $fleMime = $fleInf->file($fltFleObj->getRealPath());
-       // Check the mimetype
-       if (!str_is($fleMime, "text/plain")) {
-         // If the file isn't a text file return false
-         return false;
-       }
-       // Check if the file is empty
-       if (!$this->isEmpty($fltFleObj)>0) {
-         return false;
-       }
+       if ($fltFleObj == false) { return false; }
 
        // 3. Tokenize the current line
        // Get the first line as the header
@@ -325,20 +281,5 @@ class CSVHelper {
 
        // Returning tokens
        return $tkns;
-     }
-
-    //  /**
-    //   *
-    //   * @author Tracy A. McCormick <tam0013@mail.wvu.edu>
-    //   */
-    //  public function createFlatTable($storageFolder, $thsFltFile, $collctnId, $tblNme) {
-    //    // detect fields we pass true if we have a header row,
-    //    // file location, number of rows to check
-    //    $fieldTypes = $this->determineTypes(true, $storageFolder.'/'.$thsFltFile, 10000);
-
-    //    // get 1st row from csv file
-    //    $schema = $this->schema($storageFolder.'/'.$thsFltFile);
-
-    //    (new TableHelper)->createTable($storageFolder, $thsFltFile, $tblNme, $schema, $fieldTypes, $collctnId);
-    //  }     
+     }    
 }

@@ -1,5 +1,5 @@
 <?php
-  # app/tests/Unit/controllers/ImportAdapterControllerUnitTest.php
+  # app/tests/Unit/Adapters/importAdapterControllerUnitTest.php
 
   use Illuminate\Support\Facades\Storage;
   use App\Adapters\ImportAdapter;
@@ -16,80 +16,105 @@
     public $tableHelper;
     public $importAdapter;
 
+    private $colName;
+    private $tableName;       
+
     public function setUp(): void {
       parent::setUp();
       $this->collectionHelper = new CollectionHelper;
       $this->tableHelper = new TableHelper;
       $this->importAdapter = new ImportAdapter;
+
+      // Generate Collection Name
+      $this->colName = $this->testHelper->generateCollectionName();
+
+      // Generate Table Name
+      $this->tableName = $this->testHelper->createTableName();       
+    } 
+    
+    protected function tearDown(): void {
+        // test tables, files and folders that were created
+        $this->testHelper->cleanupTestTables();
+
+        // Delete Test Collections
+        $this->testHelper->deleteTestCollections();   
+        
+        // Delete Test Files
+        $this->testHelper->cleanupTestUploads(['empty.csv', '50000 Sales Records.csv', 'test.dat']);
+
+        parent::tearDown();
     }    
 
     public function testProcessEmptyFile() {
         // passing a empty file should throw an exception
         $path = './storage/app';
         $folder = 'flatfiles';
-        $fileName = 'empty.csv';
-        $collectionName = 'collection1';
-        $tableName = 'testtable1';
+        $file = 'empty.csv';
 
-        $this->testHelper->createCollectionWithTable($collectionName, $tableName);
+        $this->testHelper->createCollectionWithTable($this->colName, $this->tableName);
 
-        $emptyFile = $path.'/'.$folder.'/'.$fileName;
+        $emptyFile = $path.'/'.$folder.'/'.$file;
         touch($emptyFile);
         try {
-          $this->importAdapter->process($tableName, $folder, $fileName);
+          $this->importAdapter->process($this->tableName, $folder, $file);
         } catch (Exception $e) {
           $this->assertEquals("Cannot Import a Empty File.", $e->getMessage());
         }
-        unlink($emptyFile);
-        
-        // drop testtable1
-        \Schema::drop($tableName);
-
-        // clear folder that was created with the collection
-        File::deleteDirectory($this->filePath.'/'.$collectionName);
-
-        // Delete Test Collection
-        $this->collectionHelper->deleteCollection($collectionName);        
+        unlink($emptyFile);       
     }
 
-    public function testProcessFile() {
+    public function testProcessFileLargeTestCSV() {
         // passing a empty file should throw an exception
         $folder = 'files/test';
-        $fileName = 'mlb_players.csv';
-        $collectionName = 'collection1';
-        $tableName = 'testtable1';
+        $file = '50000 Sales Records.csv';
 
         // Create Collection Test Data Array
         $data = [
           'isCms' => false,
-          'name' => $collectionName
+          'name' => $this->colName
         ];
 
         // Call collection helper create
         $thisClctn = $this->collectionHelper->create($data);
 
         // Call table helper create empty table
-        $this->tableHelper->setupNewTable($folder, $fileName, $tableName, $thisClctn->id);
+        $this->tableHelper->setupNewTable($folder, $file, $this->tableName, $thisClctn->id);
 
         // Call import adapter process
-        $this->importAdapter->process($tableName, $folder, $fileName);
-
-        //$this->tableHelper->importFile($folder, $fileName, $tableName, $thisClctn->id, $thisClctn->isCms);     
+        $this->importAdapter->process($this->tableName, $folder, $file);     
 
         // get newly created table
         $table = Table::where('id', '1')->first();
 
         // Assert table was created
-        $this->assertEquals($table->id, '1');            
-        
-        // drop testtable1
-        \Schema::drop($tableName);
+        $this->assertEquals($table->id, '1');                    
+    } 
 
-        // clear folder that was created with the collection
-        File::deleteDirectory($this->filePath.'/'.$collectionName);
+    public function testProcessFileWithSplitRecord() {
+        // passing a empty file should throw an exception
+        $folder = 'files/test';
+        $file = 'test.dat';
 
-        // Delete Test Collection
-        $this->collectionHelper->deleteCollection($collectionName);            
+        // Create Collection Test Data Array
+        $data = [
+          'isCms' => true,
+          'name' => $this->colName
+        ];
+
+        // Call collection helper create
+        $thisClctn = $this->collectionHelper->create($data);
+
+        // Call table helper create empty table
+        $this->tableHelper->setupNewTable($folder, $file, $this->tableName, $thisClctn->id);
+
+        // Call import adapter process
+        $this->importAdapter->process($this->tableName, $folder, $file);     
+
+        // get newly created table
+        $table = Table::where('id', '1')->first();
+
+        // Assert table was created
+        $this->assertEquals($table->id, '1');                    
     }    
 
   }

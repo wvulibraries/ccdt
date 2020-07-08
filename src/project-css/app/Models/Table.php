@@ -95,6 +95,8 @@ class Table extends Model
                 }
             }
         }
+        // return false if field not found
+        return false;
     }
 
      /**

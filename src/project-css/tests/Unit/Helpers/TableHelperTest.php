@@ -23,7 +23,7 @@ class TableHelperTest extends BrowserKitTestCase
         $fileName = '1A-random.tab';  
 
         // Create Test Collection        
-        $collection = $this->createTestCollection('TestCollection', true);     
+        $collection = $this->testHelper->createCollection('TestCollection', 1, true);     
         
         // Test Table Name
         $tableName = 'test'.time();
@@ -52,7 +52,7 @@ class TableHelperTest extends BrowserKitTestCase
         $fileName = 'zillow.csv'; 
 
         // Create Test Collection        
-        $collection = $this->createTestCollection('TestCollection', false);
+        $collection = $this->testHelper->createCollection('TestCollection', 1, false);
         
         // Test Table Name
         $tableName = 'test'.time();
@@ -75,8 +75,8 @@ class TableHelperTest extends BrowserKitTestCase
 
     public function testSetTableInCollection() {
         // Create Test Collection(s)        
-        $collection1 = $this->createTestCollection('TestCollection1', false);
-        $collection2 = $this->createTestCollection('TestCollection2', false);
+        $collection1 = $this->testHelper->createCollection('TestCollection1', 1, false);
+        $collection2 = $this->testHelper->createCollection('TestCollection2', 1, false);
 
         // Create Test Table
         $tableName = $this->createTestTable($collection1);
@@ -124,7 +124,7 @@ class TableHelperTest extends BrowserKitTestCase
 
     private function checkFieldChange($field, $type, $size) {
         // Create Test Collection        
-        $collection = $this->createTestCollection('TestCollection', false);
+        $collection = $this->testHelper->createCollection('TestCollection', 1, false);
 
         // Create Test Table
         $tableName = $this->createTestTable($collection);
@@ -171,15 +171,15 @@ class TableHelperTest extends BrowserKitTestCase
         return ($tableName);
     }
     
-    private function createTestCollection($name, $isCms) {
-        // Create Collection Test Data Array
-        $data = [
-          'isCms' => $isCms,
-          'name' => $name
-        ];
+    // private function createTestCollection($name, $isCms) {
+    //     // Create Collection Test Data Array
+    //     $data = [
+    //       'isCms' => $isCms,
+    //       'name' => $name
+    //     ];
 
-        // Call collection helper create
-        return($this->collectionHelper->create($data));         
-    }
+    //     // Call collection helper create
+    //     return($this->collectionHelper->create($data));         
+    // }
 
 }

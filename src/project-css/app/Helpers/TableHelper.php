@@ -222,17 +222,13 @@ class TableHelper {
     public function changeTableField($tblNme, $curColNme, $curColType, $curColSze) {        
         switch (strtolower($curColType)) {
             case 'string':
-                // $this->changeToStringField($tblNme, $curColNme, $curColSze);
                 $this->schemaChangeToStringField($tblNme, $curColNme, $curColSze);
                 break;
             case 'text':
-                // $this->changeToTextField($tblNme, $curColNme, $curColSze);
                 $this->schemaChangeToTextField($tblNme, $curColNme, $curColSze);
                 break;
-            case 'integer':
+            default:
                 $this->changeToIntegerField($tblNme, $curColNme, $curColSze);
-                //$this->schemaChangeToIntegerField($table, $curColNme, $curColSze);
-                break;
         }
     }
 
@@ -391,22 +387,30 @@ class TableHelper {
     * @author Tracy A McCormick
     * @return error array
     */         
-     public function selectFileAndImport($data) {
-        // array for keeping errors that we will send to the user
-        $errors = [];
+    public function selectFileAndImport($data) {
+      // array for keeping errors that we will send to the user
+      $errors = [];
 
-        $result = $this->importFile($data['strDir'], $data['fltFile'], $data['tableName'], $data['colID'], $data['cms']);
-        
-        // if error in importing push returned error to $errors
-        if ($result['error']) {
-          array_push($errors, $result['errorList']);
-        }   
+      $result = $this->importFile($data['strDir'], $data['fltFile'], $data['tableName'], $data['colID'], $data['cms']);
+      
+      // if error in importing push returned error to $errors
+      if ($result['error']) {
+        array_push($errors, $result['errorList']);
+      }   
 
-        // return error array so they can be displayed to the user in the view
-        return $errors;
-     }
+      // return error array so they can be displayed to the user in the view
+      return $errors;
+    }
 
-
+    /** 
+    * @param string $strDir - is the storage folder
+    * @param string $file - file to be imported
+    * @param string $tblNme - new table name to be used
+    * @param integer $colID - the collection id 
+    * @param boolean $cms - true if uploaded files are apart of a cms set   
+    * @author Tracy A McCormick
+    * @return $errorArray
+    */    
     public function setupNewTable($strDir, $file, $tblNme, $colID, $cms = false) {
       $csvHelper = (new CSVHelper);
 
@@ -460,7 +464,7 @@ class TableHelper {
     * @param integer $colID - the collection id 
     * @param boolean $cms - true if uploaded files are apart of a cms set       
     * @author Tracy A McCormick
-    * @return redirect to table index
+    * @return $errorArray
     */       
     public function importFile($strDir, $file, $tblNme = null, $colID, $cms) {
       $errorArray = $this->setupNewTable($strDir, $file, $tblNme, $colID, $cms);

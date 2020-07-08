@@ -95,58 +95,6 @@ class CustomStringHelper {
       return ($foundFiles);
     }
 
-    /**
-     * takes a string and prepares it to be used as a search index for fulltext search
-     * @param string $curLine
-     * @return string
-     */
-    public function createSrchIndex($curLine) {
-      // remove extra characters replacing them with spaces
-      // also remove .. that is in the filenames
-      $cleanString = preg_replace('/[^A-Za-z0-9._ ]/', ' ', str_replace('..', '', $curLine));
-
-      // remove extra spaces and make string all lower case
-      $cleanString = strtolower(preg_replace('/\s+/', ' ', $cleanString));
-
-      // Convert String to Array
-      $srchArr = explode(' ', $cleanString);
-
-      // remove common words from the srchArr
-      $srchArr = $this->removeCommonWords($srchArr);
-
-      // remove any items less than 2 characters
-      // as fulltext searches need at least 2 characters
-      $counter = 0;
-      foreach ($srchArr as $value) {
-        if (strlen($value)<2) {
-          unset($srchArr[ $counter ]);
-        }
-       $counter++;
-      }
-
-      // remove duplicate keywords from the srchIndex
-      $srchArr = array_unique($srchArr);
-
-      return(implode(' ', $srchArr));
-    }
-    
-     /**
-     * Takes 2 arrays of tokens and merges them.
-     * Designed around the Rockefeller data their was instances where a
-     * incorrect character caused a break in reading the line. When this 
-     * is detected due to a inconsistent field count we will attempt to 
-     * merge the 2 lines.
-     * @param array $tkns1
-     * @param array $tkns2
-     * @return array
-     */    
-    public function mergeLines($tkns1, $tkns2) {
-        $numItem = count($tkns1) - 1;
-        $tkns1[ $numItem ] = $tkns1[ $numItem ] . ' ' . $tkns2[ 0 ];
-        unset($tkns2[ 0 ]);
-        return( (count($tkns2) > 0) ? array_merge($tkns1, $tkns2) : $tkns1 );
-    }
-
      /**
      * Takes string and converts spaces to _, removes special characters,
      * and converts string to lower case characters.

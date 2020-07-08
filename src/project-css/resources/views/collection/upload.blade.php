@@ -6,7 +6,7 @@
   <!-- Heading -->
   <div class="container adminHeading" name="adminHeading" role="banner">
     <span class="text-center">
-      <h1><a href="{{ url('/upload', $cmsID) }}">Upload Linked File(s)</a></h1>
+      <h1><a href="{{ url('/upload', $colID) }}">Upload Linked File(s)</a></h1>
       <p>Please upload files that will be linked to this collection.</p>
     </span>
   </div>
@@ -25,7 +25,7 @@
             <div class="panel panel-default formPanel">
                 <div class="panel-heading"><h2>Upload files to {{$clctnName}} Collection</h2></div>
                   <div class="panel-body">
-                      <form class="form-horizontal" role="form" method="POST" enctype="multipart/form-data" action="{{ url('/upload', ['curCol' => $cmsID]) }}">
+                      <form class="form-horizontal" role="form" method="POST" enctype="multipart/form-data" action="{{ url('/upload', ['curCol' => $colID]) }}">
                           {{ csrf_field() }}
                           <!-- upload folder name -->
                           <div class="form-group{{ $errors->has('upFldNme') ? ' has-error' : '' }}">

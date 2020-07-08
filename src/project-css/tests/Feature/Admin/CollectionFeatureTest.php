@@ -4,159 +4,158 @@
 
     class CollectionFeatureTest extends BrowserKitTestCase
     {
-        private $admin;   
+        private $admin;  
+
+        private $colName;
+        private $tableName;
         
         // location of test files
         private $filePath = './storage/app';
 
         public function setUp(): void {
-            parent::setUp();
+          parent::setUp();
 
-            // find admin and test user accounts
-            $this->admin = User::where('name', '=', 'admin')->first();
+          // find admin and test user accounts
+          $this->admin = User::where('name', '=', 'admin')->first();
+
+          // Generate Collection Name
+          $this->colName = $this->testHelper->generateCollectionName();
+
+          // Generate Table Name
+          $this->tableName = $this->testHelper->createTableName();
         }
+
+        protected function tearDown(): void {
+            // test tables, files and folders that were created
+            $this->testHelper->cleanupTestTables();
+
+            // Delete Test Collections
+            $this->testHelper->deleteTestCollections();         
+
+            parent::tearDown();
+        }         
         
         /** @test */
         public function it_can_enable_a_collection_with_tables()
         {
-            // Generate Test Collection
-            $this->testHelper->createDisabledCollectionWithTable('collection1', 'testtable1');
+          // Generate Test Collection
+          $this->testHelper->createDisabledCollectionWithTable($this->colName, $this->tableName);
 
-            // Go to collection page and enable collection
-            $this->actingAs($this->admin)
-                 ->visit('/collection')
-                 ->see('Collection(s)')
-                 ->see('Create, import and manage collections here.')
-                 ->see('collection1')
-                 ->see('Enable');
+          // Go to collection page and enable collection
+          $this->actingAs($this->admin)
+               ->visit('/collection')
+               ->see('Collection(s)')
+               ->see('Create, import and manage collections here.')
+               ->see($this->colName)
+               ->see('Enable');
 
-            // Go to collection page and enable collection1
-            $this->actingAs($this->admin)
-                 ->visit('/collection')
-                 ->click('Enable')
-                 ->press('Confirm')
-                 ->see('Disable');  
+          // Go to collection page and enable collection
+          $this->actingAs($this->admin)
+               ->visit('/collection')
+               ->click('Enable')
+               ->press('Confirm')
+               ->see('Disable'); 
                  
-            // Check that testtable1 is not shown
-            $this->actingAs($this->admin)
-                 ->visit('/table')
-                 ->see('Table(s)');  
-                 
-            // drop testtable1
-            \Schema::drop('testtable1');
-
-            // clear folder that was created with the collection
-            rmdir($this->filePath.'/collection1');
+          // Check that testtable1 is not shown
+          $this->actingAs($this->admin)
+               ->visit('/table')
+               ->see('Table(s)')
+               ->see($this->tableName);  
         }        
 
         /** @test */
         public function it_can_disable_a_collection_with_table()
         {
-            // Generate Test Collection with a table
-            $collection = $this->testHelper->createCollectionWithTable('collection1', 'testtable1');
+          // Generate Test Collection with a table
+          $collection = $this->testHelper->createCollectionWithTable($this->colName, $this->tableName);
 
-            // Go to collection page and see that collection1 exists
-            $this->actingAs($this->admin)
-                 ->visit('/collection')
-                 ->see('Collection Name')
-                 ->see('Create, import and manage collections here.')
-                 ->see('collection1')
-                 ->see('Add Tables')
-                 ->see('Edit')
-                 ->see('Disable');
+          // Go to collection page and see that collection exists
+          $this->actingAs($this->admin)
+               ->visit('/collection')
+               ->see('Collection Name')
+               ->see('Create, import and manage collections here.')
+               ->see($this->colName)
+               ->see('Add Tables')
+               ->see('Edit')
+               ->see('Disable');
 
-            // Check that testtable1 is shown
-            $this->actingAs($this->admin)
-                 ->visit('/table')
-                 ->see('testtable1');   
+          // Check that testtable1 is shown
+          $this->actingAs($this->admin)
+               ->visit('/table')
+               ->see($this->tableName);   
 
-            // Go to collection page and disable collection1
-            $this->actingAs($this->admin)
-                 ->visit('/collection')
-                 ->click('Disable')
-                 ->type('collection1', 'clctnName')
-                 ->press('Confirm')
-                 ->see('Enable');
+          // Go to collection page and disable collection
+          $this->actingAs($this->admin)
+               ->visit('/collection')
+               ->click('Disable')
+               ->type($this->colName, 'clctnName')
+               ->press('Confirm')
+               ->see('Enable');
 
-            // Check that testtable1 is not shown
-            $this->actingAs($this->admin)
-                 ->visit('/table')
-                 ->assertViewMissing('testtable1');  
-                 
-            // drop testtable1
-            \Schema::drop('testtable1');
-
-            // clear folder that was created with the collection
-            rmdir($this->filePath.'/collection1');
+          // Check that testtable1 is not shown
+          $this->actingAs($this->admin)
+               ->visit('/table')
+               ->assertViewMissing($this->tableName);  
         }    
 
         /** @test */
         public function it_can_enable_a_collection()
         {
-            // Generate Test Collection
-            $collection = $this->testHelper->createDisabledCollection('collection1');
+          // Generate Test Collection
+          $collection = $this->testHelper->createCollection($this->colName, 0);
 
-            // Go to collection page and enable collection
-            $this->actingAs($this->admin)
-                 ->visit('/collection')
-                 ->see('Collection Name')
-                 ->see('Create, import and manage collections here.')
-                 ->see('collection1')
-                 ->see('Enable');
+          // Go to collection page and enable collection
+          $this->actingAs($this->admin)
+               ->visit('/collection')
+               ->see('Collection Name')
+               ->see('Create, import and manage collections here.')
+               ->see($this->colName)
+               ->see('Enable');
 
-            // Go to collection page and enable collection1
-            $this->actingAs($this->admin)
-                 ->visit('/collection')
-                 ->click('Enable')
-                 ->press('Confirm')
-                 ->see('Disable');    
-
-            // clear folder that was created with the collection
-            rmdir($this->filePath.'/collection1');
+          // Go to collection page and enable collection
+          $this->actingAs($this->admin)
+               ->visit('/collection')
+               ->click('Enable')
+               ->press('Confirm')
+               ->see('Disable');    
         }        
 
         /** @test */
         public function it_can_disable_a_collection()
         {
-            // Generate Test Collection
-            $collection = $this->testHelper->createCollection('collection1');
+          // Generate Test Collection
+          $collection = $this->testHelper->createCollection($this->colName);
 
-            // Go to collection page and see that collection1 exists
-            $this->actingAs($this->admin)
-                 ->visit('/collection')
-                 ->see('Collection Name')
-                 ->see('Create, import and manage collections here.')
-                 ->see('collection1')
-                 ->see('Add Tables')
-                 ->see('Edit')
-                 ->see('Disable');
+          // Go to collection page and see that collection exists
+          $this->actingAs($this->admin)
+               ->visit('/collection')
+               ->see('Collection Name')
+               ->see('Create, import and manage collections here.')
+               ->see($this->colName)
+               ->see('Add Tables')
+               ->see('Edit')
+               ->see('Disable');
 
-            // Go to collection page and disable collection1
-            $this->actingAs($this->admin)
-                 ->visit('/collection')
-                 ->click('Disable')
-                 ->type('collection1', 'clctnName')
-                 ->press('Confirm')
-                 ->see('Enable');
-
-            // clear folder that was created with the collection
-            rmdir($this->filePath.'/collection1');
+          // Go to collection page and disable collection
+          $this->actingAs($this->admin)
+               ->visit('/collection')
+               ->click('Disable')
+               ->type($this->colName, 'clctnName')
+               ->press('Confirm')
+               ->see('Enable');
         }        
 
         /** @test */
         public function it_can_create_a_collection()
         {
-            // Go to collection and create new collection
-            $this->actingAs($this->admin)
-                 ->visit('/collection')
-                 ->see('Collection Name')
-                 ->type('collection1', 'clctnName')
-                 ->press('Create')
-                 ->see('Create, import and manage collections here.')
-                 ->see('collection1');
-
-            // clear folder that was created with the collection
-            rmdir($this->filePath.'/collection1');
+          // Go to collection and create new collection
+          $this->actingAs($this->admin)
+               ->visit('/collection')
+               ->see('Collection Name')
+               ->type($this->colName, 'clctnName')
+               ->press('Create')
+               ->see('Create, import and manage collections here.')
+               ->see($this->colName);
         }
 
         /** @test */

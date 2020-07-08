@@ -166,6 +166,7 @@ class FileViewHelper {
       // get all subfolder
       $ffs = Storage::disk('local')->directories($collection->clctnName);
       foreach ($ffs as &$value) {
+        // return string with path if match found
         if (Storage::exists($value.'/'.$filename)) {
           return($value .'/'.$filename);
         }
