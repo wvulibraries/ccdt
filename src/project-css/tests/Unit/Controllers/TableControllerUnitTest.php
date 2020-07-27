@@ -6,9 +6,6 @@
 
   class TableControllerUnitTest extends BrowserKitTestCase
   {
-    // location of test files
-    private $filePath = './storage/app';
-
     public function testLoad() {
         // calling load should return the list of files
         // in the flatfile directory under Storage
@@ -16,6 +13,12 @@
         $response = (new TableController)->load();
         $this->assertIsArray($response->fltFleList);
     }
+
+    public function testLoadisForwardTrue() {
+        // calling load and setting isForward to true
+        $response = (new TableController)->load(true);
+        $this->assertIsArray($response->fltFleList);
+    }    
 
   }
 ?>

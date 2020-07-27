@@ -72,23 +72,23 @@
        // view specific record with a invalid id
        // should produce error messsage that no results
        $this->actingAs($this->admin)
-              ->visit('table')
-              ->see($this->tblname)
-              ->visit('data/1/2000')
-              ->assertResponseStatus(200)
-              ->see('Search Yeilded No Results');
+            ->visit('table')
+            ->see($this->tblname)
+            ->visit('data/1/2000')
+            ->assertResponseStatus(200)
+            ->see('Search Yeilded No Results');
     }    
 
     public function testIndexWithInvalidTable() {
        //try to import a table without a collection
        $this->actingAs($this->admin)
-              ->visit('data/1')
-              ->see("Table id is invalid");
+            ->visit('data/1')
+            ->see("Table id is invalid");
 
        // test using non-numeric table id
        $this->actingAs($this->admin)
-              ->visit('data/idontexist')
-              ->see("Table id is invalid");
+            ->visit('data/idontexist')
+            ->see("Table id is invalid");
     }
 
     public function testImportWithRecords() {

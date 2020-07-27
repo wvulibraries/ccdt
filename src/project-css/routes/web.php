@@ -68,15 +68,9 @@ Route::group([ 'prefix' => 'table' ], function() {
 
     Route::get('edit/schema/{curTable}', 'TableController@editSchema')->name('table.edit.schema');
     Route::post('update/schema', 'TableController@updateSchema');
-
     Route::get('create', 'TableController@create');
-    //Route::post('create/import', 'TableController@import');
-    //Route::post('create/importcmsdis', 'TableController@importCMSDIS')->name('importcmsdis');
-    //Route::post('create/select', 'TableController@select');
-    //Route::post('create/selectCMSDIS', 'TableController@selectCMSDIS')->name('selectcmsdis');
 
     // Forward route in case for error
-    // Route::get('create/select', 'TableController@wizard');
     Route::post('create/finalize', 'TableController@finalize');
     Route::get('load', 'TableController@load');
     Route::post('load/store', 'TableController@store');

@@ -91,12 +91,6 @@
               ->press('Import')
               ->assertResponseStatus(200)
               ->see('mlb_players.csv File already exists. Please select the file or rename and re-upload.');  
-
-         // // test tables, files and folders that were created
-         // $this->testHelper->cleanupTestTablesAndFiles(['mlb_players.csv']);
-
-         // // Delete Test Collection
-         // $this->testHelper->deleteCollection($this->colName);
       }      
 
       public function testFlatFileFileUpload() {
@@ -112,13 +106,7 @@
               ->press('Import')
               ->assertResponseStatus(200)
               ->see('mlb_players.csv has been queued for import to')
-              ->see('table. It will be available shortly.');  
-              
-         // // test tables, files and folders that were created
-         // $this->testHelper->cleanupTestTablesAndFiles(['mlb_players.csv']);
-
-         // // Delete Test Collection
-         // $this->testHelper->deleteCollection($this->colName);              
+              ->see('table. It will be available shortly.');               
       }
 
       public function testCMSFileFileUpload() {
@@ -133,13 +121,7 @@
               ->press('Import')
               ->assertResponseStatus(200)
               ->see('1A-random.tab has been queued for import to')
-              ->see('table. It will be available shortly.');  
-              
-         // // test tables, files and folders that were created
-         // $this->testHelper->cleanupTestTablesAndFiles(['1A-random.tab']);
-
-         // // Delete Test Collection
-         // $this->testHelper->deleteCollection($this->colName);              
+              ->see('table. It will be available shortly.');               
       }
 
       public function testNonAdminCannotRunImportWizard() {
@@ -149,9 +131,6 @@
          $this->actingAs($this->user)
               ->visit('admin/wizard/import/')
               // user is routed to home page since they do not have access to import
-              ->see('Please kindly select the collection and table to view the records');    
-            
-         // // Delete Test Collection
-         // $this->testHelper->deleteCollection($this->colName);              
+              ->see('Please kindly select the collection and table to view the records');                
       }
    }

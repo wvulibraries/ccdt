@@ -19,7 +19,7 @@
 <div class="collectionWrapper" role="main">
   <div class="container">
 
-  <h2 class="text-center">Step1: Select or Import</h2>
+  <h2 class="text-center">Select or Import</h2>
   <!-- Separator -->
   <hr/>
     <div class="row">

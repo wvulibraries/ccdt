@@ -3,21 +3,17 @@
 
   use App\Models\User;
   use App\Models\Collection;
-  use App\Models\Table;
   use App\Helpers\CollectionHelper;
 
   class CollectionControllerTest extends BrowserKitTestCase {
+     private $adminEmail;
+     private $adminPass;
+     private $admin;
+     private $user;
 
-    private $adminEmail;
-    private $adminPass;
-    private $admin;
-    private $user;
-
-    // location of test files
-    private $filePath = './storage/app';
-
-     private $colName;
-     private $colName2;   
+     // location of test files
+     private $filePath = './storage/app';
+     private $colName;   
 
      public function setUp(): void {
           parent::setUp();
@@ -32,8 +28,7 @@
 
           // Generate Collection Name
           $this->colName = $this->testHelper->generateCollectionName();
-          $this->colName2 = $this->colName+1;
-    }
+     }
 
      protected function tearDown(): void {
           // test tables, files and folders that were created
@@ -45,7 +40,7 @@
           parent::tearDown();
      }     
 
-    public function testCreateCollection() {
+     public function testCreateCollection() {
           // Go to login page and enter credentials
           $this->visit('/login')
                ->type($this->adminEmail, 'email')
@@ -60,100 +55,48 @@
                ->press('Create')
                ->see('Create, import and manage collections here.')
                ->see($this->colName);
-    }
+     }
 
-    public function testNonAdminCannotCreateCollection() {
-        // try to get to the user(s) page
-        $this->actingAs($this->user)
-              ->get('collection')
-              //invalid user gets redirected
-              ->assertResponseStatus(302);
-    }
+     public function testNonAdminCannotCreateCollection() {
+          // try to get to the user(s) page
+          $this->actingAs($this->user)
+               ->get('collection')
+               //invalid user gets redirected
+               ->assertResponseStatus(302);
+     }
 
-    public function testAdminCanCreateCollection() {
-        // try to get to the user(s) page
-        $this->actingAs($this->admin)
-            ->get('collection')
-            //valid admin user should get response 200
-            ->assertResponseStatus(200);
-    }
-
-    public function testAdminCreateCollection() {
-        // try to get to the user(s) page
-        $this->actingAs($this->admin)
-            ->get('table/create')
-            ->see('Create, import and manage collections here.')
-            //valid admin user should get response 200
-            ->assertResponseStatus(200);
-    }
-
-    public function testEditingCollectionName() {
-          // Create Test Data Array
-          $data = [
-               'isCms' => false,
-               'name' => $this->colName
-          ];
-
-          // Call helper create
-          $collection = (new CollectionHelper)->create($data);
-
-          // While using a admin account try to rename collection name
+     public function testAdminCanCreateCollection() {
+          // try to get to the user(s) page
           $this->actingAs($this->admin)
-               ->withoutMiddleware()
-               ->post('collection/edit', [ 'id' => $collection->id, 'clctnName' => $this->colName2 ]);
+               ->get('/collection')
+               ->assertResponseStatus(200)
+               ->see('Create, import and manage collections here.');
+     }
 
-          //check if collection was renamed
-          $collection = Collection::find($collection->id);
-          $this->assertEquals($this->colName2, $collection->clctnName);     
-    }
-
-    public function testDisableThenEnableCollection() {
+     public function testUploadFilesToCollection() {
           // Generate Test Collection
           $collection = $this->testHelper->createCollection($this->colName);
 
-          // While using a admin account try to disable a collection with invalid name (should be redirected)
+          // try to get to the collection page page
           $this->actingAs($this->admin)
-               ->withoutMiddleware()        
-               ->post('collection/disable', [ 'id' => $collection->id, 'clctnName' => 'collection' ])->assertResponseStatus(302);
+               ->get('collection/upload/1')
+               ->assertResponseStatus(200)
+               ->see('Upload Linked File(s)');
+     }
 
-          // While using a admin account try to disable a collection
-          $this->actingAs($this->admin)
-               ->withoutMiddleware()    
-               ->post('collection/disable', [ 'id' => $collection->id, 'clctnName' => $collection->clctnName ]);
+     // public function testCMSCreator() {
+     //      // Generate Test Collection
+     //      $collection = $this->testHelper->createCollection($this->colName);
 
-          // Verify Collection is disabled
-          $collection = Collection::find($collection->id);
-          $this->assertEquals('0', $collection->isEnabled);
-
-          // While using a admin account try to enable a collection with invalid name (should be redirected)
-          $this->actingAs($this->admin)
-               ->withoutMiddleware()    
-               ->post('collection/enable', [ 'id' => $collection->id, 'clctnName' => 'collection' ])->assertResponseStatus(302);
-
-          // While using a admin account try to enable a collection
-          $this->actingAs($this->admin)
-               ->withoutMiddleware()    
-               ->post('collection/enable', [ 'id' => $collection->id ]);
-
-          $collection = Collection::find($collection->id);
-          $this->assertEquals('1', $collection->hasAccess);   
-    }
-
-    public function testNonAdminDisableCollection() {
-          // Generate Test Collection
-          $collection = $this->testHelper->createCollection($this->colName);
-
-          // Verify Collection isEnabled
-          $collection = Collection::find($collection->id);
-          $this->assertEquals('1', $collection->isEnabled);
-
-          // While using a admin account try to disable a collection
-          $this->actingAs($this->user)  
-               ->post('collection/disable', [ 'id' => $collection->id, 'clctnName' => $collection->clctnName ]);
-
-          // Verify Collection hasn't changed
-          $collection = Collection::find($collection->id);
-          $this->assertEquals('1', $collection->isEnabled);
-    }
+     //      // try to get to the collection page page
+     //      $this->actingAs($this->admin)
+     //           ->get('/collection')
+     //           ->see($this->colName)
+     //           ->see('Show')
+     //           ->click('Show')
+     //           ->see('CMS View Creator');
+     //           ->press('CMS View Creator')
+     //           ->see('Please add tables to generate a CMS View');
+     // }       
 
   }
