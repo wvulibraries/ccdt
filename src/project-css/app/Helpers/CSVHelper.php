@@ -188,12 +188,6 @@ class CSVHelper {
          // determine final field types
          foreach($checkArray as $x=>$x_value)
          {
-           // if integer is detected and character count is greater than
-           // 10 we will store it as text
-          //  if (($x_value[0] == 1) && ($x_value[1] > 20)) {
-          //    $x_value[0] = 0;
-          //  }
-
           if ($x_value[0] == 0) {
             switch ($x_value[1]) {
               case 0:

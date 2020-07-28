@@ -91,10 +91,13 @@
      //      // try to get to the collection page page
      //      $this->actingAs($this->admin)
      //           ->get('/collection')
-     //           ->see($this->colName)
-     //           ->see('Show')
-     //           ->click('Show')
-     //           ->see('CMS View Creator');
+     //           ->see($this->colName);
+
+     //      var_dump($collection);
+
+     //      $this->actingAs($this->admin)
+     //           ->get('/collection/show/'.$collection->id)     
+     //           ->see('CMS View Creator')
      //           ->press('CMS View Creator')
      //           ->see('Please add tables to generate a CMS View');
      // }       

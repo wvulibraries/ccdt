@@ -446,12 +446,12 @@ class TableHelper {
 
       $this->createTable($strDir, $file, $tblNme, $fieldNames, $fieldTypes, $colID);
 
-      $errorArray = [
+      $result = [
         'error' => false,
-        'errorList' => []
+        'tblNme' => $tblNme
       ];
 
-      return ($errorArray);
+      return ($result);
     }
 
     /** 
@@ -467,13 +467,17 @@ class TableHelper {
     * @return $errorArray
     */       
     public function importFile($strDir, $file, $tblNme = null, $colID, $cms) {
-      $errorArray = $this->setupNewTable($strDir, $file, $tblNme, $colID, $cms);
-      if ($errorArray['error'] == true) { return $errorArray; }
+      $result = $this->setupNewTable($strDir, $file, $tblNme, $colID, $cms);
+      if ($result['error'] == true) { 
+        $errorArray = [
+          'error' => true,
+          'errorList' => $result['errorList']
+        ];
+        return $errorArray; 
+      }
 
       // queue job for import
-      $this->dispatchImportJob($tblNme, $strDir, $file);
-
-      return ($errorArray);
+      $this->dispatchImportJob($result['tblNme'], $strDir, $file);
     }
 
     /** 

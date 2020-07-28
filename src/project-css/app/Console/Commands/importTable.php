@@ -57,12 +57,12 @@ class importTable extends Command
             // Using Collection Helper Create a new collection
             $collection = (new CollectionHelper)->create($data);        
         }
-        
+
         // set storage location
         $storageFolder = 'flatfiles';
 
         // create table and queue file for import
-        (new TableHelper)->importFile($storageFolder, $this->argument('filename'), $this->argument('tablename'), $collection->id, false);
+        (new TableHelper)->importFile($storageFolder, $this->argument('filename'), $this->argument('tablename'), $collection->id, $collection->isCms);
         
         return $this->error('File ' . $this->argument('filename') . ' Has Been Queued For Import.');
     }
