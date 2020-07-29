@@ -50,7 +50,9 @@ class createCollection extends Command
             ];
         
             // Using Collection Helper Create a new collection
-            (new CollectionHelper)->create($data);        
+            (new CollectionHelper)->create($data);  
+            $this->info('Collection Has been Created.'); 
+            return;                
         }
         else {
             $this->error('Collection ' . $this->argument('collectioname') . ' Already Exists');

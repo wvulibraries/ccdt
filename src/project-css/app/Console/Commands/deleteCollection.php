@@ -39,10 +39,10 @@ class deleteCollection extends Command
      */
     public function handle()
     {
+        $helper = new CollectionHelper;
+
         // skip verify of items if force is set
         if ($this->option('force') == false) {
-            $helper = new CollectionHelper;
-
             // verify collection exists
             if ($helper->isCollection($this->argument('collectioname')) == false) {
                 return $this->error('Collection ' . $this->argument('collectioname') . ' Doesn\'t Exist');
@@ -61,5 +61,7 @@ class deleteCollection extends Command
 
         // call helper delete collection
         $this->helper->deleteCollection($this->argument('collectioname'));
+
+        $this->info('Collection Has been Deleted.');          
     }
 }

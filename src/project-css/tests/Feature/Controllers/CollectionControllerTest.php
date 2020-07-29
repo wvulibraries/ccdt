@@ -84,6 +84,8 @@
                ->see('Upload Linked File(s)');
      }
 
+     // Note testing CMS Creator here isn't working correctly
+     // Feature not implemented yet
      // public function testCMSCreator() {
      //      // Generate Test Collection
      //      $collection = $this->testHelper->createCollection($this->colName);

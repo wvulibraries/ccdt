@@ -6,7 +6,6 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class ViewTest extends BrowserKitTestCase
 {
-
     private $adminEmail;
     private $adminPass;
     private $userName;

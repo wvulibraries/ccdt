@@ -8,6 +8,8 @@ abstract class TestCase extends Illuminate\Foundation\Testing\TestCase
      * @var string
      */
     protected $baseUrl = 'http://localhost';
+    
+    public $testHelper;    
 
     /**
      * Clears Laravel Cache.
@@ -19,6 +21,19 @@ abstract class TestCase extends Illuminate\Foundation\Testing\TestCase
             \Illuminate\Support\Facades\Artisan::call($command);
         }
     }
+
+    public function setUp(): void {
+        parent::setUp();
+        Artisan::call('migrate:refresh --seed');  
+
+        // Add testHelper
+        $this->testHelper = new TestHelper;    
+    }
+
+    protected function tearDown(): void {
+        Artisan::call('migrate:rollback');
+        parent::tearDown();
+    }      
 
     /**
      * Creates the application.
