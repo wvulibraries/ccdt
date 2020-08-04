@@ -6,7 +6,8 @@
 
   class CreateCollectionTest extends TestCase
   {
-    private $colName;     
+    private $colName;
+    private $helper;    
 
     public function setUp(): void {
       parent::setUp();

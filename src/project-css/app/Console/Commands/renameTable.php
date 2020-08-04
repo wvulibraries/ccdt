@@ -39,9 +39,24 @@ class renameTable extends Command
      */
     public function handle()
     {
+        // insure table exists
+        if (!Schema::hasTable($this->argument('tablename'))) { 
+            $this->error('Table Doesn\'t Exist.');
+            return;
+        }
+
+        // insure table doesn't exist
+        if (Schema::hasTable($this->argument('newname'))) { 
+            $this->error($this->argument('newname') . ' Already Exists.');
+            return;
+        }        
+
         // Rename Table
         Schema::rename($this->argument('tablename'), $this->argument('newname'));
+        
         // Rename table name in tables
         DB::table('tables')->where('tblNme', '=', $this->argument('tablename'))->update(['tblNme' => $this->argument('newname')]);
+
+        $this->info('Table Has been Renamed.');
     }
 }

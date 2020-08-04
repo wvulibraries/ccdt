@@ -57,9 +57,12 @@ class renameCollection extends Command
         $data = [
             'id' => $thisClctn->id,
             'name' => $this->argument('newname'),
+            'isCms' => $thisClctn->isCms
         ];
     
         // Using Collection Helper Update collection
-        $helper->update($data);        
+        $helper->update($data);  
+
+        $this->info('Collection Has been Renamed.');    
     }
 }

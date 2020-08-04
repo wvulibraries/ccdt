@@ -39,9 +39,16 @@ class dropTable extends Command
      */
     public function handle()
     {
+        if (!Schema::hasTable($this->argument('tablename'))) { 
+            $this->error('Table Doesn\'t Exist.');
+            return;
+        }
+
         // Drop Table if Exists
         Schema::dropIfExists($this->argument('tablename'));
         // Drop Entry in tables table
         DB::table('tables')->where('tblNme', '=', $this->argument('tablename'))->delete();
+
+        $this->info('Table Has been Deleted.');
     }
 }

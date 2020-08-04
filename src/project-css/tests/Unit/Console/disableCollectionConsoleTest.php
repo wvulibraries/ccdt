@@ -47,16 +47,7 @@
     /** @test */
     public function try_to_disable_a_missing_collection() {
         $this->artisan('collection:disable', ['collectioname' => $this->colName] )
-             ->expectsOutput('Collection ' . $this->colName . ' Doesn\'t Exist');
-
-
-        // Disable Collection
-        //$response = Artisan::call('collection:disable', ['collectioname' => $this->colName]);
-
-        //var_dump($response);
-     
-        // Verify that collection is disabled
-        //$this->assertEquals('Collection ' . $this->colName . ' Doesn\'t Exist', $response);      
+             ->expectsOutput('Collection ' . $this->colName . ' Doesn\'t Exist');     
     }      
 
   }

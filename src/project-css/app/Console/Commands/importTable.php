@@ -64,6 +64,6 @@ class importTable extends Command
         // create table and queue file for import
         (new TableHelper)->importFile($storageFolder, $this->argument('filename'), $this->argument('tablename'), $collection->id, $collection->isCms);
         
-        return $this->error('File ' . $this->argument('filename') . ' Has Been Queued For Import.');
+        return $this->info('File ' . $this->argument('filename') . ' Has Been Queued For Import.');
     }
 }
