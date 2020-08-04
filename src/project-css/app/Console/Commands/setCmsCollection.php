@@ -47,6 +47,8 @@ class setCmsCollection extends Command
         }
 
         // Using Collection Helper set collection cms option
-        $helper->setCMS($this->argument('collectioname'), true);         
+        $helper->setCMS($this->argument('collectioname'), true);   
+
+        $this->info('Collection is set as CMS');        
     }
 }
