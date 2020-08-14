@@ -22,7 +22,7 @@ class OptimizeSearchIndex implements ShouldQueue
 {
     use InteractsWithQueue, Queueable, SerializesModels;
 
-    private $tblNme;
+    private $tblNme;  
 
     /**
      * Create a new job instance.
@@ -37,24 +37,20 @@ class OptimizeSearchIndex implements ShouldQueue
      */
     public function handle()
     {
-        try{
-            $recordCount = DB::table($this->tblNme)->count();
-            $recordsRemaining = true;
-            $lookupsCompleted = 0;
-            $chunkSize = 500;
+        $recordCount = DB::table($this->tblNme)->count();
+        $recordsRemaining = true;
+        $lookupsCompleted = 0;
+        $chunkSize = 500;         
 
-            while($recordsRemaining){
-                dispatch(new OptimizeSearch($this->tblNme, $chunkSize*$lookupsCompleted, $chunkSize))->onQueue('low');              
+        while($recordsRemaining){
+            dispatch(new OptimizeSearch($this->tblNme, $chunkSize*$lookupsCompleted, $chunkSize))->onQueue('low');              
 
-                if($recordCount < $chunkSize + ($chunkSize*$lookupsCompleted)){
-                    $recordsRemaining = false;
-                }
+            if($recordCount < $chunkSize + ($chunkSize*$lookupsCompleted)){
+                $recordsRemaining = false;
+            }
 
-                $lookupsCompleted++;
-            }  
-        }catch(\Exception $e){
-            Log::error($e->getMessage());
-        }          
-    }
+            $lookupsCompleted++;
+        }         
+    }    
 
 }

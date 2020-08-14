@@ -55,9 +55,15 @@
     /** @test */
     // public function try_to_delete_a_collection_with_table() {
     //     $this->testHelper->createCollectionWithTable($this->colName, $this->tableName);
-      
+
+    //     // Call helper isCollection Verify Collection Exists
+    //     $this->assertTrue($this->helper->isCollection($this->colName));         
+
     //     $this->artisan('collection:delete', ['collectioname' => $this->colName] )
     //          ->expectsOutput('Unable to remove Collection ' . $this->colName . ' Tables are Associated With the Collection.');  
+
+    //     // Call helper isCollection Verify Collection Doesn't exist
+    //     $this->assertFalse($this->helper->isCollection($this->colName));       
              
     //     // test tables, files and folders that were created
     //     $this->testHelper->cleanupTestTablesAndFiles();               

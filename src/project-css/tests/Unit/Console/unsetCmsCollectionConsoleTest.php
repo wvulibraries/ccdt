@@ -4,7 +4,7 @@
   use App\Models\Collection;
   use App\Helpers\CollectionHelper;  
 
-  class setCmsCollectionTest extends TestCase
+  class unsetCmsCollectionTest extends TestCase
   {
     private $colName;
     private $helper;    
@@ -25,24 +25,24 @@
     }    
 
     /** @test */
-    public function it_has_collection_setcms_command()
+    public function it_has_collection_unset_command()
     {
-        $this->assertTrue(class_exists(\App\Console\Commands\setCmsCollection::class));
+        $this->assertTrue(class_exists(\App\Console\Commands\unsetCmsCollection::class));
     }
 
     /** @test */
-    public function it_sets_cms_on_a_collection() {
+    public function it_unset_cms_on_a_collection() {
         Artisan::call('collection:create', ['collectioname' => $this->colName]);
 
         $this->assertTrue($this->helper->isCollection($this->colName));
 
-        $this->artisan('collection:cms:set', ['collectioname' => $this->colName] )
-             ->expectsOutput('Collection is set as CMS'); 
+        $this->artisan('collection:cms:unset', ['collectioname' => $this->colName] )
+             ->expectsOutput('Collection is set as Flatfile'); 
     }     
 
     /** @test */
-    public function try_to_set_cms_on_a_nonexisting_collection() {
-        $this->artisan('collection:cms:set', ['collectioname' => $this->colName] )
+    public function try_to_unset_cms_on_a_nonexisting_collection() {
+        $this->artisan('collection:cms:unset', ['collectioname' => $this->colName] )
              ->expectsOutput('Collection ' . $this->colName . ' Doesn\'t Exist');     
     }      
 

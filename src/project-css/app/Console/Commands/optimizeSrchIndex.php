@@ -3,9 +3,9 @@
 namespace App\Console\Commands;
 
 use App\Jobs\OptimizeSearchIndex;
-use App\Adapters\OptimizeSearchAdapter;
 use Illuminate\Console\Command;
 use Illuminate\Foundation\Bus\DispatchesJobs;
+use Illuminate\Support\Facades\Schema;
 
 class optimizeSrchIndex extends Command
 {
@@ -40,6 +40,13 @@ class optimizeSrchIndex extends Command
      */
     public function handle()
     {
-        dispatch(new OptimizeSearchIndex($this->argument('tablename')))->onQueue('high');
+        // insure table exists
+        if (Schema::hasTable($this->argument('tablename'))) { 
+            dispatch(new OptimizeSearchIndex($this->argument('tablename')))->onQueue('high');
+
+            return $this->info('Job has been created to Optimize Search Index');   
+        }
+
+        return $this->error('Table Doesn\'t Exist.');      
     }
 }

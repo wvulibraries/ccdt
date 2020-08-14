@@ -3,6 +3,7 @@
 use App\Helpers\CollectionHelper;
 use App\Helpers\TableHelper;
 use App\Models\Collection;
+use Illuminate\Support\Facades\Schema;
 
 class TestHelper {
    // location of test files
@@ -112,9 +113,9 @@ class TestHelper {
 
       for ($x = 0; $x <= $numItems; $x++) {
          // join 2 random number calls to get large random number
-         $IntegerBig = $faker->randomNumber(8, true) . $faker->randomNumber(mt_rand(1, 9), true);     
+         $integerBig = $faker->randomNumber(8, true) . $faker->randomNumber(mt_rand(1, 9), true);     
 
-         fputcsv($file, array($faker->word, $faker->words(10, true), $faker->text(500), $faker->text(1000), $faker->text(3000), $faker->text(9000), $faker->randomDigit(), $faker->randomNumber(7, true), $IntegerBig));
+         fputcsv($file, array($faker->word, $faker->words(10, true), $faker->text(500), $faker->text(1000), $faker->text(3000), $faker->text(9000), $faker->randomDigit(), $faker->randomNumber(7, true), $integerBig));
       }
 
       fclose($file);      

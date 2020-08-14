@@ -22,7 +22,7 @@ class OptimizeSearch implements ShouldQueue
     private $tblNme;
     private $skipCount;
     private $chunkSize;
-    private $records;
+    private $records;  
 
     /**
      * Create a new job instance.
@@ -39,19 +39,14 @@ class OptimizeSearch implements ShouldQueue
      */
     public function handle()
     {
-        try{
-            $this->records = DB::table($this->tblNme)->skip($this->skipCount)->take($this->chunkSize)->get();
+        $this->records = DB::table($this->tblNme)->skip($this->skipCount)->take($this->chunkSize)->get();
 
-            $adapter = new UpdateSearchAdapter;
+        $adapter = new UpdateSearchAdapter;
 
-            foreach ($this->records as $record) {
-                // Build search index on all records in table
-                $adapter->process($this->tblNme, $record->id, $record->srchindex);
-            }
-
-        }catch(\Exception $e){
-            Log::error($e->getMessage());
-        }          
-    }
+        foreach ($this->records as $record) {
+            // Optimize Search index on all records in table
+            $adapter->process($this->tblNme, $record->id, $record->srchindex);
+        }         
+    }   
 
 }

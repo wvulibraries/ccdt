@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 class exportTable extends Command
 {
@@ -12,7 +13,8 @@ class exportTable extends Command
      *
      * @var string
      */
-    protected $signature = 'table:export {tablename} {fields*}';
+    protected $signature = 'table:export {tablename : name of table} 
+                                         {--field=* : requested fields of table}';
 
     /**
      * The console command description.
@@ -38,19 +40,31 @@ class exportTable extends Command
      */
     public function handle()
     {
-        // var_dump($this->argument('tablename'));
-        // var_dump($this->argument('fields'));
-        
-        // //$columns = array('zip', 'in_date', 'in_topic');
-        // $file = fopen('storage/app/exports/' . $this->argument('tablename') .'.csv', 'w');
-        // fputcsv($file, $this->argument('fields'));
-        // $records = DB::table($this->argument('tablename'))->get();
+        if (Schema::hasTable($this->argument('tablename'))) { 
+            // allowed fields
+            $allowed = $this->option('field');        
 
-        // foreach ($records as $record) {
-        //      //fputcsv($file, array($record->zip, $record->in_date, $record->in_topic));
-        //     var_dump($record);
-        //     die();
-        // }
-        // fclose($file);
+            $file = fopen('storage/app/exports/' . $this->argument('tablename') .'.csv', 'w');
+            fputcsv($file, $allowed);
+            $records = DB::table($this->argument('tablename'))->get();
+
+            foreach ($records as $record) {
+                $filtered = array_filter(
+                    (array) $record,
+                    function ($key) use ($allowed) {
+                        return in_array($key, $allowed);
+                    },
+                    ARRAY_FILTER_USE_KEY
+                );
+
+                fputcsv($file, $filtered);
+            }
+
+            fclose($file);
+
+            return $this->info('Table ' . $this->argument('tablename') . ' Has Been Exported.');            
+        }
+
+        return $this->error('Table Doesn\'t Exist.');
     }
 }

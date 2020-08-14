@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use App\Helpers\CollectionHelper;
+use App\Models\Collection;
 
 class deleteCollection extends Command
 {
@@ -48,13 +49,16 @@ class deleteCollection extends Command
                 return $this->error('Collection ' . $this->argument('collectioname') . ' Doesn\'t Exist');
             }
 
+            // find the collection
+            $thisClctn = Collection::where('clctnName', $this->argument('collectioname'))->first();            
+
             // Verify That No files exist in the Storage Folder for the Collection
-            if ($helper->hasFiles($this->argument('collectioname'))) {
+            if ($thisClctn->hasFiles()) {
                 return $this->error('Unable to remove Collection ' . $this->argument('collectioname') . '. Files Exist in Storage Folder.');
             }
 
             // Verify That No Tables are associated with this collection
-            if ($helper->hasTables($this->argument('collectioname'))) {
+            if ($thisClctn->hasTables()) {
                 return $this->error('Unable to remove Collection ' . $this->argument('collectioname') . '. Tables are Associated With the Collection.');
             }
         }

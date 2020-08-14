@@ -47,6 +47,8 @@ class unsetCmsCollection extends Command
         }
 
         // Using Collection Helper unset cms option
-        $helper->setCMS($this->argument('collectioname'), false);           
+        $helper->setCMS($this->argument('collectioname'), false); 
+        
+        $this->info('Collection is set as Flatfile');        
     }
 }

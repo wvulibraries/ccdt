@@ -18,6 +18,19 @@ class Collection extends Model
     return $this->hasMany('App\Models\Table');
   }
 
+  public function hasTables() {
+    $tbls = $this->tables()->get();
+    return ($tbls->count() > 0);
+  } 
+  
+  public function hasFiles() {
+    $files = \Storage::allFiles($this->clctnName);
+    if (empty($files)) {
+      return false;
+    }
+    return true;
+  }
+
   public function setCMSId($collectionID, $cmsId) {
     // Set CMS Id in collection
     \DB::table('collections')

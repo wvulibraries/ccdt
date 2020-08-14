@@ -41,21 +41,22 @@ class createCollection extends Command
      */
     public function handle()
     {
+        $helper = new CollectionHelper;
+
         // verify collection doesn't exist
-        if (Collection::where('clctnName', '=', $this->argument('collectioname'))->count() == 0) {
-            // Get required fields for collection
-            $data = [
-                'isCms' => $this->option('iscms'),
-                'name' => $this->argument('collectioname')
-            ];
-        
-            // Using Collection Helper Create a new collection
-            (new CollectionHelper)->create($data);  
-            $this->info('Collection Has been Created.'); 
-            return;                
+        if ($helper->isCollection($this->argument('collectioname'))) {
+          return $this->error('Collection ' . $this->argument('collectioname') . ' Already Exists');
         }
-        else {
-            $this->error('Collection ' . $this->argument('collectioname') . ' Already Exists');
-        }
+
+        // Get required fields for collection
+        $data = [
+            'isCms' => $this->option('iscms'),
+            'name' => $this->argument('collectioname')
+        ];
+    
+        // Using Collection Helper Create a new collection
+        $helper->create($data);  
+
+        $this->info('Collection Has been Created.');              
     }
 }

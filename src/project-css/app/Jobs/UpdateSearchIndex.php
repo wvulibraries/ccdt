@@ -20,7 +20,7 @@ class UpdateSearchIndex implements ShouldQueue
     use InteractsWithQueue, Queueable, SerializesModels;
 
     private $tblNme;
-    private $records;
+    private $records;    
 
     /**
      * Create a new job instance.
@@ -36,16 +36,12 @@ class UpdateSearchIndex implements ShouldQueue
      */
     public function handle()
     {
-        try{
-            $adapter = new UpdateSearchAdapter;
+        $adapter = new UpdateSearchAdapter;
 
-            foreach ($this->records as $record) {
-                // Build search index on all records in table
-                $adapter->process($this->tblNme, $record->id, $record->srchindex);
-            }
-        }catch(\Exception $e){
-            Log::error($e->getMessage());
-        }          
+        foreach ($this->records as $record) {
+            // Build search index on all records in table
+            $adapter->process($this->tblNme, $record->id, $record->srchindex);
+        }           
     }
 
 }

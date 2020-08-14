@@ -17,7 +17,7 @@ class CreateSearchIndex implements ShouldQueue
 {
     use InteractsWithQueue, Queueable, SerializesModels;
 
-    private $tblNme;
+    public $tblNme;  
 
     /**
      * Create a new job instance.
@@ -32,13 +32,9 @@ class CreateSearchIndex implements ShouldQueue
      */
     public function handle()
     {
-        try{
-            $adapter = new SearchIndexAdapter;
-            // Build search index on all records in table
-            $adapter->process($this->tblNme);
-        }catch(\Exception $e){
-            Log::error($e->getMessage());
-        }          
-    }
+        $adapter = new SearchIndexAdapter;
+        // Build search index on all records in table
+        $adapter->process($this->tblNme);         
+    }   
 
 }

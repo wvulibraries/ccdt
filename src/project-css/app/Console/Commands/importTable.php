@@ -2,9 +2,7 @@
 
 namespace App\Console\Commands;
 
-//use App\Http\Controllers\TableController;
 use Illuminate\Console\Command;
-//use Illuminate\Support\Facades\DB;
 use App\Helpers\CollectionHelper;
 use App\Helpers\TableHelper;
 use App\Models\Collection;
@@ -64,6 +62,6 @@ class importTable extends Command
         // create table and queue file for import
         (new TableHelper)->importFile($storageFolder, $this->argument('filename'), $this->argument('tablename'), $collection->id, $collection->isCms);
         
-        return $this->info('File ' . $this->argument('filename') . ' Has Been Queued For Import.');
+        $this->info('File ' . $this->argument('filename') . ' Has Been Queued For Import.');
     }
 }

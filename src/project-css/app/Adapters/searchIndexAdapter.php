@@ -14,7 +14,12 @@ class SearchIndexAdapter {
  
     public function process($tblNme) {
       //get table
-      $table = Table::where('tblNme', $tblNme)->first();
+      $table = Table::where('tblNme', $tblNme)->firstOrFail();
+      // var_dump($table);
+      // if(!$table){
+      //   throw new \Exception('Error generating search index');
+      // }
+
       $clmnLst = $table->getColumnList();
 
       // remove the id, srchindex and time stamps

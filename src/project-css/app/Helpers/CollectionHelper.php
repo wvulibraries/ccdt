@@ -114,16 +114,14 @@ class CollectionHelper {
      // check and see if collection has Tables
      // associated to it.
      public function hasTables($name) {
-        // find the collection
-        $thisClctn = Collection::where('clctnName', $name)->first();
-
-        // Get all the tables of this collection
-        $thisClctnTbls = $thisClctn->tables()->get();
-
-        if ($thisClctnTbls->count() > 0) {
-          return true;
-        }
+      if ($this->isCollection($name) == false) {   
         return false;
+      }
+        
+      // find the collection
+      $thisClctn = Collection::where('clctnName', $name)->first();
+
+      return $thisClctn->hasTables();
      }
 
     /**
@@ -133,11 +131,14 @@ class CollectionHelper {
     * @return boolean
     */         
      public function hasFiles($name) {
-        $files = Storage::allFiles($name);
-        if (empty($files)) {
-          return false;
+       if ($this->isCollection($name)) {
+          $files = Storage::allFiles($name);
+          if (empty($files)) {
+            return false;
+          }
+          return true;
         }
-        return true;
+        return false;
      }
 
      /**
