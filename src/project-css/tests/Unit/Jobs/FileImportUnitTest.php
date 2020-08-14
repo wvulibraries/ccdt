@@ -17,6 +17,16 @@
 
       // Generate Table Name
       $this->tableName = $this->testHelper->createTableName();       
+    } 
+    
+    protected function tearDown(): void {
+      // test tables, files and folders that were created
+      $this->testHelper->cleanupTestTablesAndFiles();
+
+      // Delete Test Collections
+      $this->testHelper->deleteTestCollections();         
+
+      parent::tearDown();
     }     
     
     public function testPushingFakeJob() {
@@ -53,10 +63,7 @@
         $table = Table::where('id', '1')->first();
 
         // Assert table was created
-        $this->assertEquals($table->recordCount(), 50000);
-        
-        // test tables, files and folders that were created
-        $this->testHelper->cleanupTestTablesAndFiles();        
+        $this->assertEquals($table->recordCount(), 50000);        
     }          
 
   }

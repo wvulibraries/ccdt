@@ -18,7 +18,17 @@
 
       // Generate Table Name
       $this->tableName = $this->testHelper->createTableName();      
-    }    
+    }
+    
+    protected function tearDown(): void {
+      // test tables, files and folders that were created
+      $this->testHelper->cleanupTestTablesAndFiles();
+
+      // Delete Test Collections
+      $this->testHelper->deleteTestCollections();         
+
+      parent::tearDown();
+    }     
     
     public function testPushingFakeJob() {
       // Fake the queue
@@ -45,37 +55,7 @@
 
       // Assert 1 job has deployed
       $this->assertEquals(\DB::table('jobs')->count(), 1);
-    } 
-    
-    /** @test */
-    // public function test_optimize_search_index_no_records() {
-    //   $this->testHelper->createCollectionWithTable($this->colName, $this->tableName);
-
-    //   $this->assertEquals(\DB::table('tables')->count(), 1);
-
-    //   (new CreateSearchIndex($this->tableName))->handle();
-
-    //   $job = (new OptimizeSearchIndex($this->tableName));
-    //   $job->handle();
- 
-    //   //var_dump($job->error);
-
-    //   $this->assertFalse($job->completed);        
-
-    //   // test tables, files and folders that were created
-    //   $this->testHelper->cleanupTestTablesAndFiles();
-    // }     
-
-    /** @test */
-    // public function test_optimize_search_index_with_missing_table() {
-    //   $job = (new OptimizeSearchIndex($this->tableName));
-    //   $job->handle();
-
-    //   $this->assertFalse($job->completed);        
-
-    //   // test tables, files and folders that were created
-    //   $this->testHelper->cleanupTestTablesAndFiles();
-    // }      
+    }     
 
   }
 ?>

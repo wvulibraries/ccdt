@@ -17,7 +17,17 @@
 
       // Generate Table Name
       $this->tableName = $this->testHelper->createTableName();      
-    }    
+    }
+    
+    protected function tearDown(): void {
+      // test tables, files and folders that were created
+      $this->testHelper->cleanupTestTablesAndFiles();
+
+      // Delete Test Collections
+      $this->testHelper->deleteTestCollections();         
+
+      parent::tearDown();
+    }     
     
     public function testPushingFakeJob() {
       // Fake the queue
@@ -59,9 +69,6 @@
 
       // duplicate words in the srchindex should be stripped out  
       $this->assertEquals($srchIndex, $record[0]->srchindex);
-
-      // test tables, files and folders that were created
-      $this->testHelper->cleanupTestTablesAndFiles();
     }    
 
   }

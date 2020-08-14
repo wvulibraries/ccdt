@@ -16,7 +16,17 @@
 
       // Generate Table Name
       $this->tableName = $this->testHelper->createTableName();      
-    }    
+    } 
+    
+    protected function tearDown(): void {
+      // test tables, files and folders that were created
+      $this->testHelper->cleanupTestTablesAndFiles();
+
+      // Delete Test Collections
+      $this->testHelper->deleteTestCollections();         
+
+      parent::tearDown();
+    }     
     
     public function testPushingFakeJob() {
       // Fake the queue
@@ -45,9 +55,6 @@
 
         // assert record srchindex is not Null
         $this->assertNotNull($record[0]->srchindex);        
-
-        // test tables, files and folders that were created
-        $this->testHelper->cleanupTestTablesAndFiles();
     }  
 
   }

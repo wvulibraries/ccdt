@@ -22,6 +22,9 @@
     } 
     
     protected function tearDown(): void {
+        // test tables, files and folders that were created
+        $this->testHelper->cleanupTestTablesAndFiles(); 
+
         // Delete Test Collections
         $this->testHelper->deleteTestCollections();   
         parent::tearDown();
@@ -47,11 +50,11 @@
         // assert file was created
         $this->assertFileExists('storage/app/exports/'.$this->tableName.'.csv', "Generated CSV does not exist");
 
-        // test tables, files and folders that were created
-        $this->testHelper->cleanupTestTablesAndFiles(); 
+        var_dump($this->tableName);
 
         // delete generated file
-        \Storage::delete('storage/app/exports/'.$this->tableName.'.csv');
+        //\Storage::delete('storage/app/exports/'.$this->tableName.'.csv');
+        \Storage::delete('/exports/'.$this->tableName.'.csv');        
     }  
     
     // /** @test */
