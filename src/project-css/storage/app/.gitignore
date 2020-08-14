@@ -1,4 +1,5 @@
 !files/test
+!exports
 !.gitignore
 .DS_Store
 *

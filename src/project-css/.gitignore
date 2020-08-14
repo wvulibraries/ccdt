@@ -9,9 +9,6 @@ vendor
 storage/framework/cache/**
 storage/framework/sessions/**
 storage/framework/views/**
-# Homestead.json
-# Homestead.yaml
-# composer.lock
 .DS_Store
 .log
 # /resources/views/vendor
