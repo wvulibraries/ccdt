@@ -44,7 +44,7 @@ class exportTable extends Command
             // allowed fields
             $allowed = $this->option('field');        
 
-            $file = fopen('storage/app/exports/' . $this->argument('tablename') .'.csv', 'w');
+            $file = fopen('./storage/app/exports/' . $this->argument('tablename') .'.csv', 'w');
             fputcsv($file, $allowed);
             $records = DB::table($this->argument('tablename'))->get();
 
