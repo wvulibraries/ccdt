@@ -30,7 +30,7 @@ jobs:
           
       - run:
           name: create exports folder
-          command: mkdir -p /app/storage/app/exports
+          command: mkdir -p /storage/app/exports
           
       - run:
           name: Install PHP exts
