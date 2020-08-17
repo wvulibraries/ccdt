@@ -37,14 +37,6 @@
     public function it_drops_a_existing_table() {
         $this->testHelper->createCollectionWithTable($this->colName, $this->tableName);
 
-        // $path = './storage/app/files/test/';
-        // $file = 'zillow.csv';
-        // $storageFolder = 'flatfiles';
-        // $fltFleAbsPth = './storage/app'.'/'.$storageFolder.'/';
-        // copy($path.$file, $fltFleAbsPth.$file);
-
-        // Artisan::call('table:import', ['collectioname' => $this->colName, 'tablename' => $this->tableName, 'filename' => $file]);
-
         $this->assertEquals(\DB::table('tables')->count(), 1);
 
         $this->artisan('table:drop', ['tablename' => $this->tableName] )
