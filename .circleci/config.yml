@@ -26,7 +26,11 @@ jobs:
             
       - run:
           name: Delete .env.testing
-          command: unlink .env.testing               
+          command: unlink .env.testing
+          
+      - run:
+          name: create exports folder
+          command: mkdir -p /app/storage/app/exports
           
       - run:
           name: Install PHP exts
