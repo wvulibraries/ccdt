@@ -9,13 +9,8 @@
   {
     private $colName;
 
-    // use the factory to create a Faker\Generator instance
-    public $faker;
-
     public function setUp(): void {
       parent::setUp();
-
-      $this->faker = Faker\Factory::create();
 
       // Generate Collection Name
       $this->colName = $this->testHelper->generateCollectionName();         

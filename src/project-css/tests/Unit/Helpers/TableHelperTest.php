@@ -170,16 +170,5 @@ class TableHelperTest extends BrowserKitTestCase
         // return table name
         return ($tableName);
     }
-    
-    // private function createTestCollection($name, $isCms) {
-    //     // Create Collection Test Data Array
-    //     $data = [
-    //       'isCms' => $isCms,
-    //       'name' => $name
-    //     ];
-
-    //     // Call collection helper create
-    //     return($this->collectionHelper->create($data));         
-    // }
 
 }
