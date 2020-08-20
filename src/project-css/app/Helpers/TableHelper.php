@@ -351,26 +351,30 @@ class TableHelper {
     * @return redirect to table index
     */      
     public function storeUploadAndImport($data) {
+      $errors = [];
+
       // Get the list of files in the directory
       $fltFleList = Storage::allFiles($data['strDir']);
 
-      $errors = [];
-
       $thisFltFileNme = $data['fltFile']->getClientOriginalName();
+
+      // set error if file currently exists
       if (in_array($data['strDir'].'/'.$thisFltFileNme, $fltFleList)) {
-        array_push($errors, $thisFltFileNme . ' File already exists. Please select the file or rename and re-upload.');
+        // save error to $errors array
+        $errors = [$thisFltFileNme . ' File already exists. Please select the file or rename and re-upload.'];
       }
       else {
         // Store in the directory inside storage/app
         $data['fltFile']->storeAs($data['strDir'], $thisFltFileNme);
         $result = $this->importFile($data['strDir'], $thisFltFileNme, $data['tableName'], $data['colID'], $data['cms']);
 
-        // if error in importing push returned error to $errors
+        // if error(s) save errorlist to $errors
         if ($result['error']) {
-          array_push($errors, $result['errorList']);
+          $errors = $result['errorList'];
         }   
       }
 
+      // return error array so they can be displayed to the user in the view
       return $errors;
     }
 
@@ -393,10 +397,10 @@ class TableHelper {
 
       $result = $this->importFile($data['strDir'], $data['fltFile'], $data['tableName'], $data['colID'], $data['cms']);
       
-      // if error in importing push returned error to $errors
+      // if error(s) save errorlist to $errors
       if ($result['error']) {
-        array_push($errors, $result['errorList']);
-      }   
+        $errors = $result['errorList'];
+      }    
 
       // return error array so they can be displayed to the user in the view
       return $errors;

@@ -3,7 +3,7 @@
 
   use App\Http\Middleware\CheckTableId;
 
-  class CheckTableIdUnitTest extends BrowserKitTestCase {
+  class CheckTableIdUnitTest extends TestCase {
 
     public function setUp(): void {
          parent::setUp();

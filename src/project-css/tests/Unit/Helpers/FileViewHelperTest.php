@@ -1,5 +1,6 @@
 <?php
 
+use App\Adapters\ImportAdapter;
 use App\Helpers\CollectionHelper;
 use App\Helpers\CSVHelper;
 use App\Helpers\FileViewHelper;
@@ -14,7 +15,8 @@ class FileViewHelperTest extends BrowserKitTestCase
     public $collectionHelper;
     public $tableHelper;
     private $colName;
-    private $tableName;     
+    private $tableName;    
+    public $importAdapter; 
 
     public function setUp(): void {
         parent::setUp();
@@ -22,6 +24,7 @@ class FileViewHelperTest extends BrowserKitTestCase
         $this->singlefilewithpath = '..\documents\BlobExport\indivletters\114561.txt';
         $this->tableHelper = new TableHelper;  
         $this->collectionHelper = new CollectionHelper; 
+        $this->importAdapter = new ImportAdapter;
         
         // Generate Collection Name
         $this->colName = $this->testHelper->generateCollectionName();
@@ -205,52 +208,31 @@ class FileViewHelperTest extends BrowserKitTestCase
         $this->assertEquals($result, $collection->clctnName.'/'.$folder.'/'.$testUpload);         
   }
 
-//   public function testgetOriginalPath() {
-//         // Generate Test Collection
-//         $collection = $this->testHelper->createCollection($this->colName, 0);
+  public function testgetOriginalPath() {
+        // Generate Test Collection
+        $collection = $this->testHelper->createCollection($this->colName, 0);
 
-//         // Create Test Table
-//         $tableName = $this->testHelper->createTestTable($collection, 'test.dat');
+        // Create Test Table
+        $tableName = $this->testHelper->createTestTable($collection, 'test.dat');
 
-//         //get table
-//         $table = Table::where('tblNme', $tableName)->first();
+        $this->importAdapter->process($tableName, 'files/test', 'test.dat');
+
+        //get table
+        $table = Table::where('tblNme', $tableName)->first();
         
-//         // set fake filename to look for
-//         $testUpload = 'feds0101_dc_statehood_1990.doc';        
+        // set fake filename to look for
+        $testUpload = '000007.txt';        
 
-//         $folder = 'federal_government';
+        $folder = 'indivletters';
 
-//         mkdir('./storage/app'.'/'.$collection->clctnName.'/'.$folder);
+        mkdir('./storage/app'.'/'.$collection->clctnName.'/'.$folder);
 
-//         // create empty file
-//         touch('./storage/app'.'/'.$collection->clctnName.'/'.$folder.'/'.$testUpload, time() - (60 * 60 * 24 * 5));
+        // create empty file
+        touch('./storage/app'.'/'.$collection->clctnName.'/'.$folder.'/'.$testUpload, time() - (60 * 60 * 24 * 5));
 
-//         $result = $this->fileViewHelper->getOriginalPath($table->id, 1, $testUpload);
+        $result = $this->fileViewHelper->getOriginalPath(1, 2, $testUpload);
 
-//         $this->assertEquals($result, $collection->clctnName.'/'.$folder.'/'.$testUpload);       
-//   }
-
-    // private function createTestTable($collection, $fileName) {
-    //     // set storage location
-    //     $storageFolder = 'files/test';
-
-    //     // Create Table and Dispatch file Import
-    //     $this->tableHelper->importFile($storageFolder, $fileName, $this->tableName, $collection->id, $collection->isCms);
-        
-    //     // return table name
-    //     return ($this->tableName);
-    // }
-    
-    // private function createTestCollection($name, $isCms) {
-    //     // Create Collection Test Data Array
-    //     $data = [
-    //       'isCms' => $isCms,
-    //       'name' => $name
-    //     ];
-
-    //     // Call collection helper create
-    //     return($this->collectionHelper->create($data));         
-    // }  
-
+        $this->assertEquals($result, '..\documents\BlobExport\indivletters\000007.txt');      
+  }
 
 }

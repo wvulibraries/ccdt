@@ -40,31 +40,31 @@ class exportTable extends Command
      */
     public function handle()
     {
-        if (Schema::hasTable($this->argument('tablename'))) { 
-            // allowed fields
-            $allowed = $this->option('field');        
-
-            $file = fopen('./storage/app/exports/' . $this->argument('tablename') .'.csv', 'w');
-            fputcsv($file, $allowed);
-            $records = DB::table($this->argument('tablename'))->get();
-
-            foreach ($records as $record) {
-                $filtered = array_filter(
-                    (array) $record,
-                    function ($key) use ($allowed) {
-                        return in_array($key, $allowed);
-                    },
-                    ARRAY_FILTER_USE_KEY
-                );
-
-                fputcsv($file, $filtered);
-            }
-
-            fclose($file);
-
-            return $this->info('Table ' . $this->argument('tablename') . ' Has Been Exported.');            
+        if (!Schema::hasTable($this->argument('tablename'))) { 
+            return $this->error('Table Doesn\'t Exist.');
         }
 
-        return $this->error('Table Doesn\'t Exist.');
+        // allowed fields
+        $allowed = $this->option('field');        
+
+        $file = fopen('./storage/app/exports/' . $this->argument('tablename') .'.csv', 'w');
+        fputcsv($file, $allowed);
+        $records = DB::table($this->argument('tablename'))->get();
+
+        foreach ($records as $record) {
+            $filtered = array_filter(
+                (array) $record,
+                function ($key) use ($allowed) {
+                    return in_array($key, $allowed);
+                },
+                ARRAY_FILTER_USE_KEY
+            );
+
+            fputcsv($file, $filtered);
+        }
+
+        fclose($file);
+
+        return $this->info('Table ' . $this->argument('tablename') . ' Has Been Exported.');            
     }
 }

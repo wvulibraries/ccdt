@@ -13,7 +13,8 @@
 
      // location of test files
      private $filePath = './storage/app';
-     private $colName;   
+     private $colName;
+     private $tableName;  
 
      public function setUp(): void {
           parent::setUp();
@@ -28,6 +29,9 @@
 
           // Generate Collection Name
           $this->colName = $this->testHelper->generateCollectionName();
+
+          // Generate Table Name
+          $this->tableName = $this->testHelper->createTableName();             
      }
 
      protected function tearDown(): void {
@@ -86,22 +90,23 @@
 
      // Note testing CMS Creator here isn't working correctly
      // Feature not implemented yet
-     // public function testCMSCreator() {
-     //      // Generate Test Collection
-     //      $collection = $this->testHelper->createCollection($this->colName);
+     public function testCMSCreator() {
+        // Generate Test Collection
+        $collection = $this->testHelper->createCollection($this->colName);
 
-     //      // try to get to the collection page page
-     //      $this->actingAs($this->admin)
-     //           ->get('/collection')
-     //           ->see($this->colName);
+        // Create Test Table
+        $tableName = $this->testHelper->createTestTable($collection);
 
-     //      var_dump($collection);
+        // try to get to the collection page page
+        $this->actingAs($this->admin)
+             ->get('/collection')
+             ->see($this->colName);
 
-     //      $this->actingAs($this->admin)
-     //           ->get('/collection/show/'.$collection->id)     
-     //           ->see('CMS View Creator')
-     //           ->press('CMS View Creator')
-     //           ->see('Please add tables to generate a CMS View');
-     // }       
+        $this->actingAs($this->admin)
+             ->get('/collection/show/'.$collection->id)     
+             ->see('CMS View Creator');
+     //         ->click('CMS View Creator')
+     //         ->see('Please add tables to generate a CMS View');
+     }       
 
   }

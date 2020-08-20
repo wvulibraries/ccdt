@@ -56,8 +56,13 @@
     
     // /** @test */
     public function try_to_export_on_nonexisting_table() {
-        $this->artisan('table:export', ['tablename' => $this->tableName, '--field' => ['id']])
-             ->expectsOutput('Table Doesn\'t Exist.');     
+      $this->testHelper->createCollectionWithTable($this->colName, $this->tableName);
+
+      $this->artisan('table:export', ['tablename' => 'notatable', '--field' => ['id']])
+            ->expectsOutput('Table Doesn\'t Exist.');   
+            
+      // assert file was created
+      $this->assertFileNotExists('storage/app/exports/notatable.csv', "Generated CSV exists");        
     }     
 
   }
