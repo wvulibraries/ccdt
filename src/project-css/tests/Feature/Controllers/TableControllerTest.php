@@ -222,7 +222,7 @@
 //             $file = '1A-random.tab';
 //             $file2 = '1B-random.tab';
 
-//             $this->testHelper->createCollection('collection1');
+//             $this->testHelper->createCollection($this->colName);
 
 //             $storageFolder = 'flatfiles';
 
@@ -236,12 +236,6 @@
 //                  ->call('POST', route('selectcmsdis'), ['colID2' => 1, 'cmsdisFiles2' => [$file, $file2]]);
 
 //             $this->assertEquals(DB::table('tables')->count(), 2);
-
-//             // test tables, files and folders that were created
-//             $this->testHelper->cleanupTestTablesAndFiles([$file, $file2]);
-
-//             // clear folder that was created with the collection
-//             rmdir($this->filePath.'/collection1');
 //     }
 
 //     public function testCMSSelectInvalidFile() {
@@ -274,7 +268,7 @@
 //             $path = './storage/app/files/test/';
 //             $file = 'images.png';
 
-//             $this->testHelper->createCollection('collection1');
+//             $this->testHelper->createCollection($this->colName);
 
 //             $this->actingAs($this->admin)
 //                  ->visit('table/create')
@@ -289,7 +283,7 @@
 //             $this->testHelper->cleanupTestTablesAndFiles([$file]);
 
 //             // clear folder that was created with the collection
-//             rmdir($this->filePath.'/collection1');
+//             rmdir($this->filePath.'/'.$this->colName);
 //     }
 
 //     public function testFileExistsUpload() {

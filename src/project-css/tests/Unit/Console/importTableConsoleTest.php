@@ -47,7 +47,23 @@
 
         // test tables, files and folders that were created
         $this->testHelper->cleanupTestTablesAndFiles([$file]); 
-    }        
+    }  
+    
+    public function it_cannot_create_a_table_with_existing_name() {
+        $this->testHelper->createCollectionWithTable($this->colName, $this->tableName);
+
+        $path = './storage/app/files/test/';
+        $file = 'zillow.csv';
+        $storageFolder = 'flatfiles';
+        $fltFleAbsPth = './storage/app'.'/'.$storageFolder.'/';
+        copy($path.$file, $fltFleAbsPth.$file);
+
+        $this->artisan('table:import', ['collectioname' => $this->colName, 'tablename' => $this->tableName, 'filename' => $file])
+             ->expectsOutput('Table Name Already Exists.');  
+
+        // test tables, files and folders that were created
+        $this->testHelper->cleanupTestTablesAndFiles([$file]); 
+    }    
 
   }
 ?>

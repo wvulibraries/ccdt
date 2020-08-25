@@ -46,5 +46,24 @@
       $this->assertTrue($collection->hasFiles());
     }
 
+    public function testCollectionHasTables() {
+      // Create Test Data Array
+      $data = [
+            'isCms' => false,
+            'name' => $this->colName
+      ];
+
+      // Call helper create
+      $collection = (new CollectionHelper)->create($data);
+
+      // assert no files exist
+      $this->assertFalse($collection->hasTables());
+
+      // Create Test Table
+      $tableName = $this->testHelper->createTestTable($collection, 'test.dat');      
+
+      $this->assertTrue($collection->hasTables());
+    }    
+
   }
 ?>

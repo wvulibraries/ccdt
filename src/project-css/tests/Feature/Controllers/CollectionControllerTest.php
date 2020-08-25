@@ -92,6 +92,30 @@
      // Feature not implemented yet
      public function testCMSCreator() {
         // Generate Test Collection
+        $collection = $this->testHelper->createCollection($this->colName, 1, true);
+
+        // Create Test Table
+        $tableName = $this->testHelper->createTestTable($collection);
+
+        // Create 2nd Test Table
+        $tableName2 = $this->testHelper->createTestTable($collection);        
+
+        // try to get to the collection page page
+        $this->actingAs($this->admin)
+             ->get('/collection')
+             ->see($this->colName);
+
+        $this->actingAs($this->admin)
+             ->visit('/collection/show/'.$collection->id)     
+             ->see('CMS View Creator')
+             ->click('CMS View Creator')
+             ->see('Please add tables to generate a CMS View');
+     }      
+
+     // Note testing CMS Creator here isn't working correctly
+     // Feature not implemented yet
+     public function testCMSCreatorOnNonCMSCollection() {
+        // Generate Test Collection
         $collection = $this->testHelper->createCollection($this->colName);
 
         // Create Test Table
@@ -103,10 +127,10 @@
              ->see($this->colName);
 
         $this->actingAs($this->admin)
-             ->get('/collection/show/'.$collection->id)     
-             ->see('CMS View Creator');
-     //         ->click('CMS View Creator')
-     //         ->see('Please add tables to generate a CMS View');
+             ->visit('/collection/show/'.$collection->id)     
+             ->see('CMS View Creator')
+             ->click('CMS View Creator')
+             ->see('Current Collection is Not a CMS Database');
      }       
 
   }

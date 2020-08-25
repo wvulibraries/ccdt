@@ -6,7 +6,7 @@ use Illuminate\Console\Command;
 use App\Helpers\CollectionHelper;
 use App\Helpers\TableHelper;
 use App\Models\Collection;
-
+use Illuminate\Support\Facades\Schema;
 
 class importTable extends Command
 {
@@ -41,6 +41,10 @@ class importTable extends Command
      */
     public function handle()
     {
+        if (Schema::hasTable($this->argument('tablename'))) { 
+            return $this->error('Table Name Already Exists.');
+        }
+
         // get collection
         $collection = Collection::where('clctnName', '=', $this->argument('collectioname'))->first();
 

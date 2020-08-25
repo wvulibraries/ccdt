@@ -1,6 +1,7 @@
 <?php
   # app/tests/Unit/controllers/CollectionControllerUnitTest.php
 
+  use App\Http\Controllers\CollectionController;
   use App\Models\User;
   use App\Models\Collection;
   use App\Helpers\CollectionHelper;
@@ -114,7 +115,23 @@
       // Verify Collection hasn't changed
       $collection = Collection::find($collection->id);
       $this->assertEquals('1', $collection->isEnabled);
-    }    
+    }   
+    
+    // public function testCreator() {
+    //   // Generate Test Collection
+    //   $collection = $this->testHelper->createCollection($this->colName);
+
+    //   // Create Test Table
+    //   $tableName = $this->testHelper->createTestTable($collection);      
+
+    //   $this->actingAs($this->admin)
+    //        ->withoutMiddleware()    
+    //        ->call('collection.cms.creator', $collection->id);
+      
+    //   //(new CollectionController)->creator($collection->id);
+
+    //   $this->assertRedirectedTo('/collection');
+    // }     
 
   }
 ?>
