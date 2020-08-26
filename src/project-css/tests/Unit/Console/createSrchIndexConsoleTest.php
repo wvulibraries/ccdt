@@ -48,7 +48,7 @@
         $this->testHelper->cleanupTestTablesAndFiles();
     }  
     
-    // /** @test */
+    /** @test */
     public function try_to_create_index_on_nonexisting_table() {
         $this->assertEquals(\DB::table('tables')->count(), 0);        
 

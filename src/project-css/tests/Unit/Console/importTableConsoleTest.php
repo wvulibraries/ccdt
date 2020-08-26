@@ -49,6 +49,7 @@
         $this->testHelper->cleanupTestTablesAndFiles([$file]); 
     }  
     
+    /** @test */
     public function it_cannot_create_a_table_with_existing_name() {
         $this->testHelper->createCollectionWithTable($this->colName, $this->tableName);
 

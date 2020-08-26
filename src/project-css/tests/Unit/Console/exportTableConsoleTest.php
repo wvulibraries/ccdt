@@ -31,7 +31,7 @@
     }    
 
     /** @test */
-    public function it_has_import_table_command()
+    public function it_has_export_table_command()
     {
         $this->assertTrue(class_exists(\App\Console\Commands\ExportTable::class));
     }
@@ -54,7 +54,7 @@
         \Storage::delete('/exports/'.$this->tableName.'.csv');        
     }  
     
-    // /** @test */
+    /** @test */
     public function try_to_export_on_nonexisting_table() {
       $this->artisan('table:export', ['tablename' => 'notatable'])
            ->expectsOutput('Table Doesn\'t Exist.');   

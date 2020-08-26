@@ -29,7 +29,7 @@
     }    
 
     /** @test */
-    public function it_has_collection_create_command()
+    public function it_has_collection_delete_command()
     {
         $this->assertTrue(class_exists(\App\Console\Commands\DeleteCollection::class));
     }
