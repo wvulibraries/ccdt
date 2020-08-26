@@ -3,6 +3,7 @@ use App\Helpers\CollectionHelper;
 use App\Helpers\CustomStringHelper;
 use App\Helpers\TableHelper;
 use App\Models\Table;
+use Illuminate\Database\Schema\Blueprint;
 
 class TableHelperTest extends TestCase
 {
@@ -140,8 +141,35 @@ class TableHelperTest extends TestCase
         $this->assertEquals($response[0], "The selected flat file must be of type: text/plain");
         $this->assertEquals($response[1], "The selected flat file should not be empty");
         $this->assertEquals($response[2], "File is deleted for security reasons");
-    }    
-    
+    }         
+
+    public function testCreateIntegerFieldString() {
+      // Create Test Collection(s)        
+      $collection = $this->testHelper->createCollection($this->colName, 1, false);
+
+      $this->checkFieldCreate($collection->id, 'testBig', 'integer', 'big');
+      $this->checkFieldCreate($collection->id, 'testMedium', 'integer', 'medium');
+      $this->checkFieldCreate($collection->id, 'testDefault', 'integer', 'default');            
+    } 
+
+    public function testCreateTableFieldString() {
+      // Create Test Collection(s)        
+      $collection = $this->testHelper->createCollection($this->colName, 1, false);
+
+      $this->checkFieldCreate($collection->id, 'testBig', 'string', 'big');
+      $this->checkFieldCreate($collection->id, 'testMedium', 'string', 'medium');
+      $this->checkFieldCreate($collection->id, 'testDefault', 'string', 'default');            
+    } 
+
+    public function testCreateTableFieldText() {
+      // Create Test Collection(s)        
+      $collection = $this->testHelper->createCollection($this->colName, 1, false);
+
+      $this->checkFieldCreate($collection->id, 'testBig', 'text', 'big');
+      $this->checkFieldCreate($collection->id, 'testMedium', 'text', 'medium');
+      $this->checkFieldCreate($collection->id, 'testDefault', 'text', 'default');            
+    } 
+
     public function testChangeTableFieldToString() {
       $this->checkFieldChange("Living Space (sq ft)", 'string', 'big');
       $this->checkFieldChange("Living Space (sq ft)", 'string', 'medium');
@@ -159,6 +187,38 @@ class TableHelperTest extends TestCase
       $this->checkFieldChange("Living Space (sq ft)", 'integer', 'medium');
       $this->checkFieldChange("Living Space (sq ft)", 'integer', 'default');
     }       
+
+    public function checkFieldCreate($colId, $field, $type, $size) {
+      // create the table
+      $tableName = $this->testHelper->createTableName();
+      Schema::connection('mysql')->create($tableName, function(Blueprint $table) use($field, $type, $size) {
+        // Default primary key
+        $table->increments('id');
+
+        (new TableHelper)->setupTableField($table, $field, $type, $size);
+
+        // search index
+        $table->longText('srchindex');
+
+        // Time stamps
+        $table->timestamps();
+      });
+
+      // Set table collection id
+      (new TableHelper)->crteTblInCollctn($tableName, $colId);      
+
+      // get newly created table
+      $table = Table::where('tblNme', $tableName)->first();
+
+      // get update field info
+      $response = $table->getColumnType($field);
+
+      // Verify type 
+      $this->assertEquals($response['type'], $type); 
+
+      // Verify size 
+      $this->assertEquals($response['size'], $size); 
+    } 
 
     private function checkFieldChange($field, $type, $size) {
       // Create Test Collection        
@@ -184,6 +244,6 @@ class TableHelperTest extends TestCase
 
       // Verify size changed 
       $this->assertEquals($response['size'], $size);  
-    }
+    }   
 
 }

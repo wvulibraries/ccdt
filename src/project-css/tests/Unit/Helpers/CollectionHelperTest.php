@@ -181,6 +181,9 @@ class CollectionHelperTest extends BrowserKitTestCase
         // set location of file
         $fileName = '1A-random.tab';  
 
+        // Call helper on a collection that hasn't been created
+        $this->assertFalse($this->helper->hasTables($this->colName));          
+
         // Create Test Data Array
         $data = [
           'isCms' => true,
@@ -198,6 +201,9 @@ class CollectionHelperTest extends BrowserKitTestCase
      }     
 
      public function testHasFiles() {
+        // Call helper should return false on collection that doesn't exist
+        $this->assertFalse($this->helper->hasFiles($this->colName));
+
         // Create Test Data Array
         $data = [
           'isCms' => false,
@@ -208,14 +214,14 @@ class CollectionHelperTest extends BrowserKitTestCase
         $collection = $this->helper->create($data);
 
         // Call helper to see that no files exist
-        $this->assertFalse($this->helper->hasFiles($data['name']));   
+        $this->assertFalse($this->helper->hasFiles($this->colName));   
 
         // create a empty file in collection
-        $emptyFile = './storage/app/' . $data['name'] . '/empty.txt';
+        $emptyFile = './storage/app/' . $this->colName . '/empty.txt';
         touch($emptyFile);        
 
         // Call helper to see that files exist
-        $this->assertTrue($this->helper->hasFiles($data['name']));     
+        $this->assertTrue($this->helper->hasFiles($this->colName));     
      }     
 
      public function testSetCMS() {

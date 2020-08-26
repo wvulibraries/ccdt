@@ -208,6 +208,33 @@ class FileViewHelperTest extends BrowserKitTestCase
         $this->assertEquals($result, $collection->clctnName.'/'.$folder.'/'.$testUpload);         
   }
 
+  public function testGetFilePath() {
+        // Generate Test Collection
+        $collection = $this->testHelper->createCollection($this->colName, 0);
+
+        // Create Test Table
+        $tableName = $this->testHelper->createTestTable($collection, 'test.dat');
+
+        $this->importAdapter->process($tableName, 'files/test', 'test.dat');
+
+        //get table
+        $table = Table::where('tblNme', $tableName)->first();
+        
+        // set fake filename to look for
+        $testUpload = '000007.txt';        
+
+        $folder = 'indivletters';
+
+        mkdir('./storage/app'.'/'.$collection->clctnName.'/'.$folder);
+
+        // create empty file
+        touch('./storage/app'.'/'.$collection->clctnName.'/'.$folder.'/'.$testUpload, time() - (60 * 60 * 24 * 5));
+
+        $result = $this->fileViewHelper->getFilePath(1, 2, $testUpload);
+
+        $this->assertEquals($result, $collection->clctnName.'/'.$folder.'/'.$testUpload);      
+  }  
+
   public function testgetOriginalPath() {
         // Generate Test Collection
         $collection = $this->testHelper->createCollection($this->colName, 0);

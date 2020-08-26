@@ -6,6 +6,7 @@
   class UploadControllerUnitTest extends TestCase
   {
     private $colName;
+    private $tableName;     
 
     public function setUp(): void {
       parent::setUp();
@@ -15,11 +16,14 @@
     }    
 
     protected function tearDown(): void {
-        // Delete Test Collections
-        $this->testHelper->deleteTestCollections();         
+      // Delete Test Collections
+      $this->testHelper->deleteTestCollections();  
+        
+      // Generate Table Name
+      $this->tableName = $this->testHelper->createTableName();        
 
-        parent::tearDown();
-    }       
+      parent::tearDown();
+    }        
 
     public function testStoreFilesInvalidCollectionId() {
       $this->expectException(Illuminate\Database\Eloquent\ModelNotFoundException::class);
@@ -27,15 +31,7 @@
       // testing store with invalid collection id should always throw a exception
       $request = new \Illuminate\Http\Request();
       (new UploadController)->storeFiles($request, 1);
-    }
-
-    // public function testStoreFilesInvalidCollectionId2() {
-    //   // testing store with invalid collection id should always throw a exception
-    //   $request = new \Illuminate\Http\Request();
-    //   $response = (new UploadController)->storeFiles($request, 1);
-
-    //   var_dump($response);
-    // }    
+    }   
 
     public function testStoreFilesNoAttachedFiles() {
       $this->startSession();
