@@ -57,6 +57,6 @@ class renameTable extends Command
         // Rename table name in tables
         DB::table('tables')->where('tblNme', '=', $this->argument('tablename'))->update(['tblNme' => $this->argument('newname')]);
 
-        $this->info('Table Has been Renamed.');
+        return $this->info('Table Has been Renamed.');
     }
 }

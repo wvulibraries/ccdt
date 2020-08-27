@@ -63,6 +63,6 @@ class renameCollection extends Command
         // Using Collection Helper Update collection
         $helper->update($data);  
 
-        $this->info('Collection Has been Renamed.');    
+        return $this->info('Collection Has been Renamed.');    
     }
 }

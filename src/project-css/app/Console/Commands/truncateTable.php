@@ -47,6 +47,6 @@ class truncateTable extends Command
 
         DB::table($this->argument('tablename'))->truncate();
 
-        $this->info('Table Has been Truncated.');        
+        return $this->info('Table Has been Truncated.');        
     }
 }

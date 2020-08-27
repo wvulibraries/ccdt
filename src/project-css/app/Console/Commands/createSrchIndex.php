@@ -46,6 +46,6 @@ class createSrchIndex extends Command
 
         dispatch(new CreateSearchIndex($this->argument('tablename')))->onQueue('importQueue');
 
-        $this->info('Job has been created to Create Search Index');          
+        return $this->info('Job has been created to Create Search Index');          
     }
 }

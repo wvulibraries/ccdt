@@ -49,6 +49,6 @@ class enableCollection extends Command
         // Using Collection Helper Disable collection
         $helper->enable($this->argument('collectioname'));   
         
-        $this->info('Collection Has been Enabled.');         
+        return $this->info('Collection Has been Enabled.');         
     }
 }

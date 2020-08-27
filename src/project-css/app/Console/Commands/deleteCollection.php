@@ -66,6 +66,6 @@ class deleteCollection extends Command
         // call helper delete collection
         $helper->deleteCollection($this->argument('collectioname'));
 
-        $this->info('Collection Has been Deleted.');          
+        return $this->info('Collection Has been Deleted.');          
     }
 }

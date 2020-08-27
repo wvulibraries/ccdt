@@ -35,7 +35,8 @@
         Artisan::call('collection:create', ['collectioname' => $this->colName]);
 
         // Disable Collection
-        Artisan::call('collection:disable', ['collectioname' => $this->colName]);
+        $this->artisan('collection:disable', ['collectioname' => $this->colName] )
+             ->expectsOutput('Collection Has been Disabled.'); 
 
         // find the collection
         $thisClctn = Collection::where('clctnName', $this->colName)->first();      
@@ -48,7 +49,7 @@
     public function try_to_disable_a_missing_collection() {
         $this->artisan('collection:disable', ['collectioname' => $this->colName] )
              ->expectsOutput('Collection ' . $this->colName . ' Doesn\'t Exist');     
-    }      
+    }
 
   }
 ?>

@@ -49,6 +49,6 @@ class dropTable extends Command
         // Drop Entry in tables table
         DB::table('tables')->where('tblNme', '=', $this->argument('tablename'))->delete();
 
-        $this->info('Table Has been Deleted.');
+        return $this->info('Table Has been Deleted.');
     }
 }

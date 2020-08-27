@@ -57,6 +57,6 @@ class createCollection extends Command
         // Using Collection Helper Create a new collection
         $helper->create($data);  
 
-        $this->info('Collection Has been Created.');              
+        return $this->info('Collection Has been Created.');              
     }
 }

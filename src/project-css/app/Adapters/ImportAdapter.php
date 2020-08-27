@@ -13,13 +13,27 @@ use App\Helpers\CustomStringHelper;
 
 use Log;
 
-class ImportAdapter {
-    public $savedTkns;
-    public $lastErrRow;
+class ImportAdapter {  
     public $tkns;
     public $curArry;
     public $clmnLst;
     public $tblNme;
+
+    // Class Variables
+    private $errorCount;
+    private $mergeCount;
+    private $lastErrRow;
+    private $savedTkns;
+
+    public function __construct()
+    {
+      // Init Class Variables
+      $this->errorCount = 0;
+      $this->mergeCount = 0;
+
+      $this->lastErrRow = NULL;
+      $this->savedTkns = NULL;
+    }    
 
      /**
      * Takes 2 arrays of tokens and merges them.
@@ -118,12 +132,6 @@ class ImportAdapter {
      * @return void
      */
     public function process($tblNme, $fltFlePath, $fltFleNme) {
-      $this->errorCount = 0;
-      $this->mergeCount = 0;
-
-      $this->lastErrRow = NULL;
-      $this->savedTkns = NULL;
-
       $this->tblNme = $tblNme;
 
       //get table
