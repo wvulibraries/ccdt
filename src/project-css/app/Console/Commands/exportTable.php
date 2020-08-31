@@ -6,6 +6,15 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
+/**
+ * Artisan Command for exporting a table to a csv file
+ *
+ * Command execution example 'php artisan table:export table1 --field=id --field=name' 
+ * the above command will generate a csv file from table1 called table1.csv in the 
+ * exports folder. The new file in this example will only export 2 fields id and name
+ * to the new file.
+ * 
+ */
 class exportTable extends Command
 {
     /**

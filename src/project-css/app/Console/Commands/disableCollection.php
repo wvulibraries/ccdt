@@ -5,6 +5,14 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use App\Helpers\CollectionHelper;
 
+/**
+ * Artisan Command for disabling a collection
+ *
+ * Command execution example 'php artisan collection:disable collection1'
+ * command disables the collection. Once the collection is disabled the users
+ * cannot access any table(s) that have been created in the collection.
+ *
+ */
 class disableCollection extends Command
 {
     /**

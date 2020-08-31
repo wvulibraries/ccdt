@@ -7,6 +7,15 @@ use Illuminate\Console\Command;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Support\Facades\Schema;
 
+/**
+ * Artisan Command for optimizing the search index of a table
+ *
+ * Command execution example 'php artisan table:optimize:search table1'
+ * command dispatches job that performs various function on the search
+ * index such removing common words, duplicate words and single characters
+ * that full text search ignores.
+ *
+ */
 class optimizeSrchIndex extends Command
 {
     /**

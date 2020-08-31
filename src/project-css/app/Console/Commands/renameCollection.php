@@ -6,6 +6,13 @@ use Illuminate\Console\Command;
 use App\Models\Collection;
 use App\Helpers\CollectionHelper;
 
+/**
+ * Artisan Command for renaming collection
+ *
+ * Command execution example 'php artisan collection:rename collection1 collection2'
+ * command renames a existing collection and associated storage folder.
+ *
+ */
 class renameCollection extends Command
 {
     /**

@@ -6,6 +6,14 @@ use Illuminate\Console\Command;
 use App\Helpers\CollectionHelper;
 use App\Models\Collection;
 
+/**
+ * Artisan Command for deleting a collection
+ *
+ * Command execution example 'php artisan collection:delete collection1'
+ * command removes passed collection if it exists. The use of '--force' 
+ * bypasses checking for attached files or tables.
+ *
+ */
 class deleteCollection extends Command
 {
     /**
@@ -42,13 +50,13 @@ class deleteCollection extends Command
     {
         $helper = new CollectionHelper;
 
+        // verify collection exists
+        if ($helper->isCollection($this->argument('collectioname')) == false) {
+            return $this->error('Collection ' . $this->argument('collectioname') . ' Doesn\'t Exist');
+        }
+
         // skip verify of items if force is set
         if ($this->option('force') == false) {
-            // verify collection exists
-            if ($helper->isCollection($this->argument('collectioname')) == false) {
-                return $this->error('Collection ' . $this->argument('collectioname') . ' Doesn\'t Exist');
-            }
-
             // find the collection
             $thisClctn = Collection::where('clctnName', $this->argument('collectioname'))->first();            
 

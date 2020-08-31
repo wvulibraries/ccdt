@@ -5,6 +5,14 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use App\Helpers\CollectionHelper;
 
+/**
+ * Artisan Command for enabling a disabled collection
+ *
+ * Command execution example 'php artisan collection:enable collection1'
+ * command enables a previously disabled collection. Once the collection 
+ * is enabled the users will be able to view the associated tables.
+ *
+ */
 class enableCollection extends Command
 {
     /**

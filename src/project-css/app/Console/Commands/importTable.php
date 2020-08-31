@@ -8,6 +8,15 @@ use App\Helpers\TableHelper;
 use App\Models\Collection;
 use Illuminate\Support\Facades\Schema;
 
+
+/**
+ * Artisan Command for importing a table
+ *
+ * Command execution example 'php artisan table:import collection1 table1 file.csv' 
+ * the above command will import a file into a new table. It will also create the collection
+ * if it doesn't exist.
+ * 
+ */
 class importTable extends Command
 {
     /**

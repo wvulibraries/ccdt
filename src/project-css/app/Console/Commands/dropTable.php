@@ -6,6 +6,15 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
+/**
+ * Artisan Command for removing a table
+ *
+ * Command execution example 'php artisan table:drop table1'
+ * command removes a table from the mysql database and from
+ * the tables table that ccdt uses to keep track of tables
+ * and associated collections.
+ *
+ */
 class dropTable extends Command
 {
     /**
@@ -40,13 +49,13 @@ class dropTable extends Command
     public function handle()
     {
         if (!Schema::hasTable($this->argument('tablename'))) { 
-            $this->error('Table Doesn\'t Exist.');
-            return;
+            return $this->error('Table Doesn\'t Exist.');
         }
 
         // Drop Table if Exists
         Schema::dropIfExists($this->argument('tablename'));
-        // Drop Entry in tables table
+
+        // Remove Entry in tables table
         DB::table('tables')->where('tblNme', '=', $this->argument('tablename'))->delete();
 
         return $this->info('Table Has been Deleted.');

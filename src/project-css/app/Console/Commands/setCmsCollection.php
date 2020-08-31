@@ -5,6 +5,13 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use App\Helpers\CollectionHelper;
 
+/**
+ * Artisan Command for setting the cms option on a collection
+ *
+ * Command execution example 'php artisan collection:cms:set collection1'
+ * command sets the collection as a cms collection.
+ *
+ */
 class setCmsCollection extends Command
 {
     /**

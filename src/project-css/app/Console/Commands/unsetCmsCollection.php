@@ -5,6 +5,13 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use App\Helpers\CollectionHelper;
 
+/**
+ * Artisan Command for unsetting the cms option on a collection
+ *
+ * Command execution example 'php artisan collection:cms:unset collection1'
+ * command unsets the cms option on a collection.
+ *
+ */
 class unsetCmsCollection extends Command
 {
     /**

@@ -6,6 +6,13 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
+/**
+ * Artisan Command for renaming a table
+ *
+ * Command execution example 'php artisan table:rename table1 table2' 
+ * the above command will rename table.
+ * 
+ */
 class renameTable extends Command
 {
     /**
@@ -45,7 +52,7 @@ class renameTable extends Command
             return;
         }
 
-        // insure table doesn't exist
+        // insure new table name doesn't exist
         if (Schema::hasTable($this->argument('newname'))) { 
             $this->error($this->argument('newname') . ' Already Exists.');
             return;

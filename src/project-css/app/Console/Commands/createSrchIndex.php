@@ -7,6 +7,13 @@ use Illuminate\Console\Command;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Support\Facades\Schema;
 
+/**
+ * Artisan Command for creating a the search index of a table
+ *
+ * Command execution example 'php artisan table:create:search table1'
+ * command dispatches job that creates the search index on table1
+ *
+ */
 class createSrchIndex extends Command
 {
     /**

@@ -7,6 +7,13 @@ use Illuminate\Support\Facades\DB;
 use App\Models\Collection;
 use App\Helpers\CollectionHelper;
 
+/**
+ * Artisan Command for creating a collection
+ *
+ * Command execution example 'php artisan collection:create collection1 --iscms'
+ * command creates a new collection called collection1 and sets it as a cms collection.
+ *
+ */
 class createCollection extends Command
 {
     /**
@@ -38,7 +45,7 @@ class createCollection extends Command
      * Execute the console command.
      *
      * @return mixed
-     */
+     */   
     public function handle()
     {
         $helper = new CollectionHelper;

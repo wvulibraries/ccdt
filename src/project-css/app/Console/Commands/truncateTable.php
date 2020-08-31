@@ -6,6 +6,13 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
+/**
+ * Artisan Command for truncating a table
+ *
+ * Command execution example 'php artisan table:truncate table1' 
+ * The truncate command will remove all records from the specified table
+ * 
+ */
 class truncateTable extends Command
 {
     /**
