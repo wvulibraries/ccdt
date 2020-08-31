@@ -29,35 +29,48 @@
         });
     }
 
-    public function message_set_disabled_collection()
-    {
-        $request = new Request;
+    /** @test */
+    // public function message_set_disabled_collection()
+    // {
+    //     $this->startSession();
+    //     $request = new Request;
 
-        $request->merge([
-            'curCol' => 2
-        ]);
+    //     $request->merge([
+    //         'curCol' => 2
+    //     ]);
 
-        $middleware = new CheckCollectionId;
+    //     $middleware = new CheckCollectionId;
 
-        $middleware->handle($request, function ($req) {
-            $this->assertEquals('Collection is disabled', $req->message);
-        });
-    }
+    //     // $middleware->handle($request, function ($req) {
+    //     //     $this->assertEquals('Collection is disabled', $this->message);
+    //     // });
 
-    public function message_set_invalid_collection()
-    {
-        $request = new Request;
+    //     $result = $middleware->handle($request,function($r){});
 
-        $request->merge([
-            'curCol' => 3
-        ]);
+    //     //$result = $middleware->handle($request, function(){ return 'can access';});
 
-        $middleware = new CheckCollectionId;
+    //     var_dump($result);
 
-        $middleware->handle($request, function ($req) {
-            $this->assertEquals('Collection id is invalid', $req->message);
-        });
-    }
+    //     // $sessionMessages = $this->app['session']->pull('messages');
+    //     // $this->assertEquals($sessionMessages[0]['content'], 'Collection is disabled');
+    //     // $this->assertEquals($sessionMessages[0]['level'], 'error');
+    // }
+
+    /** @test */
+    // public function message_set_invalid_collection()
+    // {
+    //     $request = new Request;
+
+    //     $request->merge([
+    //         'curCol' => 3
+    //     ]);
+
+    //     $middleware = new CheckCollectionId;
+
+    //     $middleware->handle($request, function ($req) {
+    //         $this->assertEquals('Collection id is invalid', $req->message);
+    //     });
+    // }
 
     // public function test_handler()
     // {
@@ -76,7 +89,8 @@
     //     var_dump($response);
     // }
 
-    public function testIsValidCollection() {
+    /** @test */
+    public function is_valid_collection() {
         $response =  (new CheckCollectionId)->isValidCollection('invalid');
         $this->assertFalse($response);
         $response =  (new CheckCollectionId)->isValidCollection(0);
@@ -85,7 +99,8 @@
         $this->assertTrue($response);
     }
 
-    public function testHasAccess() {
+    /** @test */
+    public function has_access() {
         $response =  (new CheckCollectionId)->hasAccess(0);
         $this->assertFalse($response);
         $response =  (new CheckCollectionId)->hasAccess(1);

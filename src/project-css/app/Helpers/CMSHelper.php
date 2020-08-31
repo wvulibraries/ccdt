@@ -11,16 +11,14 @@ use App\Models\Collection;
 use App\Helpers\CSVHelper;
 use App\Helpers\TableHelper;
 
+/**
+ * CMS Helper
+ *
+ * These are various functions that help with processing
+ * cms files.
+ *
+ */
 class CMSHelper {
-    /**
-     * CMS Helper
-     *
-     * These are various functions that help with processing
-     * cms files.
-     *
-     */
-
-
      /**
       * Check the Record Types table for a matching header for the table
       *

@@ -14,7 +14,6 @@
     private $filePath = './storage/app';
     public $collectionHelper;
     public $tableHelper;
-    public $importAdapter;
 
     private $colName;
     private $tableName;       
@@ -23,7 +22,6 @@
       parent::setUp();
       $this->collectionHelper = new CollectionHelper;
       $this->tableHelper = new TableHelper;
-      $this->importAdapter = new ImportAdapter;
 
       // Generate Collection Name
       $this->colName = $this->testHelper->generateCollectionName();
@@ -56,7 +54,8 @@
         $emptyFile = $path.'/'.$folder.'/'.$file;
         touch($emptyFile);
         try {
-          $this->importAdapter->process($this->tableName, $folder, $file);
+          $importAdapter = (new ImportAdapter($this->tableName, $folder, $file));
+          $importAdapter->process();
         } catch (Exception $e) {
           $this->assertEquals("Cannot Import a Empty File.", $e->getMessage());
         }
@@ -81,7 +80,8 @@
         $this->tableHelper->setupNewTable($folder, $file, $this->tableName, $thisClctn->id);
 
         // Call import adapter process
-        $this->importAdapter->process($this->tableName, $folder, $file);     
+        $importAdapter = (new ImportAdapter($this->tableName, $folder, $file));
+        $importAdapter->process();    
 
         // get newly created table
         $table = Table::where('id', '1')->first();
@@ -108,7 +108,8 @@
         $this->tableHelper->setupNewTable($folder, $file, $this->tableName, $thisClctn->id);
 
         // Call import adapter process
-        $this->importAdapter->process($this->tableName, $folder, $file);     
+        $importAdapter = (new ImportAdapter($this->tableName, $folder, $file));
+        $importAdapter->process();     
 
         // get newly created table
         $table = Table::where('id', '1')->first();

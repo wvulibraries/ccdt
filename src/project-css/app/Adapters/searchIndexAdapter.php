@@ -10,15 +10,15 @@ use App\Models\Table;
 
 use Log;
 
+/**
+ * Search Index Adapter
+ */
+
 class SearchIndexAdapter {
  
     public function process($tblNme) {
       //get table
       $table = Table::where('tblNme', $tblNme)->firstOrFail();
-      // var_dump($table);
-      // if(!$table){
-      //   throw new \Exception('Error generating search index');
-      // }
 
       $clmnLst = $table->getColumnList();
 

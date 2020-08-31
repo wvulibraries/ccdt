@@ -7,10 +7,14 @@
 namespace App\Libraries;
 use App\Helpers\CustomStringHelper;
 
+/**
+ * Full Text Search Formatter
+ * 
+ * class contains functions that will check and properly Format
+ * a string that can be used for full text boolean searches
+ * with sql injection in mind.
+ */
 class FullTextSearchFormatter {
-// class contains functions that will check and properly Format
-// a string that can be used for full text boolean searches
-// with sql injection in mind.
 
      /**
      * sanitizes and corrects search string for full text search
@@ -70,7 +74,7 @@ class FullTextSearchFormatter {
      * @param string $word
      * @return boolean
      */   
-    public function hasRelevancyModifier($word) {
+    public function hasRelevancyModifier($word) : bool {
       $count = substr_count('<>', $word[0]);
       return ($count == 1);
     }
@@ -82,7 +86,7 @@ class FullTextSearchFormatter {
      * @param string $string
      * @return boolean
      */       
-    public function hasExactTerm($string) {
+    public function hasExactTerm($string) : bool {
       $count = substr_count($string, '"');
       return ($count == 2);
     }
@@ -93,7 +97,7 @@ class FullTextSearchFormatter {
      * @param string $string the string should contain ()
      * @return boolean
      */    
-    public function hasMatchEither($string) {
+    public function hasMatchEither($string) : bool {
       // verifes that the match either grouping is correct
       return (strpos($string, '(') < strpos($string, ')'));
     }
@@ -104,7 +108,7 @@ class FullTextSearchFormatter {
      * @param string $string
      * @return boolean
      */  
-    public function hasWildCard($string) {
+    public function hasWildCard($string) : bool {
       return (mb_substr($string, -1) == '*');
     }
 
@@ -112,7 +116,7 @@ class FullTextSearchFormatter {
      * returns string between ()
      *
      * @param string $string the string should contain ()
-     * @return string or false if substring cannot be returned
+     * @return mixed substr or false if substring cannot be returned
      */    
     public function getMatchEither($string) {
       $startPos = strpos($string, '(') + 1;
@@ -151,7 +155,7 @@ class FullTextSearchFormatter {
      * ie +nice +(language country)
      *
      * @param string $string
-     * @return string $value
+     * @return string
      */        
     public function cleanMatchEither($string) {
       // words in match either query
@@ -170,7 +174,7 @@ class FullTextSearchFormatter {
      * properly format search string
      *
      * @param string $search
-     * @return string $searchTerms
+     * @return string
      */      
     public function prepareSearch($search) {
       // if the string is wrapped in quotes we add them back after the preg_replace

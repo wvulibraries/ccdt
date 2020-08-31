@@ -13,15 +13,14 @@ use App\Models\Table;
 use App\Helpers\CustomStringHelper;
 use App\Services\TikaConvert;
 
+/**
+ * File View Helper
+ *
+ * These are various functions that help locate files
+ * that are saved to the database
+ *
+ */
 class FileViewHelper {
-    /**
-     * File View Helper
-     *
-     * These are various functions that help locate files
-     * that are saved to the database
-     *
-     */
-
      /**
       * checks if files exists in storage under the folder
       * for the table

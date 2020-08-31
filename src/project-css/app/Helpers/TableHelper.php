@@ -25,15 +25,14 @@ use App\Helpers\CSVHelper;
 use App\Helpers\CMSHelper;
 use App\Helpers\CustomStringHelper;
 
+/**
+ * Table Helper
+ *
+ * These are various functions that help with dynamically
+ * creating and modifying tables without migrations.
+ *
+ */
 class TableHelper {
-    /**
-     * Table Helper
-     *
-     * These are various functions that help with dynamically
-     * creating and modifying tables without migrations.
-     *
-     */
-
     /** 
     * Inserts New String field into the passed table
     *

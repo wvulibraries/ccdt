@@ -11,13 +11,11 @@
     protected $fileViewHelper;
     private $colName;  
     private $tableName; 
-    public $importAdapter; 
 
     public function setUp(): void {
       parent::setUp();
 
       $this->fileViewHelper = new FileViewHelper;
-      $this->importAdapter = new ImportAdapter;
 
       // Generate Collection Name
       $this->colName = $this->testHelper->generateCollectionName();  
@@ -42,7 +40,9 @@
         // Create Test Table
         $tableName = $this->testHelper->createTestTable($collection, 'test.dat');
 
-        $this->importAdapter->process($tableName, 'files/test', 'test.dat');
+        // Call import adapter process
+        $importAdapter = (new ImportAdapter($tableName, 'files/test', 'test.dat'));
+        $importAdapter->process();  
 
         //get table
         $table = Table::where('tblNme', $tableName)->first();

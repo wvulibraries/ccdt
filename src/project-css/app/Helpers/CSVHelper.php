@@ -9,15 +9,14 @@ namespace App\Helpers;
 use Illuminate\Support\Facades\Storage;
 use App\Helpers\TableHelper;
 
+/**
+ * CSV Helper
+ *
+ * These are various functions that help with processing
+ * csv or other delmimited files prior to importing.
+ *
+ */
 class CSVHelper {
-    /**
-     * Table Helper
-     *
-     * These are various functions that help with processing
-     * csv or other delmimited files prior to importing.
-     *
-     */
-
      /**
       * Determine delimiter used in a file
       *
@@ -151,9 +150,6 @@ class CSVHelper {
          }
 
          foreach($tkns as $x=>$x_value) {
-           //var_dump($checkArray[$x][1] . ' ' . $x_value . ' ' . strlen($x_value));
-           //die();  
-
            // change type if we detect any that the string isn't numeric
            if (is_numeric($x_value) && ($x_value != "")) {
              $checkArray[$x][0] = 1;           

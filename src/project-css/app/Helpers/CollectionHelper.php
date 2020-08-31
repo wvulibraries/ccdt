@@ -9,14 +9,15 @@ namespace App\Helpers;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Collection;
 
+/**
+ * Collection Helper
+ *
+ * These are various functions that help with creating and modifying 
+ * collections.
+ *
+ */
+
 class CollectionHelper {
-    /**
-     * Collection Helper
-     *
-     * These are various functions that help with creating and modifying 
-     * collections.
-     *
-     */
 
      public function create($data) {
         // Create the collection name
@@ -63,33 +64,31 @@ class CollectionHelper {
      }
 
      public function disable($name) {
-        // verify collection exists
-        if ($this->isCollection($name)) {
-          // find the collection
-          $thisClctn = Collection::where('clctnName', $name)->first();
+       if ($this->isCollection($name) == false) {   
+         return false;
+       }
 
-          // reset collection to disabled
-          $this->updateCollectionFlag($thisClctn->id, false);
+       // find the collection
+       $thisClctn = Collection::where('clctnName', $name)->first();
 
-          return true;
-        }
+       // reset collection to disabled
+       $this->updateCollectionFlag($thisClctn->id, false);
 
-        return false;
+       return true;
     }
 
     public function enable($name) {
-      // verify collection exists
-      if ($this->isCollection($name)) {
-        // find the collection
-        $thisClctn = Collection::where('clctnName', $name)->first();
-
-        // reset collection to enabled
-        $this->updateCollectionFlag($thisClctn->id, true);
-
-        return true;
+      if ($this->isCollection($name) == false) {   
+        return false;
       }
 
-      return false;
+      // find the collection
+      $thisClctn = Collection::where('clctnName', $name)->first();
+
+      // reset collection to enabled
+      $this->updateCollectionFlag($thisClctn->id, true);
+
+      return true;
      }
 
      public function isCollection($name) {
@@ -131,14 +130,15 @@ class CollectionHelper {
     * @return boolean
     */         
      public function hasFiles($name) {
-       if ($this->isCollection($name)) {
-          $files = Storage::allFiles($name);
-          if (empty($files)) {
-            return false;
-          }
-          return true;
+        if ($this->isCollection($name) == false) {   
+          return false;
+        }       
+
+        $files = Storage::allFiles($name);
+        if (empty($files)) {
+          return false;
         }
-        return false;
+        return true;
      }
 
      /**
@@ -147,7 +147,7 @@ class CollectionHelper {
       * collection
       *
       * @param  integer $id   
-      * @param  boolean  $flag   
+      * @param  boolean $flag   
       */
      public function updateCollectionFlag($id, $flag) {
         // Create the collection name
@@ -165,6 +165,9 @@ class CollectionHelper {
 
       /**
       * Sets hasAccess on all tables in collection
+      *
+      * @param  object $collection   
+      * @param  boolean $access        
       */  
       private function updateTableAccess($collection, $access) {
         // Get all the tables of this collection
@@ -179,15 +182,24 @@ class CollectionHelper {
 
       /**
        * Delete a collection
-       */
+       *
+       * @param  string  $name    
+       * @return boolean
+       */ 
       public function deleteCollection($name) {
         // find the collection
         $thisClctn = Collection::where('clctnName', $name)->first();
 
-        // delete the collection
-        $thisClctn->delete();
+        if ( $thisClctn != null ) {
+          // delete the collection
+          $thisClctn->delete();
 
-        // delete storage folder
-        Storage::deleteDirectory($name);
+          // delete storage folder
+          Storage::deleteDirectory($name);
+
+          return true;
+        }
+
+        return false;
       }
 }

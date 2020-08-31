@@ -23,6 +23,11 @@ class FileImport implements ShouldQueue
 
     /**
      * Create a new job instance.
+     *
+     * @param string $tblNme
+     * @param string $fltFlePath
+     * @param string $fltFle
+     *  
      */
     public function __construct($tblNme, $fltFlePath, $fltFle)
     {
@@ -36,8 +41,8 @@ class FileImport implements ShouldQueue
      */
     public function handle()
     {
-        $adapter = new ImportAdapter;
+        $adapter = new ImportAdapter($this->tblNme, $this->fltFlePath, $this->fltFle);
         // import file into table
-        $adapter->process($this->tblNme, $this->fltFlePath, $this->fltFle);        
+        $adapter->process();        
     }
 }

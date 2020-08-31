@@ -9,17 +9,16 @@ namespace App\Helpers;
 use Illuminate\Support\Facades\DB;
 use App\Models\AllowedFileTypes;
 
+/**
+ * Custom String Helper
+ *
+ * These are various functions that help with parsing over
+ * strings that that point to files in the storage folder
+ * in laravel. These files were orginally in a windows
+ * environment.
+ *
+ */
 class CustomStringHelper {
-    /**
-     * Custom String Helper
-     *
-     * These are various functions that help with parsing over
-     * strings that that point to files in the storage folder
-     * in laravel. These files were orginally in a windows
-     * environment.
-     *
-     */
-
      // regex patter we will use to detect a social security number
      protected $pattern = '#\b[0-9]{3}-[0-9]{2}-[0-9]{4}\b#';
 

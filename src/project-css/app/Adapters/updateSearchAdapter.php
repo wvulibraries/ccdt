@@ -8,11 +8,16 @@ namespace App\Adapters;
 use Illuminate\Support\Facades\DB;
 use Log;
 
+/**
+ * Update Search Adapter
+ */
+
 class UpdateSearchAdapter {
        
     // process takes the current $srchIndex and removes duplicate information
     // and cleans up the string to be used by mysql full text search.
-    // saving the result to the passed table with $id.  
+    // saving the result to the passed table with $id. 
+
     public function process($tblNme, $id, $srchIndex) {
         // remove extra characters replacing them with spaces
         // also remove .. that is in the filenames

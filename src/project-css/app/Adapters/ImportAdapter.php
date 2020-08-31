@@ -16,36 +16,60 @@ use Log;
 class ImportAdapter {  
     public $tkns;
     public $curArry;
-    public $clmnLst;
-    public $tblNme;
 
     // Class Variables
-    private $errorCount;
-    private $mergeCount;
+    private $tblNme;
+    private $fltFlePath;
+    private $fltFleNme;
+
     private $lastErrRow;
     private $savedTkns;
+    private $orgCount;
+    private $delimiter;
 
-    public function __construct()
-    {
+    private $collection;
+    private $table;
+    private $tableFields;
+
+    // Helpers
+    private $csvHelper;
+
+    public function __construct($tblNme, $fltFlePath, $fltFleNme) {
+      // Set items
+      $this->tblNme = $tblNme;
+      $this->fltFlePath = $fltFlePath;
+      $this->fltFleNme = $fltFleNme;      
+
       // Init Class Variables
-      $this->errorCount = 0;
-      $this->mergeCount = 0;
-
       $this->lastErrRow = NULL;
       $this->savedTkns = NULL;
+
+      // Init Helpers
+      $this->csvHelper = new CSVHelper;
+      
+      //get table
+      $this->table = Table::where('tblNme', $this->tblNme)->first();
+
+      // find the collection
+      $this->collection = Collection::findorFail($this->table->collection_id);
+
+      // set table fields
+      $this->tableFields = $this->getTableFields();
+
+      // determine number of fields without the srchIndex
+      $this->orgCount = count($this->tableFields) - 1;
     }    
 
      /**
-     * Takes 2 arrays of tokens and merges them.
+     * Merges $this->savedTkns and $this->tkns 
+     * saves merged array to $this->tkns
+     * 
      * Designed around the Rockefeller data their was instances where a
      * incorrect character caused a break in reading the line. When this 
      * is detected due to a inconsistent field count we will attempt to 
      * merge the 2 lines.
-     * @param array $tkns1
-     * @param array $tkns2
-     * @return array
      */    
-    public function mergeLines() {
+    public function mergeLines() : void {
         $numItem = count($this->savedTkns) - 1;
         $this->savedTkns[ $numItem ] = $this->savedTkns[ $numItem ] . ' ' . $this->tkns[ 0 ];
         unset($this->tkns[ 0 ]);
@@ -59,23 +83,21 @@ class ImportAdapter {
      * if their is insufficent items we will save the tkns and the row position
      * so we can attempt a merge later.
      * @param string $curLine current line read from the file
-     * @param string $delimiter type of delmiter that is used in the file
-     * @param integer $orgCount current number of fields expected
      * @param integer $prcssd current position in the file
-     * @return string
+     * @return boolean
      */
-    public function prepareLine($curLine, $delimiter, $orgCount, $prcssd) {
+    public function prepareLine($curLine, $prcssd) : bool {
         // Strip out Quotes that are sometimes seen in csv files around each item
         $curLine = str_replace('"', "", $curLine);
 
         // Tokenize the line
-        $this->tkns = (new CSVHelper)->tknze($curLine, $delimiter);
+        $this->tkns = $this->csvHelper->tknze($curLine, $this->delimiter);
 
         // Validate the tokens and filter them
-        $this->tkns = (new CSVHelper)->fltrTkns($this->tkns);
+        $this->tkns = $this->csvHelper->fltrTkns($this->tkns);
 
         // if lastErrRow is the previous row try to combine the lines
-        if ((count($this->tkns) != $orgCount) && ($this->lastErrRow == $prcssd) && ($this->savedTkns != NULL)) {
+        if ((count($this->tkns) != $this->orgCount) && ($this->lastErrRow == $prcssd) && ($this->savedTkns != NULL)) {
             $this->mergeLines();
 
             // clear last saved line since we did a merge
@@ -84,7 +106,7 @@ class ImportAdapter {
         }
 
         // if token count doesn't match what is exptected save the tkns and last row position
-        if (is_array($this->tkns) && (count($this->tkns) != $orgCount)) {
+        if (is_array($this->tkns) && (count($this->tkns) != $this->orgCount)) {
           // save the last row position and the Tokenized row
           $this->lastErrRow = $prcssd;
           $this->savedTkns = $this->tkns;
@@ -98,25 +120,25 @@ class ImportAdapter {
     * takes array of tokens. Creates a search index and 
     * inserts them into the table
     * 
-    * @param array $tkns array containing all fields of record
-    * @param integer $orgCount number of expected fields in the record
-    * @param object $clmnLst array containing all field names for table
     * @return boolean
     */   
-    public function processLine($orgCount) {
+    public function processLine() : bool  {
         if(!is_array($this->tkns) && empty($this->tkns)) { return false; }
 
-        // verify that passed $tkns match the expected field count
-        if (count($this->tkns) == $orgCount) {
-          // Declae an array
+        // verify that $tkns match the expected field count
+        if (count($this->tkns) == $this->orgCount) {
+          // Declare an array
           $this->curArry = array();
 
           // Compact them into one array with utf8 encoding
-          for ($i = 0; $i<$orgCount; $i++) {
-            $this->curArry[ strval($this->clmnLst[ $i ]) ] = utf8_encode($this->tkns[ $i ]);
+          for ($i = 0; $i<$this->orgCount; $i++) {
+            $this->curArry[ strval($this->tableFields[ $i ]) ] = utf8_encode($this->tkns[ $i ]);
           }
 
+          return true;
         }
+
+        return false;
     }
 
     /**
@@ -124,45 +146,23 @@ class ImportAdapter {
      * get all the column names from table name
      * 1. Read the file as spl object
      * 2. For each line
-     *   1. Validate
-     * @param string $tblNme
-     * @param string $fltFlePath
-     * @param string $fltFleNmetype
-     * @param boolean $ignoreFirst 
-     * @return void
+     *   1. Validate 
      */
-    public function process($tblNme, $fltFlePath, $fltFleNme) {
-      $this->tblNme = $tblNme;
-
-      //get table
-      $table = Table::where('tblNme', $tblNme)->first();
-
-      // find the collection
-      $thisClctn = Collection::findorFail($table->collection_id);
-
-      $this->clmnLst = $table->getColumnList();
-
-      // remove the id and time stamps
-      $this->clmnLst = array_splice($this->clmnLst, 1, count($this->clmnLst) - 3);
-
-      // determine number of fields without the srchIndex
-      $orgCount = count($this->clmnLst) - 1;
-
+    public function process() {
       // 1. Read the file as spl object
-      $fltFleAbsPth = $fltFlePath.'/'.$fltFleNme;
-      $fltFleFullPth = storage_path('app/'.$fltFleAbsPth);
+      $fltFleFullPth = storage_path('app/'.$this->fltFlePath.'/'.$this->fltFleNme);
 
       // Create an instance for the file
       $curFltFleObj = new \SplFileObject($fltFleFullPth);
 
       // Detect delimiter used in file
-      $delimiter = (new CSVHelper)->detectDelimiter($fltFleFullPth);
+      $this->delimiter = $this->csvHelper->detectDelimiter($fltFleFullPth);
       
       // Check for an empty file
       if (filesize($fltFleFullPth)>0) {
 
         // Ignore the first line if the collection is cms
-        if ($thisClctn->isCms == false) { $curFltFleObj->seek(1); }
+        if ($this->collection->isCms == false) { $curFltFleObj->seek(1); }
 
         // Counter for processed
         $prcssd = 0;
@@ -171,14 +171,14 @@ class ImportAdapter {
         $data = [];
 
         // number of records to insert based on field count
-        $insertCount = 2000 * (32 / $orgCount);
+        $insertCount = 2000 * (32 / $this->orgCount);
 
         // For each line
         while ($curFltFleObj->valid()) {
           // Call prepareLine to process the next line of the file
-          if ($this->prepareLine($curFltFleObj->current(), $delimiter, $orgCount, $prcssd)) {
+          if ($this->prepareLine($curFltFleObj->current(), $prcssd)) {
             // process $tkns 
-            $this->processLine($orgCount);
+            $this->processLine();
 
             // save line to be inserted later
             if ($this->curArry) {
@@ -191,7 +191,7 @@ class ImportAdapter {
 
             if (count($data) >= $insertCount) {
               //insert Record(s) into database
-              $result = $table->insertRecord($data);
+              $result = $this->table->insertRecord($data);
 
               // clear $data array
               $data = [];
@@ -204,13 +204,28 @@ class ImportAdapter {
         // insert records at the end of file
         if (count($data) > 0) {
             //insert Record(s) into database
-            $table->insertRecord($data);
+            $this->table->insertRecord($data);
         }  
 
       }
       else {
         throw new \Exception("Cannot Import a Empty File.");
       }
+    }
+
+    /**
+    * get current column list from current table
+    * remove common fields id and time stamps
+    * return remaining fields as an array
+    * @return array
+    */ 
+    private function getTableFields() : array {
+      // Get Column List from table
+      $clmnLst = $this->table->getColumnList();
+
+      // remove the id and time stamps
+      // return the remaining items in array
+      return array_splice($clmnLst, 1, count($clmnLst) - 3);
     }
 
 }

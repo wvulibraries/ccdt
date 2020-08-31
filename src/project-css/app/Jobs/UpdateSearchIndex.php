@@ -24,6 +24,10 @@ class UpdateSearchIndex implements ShouldQueue
 
     /**
      * Create a new job instance.
+     *
+     * @param string $tblNme
+     * @param array $records
+     *  
      */
     public function __construct($tblNme, $records)
     {

@@ -26,6 +26,11 @@ class OptimizeSearch implements ShouldQueue
 
     /**
      * Create a new job instance.
+     * 
+     * @param string $tblNme
+     * @param integer $skipCount
+     * @param integer $chunkSize     
+     *  
      */
     public function __construct($tblNme, $skipCount, $chunkSize)
     {

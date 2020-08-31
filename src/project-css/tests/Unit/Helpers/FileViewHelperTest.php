@@ -16,7 +16,6 @@ class FileViewHelperTest extends BrowserKitTestCase
     public $tableHelper;
     private $colName;
     private $tableName;    
-    public $importAdapter; 
 
     public function setUp(): void {
         parent::setUp();
@@ -24,7 +23,6 @@ class FileViewHelperTest extends BrowserKitTestCase
         $this->singlefilewithpath = '..\documents\BlobExport\indivletters\114561.txt';
         $this->tableHelper = new TableHelper;  
         $this->collectionHelper = new CollectionHelper; 
-        $this->importAdapter = new ImportAdapter;
         
         // Generate Collection Name
         $this->colName = $this->testHelper->generateCollectionName();
@@ -215,7 +213,8 @@ class FileViewHelperTest extends BrowserKitTestCase
         // Create Test Table
         $tableName = $this->testHelper->createTestTable($collection, 'test.dat');
 
-        $this->importAdapter->process($tableName, 'files/test', 'test.dat');
+        $importAdapter = (new ImportAdapter($tableName, 'files/test', 'test.dat'));
+        $importAdapter->process(); 
 
         //get table
         $table = Table::where('tblNme', $tableName)->first();
@@ -242,7 +241,8 @@ class FileViewHelperTest extends BrowserKitTestCase
         // Create Test Table
         $tableName = $this->testHelper->createTestTable($collection, 'test.dat');
 
-        $this->importAdapter->process($tableName, 'files/test', 'test.dat');
+        $importAdapter = (new ImportAdapter($tableName, 'files/test', 'test.dat'));
+        $importAdapter->process();         
 
         //get table
         $table = Table::where('tblNme', $tableName)->first();
