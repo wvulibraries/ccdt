@@ -6,18 +6,27 @@
 namespace App\Adapters;
 
 use Illuminate\Support\Facades\DB;
-use Log;
 
 /**
  * Update Search Adapter
+ * 
+ * Update SearchAdapter has on function process that takes the current
+ * $srchIndex and removes duplicate information and cleans up the string 
+ * to be used by mysql full text search. Then saving the result to the passed 
+ * table with $id. 
  */
-
 class UpdateSearchAdapter {
-       
-    // process takes the current $srchIndex and removes duplicate information
-    // and cleans up the string to be used by mysql full text search.
-    // saving the result to the passed table with $id. 
-
+      
+    /**
+     * Process is the main function in the Update Search Adapter
+     *
+     * @param string $tblNme Table Name
+     * @param integer $id table record id
+     * @param string $srchIndex current Search Index
+     *
+     * @author Tracy A. McCormick <tam0013@mail.wvu.edu>
+     * @return unserialized Array if found or null
+     */     
     public function process($tblNme, $id, $srchIndex) {
         // remove extra characters replacing them with spaces
         // also remove .. that is in the filenames

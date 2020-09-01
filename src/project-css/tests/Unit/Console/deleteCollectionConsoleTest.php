@@ -17,9 +17,6 @@
 
       // Generate Collection Name
       $this->colName = $this->testHelper->generateCollectionName(); 
-      
-      // Generate Table Name
-      $this->tableName = $this->testHelper->createTableName(); 
     } 
     
     protected function tearDown(): void {

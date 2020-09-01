@@ -16,8 +16,10 @@ use Log;
 /**
  * Import Adapter
  *
- * The Import Adapter  is used in the Jobs/FileImport.php 
- * 
+ * The Import Adapter is used in the Jobs/FileImport.php 
+ * processes a flatfile and imports the contents into a database table.
+ * It performs various functions on each line to insure each row is read
+ * correctly and imported into the table.
  * 
  * @param string $tblNme
  * @param string $fltFlePath
@@ -49,7 +51,12 @@ class ImportAdapter {
     // Helpers
     private $csvHelper;
 
+    // Class Constants
+    const FIELD_LIMITER_VALUE = 2000;
+    const DEFAULT_FIELD_COUNT = 32;
+
     public function __construct($tblNme, $fltFlePath, $fltFleNme) {
+
       // Set items
       $this->tblNme = $tblNme;
       $this->fltFlePath = $fltFlePath;
@@ -107,6 +114,7 @@ class ImportAdapter {
      * the previous line was saved and merge them and check the count again.
      * if their is insufficent items we will save the tkns and the row position
      * so we can attempt a merge later.
+     * 
      * @param string $curLine current line read from the file
      * @return boolean
      */
@@ -185,7 +193,7 @@ class ImportAdapter {
         if ($this->collection->isCms == false) { $curFltFleObj->seek(1); }
 
         // number of records to insert based on field count
-        $insertCount = 2000 * (32 / $this->orgCount);
+        $insertCount = self::FIELD_LIMITER_VALUE * (self::DEFAULT_FIELD_COUNT / $this->orgCount);
 
         // For each line
         while ($curFltFleObj->valid()) {

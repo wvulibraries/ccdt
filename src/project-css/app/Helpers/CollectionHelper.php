@@ -16,7 +16,6 @@ use App\Models\Collection;
  * collections.
  *
  */
-
 class CollectionHelper {
 
      public function create($data) {
@@ -40,6 +39,16 @@ class CollectionHelper {
         return $thisClctn;
      }
 
+     /**
+      * update takes the passed data array the data array
+      * should contain the collection id. Other fields that 
+      * may or may not exist ie name and isCMS are optional.
+      *
+      * @param data items to be updated in the collection
+      *
+      * @author Tracy A. McCormick <tam0013@mail.wvu.edu>
+      * @return Array
+      */  
      public function update($data) {
       // find the collection
       $thisClctn = Collection::findorFail($data['id']);

@@ -12,8 +12,13 @@ use Log;
 
 /**
  * Search Index Adapter
+ * 
+ * The Search Index Adapter creates a basic search index on all records
+ * in a table by concating all the fields and saving them to srchindex.
+ * We do remove the search index and timestamps since they are not required 
+ * by the mysql full text search. Also the srchindex will be be optimized by 
+ * the updateSearchAdapter.
  */
-
 class SearchIndexAdapter {
  
     public function process($tblNme) {

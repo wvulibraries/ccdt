@@ -58,6 +58,17 @@ class CMSHelper {
        return null;
      }
 
+     /**
+      * cmsHeader finds or creates a header to be used for creating 
+      * cms tables.
+      *
+      * @param integer $collctnID Contains the collection ID
+      * @param string $recordType Contains the Record type 1A, 1B, etc.
+      * @param integer $fieldCount Contains number of fields expected for the Record
+      *
+      * @author Tracy A. McCormick <tam0013@mail.wvu.edu>
+      * @return Array
+      */     
      public function cmsHeader($collctnId, $recordType = null, $fieldCount) {
        $header = null;
        

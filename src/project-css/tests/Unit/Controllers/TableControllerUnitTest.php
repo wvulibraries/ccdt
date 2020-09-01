@@ -21,8 +21,10 @@
 
     protected function tearDown(): void {
       // test tables, files and folders that were created
-      $this->testHelper->cleanupTestTables();        
+      $this->testHelper->cleanupTestTablesAndFiles(); 
 
+      // Delete Test Collections
+      $this->testHelper->deleteTestCollections();   
       parent::tearDown();
     }    
 
