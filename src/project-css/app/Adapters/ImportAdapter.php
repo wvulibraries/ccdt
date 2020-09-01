@@ -30,7 +30,6 @@ use Log;
 
 class ImportAdapter {  
     public $tkns;
-    public $curArry;
 
     // Class Variables
     private $tblNme;
@@ -47,6 +46,7 @@ class ImportAdapter {
     private $tableFields;
     private $recordsToInsert;
     private $prcssd;
+    private $currentRecord;
 
     // Helpers
     private $csvHelper;
@@ -156,11 +156,11 @@ class ImportAdapter {
         // verify that $tkns match the expected field count
         if (count($this->tkns) == $this->orgCount) {
           // Declare an array
-          $this->curArry = array();
+          $this->currentRecord = array();
 
           // Compact them into one array with utf8 encoding
           for ($i = 0; $i<$this->orgCount; $i++) {
-            $this->curArry[ strval($this->tableFields[ $i ]) ] = utf8_encode($this->tkns[ $i ]);
+            $this->currentRecord[ strval($this->tableFields[ $i ]) ] = utf8_encode($this->tkns[ $i ]);
           }
 
           return true;
@@ -205,6 +205,7 @@ class ImportAdapter {
             // saves $this->curArry to the $this->recordsToInsert array. 
             $this->queueRecord();
 
+            // insert records once we reach insert count
             if (count($this->recordsToInsert) >= $insertCount) {
               //insert Record(s) into database
               $result = $this->table->insertRecord($this->recordsToInsert);
@@ -237,9 +238,9 @@ class ImportAdapter {
     */     
     private function queueRecord() : bool {
       // save line to be inserted later
-      if ($this->curArry) {
+      if ($this->currentRecord) {
         // add row to data array to insert it later
-        array_push($this->recordsToInsert, $this->curArry);
+        array_push($this->recordsToInsert, $this->currentRecord);
 
         // Update the counter if the line was inserted
         $this->prcssd += 1;

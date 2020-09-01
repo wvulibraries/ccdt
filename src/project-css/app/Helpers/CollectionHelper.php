@@ -18,6 +18,16 @@ use App\Models\Collection;
  */
 class CollectionHelper {
 
+     /**
+      * creates takes the passed data array the data array
+      * should contain the name and isCMS. The cmsId can be
+      * included but it generally doesn't exist outside of testing. 
+      *
+      * @param data array includes items name and isCMS to be used to create the collection
+      *
+      * @author Tracy A. McCormick <tam0013@mail.wvu.edu>
+      * @return Array
+      */    
      public function create($data) {
         // Create the collection name
         $thisClctn = new Collection;
@@ -33,7 +43,7 @@ class CollectionHelper {
 
         // create folder in storage that will contain any additional files associated to the collection
         if (Storage::exists($thisClctn->clctnName) == FALSE) {
-          Storage::makeDirectory($thisClctn->clctnName, 0775);
+          Storage::makeDirectory($thisClctn->clctnName, 0664);
         }
 
         return $thisClctn;
@@ -47,9 +57,9 @@ class CollectionHelper {
       * @param data items to be updated in the collection
       *
       * @author Tracy A. McCormick <tam0013@mail.wvu.edu>
-      * @return Array
+      * @return void
       */  
-     public function update($data) {
+     public function update($data) : void {
       // find the collection
       $thisClctn = Collection::findorFail($data['id']);
 
