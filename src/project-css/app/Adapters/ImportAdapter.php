@@ -13,6 +13,19 @@ use App\Helpers\CustomStringHelper;
 
 use Log;
 
+/**
+ * Import Adapter
+ *
+ * The Import Adapter  is used in the Jobs/FileImport.php 
+ * 
+ * 
+ * @param string $tblNme
+ * @param string $fltFlePath
+ * @param string $fltFleNme
+ * 
+ * @return array of field headers
+ */
+
 class ImportAdapter {  
     public $tkns;
     public $curArry;
@@ -30,6 +43,8 @@ class ImportAdapter {
     private $collection;
     private $table;
     private $tableFields;
+    private $recordsToInsert;
+    private $prcssd;
 
     // Helpers
     private $csvHelper;
@@ -58,6 +73,12 @@ class ImportAdapter {
 
       // determine number of fields without the srchIndex
       $this->orgCount = count($this->tableFields) - 1;
+
+      // Temporary store of items to be inserted into the table
+      $this->recordsToInsert = [];
+
+      // Counter for processed
+      $this->prcssd = 0;
     }    
 
      /**
@@ -74,6 +95,10 @@ class ImportAdapter {
         $this->savedTkns[ $numItem ] = $this->savedTkns[ $numItem ] . ' ' . $this->tkns[ 0 ];
         unset($this->tkns[ 0 ]);
         $this->tkns = ( (count($this->tkns) > 0) ? array_merge($this->savedTkns, $this->tkns) : $this->savedTkns );
+ 
+        // clear last saved line since we did a merge
+        $this->lastErrRow = NULL;
+        $this->savedTkns = NULL;        
     }
 
     /**
@@ -83,10 +108,9 @@ class ImportAdapter {
      * if their is insufficent items we will save the tkns and the row position
      * so we can attempt a merge later.
      * @param string $curLine current line read from the file
-     * @param integer $prcssd current position in the file
      * @return boolean
      */
-    public function prepareLine($curLine, $prcssd) : bool {
+    public function prepareLine($curLine) : bool {
         // Strip out Quotes that are sometimes seen in csv files around each item
         $curLine = str_replace('"', "", $curLine);
 
@@ -97,18 +121,14 @@ class ImportAdapter {
         $this->tkns = $this->csvHelper->fltrTkns($this->tkns);
 
         // if lastErrRow is the previous row try to combine the lines
-        if ((count($this->tkns) != $this->orgCount) && ($this->lastErrRow == $prcssd) && ($this->savedTkns != NULL)) {
+        if ((count($this->tkns) != $this->orgCount) && ($this->lastErrRow == $this->prcssd) && ($this->savedTkns != NULL)) {
             $this->mergeLines();
-
-            // clear last saved line since we did a merge
-            $this->lastErrRow = NULL;
-            $this->savedTkns = NULL;
         }
 
         // if token count doesn't match what is exptected save the tkns and last row position
         if (is_array($this->tkns) && (count($this->tkns) != $this->orgCount)) {
           // save the last row position and the Tokenized row
-          $this->lastErrRow = $prcssd;
+          $this->lastErrRow = $this->prcssd;
           $this->savedTkns = $this->tkns;
           return false;
         }
@@ -164,37 +184,25 @@ class ImportAdapter {
         // Ignore the first line if the collection is cms
         if ($this->collection->isCms == false) { $curFltFleObj->seek(1); }
 
-        // Counter for processed
-        $prcssd = 0;
-
-        // Temporary store of items to be inserted into the
-        $data = [];
-
         // number of records to insert based on field count
         $insertCount = 2000 * (32 / $this->orgCount);
 
         // For each line
         while ($curFltFleObj->valid()) {
           // Call prepareLine to process the next line of the file
-          if ($this->prepareLine($curFltFleObj->current(), $prcssd)) {
-            // process $tkns 
+          if ($this->prepareLine($curFltFleObj->current())) {
+            // process $this->tkns 
             $this->processLine();
 
-            // save line to be inserted later
-            if ($this->curArry) {
-              // add row to data array to insert it later
-              array_push($data, $this->curArry);
+            // saves $this->curArry to the $this->recordsToInsert array. 
+            $this->queueRecord();
 
-              // Update the counter if the line was inserted
-              $prcssd += 1;
-            } 
-
-            if (count($data) >= $insertCount) {
+            if (count($this->recordsToInsert) >= $insertCount) {
               //insert Record(s) into database
-              $result = $this->table->insertRecord($data);
+              $result = $this->table->insertRecord($this->recordsToInsert);
 
-              // clear $data array
-              $data = [];
+              // clear $this->recordsToInsert array
+              $this->recordsToInsert = [];
             }
           }
 
@@ -202,15 +210,36 @@ class ImportAdapter {
         }
 
         // insert records at the end of file
-        if (count($data) > 0) {
+        if (count($this->recordsToInsert ) > 0) {
             //insert Record(s) into database
-            $this->table->insertRecord($data);
+            $this->table->insertRecord($this->recordsToInsert);
         }  
 
       }
       else {
         throw new \Exception("Cannot Import a Empty File.");
       }
+    }
+
+    /**
+    * takes current line that was processed and saves it to array
+    * to be inserted into the database.
+    *
+    * @return boolean
+    */     
+    private function queueRecord() : bool {
+      // save line to be inserted later
+      if ($this->curArry) {
+        // add row to data array to insert it later
+        array_push($this->recordsToInsert, $this->curArry);
+
+        // Update the counter if the line was inserted
+        $this->prcssd += 1;
+
+        return true;
+      } 
+
+      return false;
     }
 
     /**
