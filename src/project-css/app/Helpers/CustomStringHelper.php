@@ -25,7 +25,7 @@ class CustomStringHelper {
     /**
      * Separates the string into an array of flatfiles
      * by using explode and the ^ as a separator
-     * @param       string  $str    Input string
+     * @param       string  $str
      * @return      array of strings
      */
     public function separateFiles($str) {
@@ -78,10 +78,17 @@ class CustomStringHelper {
         return($fileContents);
     }
 
-    /*
-    * @param string $string
-    * @return array with filenames
-    */
+    /** 
+     * function takes a string and splits 
+     * it using the /. if the substring has a . 
+     * we proceed to check the characters after the .
+     * to determine if it is a allowed file type.
+     * If it is allowed we add the substring to $foundFiles.
+     * Once finished we return the $foundFiles array.
+     *
+     * @param string $string
+     * @return array with filenames
+     */
     public function checkForFilenames($string) {
       $foundFiles = [];
       $pieces = explode("/", $string);

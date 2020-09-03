@@ -75,6 +75,15 @@ class CSVHelper {
        return $tkns;
      }    
 
+    /**
+     * Creates SplFileObject or returns false if unable to 
+     * create the item
+     *
+     * @param  string  $fltFleAbsPth    
+     *  
+     * @author Tracy A. McCormick <tam0013@mail.wvu.edu>  
+     * @return mixed (boolean or SplFileObject) 
+     */       
      public function createFltFleObj($fltFleAbsPth) {
        if (Storage::has($fltFleAbsPth) == false) {
          // If the file doesn't exists return with error
@@ -248,7 +257,7 @@ class CSVHelper {
      * 4. Validate the tokens and return
      * 5. Return first line as array
      * @param string $fltFlePth
-     * @return array of field headers
+     * @return mixed (array of field headers or boolean)
      */
      public function schema($fltFlePth) {
        // create flat file object

@@ -34,14 +34,16 @@ use App\Helpers\CustomStringHelper;
  */
 class TableHelper {
     /** 
-    * Inserts New String field into the passed table
-    *
-    * @param table $table - Current Table object
-    * @param string $curColNme - String name of new field
-    * @param string $curColSze - String Size either 'default', 'medium' or 'big'
-    * @author Tracy A McCormick
-    */     
-    public function createStringField($table, $curColNme, $curColSze) {
+     * Inserts New String field into the passed table
+     *
+     * @param table $table - Current Table object
+     * @param string $curColNme - String name of new field
+     * @param string $curColSze - String Size either 'default', 'medium' or 'big'
+     *
+     * @author Tracy A. McCormick <tam0013@mail.wvu.edu>  
+     * @return void      
+     */    
+    public function createStringField($table, $curColNme, $curColSze) : void {
       switch ($curColSze) {
           case 'medium':
               // For String medium is 150 characters
@@ -58,14 +60,16 @@ class TableHelper {
     }
 
     /** 
-    * Inserts New Text field into the passed table
-    *
-    * @param table $table - Current Table object
-    * @param string $curColNme - String name of new field
-    * @param string $curColSze - String Size either 'default', 'medium' or 'big'
-    * @author Tracy A McCormick
-    */     
-    public function createTextField($table, $curColNme, $curColSze) {
+     * Inserts New Text field into the passed table
+     *
+     * @param table $table - Current Table object
+     * @param string $curColNme - String name of new field
+     * @param string $curColSze - String Size either 'default', 'medium' or 'big'
+     *
+     * @author Tracy A. McCormick <tam0013@mail.wvu.edu>  
+     * @return void      
+     */        
+    public function createTextField($table, $curColNme, $curColSze) : void {
       switch ($curColSze) {
           case 'medium':
               // For text medium is mediumtext type
@@ -82,14 +86,16 @@ class TableHelper {
     }    
     
     /** 
-    * Inserts New Integer field into the passed table
-    *
-    * @param table $table - Current Table object
-    * @param string $curColNme - String name of new field
-    * @param string $curColSze - String Size either 'default', 'medium' or 'big'
-    * @author Tracy A McCormick
-    */ 
-    public function createIntegerField($table, $curColNme, $curColSze) {
+     * Inserts New Integer field into the passed table
+     *
+     * @param table $table - Current Table object
+     * @param string $curColNme - String name of new field
+     * @param string $curColSze - String Size either 'default', 'medium' or 'big'
+     *
+     * @author Tracy A. McCormick <tam0013@mail.wvu.edu>  
+     * @return void      
+     */  
+    public function createIntegerField($table, $curColNme, $curColSze) : void {
       switch ($curColSze) {
           case 'medium':
               // For Integer medium is medium integer
@@ -106,16 +112,18 @@ class TableHelper {
     }     
 
     /** 
-    * Function checks $curColType and calls the correct function to create
-    * the field.
-    *
-    * @param string $table - current table object  
-    * @param string $curColNme - String name of field
-    * @param string $curColType - String type of field    
-    * @param string $curColSze - String Size either 'default', 'medium' or 'big'
-    * @author Tracy A McCormick
-    */      
-    public function setupTableField($table, $curColNme, $curColType, $curColSze) {
+     * Function checks $curColType and calls the correct function to create
+     * the field.
+     *
+     * @param string $table - current table object  
+     * @param string $curColNme - String name of field
+     * @param string $curColType - String type of field    
+     * @param string $curColSze - String Size either 'default', 'medium' or 'big'
+     *
+     * @author Tracy A. McCormick <tam0013@mail.wvu.edu>  
+     * @return void      
+     */      
+    public function setupTableField($table, $curColNme, $curColType, $curColSze) : void {
         // Call correct create function based on $curColType
         switch ($curColType) {
             case 'string':
@@ -155,15 +163,17 @@ class TableHelper {
     } 
 
     /** 
-    * Basic Switch function to call correct update 
-    * function to change type of field in the table.
-    *
-    * @param string $tblNme - String name of table   
-    * @param string $curColNme - String name of field
-    * @param string $curColSze - String Size either 'default', 'medium' or 'big'
-    * @author Tracy A McCormick
-    */         
-    public function schemaChangeToStringField($tblNme, $curColNme, $curColSze) {    
+     * Basic Switch function to call correct update 
+     * function to change type of field in the table.
+     *
+     * @param string $tblNme - String name of table   
+     * @param string $curColNme - String name of field
+     * @param string $curColSze - String Size either 'default', 'medium' or 'big'
+     *
+     * @author Tracy A. McCormick <tam0013@mail.wvu.edu>  
+     * @return void      
+     */           
+    public function schemaChangeToStringField($tblNme, $curColNme, $curColSze) : void {    
       Schema::table($tblNme, function ($table) use ($curColNme, $curColSze) {             
         switch ($curColSze) {
             case 'medium':
@@ -182,15 +192,17 @@ class TableHelper {
     }
 
     /** 
-    * Basic Switch function to call correct update 
-    * function to change type of field in the table.
-    *
-    * @param string $tblNme - String name of table   
-    * @param string $curColNme - String name of field
-    * @param string $curColSze - String Size either 'default', 'medium' or 'big'
-    * @author Tracy A McCormick
-    */      
-    public function schemaChangeToTextField($tblNme, $curColNme, $curColSze) {  
+     * Basic Switch function to call correct update 
+     * function to change type of field in the table.
+     *
+     * @param string $tblNme - String name of table   
+     * @param string $curColNme - String name of field
+     * @param string $curColSze - String Size either 'default', 'medium' or 'big'
+     *
+     * @author Tracy A. McCormick <tam0013@mail.wvu.edu>  
+     * @return void      
+     */       
+    public function schemaChangeToTextField($tblNme, $curColNme, $curColSze) : void {  
       Schema::table($tblNme, function ($table) use ($curColNme, $curColSze) {
         switch ($curColSze) {
             case 'medium':
@@ -209,16 +221,18 @@ class TableHelper {
     }    
 
     /** 
-    * Basic Switch function to call correct update 
-    * function to change type of field in the table.
-    *
-    * @param string $tblNme - String name of table   
-    * @param string $curColNme - String name of field
-    * @param string $curColType - String type that field will be changed to   
-    * @param string $curColSze - String Size either 'default', 'medium' or 'big'
-    * @author Tracy A McCormick
-    */      
-    public function changeTableField($tblNme, $curColNme, $curColType, $curColSze) {        
+     * Basic Switch function to call correct update 
+     * function to change type of field in the table.
+     *
+     * @param string $tblNme - String name of table   
+     * @param string $curColNme - String name of field
+     * @param string $curColType - String type that field will be changed to   
+     * @param string $curColSze - String Size either 'default', 'medium' or 'big'
+     *
+     * @author Tracy A. McCormick <tam0013@mail.wvu.edu>  
+     * @return void      
+     */        
+    public function changeTableField($tblNme, $curColNme, $curColType, $curColSze) : void {        
         switch (strtolower($curColType)) {
             case 'string':
                 $this->schemaChangeToStringField($tblNme, $curColNme, $curColSze);
@@ -235,7 +249,10 @@ class TableHelper {
      * Simple function to create the table within the collections
      * @param string $tblNme
      * @param string $collctnId
-     */
+     *
+     * @author Tracy A. McCormick <tam0013@mail.wvu.edu>  
+     * @return object - Returns newly created table      
+     */   
      public function crteTblInCollctn($tblNme, $collctnId) {
        // declare a new table instance
        $thisTabl = new Table;
@@ -245,14 +262,19 @@ class TableHelper {
        $thisTabl->collection_id = $collctnId;
        // Save the table
        $thisTabl->save();
+       // return created table
+       return $thisTabl;
      }
 
      /**
      * Simple function to set the table to a collection
      * @param integer $tblId
      * @param string $collctnId
-     */
-     public function setTblInCollctn($tblId, $collctnId) {
+     *
+     * @author Tracy A. McCormick <tam0013@mail.wvu.edu>  
+     * @return void      
+     */   
+     public function setTblInCollctn($tblId, $collctnId) : void {
        // Get the table entry in meta table "tables"
        $table = Table::findOrFail($tblId);
        // Set collection id
@@ -263,14 +285,19 @@ class TableHelper {
 
      /**
      * Function takes the tablename, filepath and the filename
-     * and calls dispatch on the FileImport function to queue 
-     * the file for import into the table.
+     * and calls dispatch on the FileImport, CreateSearchIndex 
+     * and OptimizeSearchIndex Jobs. These 3 jobs work together
+     * to import a file into the specified table. Then build 
+     * and optimize the search index.
      * 
      * @param string $tblNme - table name
      * @param string $fltFlePath - path to file to be imported
      * @param string $fltFle - filename of file 
-     */     
-     public function dispatchImportJob($tblNme, $fltFlePath, $fltFle) {
+     *
+     * @author Tracy A. McCormick <tam0013@mail.wvu.edu>  
+     * @return void      
+     */       
+     public function dispatchImportJob($tblNme, $fltFlePath, $fltFle) : void {
        // set messages array to empty
        $messages = [];
 
@@ -290,27 +317,23 @@ class TableHelper {
      }      
 
     /** 
-    * 
-    *
-    * @param string $filepath
-    * @param string $fileName
-    * @param string $tblNme
-    * @param array $fieldNames
-    * @param array $fieldTypes
-    * @param integer $collctnId - the collection id  
-    * @author Tracy A McCormick
-    * @return redirect to table index
-    */    
-    public function createTable($filepath, $fileName, $tblNme, $fieldNames, $fieldTypes, $collctnId) {
+     * Creates a new table and set the correct collection association
+     *
+     * @param string $filepath
+     * @param string $fileName
+     * @param string $tblNme
+     * @param array $fieldNames
+     * @param array $fieldTypes
+     * @param integer $collctnId - the collection id  
+     *
+     * @author Tracy A. McCormick <tam0013@mail.wvu.edu>  
+     * @return void      
+     */    
+    public function createTable($filepath, $fileName, $tblNme, $fieldNames, $fieldTypes, $collctnId) : void {
       $fieldCount = count($fieldTypes);
 
       // create the table
       Schema::connection('mysql')->create($tblNme, function(Blueprint $table) use($fieldNames, $fieldTypes, $fieldCount, $collctnId) {        
-        // // if index exist rename to id
-        // if ($fieldNames[0] == 'index') {
-        //   $fieldNames[0] = 'id';
-        // }
-
         // Default primary key
         $table->increments('id');
 
@@ -347,7 +370,7 @@ class TableHelper {
     * @param string $data['tableName'] - new table name to be used
     * @param boolean $data['cms'] - true if uploaded files are apart of a cms set
     * @author Tracy A McCormick
-    * @return redirect to table index
+    * @return array $errors
     */      
     public function storeUploadAndImport($data) {
       $errors = [];
@@ -387,8 +410,9 @@ class TableHelper {
     * @param string $data['strDir'] - is the storage folder
     * @param string $data['fltFile'] - file to be imported
     * @param integer $data['colID'] - the collection id    
+    *
     * @author Tracy A McCormick
-    * @return error array
+    * @return array $errors
     */         
     public function selectFileAndImport($data) {
       // array for keeping errors that we will send to the user
@@ -410,9 +434,10 @@ class TableHelper {
     * @param string $file - file to be imported
     * @param string $tblNme - new table name to be used
     * @param integer $colID - the collection id 
-    * @param boolean $cms - true if uploaded files are apart of a cms set   
+    * @param boolean $cms - true if uploaded files are apart of a cms set 
+    *  
     * @author Tracy A McCormick
-    * @return $errorArray
+    * @return array
     */    
     public function setupNewTable($strDir, $file, $tblNme, $colID, $cms = false) {
       $csvHelper = (new CSVHelper);

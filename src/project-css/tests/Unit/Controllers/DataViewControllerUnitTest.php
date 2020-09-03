@@ -52,7 +52,7 @@
 
         $folder = 'indivletters';
 
-        mkdir('./storage/app'.'/'.$collection->clctnName.'/'.$folder);
+        \Storage::makeDirectory($collection->clctnName.'/'.$folder);
 
         // create empty file
         touch('./storage/app'.'/'.$collection->clctnName.'/'.$folder.'/'.$testUpload, time() - (60 * 60 * 24 * 5));

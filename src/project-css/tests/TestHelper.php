@@ -21,7 +21,9 @@ class TestHelper {
     * creates a collection used for Testing
     *
     * @param string $name name of collection to use for test
+    * @param integer $isEnabled default 1
     * @param boolean $isCms default false
+    * @param integer $cmsId default null
     *
     * @author Tracy A. McCormick <tam0013@mail.wvu.edu>
     */
@@ -42,12 +44,19 @@ class TestHelper {
 
       // Create Collection Storage Folder          
       if (Storage::exists($name) == FALSE) {
-         Storage::makeDirectory($name, 0775);
+         Storage::makeDirectory($name, 0664);
       }
 
       return $collection;      
     }     
 
+   /**
+    * Calls Collection Helper delete collection
+    *
+    * @param string $name name of collection to use for test
+    *
+    * @author Tracy A. McCormick <tam0013@mail.wvu.edu>
+    */    
    public function deleteCollection($name) {
       // Call collection helper create
       return((new CollectionHelper)->deleteCollection($name));    

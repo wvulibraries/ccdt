@@ -8,12 +8,12 @@ use App\Helpers\TableHelper;
 use App\Models\Collection;
 use App\Models\Table;
 
-class FileViewHelperTest extends BrowserKitTestCase
+class FileViewHelperTest extends TestCase
 {
     protected $fileViewHelper;
     private $singlefilewithpath;
-    public $collectionHelper;
-    public $tableHelper;
+    private $collectionHelper;
+    private $tableHelper;
     private $colName;
     private $tableName;    
 
@@ -63,10 +63,11 @@ class FileViewHelperTest extends BrowserKitTestCase
 
         // create fake collection storage
         $path = './storage/app/'.$this->colName;
-        mkdir($path);
-        mkdir($path.'/'.$folder);
+
+        \Storage::makeDirectory($this->colName.'/'.$folder);
+
         // create empty file
-        touch($path.'/'.$folder.'/'.$filename, time() - (60 * 60 * 24 * 5));
+        touch($path.'/'.$folder.'/'.$filename, time() - (60 * 60 * 24 * 5));      
 
         // check that file exists using our function
         $this->assertTrue($this->fileViewHelper->fileExists($this->colName, $folder.'/'.$filename));
@@ -81,8 +82,9 @@ class FileViewHelperTest extends BrowserKitTestCase
 
         // create fake collection storage
         $path = './storage/app/'.$this->colName;
-        mkdir($path);
-        mkdir($path.'/'.$folder);
+
+        \Storage::makeDirectory($this->colName.'/'.$folder);
+
         // create empty file
         touch($path.'/'.$folder.'/'.$filename, time() - (60 * 60 * 24 * 5));
 
@@ -98,8 +100,7 @@ class FileViewHelperTest extends BrowserKitTestCase
         $folder = 'testfolder';
         $path = './storage/app/'.$this->colName;
 
-        mkdir($path);
-        mkdir($path.'/'.$folder);
+        \Storage::makeDirectory($this->colName.'/'.$folder);
 
         // check that file exists using our function
         $this->assertFalse($this->fileViewHelper->fileExistsInFolder($this->colName, $folder.'/'.'notarealfile.txt'));
@@ -154,7 +155,7 @@ class FileViewHelperTest extends BrowserKitTestCase
         // set location of file
         $testUpload = 'test_upload.doc';
 
-        mkdir('./storage/app'.'/'.$collection->clctnName.'/'.'testing');
+        \Storage::makeDirectory($this->colName.'/'.'testing');
 
         copy('./storage/app'.'/'.$storageFolder.'/'.$testUpload, './storage/app'.'/'.$collection->clctnName.'/'.'testing'.'/'.$testUpload);
 
@@ -175,7 +176,7 @@ class FileViewHelperTest extends BrowserKitTestCase
         // set fake filename to look for
         $testUpload = 'test.doc';
 
-        mkdir('./storage/app'.'/'.$collection->clctnName.'/'.'testing');
+        \Storage::makeDirectory($collection->clctnName.'/'.'testing');
 
         $result = $this->fileViewHelper->locateFile(1, $testUpload);
         $this->assertFalse($result);
@@ -196,7 +197,7 @@ class FileViewHelperTest extends BrowserKitTestCase
 
         $folder = 'indivletters';
 
-        mkdir('./storage/app'.'/'.$collection->clctnName.'/'.$folder);
+        \Storage::makeDirectory($collection->clctnName.'/'.$folder);
 
         // create empty file
         touch('./storage/app'.'/'.$collection->clctnName.'/'.$folder.'/'.$testUpload, time() - (60 * 60 * 24 * 5));
@@ -224,7 +225,7 @@ class FileViewHelperTest extends BrowserKitTestCase
 
         $folder = 'indivletters';
 
-        mkdir('./storage/app'.'/'.$collection->clctnName.'/'.$folder);
+        \Storage::makeDirectory($collection->clctnName.'/'.$folder);
 
         // create empty file
         touch('./storage/app'.'/'.$collection->clctnName.'/'.$folder.'/'.$testUpload, time() - (60 * 60 * 24 * 5));
@@ -242,7 +243,7 @@ class FileViewHelperTest extends BrowserKitTestCase
         $tableName = $this->testHelper->createTestTable($collection, 'test.dat');
 
         $importAdapter = (new ImportAdapter($tableName, 'files/test', 'test.dat'));
-        $importAdapter->process();         
+        $importAdapter->process('files/test', 'test.dat');         
 
         //get table
         $table = Table::where('tblNme', $tableName)->first();
@@ -252,7 +253,7 @@ class FileViewHelperTest extends BrowserKitTestCase
 
         $folder = 'indivletters';
 
-        mkdir('./storage/app'.'/'.$collection->clctnName.'/'.$folder);
+        \Storage::makeDirectory($collection->clctnName.'/'.$folder);
 
         // create empty file
         touch('./storage/app'.'/'.$collection->clctnName.'/'.$folder.'/'.$testUpload, time() - (60 * 60 * 24 * 5));

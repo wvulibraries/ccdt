@@ -217,101 +217,6 @@
                ->assertResponseStatus(302);
      }
 
-//     public function testCMSSelectFileAndTableCreate() {
-//             $path = './storage/app/files/test/';
-//             $file = '1A-random.tab';
-//             $file2 = '1B-random.tab';
-
-//             $this->testHelper->createCollection($this->colName);
-
-//             $storageFolder = 'flatfiles';
-
-//             $fltFleAbsPth = './storage/app'.'/'.$storageFolder.'/';
-
-//             copy($path.$file, $fltFleAbsPth.$file);
-//             copy($path.$file2, $fltFleAbsPth.$file2);
-
-//             $this->actingAs($this->admin)
-//                  ->withoutMiddleware()
-//                  ->call('POST', route('selectcmsdis'), ['colID2' => 1, 'cmsdisFiles2' => [$file, $file2]]);
-
-//             $this->assertEquals(DB::table('tables')->count(), 2);
-//     }
-
-//     public function testCMSSelectInvalidFile() {
-//             $path = './storage/app/files/test/';
-//             $file = 'images.png';
-
-//             $this->testHelper->createCollection('collection1');
-
-//             $storageFolder = 'flatfiles';
-
-//             $fltFleAbsPth = './storage/app'.'/'.$storageFolder.'/';
-
-//             copy($path.$file, $fltFleAbsPth.$file);
-
-//             $this->actingAs($this->admin)
-//                  ->withoutMiddleware()
-//                  ->call('POST', route('selectcmsdis'), ['colID2' => 1, 'cmsdisFiles2' => [$file]]);
-
-//             $this->assertEquals(DB::table('tables')->count(), 0);
-
-//             // test tables, files and folders that were created
-//             $this->testHelper->cleanupTestTablesAndFiles([$file]);
-
-//             // clear folder that was created with the collection
-//             rmdir($this->filePath.'/collection1');
-//     }
-
-//     public function testInvalidFileTypeUpload() {
-//             $tblname = 'importtest'.mt_rand();
-//             $path = './storage/app/files/test/';
-//             $file = 'images.png';
-
-//             $this->testHelper->createCollection($this->colName);
-
-//             $this->actingAs($this->admin)
-//                  ->visit('table/create')
-//                  ->type($tblname, 'imprtTblNme')
-//                  ->type('1', 'colID')
-//                  ->attach($path.$file, 'fltFile')
-//                  ->press('Import')
-//                  ->assertResponseStatus(200)
-//                  ->see('The flat file must be a file of type: text/plain.');
-
-//             // test tables, files and folders that were created
-//             $this->testHelper->cleanupTestTablesAndFiles([$file]);
-
-//             // clear folder that was created with the collection
-//             rmdir($this->filePath.'/'.$this->colName);
-//     }
-
-//     public function testFileExistsUpload() {
-//             $tblname = 'importtest'.mt_rand();
-//             $tblname2 = 'importtest'.mt_rand();
-//             $path = './storage/app/files/test/';
-//             $file = 'test.dat';
-
-//             // Create Test Collection        
-//             $collection = $this->testHelper->createCollection($this->colName, 1, false);
-
-//             $this->actingAs($this->admin)
-//                  ->visit('table/create')
-//                  ->type($tblname2, 'imprtTblNme')
-//                  ->type('1', 'colID')
-//                  ->attach($path.$file, 'fltFile')
-//                  ->press('Import')
-//                  ->assertResponseStatus(200)
-//                  ->see('File already exists. Please select the file or rename and re-upload.');
-
-//             // test tables, files and folders that were created
-//             $this->testHelper->cleanupTestTablesAndFiles([$file]);
-
-//             // clear folder that was created with the collection
-//             rmdir($this->filePath.'/collection1');
-//     }
-
-
      public function testCheckFlatFiles() {
             // test to see if 'test.dat' is available
             // using getFiles
@@ -320,9 +225,6 @@
      } 
 
      public function testTableRestrict() {
-          $path = './storage/app/files/test/';
-          $file = 'test.dat';
-
           $this->testHelper->createCollectionWithTableAndRecords($this->colName, $this->tableName);
 
           // find table by searching on it's name
