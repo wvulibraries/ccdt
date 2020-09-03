@@ -12,6 +12,8 @@ use App\Helpers\CollectionHelper;
  * Command execution example 'php artisan collection:rename collection1 collection2'
  * command renames a existing collection and associated storage folder.
  *
+ * @author Tracy A McCormick <tam0013@mail.wvu.edu>
+ *
  */
 class renameCollection extends Command
 {

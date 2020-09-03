@@ -1,8 +1,4 @@
 <?php
-/**
- * @author Ajay Krishna Teja Kavur
- * @author Tracy A McCormick <tam0013@mail.wvu.edu>
- */
 
 namespace App\Http\Controllers;
 
@@ -21,6 +17,10 @@ use App\Helpers\CSVHelper;
 use App\Helpers\CustomStringHelper;
 use App\Helpers\TableHelper;
 
+/**
+ * @author Ajay Krishna Teja Kavur
+ * @author Tracy A McCormick <tam0013@mail.wvu.edu>
+ */
 class TableController extends Controller
 {
     private $strDir;

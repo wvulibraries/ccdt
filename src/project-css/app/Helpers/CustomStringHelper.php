@@ -1,8 +1,4 @@
 <?php
-/**
- * @author Ajay Krishna Teja Kavur
- * @author Tracy A McCormick <tam0013@mail.wvu.edu>
- */
 
 namespace App\Helpers;
 
@@ -17,7 +13,11 @@ use App\Models\AllowedFileTypes;
  * in laravel. These files were orginally in a windows
  * environment.
  *
+ * @author Ajay Krishna Teja Kavur
+ * @author Tracy A McCormick <tam0013@mail.wvu.edu>
+ * 
  */
+
 class CustomStringHelper {
      // regex patter we will use to detect a social security number
      protected $pattern = '#\b[0-9]{3}-[0-9]{2}-[0-9]{4}\b#';

@@ -27,6 +27,7 @@ class CMSHelper {
       * @param integer $fieldCount Contains number of fields expected for the Record
       *
       * @author Tracy A. McCormick <tam0013@mail.wvu.edu>
+      *
       * @return unserialized Array if found or null
       */
      public function getCMSFields($collctnId, $recordType, $fieldCount) {

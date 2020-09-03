@@ -12,6 +12,8 @@ use App\Helpers\CollectionHelper;
  * command enables a previously disabled collection. Once the collection 
  * is enabled the users will be able to view the associated tables.
  *
+ * @author Tracy A McCormick <tam0013@mail.wvu.edu>
+ *
  */
 class enableCollection extends Command
 {

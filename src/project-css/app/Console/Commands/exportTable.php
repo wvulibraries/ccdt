@@ -14,6 +14,8 @@ use Illuminate\Support\Facades\Schema;
  * exports folder. The new file in this example will only export 2 fields id and name
  * to the new file.
  * 
+ * @author Tracy A McCormick <tam0013@mail.wvu.edu>
+ *
  */
 class exportTable extends Command
 {

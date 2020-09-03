@@ -11,6 +11,8 @@ use App\Helpers\CollectionHelper;
  * Command execution example 'php artisan collection:cms:unset collection1'
  * command unsets the cms option on a collection.
  *
+ * @author Tracy A McCormick <tam0013@mail.wvu.edu>
+ *
  */
 class unsetCmsCollection extends Command
 {

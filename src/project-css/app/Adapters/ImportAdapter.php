@@ -1,7 +1,4 @@
 <?php
-/**
- * @author Tracy A McCormick <tam0013@mail.wvu.edu>
- */
 
 namespace App\Adapters;
 
@@ -21,9 +18,7 @@ use Log;
  * It performs various functions on each line to insure each row is read
  * correctly and imported into the table.
  * 
- * @param string $tblNme
- * @param string $fltFlePath
- * @param string $fltFleNme
+ * @author Tracy A McCormick <tam0013@mail.wvu.edu>
  * 
  * @return array of field headers
  */
@@ -54,7 +49,16 @@ class ImportAdapter {
     // Class Constants
     const FIELD_LIMITER_VALUE = 2000;
     const DEFAULT_FIELD_COUNT = 32;
-
+    
+    /**
+     * Constructor to setup class items
+     * 
+     * @param string $tblNme
+     * @param string $fltFlePath
+     * @param string $fltFleNme
+     *
+     * @author Tracy A McCormick <tam0013@mail.wvu.edu>
+     */ 
     public function __construct($tblNme, $fltFlePath, $fltFleNme) {
 
       // Set items
@@ -96,6 +100,8 @@ class ImportAdapter {
      * incorrect character caused a break in reading the line. When this 
      * is detected due to a inconsistent field count we will attempt to 
      * merge the 2 lines.
+     * 
+     * @author Tracy A McCormick <tam0013@mail.wvu.edu>
      */    
     public function mergeLines() : void {
         $numItem = count($this->savedTkns) - 1;
@@ -116,6 +122,10 @@ class ImportAdapter {
      * so we can attempt a merge later.
      * 
      * @param string $curLine current line read from the file
+     * 
+     *
+     * @author Tracy A McCormick <tam0013@mail.wvu.edu>
+     * 
      * @return boolean
      */
     public function prepareLine($curLine) : bool {
@@ -148,6 +158,8 @@ class ImportAdapter {
     * takes array of tokens. Creates a search index and 
     * inserts them into the table
     * 
+    * @author Tracy A McCormick <tam0013@mail.wvu.edu>
+    *    
     * @return boolean
     */   
     public function processLine() : bool  {
@@ -234,6 +246,8 @@ class ImportAdapter {
     * takes current line that was processed and saves it to array
     * to be inserted into the database.
     *
+    * @author Tracy A McCormick <tam0013@mail.wvu.edu>
+    *
     * @return boolean
     */     
     private function queueRecord() : bool {
@@ -255,6 +269,9 @@ class ImportAdapter {
     * get current column list from current table
     * remove common fields id and time stamps
     * return remaining fields as an array
+    *
+    * @author Tracy A McCormick <tam0013@mail.wvu.edu>
+    *    
     * @return array
     */ 
     private function getTableFields() : array {

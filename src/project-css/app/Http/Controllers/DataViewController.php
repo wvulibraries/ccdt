@@ -1,8 +1,4 @@
 <?php
-/**
- * @author Ajay Krishna Teja Kavur
- * @author Tracy A McCormick <tam0013@mail.wvu.edu>
- */
 
 namespace App\Http\Controllers;
 
@@ -17,6 +13,8 @@ use App\Helpers\TableHelper;
 
 /**
  * The controller is responsible for showing the cards data
+ * @author Ajay Krishna Teja Kavur
+ * @author Tracy A McCormick <tam0013@mail.wvu.edu>
  */
 class DataViewController extends Controller {
     // various error messages

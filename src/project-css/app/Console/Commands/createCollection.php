@@ -13,6 +13,8 @@ use App\Helpers\CollectionHelper;
  * Command execution example 'php artisan collection:create collection1 --iscms'
  * command creates a new collection called collection1 and sets it as a cms collection.
  *
+ * @author Tracy A McCormick <tam0013@mail.wvu.edu>
+ *
  */
 class createCollection extends Command
 {

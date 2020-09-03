@@ -1,8 +1,4 @@
 <?php
-/**
- * @author Ajay Krishna Teja Kavur
- * @author Tracy A McCormick <tam0013@mail.wvu.edu>
- */
 
 namespace App\Http\Controllers;
 
@@ -11,6 +7,10 @@ use App\Models\User;
 use App\Models\Table;
 use Auth;
 
+/**
+ * @author Ajay Krishna Teja Kavur
+ * @author Tracy A McCormick <tam0013@mail.wvu.edu>
+ */
 class HomeController extends Controller {
     /**
      * Create a new controller instance.

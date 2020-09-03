@@ -25,6 +25,7 @@ class UpdateSearchAdapter {
      * @param string $srchIndex current Search Index
      *
      * @author Tracy A. McCormick <tam0013@mail.wvu.edu>
+     * 
      * @return unserialized Array if found or null
      */     
     public function process($tblNme, $id, $srchIndex) {

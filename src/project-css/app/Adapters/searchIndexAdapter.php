@@ -18,6 +18,9 @@ use Log;
  * We do remove the search index and timestamps since they are not required 
  * by the mysql full text search. Also the srchindex will be be optimized by 
  * the updateSearchAdapter.
+ *
+ * @author Tracy A McCormick <tam0013@mail.wvu.edu>
+ *
  */
 class SearchIndexAdapter {
  

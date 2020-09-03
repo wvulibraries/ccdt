@@ -12,6 +12,8 @@ use App\Helpers\CollectionHelper;
  * command disables the collection. Once the collection is disabled the users
  * cannot access any table(s) that have been created in the collection.
  *
+ * @author Tracy A McCormick <tam0013@mail.wvu.edu>
+ *
  */
 class disableCollection extends Command
 {

@@ -1,8 +1,4 @@
 <?php
-/**
- * @author Ajay Krishna Teja Kavur
- * @author Tracy A McCormick <tam0013@mail.wvu.edu>
- */
 
 namespace App\Helpers;
 
@@ -31,6 +27,8 @@ use App\Helpers\CustomStringHelper;
  * These are various functions that help with dynamically
  * creating and modifying tables without migrations.
  *
+ * @author Ajay Krishna Teja Kavur
+ * @author Tracy A McCormick <tam0013@mail.wvu.edu>
  */
 class TableHelper {
     /** 
@@ -538,6 +536,7 @@ class TableHelper {
     *
     * @param string $type - mysql type string  
     * @author Tracy A McCormick
+    *
     * @return array type info
     */      
     public function setInteger($type) {

@@ -11,7 +11,9 @@ use Illuminate\Support\Facades\Schema;
  *
  * Command execution example 'php artisan table:truncate table1' 
  * The truncate command will remove all records from the specified table
- * 
+ *
+ * @author Tracy A McCormick <tam0013@mail.wvu.edu>
+ *
  */
 class truncateTable extends Command
 {

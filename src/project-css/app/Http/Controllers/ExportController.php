@@ -1,12 +1,12 @@
 <?php
-/**
- * @author Tracy A McCormick <tam0013@mail.wvu.edu>
- */
 
 namespace App\Http\Controllers;
 
 use Auth;
 
+/**
+ * @author Tracy A McCormick <tam0013@mail.wvu.edu>
+ */
 class ExportController extends Controller
 {
     public function __construct() {

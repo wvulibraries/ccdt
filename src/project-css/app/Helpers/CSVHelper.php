@@ -1,8 +1,4 @@
 <?php
-/**
- * @author Ajay Krishna Teja Kavur
- * @author Tracy A McCormick <tam0013@mail.wvu.edu>
- */
 
 namespace App\Helpers;
 
@@ -15,6 +11,9 @@ use App\Helpers\TableHelper;
  * These are various functions that help with processing
  * csv or other delmimited files prior to importing.
  *
+ * @author Ajay Krishna Teja Kavur
+ * @author Tracy A McCormick <tam0013@mail.wvu.edu>
+ * 
  */
 class CSVHelper {
      /**
@@ -238,6 +237,7 @@ class CSVHelper {
       * @param integer $fieldCount Contains number of fields Requried for the Table
       *
       * @author Tracy A. McCormick <tam0013@mail.wvu.edu>
+      *
       * @return Array of generated headers
       */    
      public function generateHeader($fieldCount) {

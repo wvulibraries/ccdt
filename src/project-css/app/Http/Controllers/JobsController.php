@@ -1,8 +1,4 @@
 <?php
-/**
- * @author Ajay Krishna Teja Kavur
- * @author Tracy A McCormick <tam0013@mail.wvu.edu>
- */
 
 namespace App\Http\Controllers;
 
@@ -11,8 +7,13 @@ use Illuminate\Support\Facades\DB;
 use App\Models\Jobs;
 use Auth;
 
-// Jobs Controller manages the file import that loads data into the tables.
 
+/**
+ * Jobs Controller manages the file import that loads data into the tables.
+ * 
+ * @author Ajay Krishna Teja Kavur
+ * @author Tracy A McCormick <tam0013@mail.wvu.edu>
+ */
 class JobsController extends Controller
 {
     public function __construct() {

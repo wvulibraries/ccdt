@@ -13,6 +13,9 @@ use Illuminate\Support\Facades\Schema;
  * Command execution example 'php artisan table:create:search table1'
  * command dispatches job that creates the search index on table1
  *
+ *
+ * @author Tracy A McCormick <tam0013@mail.wvu.edu>
+ *
  */
 class createSrchIndex extends Command
 {

@@ -232,7 +232,8 @@ class CollectionHelper {
      * @param  object $collection   
      * @param  boolean $access       
      *  
-     * @author Tracy A. McCormick <tam0013@mail.wvu.edu>  
+     * @author Tracy A. McCormick <tam0013@mail.wvu.edu>
+     *   
      * @return void      
      */  
     public function updateTableAccess($collection, $access) : void {

@@ -11,7 +11,9 @@ use Illuminate\Support\Facades\Schema;
  *
  * Command execution example 'php artisan table:rename table1 table2' 
  * the above command will rename table.
- * 
+ *
+ * @author Tracy A McCormick <tam0013@mail.wvu.edu>
+ *
  */
 class renameTable extends Command
 {

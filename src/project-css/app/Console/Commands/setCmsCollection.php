@@ -11,6 +11,8 @@ use App\Helpers\CollectionHelper;
  * Command execution example 'php artisan collection:cms:set collection1'
  * command sets the collection as a cms collection.
  *
+ * @author Tracy A McCormick <tam0013@mail.wvu.edu>
+ *
  */
 class setCmsCollection extends Command
 {

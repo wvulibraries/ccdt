@@ -15,7 +15,9 @@ use Illuminate\Support\Facades\Schema;
  * Command execution example 'php artisan table:import collection1 table1 file.csv' 
  * the above command will import a file into a new table. It will also create the collection
  * if it doesn't exist.
- * 
+ *
+ * @author Tracy A McCormick <tam0013@mail.wvu.edu>
+ *
  */
 class importTable extends Command
 {

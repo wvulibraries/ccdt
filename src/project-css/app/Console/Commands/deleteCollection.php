@@ -13,6 +13,8 @@ use App\Models\Collection;
  * command removes passed collection if it exists. The use of '--force' 
  * bypasses checking for attached files or tables.
  *
+ * @author Tracy A McCormick <tam0013@mail.wvu.edu>
+ *
  */
 class deleteCollection extends Command
 {

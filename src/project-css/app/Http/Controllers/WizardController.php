@@ -1,7 +1,4 @@
 <?php
-/**
- * @author Tracy A McCormick <tam0013@mail.wvu.edu>
- */
 
 namespace App\Http\Controllers;
 
@@ -12,6 +9,9 @@ use Illuminate\Support\Facades\Storage;
 use App\Helpers\TableHelper;
 use Auth;
 
+/**
+ * @author Tracy A McCormick <tam0013@mail.wvu.edu>
+ */
 class WizardController extends Controller
 {
     private $strDir;

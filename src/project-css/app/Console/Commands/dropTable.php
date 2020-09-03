@@ -14,6 +14,8 @@ use Illuminate\Support\Facades\Schema;
  * the tables table that ccdt uses to keep track of tables
  * and associated collections.
  *
+ * @author Tracy A McCormick <tam0013@mail.wvu.edu>
+ *
  */
 class dropTable extends Command
 {

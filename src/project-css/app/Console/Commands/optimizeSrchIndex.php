@@ -15,6 +15,8 @@ use Illuminate\Support\Facades\Schema;
  * index such removing common words, duplicate words and single characters
  * that full text search ignores.
  *
+ * @author Tracy A McCormick <tam0013@mail.wvu.edu>
+ *
  */
 class optimizeSrchIndex extends Command
 {

@@ -1,8 +1,4 @@
 <?php
-/**
- * @author Ajay Krishna Teja Kavur
- * @author Tracy A McCormick <tam0013@mail.wvu.edu>
- */
 
 namespace App\Helpers;
 
@@ -19,7 +15,11 @@ use App\Services\TikaConvert;
  * These are various functions that help locate files
  * that are saved to the database
  *
+ * @author Ajay Krishna Teja Kavur
+ * @author Tracy A McCormick <tam0013@mail.wvu.edu>
+ * 
  */
+
 class FileViewHelper {
      /**
       * checks if files exists in storage under the folder
