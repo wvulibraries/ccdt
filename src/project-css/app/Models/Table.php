@@ -68,6 +68,17 @@ class Table extends Model
                     ->get();
     }
 
+    public function getDescription() {
+        // Get Description of table
+        $results = DB::select("DESCRIBE `{$this->tblNme}`");
+
+        // remove first item we do not change the id of the table
+        unset($results[0]);
+
+        // remmove the srchindex and timestamp fields we do not change these
+        return array_slice($results, 0, -3);
+    }
+
     // Return field type for column name passed
     public function getColumnType($name) {
         // Get Description of table

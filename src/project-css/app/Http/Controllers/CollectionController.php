@@ -1,8 +1,4 @@
 <?php
-/**
- * @author Ajay Krishna Teja Kavur
- * @author Tracy A McCormick <tam0013@mail.wvu.edu>
- */
 
 namespace App\Http\Controllers;
 
@@ -12,6 +8,12 @@ use App\Models\Collection;
 use App\Models\Table;
 use App\Helpers\CollectionHelper;
 
+/**
+ * 
+ * 
+ * @author Ajay Krishna Teja Kavur
+ * @author Tracy A McCormick <tam0013@mail.wvu.edu>
+ */
 class CollectionController extends Controller
 {
   /**
@@ -55,10 +57,13 @@ class CollectionController extends Controller
   }
 
   /**
-  * Returns view for collection
-  *
-  * @return view
-  */    
+   * Returns view for collection
+   *
+   * @param integer $colID - collection id
+   *        
+   * @author Tracy A McCormick  
+   * @return \Illuminate\Http\Response
+   */       
   public function show($colID) {
     // find the collection
     $thisClctn = Collection::findorFail($colID);  
@@ -73,10 +78,15 @@ class CollectionController extends Controller
   }   
   
   /**
-  * Returns view for collection
-  *
-  * @return view
-  */    
+   * Returns view for collection
+   *
+   * @return view
+   *
+   * @param request $request
+   *        
+   * @author Tracy A McCormick 
+   * @return \Illuminate\Http\Response (redirect to wizard import)
+   */ 
   public function upload($colID) {
     // find the collection
     $thisClctn = Collection::findorFail($colID);  
@@ -87,8 +97,13 @@ class CollectionController extends Controller
   }   
 
   /**
-  * Takes request validates the collection name and saves new collection to database
-  */
+   * Takes request validates the collection name and saves new collection to database
+   *
+   * @param request $request
+   *        
+   * @author Tracy A McCormick 
+   * @return \Illuminate\Http\Response ( redirect to collection index )
+   */ 
   public function create(Request $request) {
     // Validate the request before storing the data
     $this->validate($request, $this->rules, $this->messages);
@@ -107,14 +122,28 @@ class CollectionController extends Controller
     return redirect()->route('collection.index');
   }
 
+  /**
+   * Takes request gets collection id and redirects
+   * to the wizard import collection page
+   *
+   * @param request $request
+   *        
+   * @author Tracy A McCormick 
+   * @return \Illuminate\Http\Response ( redirect to wizard import )
+   */  
   public function tableCreate(Request $request) {
     // redirect to import wizard
     return redirect('admin/wizard/import/collection/'.$request->colID);
   }
 
   /**
-  * Takes request validates the updated collection name and then updates the database
-  */
+   * Takes request validates the updated collection name and then updates the database
+   *
+   * @param request $request
+   *        
+   * @author Tracy A McCormick 
+   * @return \Illuminate\Http\Response ( redirect back to collection page after edit )
+   */
   public function edit(Request $request) {
     // find the collection
     $thisClctn = Collection::findorFail($request->id);
@@ -146,8 +175,13 @@ class CollectionController extends Controller
   }
 
   /**
-  * Sets the the state of the collection to disabled and updates database
-  */
+   * Sets the the state of the collection to disabled and updates database
+   *
+   * @param request $request
+   *        
+   * @author Tracy A McCormick 
+   * @return \Illuminate\Http\Response ( redirect back to collection page after disable )
+   */
   public function disable(Request $request) {
     // find the collection
     $thisClctn = Collection::findorFail($request->id);
@@ -164,8 +198,13 @@ class CollectionController extends Controller
   }
 
   /**
-  * Sets the the state of the collection to enabled and updates database
-  */
+   * Sets the the state of the collection to enabled and updates database
+   *
+   * @param request $request
+   *        
+   * @author Tracy A McCormick    
+   * @return \Illuminate\Http\Response ( redirect back to collection page after enable )
+   */
   public function enable(Request $request) {
     (new CollectionHelper)->updateCollectionFlag($request->id, true);
 
@@ -173,10 +212,13 @@ class CollectionController extends Controller
   }
 
   /**
-  * Returns view for cms view creator
-  *
-  * @return view
-  */    
+   * Returns view for cms view creator
+   *
+   * @param integer $colID - collection id
+   *        
+   * @author Tracy A McCormick  
+   * @return \Illuminate\Http\Response 
+   */    
   public function creator($colID) {
     // find the collection
     $thisClctn = Collection::findorFail($colID);  

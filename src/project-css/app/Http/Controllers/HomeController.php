@@ -8,6 +8,9 @@ use App\Models\Table;
 use Auth;
 
 /**
+ * Home Controllers renders main page and home page
+ * for admin and users.
+ * 
  * @author Ajay Krishna Teja Kavur
  * @author Tracy A McCormick <tam0013@mail.wvu.edu>
  */
@@ -22,6 +25,7 @@ class HomeController extends Controller {
     /**
      * Show the application dashboard.
      *
+     * @author Tracy A McCormick
      * @return \Illuminate\Http\Response
      */
     public function index() {
@@ -32,6 +36,7 @@ class HomeController extends Controller {
     /**
      * Show the application dashboard for user.
      *
+     * @author Tracy A McCormick
      * @return \Illuminate\Http\Response
      */    
     private function showUserView() {
@@ -50,6 +55,7 @@ class HomeController extends Controller {
     /**
      * Show the application dashboard for admin.
      *
+     * @author Tracy A McCormick
      * @return \Illuminate\Http\Response
      */    
     private function showAdminView() {

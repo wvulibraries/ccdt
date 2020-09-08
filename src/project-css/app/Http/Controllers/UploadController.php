@@ -23,6 +23,11 @@ class UploadController extends Controller {
 
     /**
      * Show the table index page
+     * 
+     * @param integer $cmsID
+     * 
+     * @author Tracy A McCormick
+     * @return \Illuminate\Http\Response
      */
     public function index($cmsID) {
         // Get collection
@@ -34,9 +39,13 @@ class UploadController extends Controller {
     }
 
     /**
-     *  Store Files
+     * Store Files
      *
-     * @return Redirect
+     * @param Request $request
+     * @param integer $curId
+     * 
+     * @author Tracy A McCormick
+     * @return \Illuminate\Http\Response
      */
     public function storeFiles(Request $request, $curId) {
         // set messages array to empty

@@ -54,18 +54,30 @@ class createCollection extends Command
 
         // verify collection doesn't exist
         if ($helper->isCollection($this->argument('collectioname'))) {
-          return $this->error('Collection ' . $this->argument('collectioname') . ' Already Exists');
+            // Set Error
+            $this->error('Collection ' . $this->argument('collectioname') . ' Already Exists');
         }
+        else {
+            // Get required fields for collection
+            $data = [
+                'isCms' => $this->option('iscms'),
+                'name' => $this->argument('collectioname')
+            ];
+        
+            // Using Collection Helper Create a new collection
+            $helper->create($data);  
 
-        // Get required fields for collection
-        $data = [
-            'isCms' => $this->option('iscms'),
-            'name' => $this->argument('collectioname')
-        ];
-    
-        // Using Collection Helper Create a new collection
-        $helper->create($data);  
+            if ($helper->isCollection($this->argument('collectioname'))) {
+                // Set Info
+                $this->info('Collection Has been Created.');
+            }
+            else {
+                // Set Error
+                $this->error('Unknown Error when creating Collection');                
+            }
 
-        return $this->info('Collection Has been Created.');              
+        }
+ 
+        return;             
     }
 }

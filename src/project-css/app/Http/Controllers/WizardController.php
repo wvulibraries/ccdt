@@ -17,6 +17,14 @@ class WizardController extends Controller
     private $strDir;
     private $sharedViewData;
 
+    /**
+     * Create a new controller instance.
+     *
+     * @param string $storageFolder
+     * 
+     * @author Tracy A McCormick      
+     * @return void
+     */     
     public function __construct($storageFolder = 'flatfiles') {
       // Protection to make sure this is only accessible to admin
       $this->middleware('admin');
@@ -34,15 +42,26 @@ class WizardController extends Controller
        ];
     } 
 
-   /**
-    * Returns view for the Import Wizard Main Page
-    *
-    * @return view
-    */    
+    /**
+     * Returns view for the Import Wizard Main Page
+     * 
+     * @author Tracy A McCormick
+     * @return \Illuminate\Http\Response
+     */   
     public function import() {
         return view('admin/wizard/import')->with('AuthUsr', Auth::user());
     }
 
+    /**
+     * gets sharedViewData and sets the current
+     * requested collection. returns either the cms
+     * import page or the flatfile import page.   
+     * 
+     * @param integer $colID
+     * 
+     * @author Tracy A McCormick
+     * @return \Illuminate\Http\Response
+     */    
     public function importCollection($colID) {
         // get shared view data
         $data = $this->sharedViewData;
@@ -50,6 +69,7 @@ class WizardController extends Controller
         // set collection id to current
         $data['colID'] = $colID;
 
+        // verify collection is a cms collection
         if (Collection::findorFail($colID)->isCms) {
             // return cms import wizard
             return view('admin/wizard/cms')->with($data);

@@ -18,6 +18,8 @@ use App\Helpers\CustomStringHelper;
 use App\Helpers\TableHelper;
 
 /**
+ * The controller is responsible for showing, editing and updating the table(s)
+ * 
  * @author Ajay Krishna Teja Kavur
  * @author Tracy A McCormick <tam0013@mail.wvu.edu>
  */
@@ -28,7 +30,12 @@ class TableController extends Controller
 
     /**
      * Create a new controller instance.
-     */
+     *
+     * @param string $storageFolder
+     * 
+     * @author Tracy A McCormick      
+     * @return void
+     */ 
     public function __construct($storageFolder = 'flatfiles') {
       // Protection to make sure this is only accessible to admin
       $this->middleware('admin');
@@ -39,8 +46,11 @@ class TableController extends Controller
     }
 
     /**
-    * Show the table index page
-    */
+     * Show the table index page
+     *
+     * @author Tracy A McCormick
+     * @return \Illuminate\Http\Response
+     */ 
     public function index() {
       // Get all the table records
       $tbls = Table::all();      
@@ -49,8 +59,13 @@ class TableController extends Controller
     }
 
     /**
-    * Render View that allows users to edit table
-    */
+     * Render View that allows users to edit table
+     *
+     * @param integer $curTable
+     * 
+     * @author Tracy A McCormick
+     * @return \Illuminate\Http\Response
+     */
     public function edit($curTable) {
       $table = Table::findOrFail($curTable);
 
@@ -64,6 +79,16 @@ class TableController extends Controller
                                ->with('collcntNms', $collcntNms);
     }    
 
+    /**
+     * Takes form data and updates the table entry
+     * then returns redirect to the edit schema 
+     * page.   
+     *
+     * @param Request $request
+     * 
+     * @author Tracy A McCormick
+     * @return \Illuminate\Http\Response
+     */    
     public function update(Request $request) {
       // get table from Tables
       $table = Table::findOrFail($request->tblId);
@@ -98,6 +123,15 @@ class TableController extends Controller
       return redirect()->route('table.edit.schema',  ['curTable' => $request->tblId]);
     }
     
+     /**
+     * Gets table reads fields and determines field
+     * types. Then renders the edit schema page.  
+     *
+     * @param integer $curTable
+     * 
+     * @author Tracy A McCormick
+     * @return \Illuminate\Http\Response
+     */      
     public function editSchema($curTable) {
       // Set Empty Field Type Array
       $schema = [];
@@ -106,13 +140,7 @@ class TableController extends Controller
       $table = Table::findOrFail($curTable);
 
       // Get Description of table
-      $results = DB::select("DESCRIBE ".$table->tblNme);
-
-      // remove first item we do not change the id of the table
-      unset($results[0]);
-
-      // remmove the srchindex and timestamp fields we do not change these
-      $results = array_slice($results, 0, -3);
+      $results = $table->getDescription();
 
       //loop over remaining table fields
       foreach ($results as $col) {
@@ -144,18 +172,21 @@ class TableController extends Controller
                                       ->with('collctnId', $table->collection_id);
     }      
 
+    /**
+     * Takes form data and updates the table schema
+     * then returns redirect to the collection show page.  
+     *
+     * @param Request $request
+     * 
+     * @author Tracy A McCormick
+     * @return \Illuminate\Http\Response
+     */     
     public function updateSchema(Request $request) {
       //get table
       $table = Table::where('tblNme', $request->tblNme)->first();
 
       // Get Description of table
-      $results = DB::select("DESCRIBE ".$request->tblNme);
-
-      // remove first item we do not change the id of the table
-      unset($results[0]);
-
-      // remmove the srchindex and timestamp fields we do not change these
-      $results = array_slice($results, 0, -3);
+      $results = $table->getDescription();
 
       for ($i = 0; $i<$request->kCnt; $i++) {
         // Define current column name, type and size
@@ -185,8 +216,11 @@ class TableController extends Controller
     }
 
     /**
-    * Return the admin/collection page to create tables
-    */
+     * Return the admin/collection page to create tables 
+     *
+     * @author Tracy A McCormick
+     * @return \Illuminate\Http\Response
+     */  
     public function create() {
       // Get the collection names
       $collcntNms = Collection::all();
@@ -201,8 +235,13 @@ class TableController extends Controller
     }
 
     /**
-    * Method to format the storage files
-    **/
+     * Method to format the storage files
+     *
+     * @param string $strDir
+     * 
+     * @author Tracy A McCormick
+     * @return array 
+     */ 
     public function getFiles($strDir) {
       // Get the list of files in the directory
       $fltFleList = Storage::allFiles($strDir);
@@ -210,9 +249,9 @@ class TableController extends Controller
       // Format the file names by truncating the dir
       foreach ($fltFleList as $key => $value) {
         // check if directory string exists in the path
-        if (str_contains($value, $this->strDir.'/')) {
+        if (str_contains($value, $strDir.'/')) {
           // replace the string
-          $fltFleList[ $key ] = str_replace($this->strDir.'/', '', $value);
+          $fltFleList[ $key ] = str_replace($strDir.'/', '', $value);
         }
       }
 
@@ -221,8 +260,15 @@ class TableController extends Controller
     }
 
     /**
-    * Method responsible to load the data into the given table
-    **/
+     * Method responsible to load the data into the given table
+     *
+     * @param boolean $isFrwded
+     * @param string $tblNme
+     * @param string $fltFle
+     * 
+     * @author Tracy A McCormick
+     * @return \Illuminate\Http\Response
+     */  
     public function load($isFrwded = False, $tblNme = "", $fltFle = "") {
       // Check if the request is forwarded
       if ($isFrwded) {
@@ -247,8 +293,13 @@ class TableController extends Controller
     }
 
     /**
-    * Store takes a requested file import and adds it to the job queue for later processing
-    **/
+     * Store takes a requested file import and adds it to the job queue for later processing
+     *
+     * @param Request $request
+     * 
+     * @author Tracy A McCormick
+     * @return \Illuminate\Http\Response
+     */  
     public function store(Request $request) {
       // validate the file name and table name
       // Rules for validation
@@ -267,8 +318,13 @@ class TableController extends Controller
     }
 
     /**
-    * Disable the given table
-    */
+     * Disable the given table
+     *
+     * @param Request $request
+     * 
+     * @author Tracy A McCormick
+     * @return \Illuminate\Http\Response
+     */  
     public function restrict(Request $request) {
       // Create the collection name
       $thisTbl = Table::findOrFail($request->id);

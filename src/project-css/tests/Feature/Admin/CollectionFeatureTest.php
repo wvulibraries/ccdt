@@ -41,13 +41,19 @@
           // Generate Test Collection
           $this->testHelper->createDisabledCollectionWithTable($this->colName, $this->tableName);
 
-          // Go to collection page and enable collection
+          // Go to collection page and see the enable
           $this->actingAs($this->admin)
                ->visit('/collection')
                ->see('Collection(s)')
                ->see('Create, import and manage collections here.')
                ->see($this->colName)
                ->see('Enable');
+
+          // Check that test table is not shown
+          $this->actingAs($this->admin)
+               ->visit('/table')
+               ->see('Table(s)')
+               ->dontSee($this->tableName);  
 
           // Go to collection page and enable collection
           $this->actingAs($this->admin)
@@ -56,7 +62,7 @@
                ->press('Confirm')
                ->see('Disable'); 
                  
-          // Check that testtable1 is not shown
+          // Check that test table is shown
           $this->actingAs($this->admin)
                ->visit('/table')
                ->see('Table(s)')

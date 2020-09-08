@@ -14,8 +14,8 @@ class Controller extends BaseController
     /**
      * Constructor that associates the middlewares
      */
-    // public function __construct() {
-    //     // Middleware to check for authenticated
-    //     $this->middleware('verifyCsrd');
-    // }
+    public function __construct() {
+        // Middleware to check for authenticated
+        $this->middleware('verifyCsrd');
+    }
 }

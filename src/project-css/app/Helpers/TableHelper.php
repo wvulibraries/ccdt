@@ -559,7 +559,9 @@ class TableHelper {
     * than how they are used in the views.
     *
     * @param string $type - mysql type string  
+    *
     * @author Tracy A McCormick
+    *
     * @return array type info
     */      
     public function setText($type) {
