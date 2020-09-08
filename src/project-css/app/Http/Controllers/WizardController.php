@@ -79,35 +79,38 @@ class WizardController extends Controller
         return view('admin/wizard/flatfile')->with($data);
     }
 
-   /**
-    * Returns view for the CMS Import
-    *
-    * @return view
-    */      
+    /**
+     * Returns view for the CMS Import
+     *
+     * @author Tracy A McCormick
+     * @return \Illuminate\Http\Response
+     */      
     public function cms() {
         return view('admin/wizard/cms')->with($this->sharedViewData);
     }
 
-   /**
-    * Returns view for the FlatFile Import
-    *
-    * @return view
-    */      
+    /**
+     * Returns view for the FlatFile Import
+     *
+     * @author Tracy A McCormick
+     * @return \Illuminate\Http\Response
+     */      
     public function flatfile() {
         return view('admin/wizard/flatfile')->with($this->sharedViewData);
     }
 
-   /**
-    * Process form request to create a new table in a collection
-    *
-    * Prepares an array of values required by storeUploadsAndImport
-    * to continue processing the import request.
-    *
-    * @param request The request object has 2 fields that we require for the import
-    * flatFiles should be an array of files and the imprtTblNme (New Table Name)
-    *
-    * @return redirect
-    */       
+    /**
+     * Process form request to create a new table in a collection
+     *
+     * Prepares an array of values required by storeUploadsAndImport
+     * to continue processing the import request.
+     *
+     * @param request The request object has 2 fields that we require for the import
+     * flatFiles should be an array of files and the imprtTblNme (New Table Name)
+     *
+     * @author Tracy A McCormick
+     * @return \Illuminate\Http\Response
+     */        
     public function flatfileUpload(Request $request) {
         // 1. Input the table name in the meta Directory
         //Rules for validation
@@ -147,17 +150,18 @@ class WizardController extends Controller
         return redirect()->route('tableIndex')->withErrors($errors);
     }    
 
-   /**
-    * Process form request to create a new table in a collection
-    *
-    * Prepares an array of values required by selectFilesAndImport
-    * to continue processing the import request.
-    *
-    * @param request The request object has 3 fields that we require for the import
-    * flatFiles2 should be an array of files and the slctTblNme (New Table Name)
-    *
-    * @return redirect
-    */       
+    /**
+     * Process form request to create a new table in a collection
+     *
+     * Prepares an array of values required by selectFilesAndImport
+     * to continue processing the import request.
+     *
+     * @param request The request object has 3 fields that we require for the import
+     * flatFiles2 should be an array of files and the slctTblNme (New Table Name)
+     *
+     * @author Tracy A McCormick
+     * @return \Illuminate\Http\Response
+     */       
     public function flatfileSelect(Request $request) {
         // 1. Get the file name and validate file, if not validated remove it
         //Rules for validation
@@ -197,18 +201,19 @@ class WizardController extends Controller
         return redirect()->route('collection.show', ['colID' => $data['colID']])->withErrors($errors);      
     }
 
-   /**
-    * Process form request to create a new cms table in a collection
-    *
-    * Prepares an array of values required by storeUploadsAndImport
-    * to continue processing the import request.
-    *
-    * @param request The request object has 3 fields that we require for the import
-    * colID which is the collection id, cmsdisFiles should be an array of files and 
-    * the imprtTblNme (New Table Name)
-    *
-    * @return redirect
-    */      
+    /**
+     * Process form request to create a new cms table in a collection
+     *
+     * Prepares an array of values required by storeUploadsAndImport
+     * to continue processing the import request.
+     *
+     * @param request The request object has 3 fields that we require for the import
+     * colID which is the collection id, cmsdisFiles should be an array of files and 
+     * the imprtTblNme (New Table Name)
+     *
+     * @author Tracy A McCormick
+     * @return \Illuminate\Http\Response
+     */        
     public function cmsUpload(Request $request) {
         // 1. Input the table name in the meta Directory
         //Rules for validation
@@ -242,18 +247,19 @@ class WizardController extends Controller
         return redirect()->route('collection.show', ['colID' => $data['colID']])->withErrors($errors); 
     }    
 
-   /**
-    * Process form request to create a new table in a cms collection
-    *
-    * Prepares an array of values required by selectFilesAndImport
-    * to continue processing the import request.
-    *
-    * @param request The request object has 3 fields that we require for the import
-    * colID2 is the collection ID, cmsdisFiles2 should be an array of files and the 
-    * slctTblNme (New Table Name)
-    *
-    * @return redirect
-    */         
+    /**
+     * Process form request to create a new table in a cms collection
+     *
+     * Prepares an array of values required by selectFilesAndImport
+     * to continue processing the import request.
+     *
+     * @param request The request object has 3 fields that we require for the import
+     * colID2 is the collection ID, cmsdisFiles2 should be an array of files and the 
+     * slctTblNme (New Table Name)
+     *
+     * @author Tracy A McCormick
+     * @return \Illuminate\Http\Response
+     */         
     public function cmsSelect(Request $request) {
         // 1. Get the file name and validate file, if not validated remove it
         //Rules for validation

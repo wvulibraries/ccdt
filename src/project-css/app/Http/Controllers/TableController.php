@@ -133,41 +133,12 @@ class TableController extends Controller
      * @return \Illuminate\Http\Response
      */      
     public function editSchema($curTable) {
-      // Set Empty Field Type Array
-      $schema = [];
-
       // Get the table entry in meta table "tables"
       $table = Table::findOrFail($curTable);
 
-      // Get Description of table
-      $results = $table->getDescription();
-
-      //loop over remaining table fields
-      foreach ($results as $col) {
-        // get varchar size
-        preg_match_all('!\d+!', $col->Type, $size);
-        if (count($size[0]) == 1) {
-          $type = explode("(", $col->Type, 2);
-          switch ($type[0]) {
-              case 'varchar':
-                  array_push($schema, [$col->Field => (new TableHelper)->setVarchar((int) $size[0][0])]);
-                  break;
-              case 'int':
-              case 'mediumint':
-              case 'bigint':
-                  array_push($schema, [$col->Field => (new TableHelper)->setInteger($type[0])]);
-                  break;                                      
-          }
-        }
-        else {
-          // if size isn't present then field is a text field
-          array_push($schema, [$col->Field => (new TableHelper)->setText($col->Type)]);
-        }
-      }
-      
       // return view
       return view('table.edit.schema')->with('tblId', $table->id)
-                                      ->with('schema', $schema)
+                                      ->with('schema', $table->getSchema())
                                       ->with('tblNme', $table->tblNme)
                                       ->with('collctnId', $table->collection_id);
     }      

@@ -14,21 +14,21 @@ use App\Helpers\TableHelper;
 class Table extends Model
 {
     /**
-    * Define the many to one relationship with App\Collection
-    */
+     * Define the many to one relationship with App\Collection
+     */
     public function collection() {
         // Allow querying the collections
         return $this->belongsTo('App\Models\Collection');
     }
 
     /**
-    * Returns record count of the current table
-    */  
+     * Returns record count of the current table
+     */  
     public function recordCount() {
         return DB::table($this->tblNme)->count();
     }
 
-     /**
+    /**
      * returns 
      * 
      * @param       integer $amount Input integer
@@ -38,15 +38,15 @@ class Table extends Model
     }
 
     /**
-    * Returns the column names as an array
-    */  
+     * Returns the column names as an array
+     */  
     public function getColumnList() {
         return Schema::getColumnListing($this->tblNme);
     }
 
     /**
-    * return number of fields
-    */    
+     * return number of fields
+     */    
     public function getOrgCount() {
       // get all column names
       $clmnLst = $this->getColumnList();
@@ -55,7 +55,7 @@ class Table extends Model
       return (count($clmnLst) - 4);
     }
 
-     /**
+    /**
      * returns requested record id
      * 
      * @param       integer $id Input integer
@@ -68,6 +68,13 @@ class Table extends Model
                     ->get();
     }
 
+    /**
+     * Get description of the current table
+     * Remove the id and timestamps
+     * return the remaining fields
+     * 
+     * @return array of fields  
+     */     
     public function getDescription() {
         // Get Description of table
         $results = DB::select("DESCRIBE `{$this->tblNme}`");
@@ -79,31 +86,54 @@ class Table extends Model
         return array_slice($results, 0, -3);
     }
 
-    // Return field type for column name passed
+    /**
+     * Get description of the current table
+     * Remove the id and timestamps
+     * return the remaining fields
+     * 
+     * @param string $col (field description 
+     * that was returned from the DESCRIBE 'tablename' 
+     * command)
+     * 
+     * @return array of fields  
+     */     
+    public function findFieldType($col) {
+        // get varchar size
+        preg_match_all('!\d+!', $col->Type, $size);
+
+        // if size was found then determine type
+        if (count($size[0]) == 1) {
+            $type = explode("(", $col->Type, 2);
+            switch ($type[0]) {
+                case 'varchar':
+                    return (new TableHelper)->setVarchar((int) $size[0][0]);
+                    break;
+                case 'int':
+                case 'mediumint':
+                case 'bigint':
+                    return (new TableHelper)->setInteger($type[0]);                                     
+            }
+        }
+        // if size isn't present then field is a text field
+        return (new TableHelper)->setText($col->Type);      
+    }
+
+    /**
+     * Return field type for column name passed
+     * 
+     * @param string $name (name of field)
+     * 
+     * @return array (example ['type' => 'text', 'size' => 'medium'])  
+     */       
     public function getColumnType($name) {
         // Get Description of table
         $columns = DB::select("DESCRIBE `{$this->tblNme}`");
-        // Return Type for Field
-        foreach ($columns as $col) {            
-            if ($name == $col->Field) {
-                // get varchar size
-                preg_match_all('!\d+!', $col->Type, $size);
-                if (count($size[0]) == 1) {
-                    $type = explode("(", $col->Type, 2);
-                    switch ($type[0]) {
-                        case 'varchar':
-                            return (new TableHelper)->setVarchar((int) $size[0][0]);
-                            break;
-                        case 'int':
-                        case 'mediumint':
-                        case 'bigint':
-                            return (new TableHelper)->setInteger($type[0]);                                     
-                    }
-                }
-                else {
-                    // if size isn't present then field is a text field
-                    return (new TableHelper)->setText($col->Type);
-                }
+        
+        // loop over table fields
+        foreach ($columns as $col) { 
+            // return type once we have a match           
+            if ($name == $col->Field) {  
+                return $this->findFieldType($col);
             }
         }
         // return false if field not found
@@ -111,9 +141,31 @@ class Table extends Model
     }
 
      /**
+      * inserts a new record into the table
+      * 
+      * @return array $schema (multidimensional array contains list
+      * of field types for each column name)
+      */ 
+    public function getSchema() {
+      // Set Empty Field Type Array
+      $schema = [];
+
+      // Get Description of table
+      $columns = $this->getDescription();
+
+      // loop over table fields
+      foreach ($columns as $col) {
+        array_push($schema, [$col->Field => $this->findFieldType($col)]);
+      }     
+
+      // return schema
+      return $schema;
+    }
+
+    /**
      * inserts a new record into the table
      * 
-     * @param       array $curArry Input array
+     * @param array $curArry (array containing new record values)
      */      
     public function insertRecord($curArry) {
         // Insert them into DB
@@ -121,14 +173,14 @@ class Table extends Model
     }
 
      /**
-     * performs full text query on table 
-     * 
-     * @param       string $search Input string
-     * @param       integer $page Input integer
-     * @param       integer $perPage Input integer
-     * 
-     * @return      array   
-     */      
+      * performs full text query on table 
+      * 
+      * @param string $search (search text)
+      * @param integer $page (Page Number to be displayed)
+      * @param integer $perPage (Records displayed per page)
+      * 
+      * @return array (query results)
+      */      
     public function fullTextQuery($search, $page, $perPage) {        
         return DB::table($this->tblNme)
                 ->select('*')
