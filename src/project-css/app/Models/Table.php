@@ -87,9 +87,9 @@ class Table extends Model
     }
 
     /**
-     * Get description of the current table
-     * Remove the id and timestamps
-     * return the remaining fields
+     * Return the field type of the $col string
+     * Where the $col is one field from the describe
+     * 'tablename' function.
      * 
      * @param string $col (field description 
      * that was returned from the DESCRIBE 'tablename' 
