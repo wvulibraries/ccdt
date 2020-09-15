@@ -51,11 +51,13 @@ class createSrchIndex extends Command
     public function handle()
     {
         if (!Schema::hasTable($this->argument('tablename'))) { 
-            return $this->error('Table Doesn\'t Exist.');
+            $this->error('Table Doesn\'t Exist.');
+            return; 
         }
 
         dispatch(new CreateSearchIndex($this->argument('tablename')))->onQueue('importQueue');
 
-        return $this->info('Job has been created to Create Search Index');          
+        $this->info('Job has been created to Create Search Index');  
+        return;         
     }
 }

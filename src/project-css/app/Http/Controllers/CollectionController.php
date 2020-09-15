@@ -9,22 +9,22 @@ use App\Models\Table;
 use App\Helpers\CollectionHelper;
 
 /**
- * 
+ * The controller is responsible for showing, editing and updating the collection(s)
  * 
  * @author Ajay Krishna Teja Kavur
  * @author Tracy A McCormick <tam0013@mail.wvu.edu>
  */
 class CollectionController extends Controller
 {
-  /**
-   * Where to redirect users after Creating / selecting collections.
-   *
-   * @var string
-   */
-  protected $redirectTo = '/home';
+    /**
+     * Where to redirect users after Creating / selecting collections.
+     *
+     * @var string
+     */
+    protected $redirectTo = '/home';
 
-  // Customize the error messages
-  private $messages = array(
+    // Customize the error messages
+    private $messages = array(
       'clctnName.required' => 'Please enter a collection name',
       'clctnName.unique' => 'The collection name has already been taken by current or disabled collection',
       'clctnName.max' => 'The collection name cannot exceed 30 characters',
@@ -32,18 +32,20 @@ class CollectionController extends Controller
       'clctnName.alpha_num' => 'The collection name can only have alphab',
     );
 
-  // Rules for validation
-  private $rules = array(
+    // Rules for validation
+    private $rules = array(
       'clctnName' => 'required|unique:collections|max:30|min:6|alpha_num',
     );
 
-  /**
-   * Create a new controller instance.
-   */
-  public function __construct()
-  {
-      $this->middleware('admin');
-  }
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('admin');
+    }
 
   /**
    * Display a listing of the resource.
@@ -71,16 +73,16 @@ class CollectionController extends Controller
     // Get all the tables of this collection
     $tbls = $thisClctn->tables()->get();
 
-    // redirect to show page
+    // render collection/show page with array of tables
+    // current collection id and name of collection
     return view('collection/show')->with('tbls', $tbls)
                                   ->with('colID', $colID)
                                   ->with('clctnName', $thisClctn->clctnName);
   }   
   
   /**
-   * Returns view for collection
-   *
-   * @return view
+   * Generates response containing the collection/upload
+   * page that will be shown.
    *
    * @param request $request
    *        
@@ -91,7 +93,8 @@ class CollectionController extends Controller
     // find the collection
     $thisClctn = Collection::findorFail($colID);  
 
-    // redirect to show page
+    // render collection/upload page with current collection id 
+    // and name of collection
     return view('collection/upload')->with('colID', $colID)
                                     ->with('clctnName', $thisClctn->clctnName);
   }   
@@ -117,14 +120,14 @@ class CollectionController extends Controller
     // Using Collection Helper Create a new collection
     (new CollectionHelper)->create($data);
 
-    // Take the form object and insert using model
-    // Used a named route for better redirection
+    // return a redirect response to a named route 
+    // for better redirection
     return redirect()->route('collection.index');
   }
 
   /**
    * Takes request gets collection id and redirects
-   * to the wizard import collection page
+   * to the wizard import page for the specified collection
    *
    * @param request $request
    *        
@@ -132,7 +135,8 @@ class CollectionController extends Controller
    * @return \Illuminate\Http\Response ( redirect to wizard import )
    */  
   public function tableCreate(Request $request) {
-    // redirect to import wizard
+    // return a redirect response to import wizard 
+    // route with collection id
     return redirect('admin/wizard/import/collection/'.$request->colID);
   }
 
@@ -148,6 +152,7 @@ class CollectionController extends Controller
     // find the collection
     $thisClctn = Collection::findorFail($request->id);
 
+    // update isCms field if the collection name hasn't changed
     if ($thisClctn->clctnName == $request->clctnName) {
       // Set isCms
       $thisClctn->isCms = $request->has('isCms') ? true : false;
@@ -170,7 +175,8 @@ class CollectionController extends Controller
       $result = (new CollectionHelper)->update($data);
     }
 
-    // Redirect back to collection page
+    // return a redirect response to collection index 
+    // page using named route   
     return redirect()->route('collection.index');
   }
 
@@ -227,10 +233,11 @@ class CollectionController extends Controller
       // Get all the tables of this collection
       $tbls = $thisClctn->tables()->get();
 
-      // redirect to creators page
+      // render collection/creator page with array of tables
+      // current collection id and name of collection
       return view('collection/creator')->with('tbls', $tbls)
-                                    ->with('colID', $colID)
-                                    ->with('clctnName', $thisClctn->clctnName);
+                                       ->with('colID', $colID)
+                                       ->with('clctnName', $thisClctn->clctnName);
     }
 
     return redirect()->back()->withErrors('Current Collection is Not a CMS Database'); 

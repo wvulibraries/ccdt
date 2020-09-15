@@ -59,18 +59,12 @@ class HomeController extends Controller {
      * @return \Illuminate\Http\Response
      */    
     private function showAdminView() {
-        // Get the count of variables
-        $cllctCnt = Collection::all()->count();
-        $usrCnt = User::where('isAdmin', false)->count();
-        $admnCnt = User::where('isAdmin', true)->count();
-        $tblCnt = Table::all()->count();
-
-        // Compact them into array
+        // Create stats array that is passed to the view
         $stats = array(
-            'cllctCnt' => $cllctCnt,
-            'usrCnt' => $usrCnt,
-            'admnCnt' => $admnCnt,
-            'tblCnt' => $tblCnt,
+            'cllctCnt' => Collection::all()->count(),
+            'usrCnt' => User::where('isAdmin', false)->count(),
+            'admnCnt' => User::where('isAdmin', true)->count(),
+            'tblCnt' => Table::all()->count(),
         );
 
         // Return the view

@@ -1,8 +1,4 @@
 <?php
-/**
- * @author Ajay Krishna Teja Kavur
- * @author Tracy A McCormick <tam0013@mail.wvu.edu>
- */
 
 namespace App\Models;
 
@@ -10,6 +6,12 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Auth;
 
+/**
+ * User model default auto generated model
+ * for managing users, passwords and user access.
+ *  
+ * @author Ajay Krishna Teja Kavur
+ */
 class User extends Authenticatable
 {
     use Notifiable;

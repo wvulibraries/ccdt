@@ -7,7 +7,6 @@ use Illuminate\Support\Facades\DB;
 use App\Models\Jobs;
 use Auth;
 
-
 /**
  * Jobs Controller manages the file import that loads data into the tables.
  * 

@@ -53,12 +53,14 @@ class enableCollection extends Command
 
         // verify collection exists
         if ($helper->isCollection($this->argument('collectioname')) == false) {
-            return $this->error('Collection ' . $this->argument('collectioname') . ' Doesn\'t Exist');
+            $this->error('Collection ' . $this->argument('collectioname') . ' Doesn\'t Exist');
+            return; 
         }
 
         // Using Collection Helper Disable collection
         $helper->enable($this->argument('collectioname'));   
         
-        return $this->info('Collection Has been Enabled.');         
+        $this->info('Collection Has been Enabled.'); 
+        return;         
     }
 }

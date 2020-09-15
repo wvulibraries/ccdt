@@ -1,8 +1,4 @@
 <?php
-/**
- * @author Ajay Krishna Teja Kavur
- * @author Tracy A McCormick <tam0013@mail.wvu.edu>
- */
 
 namespace App\Models;
 
@@ -11,6 +7,12 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use App\Helpers\TableHelper;
 
+/**
+ * Table model is used to view, restart and remove jobs.
+ * 
+ * @author Ajay Krishna Teja Kavur
+ * @author Tracy A McCormick <tam0013@mail.wvu.edu>
+ */
 class Table extends Model
 {
     /**
@@ -23,30 +25,37 @@ class Table extends Model
 
     /**
      * Returns record count of the current table
-     */  
+     * @return      integer
+     */    
     public function recordCount() {
         return DB::table($this->tblNme)->count();
     }
 
     /**
-     * returns 
+     * returns the records from the requested page to
+     * be displayed in the view
      * 
      * @param       integer $amount Input integer
-     */   
+     * @return      array of records
+     */    
     public function getPage($amount) {
         return DB::table($this->tblNme)->paginate($amount);
     }
 
     /**
      * Returns the column names as an array
-     */  
+     * @return      array of field names
+     */   
     public function getColumnList() {
         return Schema::getColumnListing($this->tblNme);
     }
 
     /**
-     * return number of fields
-     */    
+     * return number of fields excluding the 4 
+     * standard fields (id, time stamps and srchIndex)
+     * 
+     * @return      integer
+     */       
     public function getOrgCount() {
       // get all column names
       $clmnLst = $this->getColumnList();
@@ -56,7 +65,8 @@ class Table extends Model
     }
 
     /**
-     * returns requested record id
+     * returns requested record id from the
+     * current table.
      * 
      * @param       integer $id Input integer
      * 
@@ -82,7 +92,7 @@ class Table extends Model
         // remove first item we do not change the id of the table
         unset($results[0]);
 
-        // remmove the srchindex and timestamp fields we do not change these
+        // remove the srchindex and timestamp fields we do not change these
         return array_slice($results, 0, -3);
     }
 
@@ -123,7 +133,8 @@ class Table extends Model
      * 
      * @param string $name (name of field)
      * 
-     * @return array (example ['type' => 'text', 'size' => 'medium'])  
+     * @return array (example ['type' => 'text', 'size' => 'medium']) 
+     * @return boolean (returns false if we don't find the field) 
      */       
     public function getColumnType($name) {
         // Get Description of table
@@ -141,10 +152,11 @@ class Table extends Model
     }
 
      /**
-      * inserts a new record into the table
+      * creates a multidimensional array 
+      * containing the type and size for each field
+      * in the table.
       * 
-      * @return array $schema (multidimensional array contains list
-      * of field types for each column name)
+      * @return array
       */ 
     public function getSchema() {
       // Set Empty Field Type Array
@@ -166,6 +178,7 @@ class Table extends Model
      * inserts a new record into the table
      * 
      * @param array $curArry (array containing new record values)
+     * @return void
      */      
     public function insertRecord($curArry) {
         // Insert them into DB

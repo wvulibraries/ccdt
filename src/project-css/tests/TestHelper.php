@@ -121,8 +121,8 @@ class TestHelper {
       fputcsv($file, $columns);
 
       for ($x = 0; $x <= $numItems; $x++) {
-         // join 2 random number calls to get large random number
-         $integerBig = $faker->randomNumber(8, true) . $faker->randomNumber(mt_rand(1, 9), true);     
+         // faker cannot make a number as larage as we need to we join 2 together
+         $integerBig = $faker->randomNumber(8, true) . $faker->randomNumber(mt_rand(1, 2), true);     
 
          fputcsv($file, array($faker->word, $faker->words(10, true), $faker->text(500), $faker->text(1000), $faker->text(3000), $faker->text(9000), $faker->randomDigit(), $faker->randomNumber(7, true), $integerBig));
       }

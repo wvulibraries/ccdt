@@ -45,7 +45,11 @@ class optimizeSrchIndex extends Command
     }
 
     /**
-     * Execute the console command.
+     * handle() is the main routine of php artisan commands 
+     * The command first verifies table exists then dispatch's a 
+     * OptimizeSearchIndex job on the high job queue for processing. 
+     * If table isn't found a error is set which is displayed in the 
+     * terminal when the command completes it execution.
      *
      * @return mixed
      */
@@ -55,9 +59,11 @@ class optimizeSrchIndex extends Command
         if (Schema::hasTable($this->argument('tablename'))) { 
             dispatch(new OptimizeSearchIndex($this->argument('tablename')))->onQueue('high');
 
-            return $this->info('Job has been created to Optimize Search Index');   
+            $this->info('Job has been created to Optimize Search Index');   
+            return; 
         }
 
-        return $this->error('Table Doesn\'t Exist.');      
+        $this->error('Table Doesn\'t Exist.');   
+        return;    
     }
 }

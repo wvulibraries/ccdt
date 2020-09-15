@@ -107,8 +107,10 @@
         // Call table helper create empty table
         $this->tableHelper->setupNewTable($folder, $file, $this->tableName, $thisClctn->id);
 
-        // Call import adapter process
+        // Setup new import adapter
         $importAdapter = (new ImportAdapter($this->tableName, $folder, $file));
+
+        // Call import adapter process to import the file        
         $importAdapter->process();     
 
         // get newly created table
@@ -116,7 +118,7 @@
 
         // Assert table was created
         $this->assertEquals($table->id, '1');                    
-    }    
+    }            
 
   }
 ?>

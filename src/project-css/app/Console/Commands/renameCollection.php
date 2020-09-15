@@ -52,14 +52,16 @@ class renameCollection extends Command
         $helper = new CollectionHelper;
 
         if ($helper->isCollection($this->argument('newname'))) {
-          return $this->error('Collection ' . $this->argument('newname') . ' Already Exists');
+          $this->error('Collection ' . $this->argument('newname') . ' Already Exists');
+          return; 
         }
 
         // find the collection
         $thisClctn = Collection::where('clctnName', $this->argument('collectioname'))->first();
 
         if ($thisClctn == null) {
-          return $this->error('Collection ' . $this->argument('collectioname') . ' Doesn\'t Exist');
+          $this->error('Collection ' . $this->argument('collectioname') . ' Doesn\'t Exist');
+          return; 
         }
     
         // Get required fields for collection
@@ -72,6 +74,7 @@ class renameCollection extends Command
         // Using Collection Helper Update collection
         $helper->update($data);  
 
-        return $this->info('Collection Has been Renamed.');    
+        $this->info('Collection Has been Renamed.'); 
+        return;    
     }
 }

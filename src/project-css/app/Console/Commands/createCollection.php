@@ -3,7 +3,6 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\DB;
 use App\Models\Collection;
 use App\Helpers\CollectionHelper;
 
@@ -33,6 +32,8 @@ class createCollection extends Command
      */
     protected $description = 'Create a new Collection';
 
+    private $helper;
+
     /**
      * Create a new command instance.
      *
@@ -40,6 +41,8 @@ class createCollection extends Command
      */
     public function __construct()
     {
+        $this->helper = new CollectionHelper;
+
         parent::__construct();
     }
 
@@ -50,34 +53,31 @@ class createCollection extends Command
      */   
     public function handle()
     {
-        $helper = new CollectionHelper;
-
         // verify collection doesn't exist
-        if ($helper->isCollection($this->argument('collectioname'))) {
+        if ($this->helper->isCollection($this->argument('collectioname'))) {
             // Set Error
             $this->error('Collection ' . $this->argument('collectioname') . ' Already Exists');
+            return; 
+        }
+
+        // Get required fields for collection
+        $data = [
+            'isCms' => $this->option('iscms'),
+            'name' => $this->argument('collectioname')
+        ];
+    
+        // Using Collection Helper Create a new collection
+        $this->helper->create($data);  
+
+        if ($this->helper->isCollection($this->argument('collectioname'))) {
+            // Verify Collection Has been Created
+            $this->info('Collection Has been Created.');
         }
         else {
-            // Get required fields for collection
-            $data = [
-                'isCms' => $this->option('iscms'),
-                'name' => $this->argument('collectioname')
-            ];
-        
-            // Using Collection Helper Create a new collection
-            $helper->create($data);  
-
-            if ($helper->isCollection($this->argument('collectioname'))) {
-                // Set Info
-                $this->info('Collection Has been Created.');
-            }
-            else {
-                // Set Error
-                $this->error('Unknown Error when creating Collection');                
-            }
-
+            // Set Error
+            $this->error('Unknown Error when creating Collection');                
         }
  
-        return;             
+        return;              
     }
 }

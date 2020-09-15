@@ -109,8 +109,8 @@ class CSVHelperTest extends BrowserKitTestCase
     $this->assertEquals($result[0][0], 'string');
     $this->assertEquals($result[0][1], 'default');
 
-    $this->assertEquals($result[1][0], 'integer');
-    $this->assertEquals($result[1][1], 'big');
+    $this->assertEquals($result[1][0], 'string');
+    $this->assertEquals($result[1][1], 'medium');
 
     $this->assertEquals($result[2][0], 'string');
     $this->assertEquals($result[2][1], 'default');

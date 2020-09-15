@@ -35,10 +35,7 @@
     public function it_deletes_a_collection() {
         // Create Collection
         Artisan::call('collection:create', ['collectioname' => $this->colName]);
-
-        // Call helper isCollection Verify Collection Exists
-        $this->assertTrue($this->helper->isCollection($this->colName));     
-        
+          
         $this->artisan('collection:delete', ['collectioname' => $this->colName] )
              ->expectsOutput('Collection Has been Deleted.');
     }        
@@ -48,6 +45,28 @@
         $this->artisan('collection:delete', ['collectioname' => $this->colName] )
              ->expectsOutput('Collection ' . $this->colName . ' Doesn\'t Exist');         
     }   
+
+    /** @test */
+    public function try_to_delete_a_collection_with_table() {    
+        // Generate Table Name
+        $tblNme = $this->testHelper->createTableName(); 
+        $this->testHelper->createCollectionWithTable($this->colName, $tblNme);
+        $this->artisan('collection:delete', ['collectioname' => $this->colName] )
+             ->expectsOutput('Unable to remove Collection ' . $this->colName . '. Tables are Associated With the Collection.');         
+    } 
+
+    public function try_to_delete_a_collection_with_files() {    
+        // passing a empty file should throw an exception
+        $path = './storage/app';
+        $file = 'empty.csv';
+
+        // create file in collection storage folder
+        $emptyFile = $path.'/'.$this->colName.'/'.$file;
+        touch($emptyFile);
+
+        $this->artisan('collection:delete', ['collectioname' => $this->colName] )
+             ->expectsOutput('Unable to remove Collection ' . $this->colName . '. Files Exist in Storage Folder.');         
+    } 
 
   }
 ?>

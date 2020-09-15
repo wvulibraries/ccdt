@@ -52,12 +52,14 @@ class setCmsCollection extends Command
 
         // verify collection exists
         if ($helper->isCollection($this->argument('collectioname')) == false) {
-            return $this->error('Collection ' . $this->argument('collectioname') . ' Doesn\'t Exist');
+            $this->error('Collection ' . $this->argument('collectioname') . ' Doesn\'t Exist');
+            return; 
         }
 
         // Using Collection Helper set collection cms option
         $helper->setCMS($this->argument('collectioname'), true);   
 
-        return $this->info('Collection is set as CMS');        
+        $this->info('Collection is set as CMS'); 
+        return;       
     }
 }

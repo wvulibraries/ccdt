@@ -148,20 +148,24 @@ class CSVHelper {
          // Validate the tokens and filter them
          $tkns = $this->fltrTkns($tkns);
 
-         // Set check array to all numeric values for field count
-         $fieldcount = count($tkns);
-         if (count($checkArray) < $fieldcount) {
-           for ($pos = count($checkArray); $pos < $fieldcount; $pos++) {
-             // push default item as numeric
-             array_push($checkArray, [0, 0]);
-           }
-         }
-
          foreach($tkns as $x=>$x_value) {
-           // change type if we detect any that the string isn't numeric
-           if (is_numeric($x_value) && ($x_value != "")) {
-             $checkArray[$x][0] = 1;           
+           // array pos isn't set then we set
+           // our default values
+           if (!isset($checkArray[$x])) {
+             $checkArray[$x] = [0, 0];
            }
+
+           // change type if we detect field as numeric
+           if (is_numeric($x_value) && ($x_value != "")) {
+             $checkArray[$x][0] = 1;          
+           }
+           elseif ($checkArray[$x][0] != 0) {
+             // if we detect that it isn't numeric and 
+             // the field isn't set to text/string we set
+             // it back
+             $checkArray[$x][0] = 0;
+           }
+
            // save character count if higher than last pass
            if ($checkArray[$x][1] < strlen($x_value)) {
              $checkArray[$x][1] = strlen($x_value);
@@ -192,7 +196,10 @@ class CSVHelper {
          // determine final field types
          foreach($checkArray as $x=>$x_value)
          {
-          if ($x_value[0] == 0) {
+          // check to see if $x_value[0] is set to 0 then it should be
+          // a string or if character count is over 10 we will set field
+          // as a string
+          if (($x_value[0] == 0) || ($x_value[1] > '10')){
             switch ($x_value[1]) {
               case 0:
               case $x_value[1] < 30:

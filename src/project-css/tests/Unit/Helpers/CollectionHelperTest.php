@@ -263,4 +263,21 @@ class CollectionHelperTest extends BrowserKitTestCase
         // check if collection isCms set to 1
         $this->assertEquals($collection->isCms, false);       
      }
+
+     public function testDeleteCollection() {
+        // Create Test Data Array
+        $data = [
+          'isCms' => false,
+          'name' => $this->colName
+        ];
+
+        // Call helper create
+        $collection = $this->helper->create($data); 
+        
+        // should delete collection
+        $this->assertTrue($this->helper->deleteCollection($data['name']));
+        
+        // cannot delete missing collection
+        $this->assertFalse($this->helper->deleteCollection($data['name']));         
+     }     
 }

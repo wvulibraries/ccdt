@@ -1,13 +1,17 @@
 <?php
-/**
- * @author Tracy A McCormick <tam0013@mail.wvu.edu>
- */
 
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
+/**
+ * CMSRecords model is used to determinine if passed
+ * recordtype exists and return the cms header to 
+ * be used in cms table creation.
+ * 
+ * @author Tracy A McCormick <tam0013@mail.wvu.edu>
+ */
 class CMSRecords extends Model
 {    
     /**

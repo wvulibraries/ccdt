@@ -296,7 +296,7 @@ class WizardController extends Controller
     * Get list of current files in the upload folder. Process
     * the array removing the path from the string. 
     *
-    * @return array
+    * @return array (of filename(s) available)
     */      
     private function flatFileList() {
       // Get the list of files in the directory

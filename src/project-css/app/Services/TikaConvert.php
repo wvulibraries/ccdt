@@ -1,15 +1,14 @@
 <?php
-/**
- * @author Tracy A McCormick <tam0013@mail.wvu.edu>
- */
 
 namespace App\Services;
 
+/**
+ * TikaConvert helps connect to the tika server to perform various
+ * file type conversions and ocr'ing of images
+ * 
+ * @author Tracy A McCormick <tam0013@mail.wvu.edu>
+ */
 class TikaConvert {
-    /**
-     * TikaConvert helps connect to the tika server to perform various
-     * file type conversions and ocr'ing of images
-     */
     private $tika_host;
     private $tika_port;
 

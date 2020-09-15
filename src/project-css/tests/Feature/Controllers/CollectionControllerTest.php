@@ -77,6 +77,14 @@
                ->see('Create, import and manage collections here.');
      }
 
+     public function testUserShowInvaidCollection() {
+          // try to get collectino page on invalid collection
+          $this->actingAs($this->user)
+               ->get('/collection/1')
+               ->assertResponseStatus(404)
+               ->see('We could not find the page you were looking for.');
+     }     
+
      public function testUploadFilesToCollection() {
           // Generate Test Collection
           $collection = $this->testHelper->createCollection($this->colName);
@@ -86,6 +94,12 @@
                ->get('collection/upload/1')
                ->assertResponseStatus(200)
                ->see('Upload Linked File(s)');
+     }
+     public function testUploadFilesToMissingCollection() {
+          // try to get to the collection page page
+          $this->actingAs($this->admin)
+               ->get('collection/upload/1')
+               ->assertResponseStatus(404);
      }
 
      // Note testing CMS Creator here isn't working correctly

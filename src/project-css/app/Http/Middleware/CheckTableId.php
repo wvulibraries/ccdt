@@ -1,14 +1,20 @@
 <?php
-/**
- * @author Ajay Krishna Teja Kavur
- * @author Tracy A McCormick <tam0013@mail.wvu.edu>
- */
 
 namespace App\Http\Middleware;
 
 use Closure;
 use App\Models\Table;
 
+/**
+ * Check Table Id Middleware 
+ *
+ * CheckTableId middleware used for checking for a 
+ * valid table id in routes. Currently used by the 
+ * DataView Controller.
+ *
+ * @author Tracy A McCormick <tam0013@mail.wvu.edu>
+ *
+ */
 class CheckTableId {
     /**
      * Handle an incoming request.

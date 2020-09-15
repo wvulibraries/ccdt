@@ -172,7 +172,8 @@ class DataViewController extends Controller {
                                         ->with('recId', $recId);
         }
 
-        // download file if tika doesn't support the conversion to text
+        // download file so user can view if tika doesn't support 
+        // the conversion to text
         return Response::make(file_get_contents($source), 200, [
            'Content-Type' => $fileMimeType,
            'Content-Disposition' => 'inline; filename="'.$filename.'"'

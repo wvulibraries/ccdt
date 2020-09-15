@@ -52,7 +52,8 @@ class exportTable extends Command
     public function handle()
     {
         if (!Schema::hasTable($this->argument('tablename'))) { 
-            return $this->error('Table Doesn\'t Exist.');
+            $this->error('Table Doesn\'t Exist.');
+            return; 
         }
 
         // allowed fields
@@ -76,6 +77,7 @@ class exportTable extends Command
 
         fclose($file);
 
-        return $this->info('Table ' . $this->argument('tablename') . ' Has Been Exported.');            
+        $this->info('Table ' . $this->argument('tablename') . ' Has Been Exported.');
+        return;          
     }
 }

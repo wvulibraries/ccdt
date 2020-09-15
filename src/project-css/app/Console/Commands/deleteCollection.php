@@ -33,6 +33,8 @@ class deleteCollection extends Command
      */
     protected $description = 'Delete a Collection';
 
+    private $helper;
+
     /**
      * Create a new command instance.
      *
@@ -40,7 +42,35 @@ class deleteCollection extends Command
      */
     public function __construct()
     {
+        $this->helper = new CollectionHelper;
+
         parent::__construct();
+    }
+
+    public function validate_collection() {
+            // boolean used to see if we need to return after error checking
+            // so we can display all errors upon exit of command
+            $error = false;
+
+            // find the collection
+            $thisClctn = Collection::where('clctnName', $this->argument('collectioname'))->first();            
+
+            // Verify That No files exist in the Storage Folder for the Collection
+            if ($thisClctn->hasFiles()) {
+                // set error
+                $this->error('Unable to remove Collection ' . $this->argument('collectioname') . '. Files Exist in Storage Folder.');
+                $error = true;
+            }
+
+            // Verify That No Tables are associated with this collection
+            if ($thisClctn->hasTables()) {
+                // set error
+                $this->error('Unable to remove Collection ' . $this->argument('collectioname') . '. Tables are Associated With the Collection.');
+                $error = true;
+            }
+
+            // return $error
+            return $error;       
     }
 
     /**
@@ -50,32 +80,22 @@ class deleteCollection extends Command
      */
     public function handle()
     {
-        $helper = new CollectionHelper;
-
         // verify collection exists
-        if ($helper->isCollection($this->argument('collectioname')) == false) {
-            return $this->error('Collection ' . $this->argument('collectioname') . ' Doesn\'t Exist');
+        if ($this->helper->isCollection($this->argument('collectioname')) == false) {
+            $this->error('Collection ' . $this->argument('collectioname') . ' Doesn\'t Exist');
+            return; 
         }
 
         // skip verify of items if force is set
-        if ($this->option('force') == false) {
-            // find the collection
-            $thisClctn = Collection::where('clctnName', $this->argument('collectioname'))->first();            
-
-            // Verify That No files exist in the Storage Folder for the Collection
-            if ($thisClctn->hasFiles()) {
-                return $this->error('Unable to remove Collection ' . $this->argument('collectioname') . '. Files Exist in Storage Folder.');
-            }
-
-            // Verify That No Tables are associated with this collection
-            if ($thisClctn->hasTables()) {
-                return $this->error('Unable to remove Collection ' . $this->argument('collectioname') . '. Tables are Associated With the Collection.');
-            }
+        if (($this->option('force') == false) && ($this->validate_collection())) {
+            // errors were found preventing deletion of collection
+            return;   
         }
 
         // call helper delete collection
-        $helper->deleteCollection($this->argument('collectioname'));
+        $this->helper->deleteCollection($this->argument('collectioname'));
 
-        return $this->info('Collection Has been Deleted.');          
+        $this->info('Collection Has been Deleted.');  
+        return;         
     }
 }

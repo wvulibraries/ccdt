@@ -32,6 +32,8 @@ class disableCollection extends Command
      */
     protected $description = 'Enable a Collection';
 
+    private $helper;
+
     /**
      * Create a new command instance.
      *
@@ -39,6 +41,8 @@ class disableCollection extends Command
      */
     public function __construct()
     {
+        $this->helper = new CollectionHelper;
+
         parent::__construct();
     }
 
@@ -49,16 +53,16 @@ class disableCollection extends Command
      */
     public function handle()
     {
-        $helper = new CollectionHelper;
-
         // verify collection exists
-        if ($helper->isCollection($this->argument('collectioname')) == false) {
-            return $this->error('Collection ' . $this->argument('collectioname') . ' Doesn\'t Exist');
+        if ($this->helper->isCollection($this->argument('collectioname')) == false) {
+            $this->error('Collection ' . $this->argument('collectioname') . ' Doesn\'t Exist');
+            return; 
         }
 
         // Using Collection Helper Disable collection
-        $helper->disable($this->argument('collectioname')); 
+        $this->helper->disable($this->argument('collectioname')); 
         
-        return $this->info('Collection Has been Disabled.');  
+        $this->info('Collection Has been Disabled.');  
+        return; 
     }
 }

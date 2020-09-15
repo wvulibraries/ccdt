@@ -46,6 +46,28 @@ class importTable extends Command
     }
 
     /**
+     * Find / Create and Return the collection that specified 
+     * in the $this->argument('collectioname')
+     *
+     * @return object collection
+     */    
+    public function collection() { 
+       // get collection
+       $collection = Collection::where('clctnName', '=', $this->argument('collectioname'))->first();
+       // if collection is null create the collection
+       if ($collection == null) {
+           // Get required fields for collection
+           $data = [
+               'isCms' => false,
+               'name' => $this->argument('collectioname')
+           ];
+           // Using Collection Helper Create a new collection
+           $collection = (new CollectionHelper)->create($data);        
+       }
+       return $collection;
+    }
+
+    /**
      * Execute the console command.
      *
      * @return mixed
@@ -53,30 +75,17 @@ class importTable extends Command
     public function handle()
     {
         if (Schema::hasTable($this->argument('tablename'))) { 
-            return $this->error('Table Name Already Exists.');
-        }
-
-        // get collection
-        $collection = Collection::where('clctnName', '=', $this->argument('collectioname'))->first();
-
-        // if collection is null create the collection
-        if ($collection == null) {
-            // Get required fields for collection
-            $data = [
-                'isCms' => false,
-                'name' => $this->argument('collectioname')
-            ];
-        
-            // Using Collection Helper Create a new collection
-            $collection = (new CollectionHelper)->create($data);        
+            $this->error('Table Name Already Exists.');
+            return;
         }
 
         // set storage location
         $storageFolder = 'flatfiles';
+        $collection = $this->collection(); 
 
         // create table and queue file for import
         (new TableHelper)->importFile($storageFolder, $this->argument('filename'), $this->argument('tablename'), $collection->id, $collection->isCms);
-        
-        return $this->info('File ' . $this->argument('filename') . ' Has Been Queued For Import.');
+        $this->info('File ' . $this->argument('filename') . ' Has Been Queued For Import.');
+        return;
     }
 }

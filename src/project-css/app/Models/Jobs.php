@@ -1,14 +1,15 @@
 <?php
-/**
- * @author Ajay Krishna Teja Kavur
- * @author Tracy A McCormick <tam0013@mail.wvu.edu>
- */
 
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
+/**
+ * Jobs model is used to view, restart and remove jobs.
+ * 
+ * @author Tracy A McCormick <tam0013@mail.wvu.edu>
+ */
 class Jobs extends Model
 {
     /**

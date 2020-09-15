@@ -52,12 +52,14 @@ class unsetCmsCollection extends Command
 
         // verify collection exists
         if ($helper->isCollection($this->argument('collectioname')) == false) {
-            return $this->error('Collection ' . $this->argument('collectioname') . ' Doesn\'t Exist');
+            $this->error('Collection ' . $this->argument('collectioname') . ' Doesn\'t Exist');
+            return;
         }
 
         // Using Collection Helper unset cms option
         $helper->setCMS($this->argument('collectioname'), false); 
         
-        return $this->info('Collection is set as Flatfile');        
+        $this->info('Collection is set as Flatfile');
+        return;        
     }
 }

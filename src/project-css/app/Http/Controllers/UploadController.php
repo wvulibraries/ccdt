@@ -8,6 +8,9 @@ use App\Models\Collection;
 use App\Helpers\CollectionHelper;
 
 /**
+ * The controller is responsible for uploading
+ * files to the collection.
+ * 
  * @author Ajay Krishna Teja Kavur
  * @author Tracy A McCormick <tam0013@mail.wvu.edu>
  */
@@ -29,12 +32,12 @@ class UploadController extends Controller {
      * @author Tracy A McCormick
      * @return \Illuminate\Http\Response
      */
-    public function index($cmsID) {
+    public function index($colID) {
         // Get collection
-        $thisClctn = Collection::find($cmsID);
+        $thisClctn = Collection::find($colID);
 
         // return the index page
-        return view('admin/upload')->with('cmsID', $cmsID)
+        return view('admin/upload')->with('cmsID', $thisClctn->id)
                                    ->with('clctnName', $thisClctn->clctnName);
     }
 
@@ -42,21 +45,16 @@ class UploadController extends Controller {
      * Store Files
      *
      * @param Request $request
-     * @param integer $curId
+     * @param integer $colID
      * 
      * @author Tracy A McCormick
      * @return \Illuminate\Http\Response
      */
-    public function storeFiles(Request $request, $curId) {
+    public function storeFiles(Request $request, $colID) {
         // set messages array to empty
-        $messages = [ ];
+        $messages = [];
 
-        try {
-            // find the collection
-            $thisClctn = Collection::findorFail($curId); 
-        } catch (ModelNotFoundException $exception) {
-            return back()->withError($exception->getMessage())->withInput();
-        }
+        $thisClctn = Collection::findorFail($colID);
       
         // Request the file input named 'attachments'
         $files = $request->file('attachments');

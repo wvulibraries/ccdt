@@ -103,7 +103,7 @@ class ImportAdapter {
      * 
      * @author Tracy A McCormick <tam0013@mail.wvu.edu>
      */    
-    public function mergeLines() : void {
+    private function mergeLines() : void {
         $numItem = count($this->savedTkns) - 1;
         $this->savedTkns[ $numItem ] = $this->savedTkns[ $numItem ] . ' ' . $this->tkns[ 0 ];
         unset($this->tkns[ 0 ]);
@@ -128,7 +128,7 @@ class ImportAdapter {
      * 
      * @return boolean
      */
-    public function prepareLine($curLine) : bool {
+    private function prepareLine($curLine) : bool {
         // Strip out Quotes that are sometimes seen in csv files around each item
         $curLine = str_replace('"', "", $curLine);
 
@@ -162,23 +162,19 @@ class ImportAdapter {
     *    
     * @return boolean
     */   
-    public function processLine() : bool  {
+    private function processLine() : bool  {
         if(!is_array($this->tkns) && empty($this->tkns)) { return false; }
 
-        // verify that $tkns match the expected field count
-        if (count($this->tkns) == $this->orgCount) {
-          // Declare an array
-          $this->currentRecord = array();
+        // Declare an array
+        $this->currentRecord = array();
 
-          // Compact them into one array with utf8 encoding
-          for ($i = 0; $i<$this->orgCount; $i++) {
-            $this->currentRecord[ strval($this->tableFields[ $i ]) ] = utf8_encode($this->tkns[ $i ]);
-          }
-
-          return true;
+        // Compact them into one array with utf8 encoding
+        for ($i = 0; $i<$this->orgCount; $i++) {
+          $this->currentRecord[ strval($this->tableFields[ $i ]) ] = utf8_encode($this->tkns[ $i ]);
         }
 
-        return false;
+        return true;
+
     }
 
     /**
@@ -248,21 +244,14 @@ class ImportAdapter {
     *
     * @author Tracy A McCormick <tam0013@mail.wvu.edu>
     *
-    * @return boolean
+    * @return void
     */     
-    private function queueRecord() : bool {
-      // save line to be inserted later
-      if ($this->currentRecord) {
-        // add row to data array to insert it later
-        array_push($this->recordsToInsert, $this->currentRecord);
+    private function queueRecord() {
+      // add row to recordsToInsert array for batch insert
+      array_push($this->recordsToInsert, $this->currentRecord);
 
-        // Update the counter if the line was inserted
-        $this->prcssd += 1;
-
-        return true;
-      } 
-
-      return false;
+      // Update the counter
+      $this->prcssd += 1;
     }
 
     /**
