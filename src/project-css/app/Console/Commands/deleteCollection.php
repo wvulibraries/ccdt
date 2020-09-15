@@ -20,6 +20,7 @@ class deleteCollection extends Command
 {
     /**
      * The name and signature of the console command.
+     * describes command name and params expected.
      *
      * @var string
      */
@@ -47,7 +48,15 @@ class deleteCollection extends Command
         parent::__construct();
     }
 
-    public function validate_collection() {
+    /**
+     * verify passed collection is valid and can be deleted.
+     * Sets error if it cannot be deleted. 
+     *
+     * @author Tracy A McCormick <tam0013@mail.wvu.edu>
+     *    
+     * @return boolean
+     */     
+    public function validate_collection() : bool {
             // boolean used to see if we need to return after error checking
             // so we can display all errors upon exit of command
             $error = false;
@@ -59,14 +68,14 @@ class deleteCollection extends Command
             if ($thisClctn->hasFiles()) {
                 // set error
                 $this->error('Unable to remove Collection ' . $this->argument('collectioname') . '. Files Exist in Storage Folder.');
-                $error = true;
+                return true;
             }
 
             // Verify That No Tables are associated with this collection
             if ($thisClctn->hasTables()) {
                 // set error
-                $this->error('Unable to remove Collection ' . $this->argument('collectioname') . '. Tables are Associated With the Collection.');
-                $error = true;
+                $this->error('Unable to remove Collection ' . $this->argument('collectioname') . '. Tables are Associated With the Collection.');           
+                return true;  
             }
 
             // return $error

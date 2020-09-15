@@ -14,7 +14,7 @@ use App\Helpers\CustomStringHelper;
 use App\Helpers\TableHelper;
 
 /**
- * The controller is responsible for showing, editing and updating the table(s)
+ * Table Controller is responsible for showing, editing and updating the table(s)
  * 
  * @author Ajay Krishna Teja Kavur
  * @author Tracy A McCormick <tam0013@mail.wvu.edu>

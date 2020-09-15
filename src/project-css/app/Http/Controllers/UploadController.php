@@ -8,7 +8,7 @@ use App\Models\Collection;
 use App\Helpers\CollectionHelper;
 
 /**
- * The controller is responsible for uploading
+ * Upload Controller is responsible for uploading
  * files to the collection.
  * 
  * @author Ajay Krishna Teja Kavur

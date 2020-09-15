@@ -26,6 +26,7 @@ class setCmsCollection extends Command
 
     /**
      * The console command description.
+     * describes command name and params expected.
      *
      * @var string
      */

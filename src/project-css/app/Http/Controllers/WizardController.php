@@ -10,6 +10,9 @@ use App\Helpers\TableHelper;
 use Auth;
 
 /**
+ * Wizard Controller is responsible for showing the 
+ * correct view to import files into tables.
+ * 
  * @author Tracy A McCormick <tam0013@mail.wvu.edu>
  */
 class WizardController extends Controller

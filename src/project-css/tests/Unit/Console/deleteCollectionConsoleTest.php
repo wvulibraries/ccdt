@@ -55,7 +55,11 @@
              ->expectsOutput('Unable to remove Collection ' . $this->colName . '. Tables are Associated With the Collection.');         
     } 
 
-    public function try_to_delete_a_collection_with_files() {    
+    /** @test */    
+    public function try_to_delete_a_collection_with_files() {
+        // Create Collection
+        Artisan::call('collection:create', ['collectioname' => $this->colName]);      
+      
         // passing a empty file should throw an exception
         $path = './storage/app';
         $file = 'empty.csv';

@@ -8,7 +8,7 @@ use App\Models\Table;
 use Auth;
 
 /**
- * Home Controllers renders main page and home page
+ * Home Controller renders main page and home page
  * for admin and users.
  * 
  * @author Ajay Krishna Teja Kavur

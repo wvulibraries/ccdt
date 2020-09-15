@@ -22,6 +22,7 @@ class optimizeSrchIndex extends Command
 {
     /**
      * The name and signature of the console command.
+     * describes command name and params expected.
      *
      * @var string
      */

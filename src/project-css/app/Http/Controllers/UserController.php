@@ -7,7 +7,8 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 
 /**
- * The controller is responsible for showing, editing and updating the users.
+ * User Controller is responsible for showing, editing 
+ * and updating the users.
  * 
  * @author Ajay Krishna Teja Kavur
  * @author Tracy A McCormick <tam0013@mail.wvu.edu>

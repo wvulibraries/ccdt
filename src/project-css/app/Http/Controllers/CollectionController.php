@@ -16,36 +16,36 @@ use App\Helpers\CollectionHelper;
  */
 class CollectionController extends Controller
 {
-    /**
-     * Where to redirect users after Creating / selecting collections.
-     *
-     * @var string
-     */
-    protected $redirectTo = '/home';
+  /**
+   * Where to redirect users after Creating / selecting collections.
+   *
+   * @var string
+   */
+  protected $redirectTo = '/home';
 
-    // Customize the error messages
-    private $messages = array(
-      'clctnName.required' => 'Please enter a collection name',
-      'clctnName.unique' => 'The collection name has already been taken by current or disabled collection',
-      'clctnName.max' => 'The collection name cannot exceed 30 characters',
-      'clctnName.min' => 'The collection name should be 6 characters or more',
-      'clctnName.alpha_num' => 'The collection name can only have alphab',
-    );
+  // Customize the error messages
+  private $messages = array(
+    'clctnName.required' => 'Please enter a collection name',
+    'clctnName.unique' => 'The collection name has already been taken by current or disabled collection',
+    'clctnName.max' => 'The collection name cannot exceed 30 characters',
+    'clctnName.min' => 'The collection name should be 6 characters or more',
+    'clctnName.alpha_num' => 'The collection name can only have alphab',
+  );
 
-    // Rules for validation
-    private $rules = array(
-      'clctnName' => 'required|unique:collections|max:30|min:6|alpha_num',
-    );
+  // Rules for validation
+  private $rules = array(
+    'clctnName' => 'required|unique:collections|max:30|min:6|alpha_num',
+  );
 
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        $this->middleware('admin');
-    }
+  /**
+   * Create a new controller instance.
+   *
+   * @return void
+   */
+  public function __construct()
+  {
+      $this->middleware('admin'); 
+  }
 
   /**
    * Display a listing of the resource.

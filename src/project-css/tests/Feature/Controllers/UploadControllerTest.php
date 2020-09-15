@@ -66,4 +66,11 @@
         $this->assertEquals(count($messages), 1, 'Message Count Should Equal 1');     
     } 
 
+    public function testUploadFileWithInvalidCollection() {
+        $this->actingAs($this->admin)
+             ->visit('upload/1')
+             ->assertResponseStatus(200)
+             ->see('Collection id is invalid');    
+    }     
+
   }

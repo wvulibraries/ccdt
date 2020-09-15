@@ -1,8 +1,4 @@
 <?php
-/**
- * @author Ajay Krishna Teja Kavur
- * @author Tracy A McCormick <tam0013@mail.wvu.edu>
- */
 
 namespace App\Libraries;
 use App\Helpers\CustomStringHelper;
@@ -13,6 +9,8 @@ use App\Helpers\CustomStringHelper;
  * class contains functions that will check and properly Format
  * a string that can be used for full text boolean searches
  * with sql injection in mind.
+ * 
+ * @author Tracy A McCormick <tam0013@mail.wvu.edu>
  */
 class FullTextSearchFormatter {
 

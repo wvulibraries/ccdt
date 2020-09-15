@@ -19,6 +19,7 @@ class createCollection extends Command
 {
     /**
      * The name and signature of the console command.
+     * describes command name and params expected.
      *
      * @var string
      */
@@ -69,14 +70,7 @@ class createCollection extends Command
         // Using Collection Helper Create a new collection
         $this->helper->create($data);  
 
-        if ($this->helper->isCollection($this->argument('collectioname'))) {
-            // Verify Collection Has been Created
-            $this->info('Collection Has been Created.');
-        }
-        else {
-            // Set Error
-            $this->error('Unknown Error when creating Collection');                
-        }
+        $this->info('Collection Has been Created.');
  
         return;              
     }
