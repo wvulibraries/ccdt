@@ -48,7 +48,7 @@ class CollectionController extends Controller
   }
 
   /**
-   * Display a listing of the resource.
+   * Display the main collection index page listing all collections.
    * 
    * @return \Illuminate\Http\Response
    */
@@ -59,7 +59,7 @@ class CollectionController extends Controller
   }
 
   /**
-   * Returns view for collection
+   * Display a collection and the associated tables.
    *
    * @param integer $colID - collection id
    *        
@@ -111,7 +111,9 @@ class CollectionController extends Controller
     // Validate the request before storing the data
     $this->validate($request, $this->rules, $this->messages);
 
-    // Get required fields for collection
+    // Get required fields for collection and set them
+    // in the $data array to be passed to the create
+    // function.
     $data = [
         'isCms' => $request->has('isCms') ? true : false,
         'name' => $request->clctnName
@@ -164,7 +166,9 @@ class CollectionController extends Controller
       // Validate the request before storing the data
       $this->validate($request, $this->rules, $this->messages);
 
-      // Get required fields for collection
+      // Get required fields for collection and set them
+      // in the $data array to be passed to the update
+      // function.
       $data = [
           'isCms' => $request->has('isCms') ? true : false,
           'id' => $request->id,
@@ -218,7 +222,7 @@ class CollectionController extends Controller
   }
 
   /**
-   * Returns view for cms view creator
+   * Displays the CMS Creator Page for the collection.
    *
    * @param integer $colID - collection id
    *        

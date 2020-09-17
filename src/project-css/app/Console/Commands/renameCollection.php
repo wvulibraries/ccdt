@@ -65,7 +65,9 @@ class renameCollection extends Command
           return; 
         }
     
-        // Get required fields for collection
+        // Get required fields for collection and set them
+        // in the $data array to be passed to the update
+        // function.
         $data = [
             'id' => $thisClctn->id,
             'name' => $this->argument('newname'),

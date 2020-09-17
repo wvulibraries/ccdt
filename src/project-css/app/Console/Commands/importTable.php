@@ -57,7 +57,9 @@ class importTable extends Command
        $collection = Collection::where('clctnName', '=', $this->argument('collectioname'))->first();
        // if collection is null create the collection
        if ($collection == null) {
-           // Get required fields for collection
+           // Get required fields for collection and set them
+           // in the $data array to be passed to the create
+           // function.
            $data = [
                'isCms' => false,
                'name' => $this->argument('collectioname')

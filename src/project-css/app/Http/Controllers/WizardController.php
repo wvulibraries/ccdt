@@ -141,6 +141,9 @@ class WizardController extends Controller
         // Validate the request before storing the data
         $this->validate($request, $rules, $messages);
 
+        // Get required fields to import the table these
+        // mostly come from the $request page some are just
+        // passed from the controller to the table helper.        
         $data = [
             'strDir' => $this->strDir,
             'colID' => $request->colID,
@@ -190,6 +193,9 @@ class WizardController extends Controller
         // Validate the request before storing the data
         $this->validate($request, $rules, $messages);
 
+        // Get required fields to import the table these
+        // mostly come from the $request page some are just
+        // passed from the controller to the table helper.          
         $data = [
             'strDir' => $this->strDir,
             'colID' => $request->colID2,
@@ -238,6 +244,9 @@ class WizardController extends Controller
         // Validate the request before storing the data
         $this->validate($request, $rules, $messages);
 
+        // Get required fields to import the table these
+        // mostly come from the $request page some are just
+        // passed from the controller to the table helper.          
         $data = [
             'strDir' => $this->strDir,
             'colID' => $request->colID,
@@ -282,6 +291,9 @@ class WizardController extends Controller
         // Validate the request before storing the data
         $this->validate($request, $rules, $messages);
 
+        // Get required fields to import the table these
+        // mostly come from the $request page some are just
+        // passed from the controller to the table helper.          
         $data = [
             'strDir' => $this->strDir,
             'colID' => $request->colID2,

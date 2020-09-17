@@ -1,7 +1,4 @@
 <?php
-/**
- * @author Tracy A McCormick <tam0013@mail.wvu.edu>
- */
 
 namespace App\Jobs;
 
@@ -13,6 +10,9 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Log;
 
+/**
+ * @author Tracy A McCormick <tam0013@mail.wvu.edu>
+ */
 class FileImport implements ShouldQueue
 {
     use InteractsWithQueue, Queueable, SerializesModels;
@@ -37,7 +37,13 @@ class FileImport implements ShouldQueue
     }
 
     /**
-     * Execute the job.
+     * The handle function contains code to be executed for 
+     * the job. 
+     * 
+     * Handle calls the Import Adapter it reads the file and inserts
+     * each record into the specified table.
+     * 
+     * @return void
      */
     public function handle()
     {

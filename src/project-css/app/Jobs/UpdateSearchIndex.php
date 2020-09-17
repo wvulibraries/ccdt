@@ -1,7 +1,4 @@
 <?php
-/**
- * @author Tracy A McCormick <tam0013@mail.wvu.edu>
- */
 
 namespace App\Jobs;
 
@@ -15,6 +12,9 @@ use Illuminate\Support\Facades\DB;
 
 use Log;
 
+/**
+ * @author Tracy A McCormick <tam0013@mail.wvu.edu>
+ */
 class UpdateSearchIndex implements ShouldQueue
 {
     use InteractsWithQueue, Queueable, SerializesModels;
@@ -36,7 +36,10 @@ class UpdateSearchIndex implements ShouldQueue
     } 
 
     /**
-     * Execute the job.
+     * The handle function contains code to be executed for 
+     * the job. 
+     * 
+     * @return void
      */
     public function handle()
     {

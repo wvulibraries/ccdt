@@ -1,7 +1,4 @@
 <?php
-/**
- * @author Tracy A McCormick <tam0013@mail.wvu.edu>
- */
 
 namespace App\Jobs;
 
@@ -13,6 +10,13 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Log;
 
+/**
+ * Create Search Index Job calls the search index
+ * adapter and builds the basic search index for each
+ * record after the table has been imported.
+ * 
+ * @author Tracy A McCormick <tam0013@mail.wvu.edu>
+ */
 class CreateSearchIndex implements ShouldQueue
 {
     use InteractsWithQueue, Queueable, SerializesModels;
@@ -31,13 +35,18 @@ class CreateSearchIndex implements ShouldQueue
     }
 
     /**
-     * Execute the job.
+     * The handle function contains code to be executed for 
+     * the job. 
+     * 
+     * Handle calls the Search Index Adapter to generate 
+     * a new search index on each record of the table.
+     * 
+     * @return void
      */
     public function handle()
     {
-        $adapter = new SearchIndexAdapter;
         // Build search index on all records in table
-        $adapter->process($this->tblNme);         
+        (new SearchIndexAdapter)->process($this->tblNme);         
     }   
 
 }

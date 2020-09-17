@@ -1,7 +1,4 @@
 <?php
-/**
- * @author Tracy A McCormick <tam0013@mail.wvu.edu>
- */
 
 namespace App\Jobs;
 
@@ -15,6 +12,14 @@ use Illuminate\Support\Facades\DB;
 
 use Log;
 
+/**
+ * Optimize Search Job calls the Update Search
+ * adapter cleans the search string by removing 
+ * invalid characters, removes common words and 
+ * single characters from the search index.
+ * 
+ * @author Tracy A McCormick <tam0013@mail.wvu.edu>
+ */
 class OptimizeSearch implements ShouldQueue
 {
     use InteractsWithQueue, Queueable, SerializesModels;
@@ -40,7 +45,10 @@ class OptimizeSearch implements ShouldQueue
     } 
 
     /**
-     * Execute the job.
+     * The handle function contains code to be executed for 
+     * the job. 
+     * 
+     * @return void
      */
     public function handle()
     {

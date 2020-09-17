@@ -61,7 +61,9 @@ class createCollection extends Command
             return; 
         }
 
-        // Get required fields for collection
+        // Get required fields for collection and set them
+        // in the $data array to be passed to the create
+        // function.
         $data = [
             'isCms' => $this->option('iscms'),
             'name' => $this->argument('collectioname')
