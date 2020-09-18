@@ -4,10 +4,17 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
+/**
+ * migration adds the cmdId field to the collections
+ * table. The cmdId is used to correctly determine which
+ * set of cms headers to use when importing tables into
+ * a cms collection.
+ * 
+ */  
 class AddCmsidToCollections extends Migration
 {
     /**
-     * Run the migrations.
+     * Run the migration adding the field to the table.
      *
      * @return void
      */
@@ -19,7 +26,7 @@ class AddCmsidToCollections extends Migration
     }
 
     /**
-     * Reverse the migrations.
+     * Reverse the migration remove the field from the table
      *
      * @return void
      */

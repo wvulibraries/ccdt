@@ -42,7 +42,7 @@ class CMSHelper {
         if (count($response) == 1) {
           // set cmsID in Collection if not already set
           if ($thisClctn->cmsId == null) {
-            $thisClctn->setCMSId($collctnId, $response[0]->cmsId);
+            $thisClctn->setCMSId($response[0]->cmsId);
           }
 
           // first returned response should be the closest match

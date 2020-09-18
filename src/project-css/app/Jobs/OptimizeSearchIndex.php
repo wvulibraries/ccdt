@@ -33,7 +33,7 @@ class OptimizeSearchIndex implements ShouldQueue
     /**
      * Create a new job instance.
      *
-     * @param string $tblNme
+     * @param string $tblNme (name of the table)
      *  
      */
     public function __construct($tblNme)

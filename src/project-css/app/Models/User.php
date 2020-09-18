@@ -9,8 +9,6 @@ use Auth;
 /**
  * User model default auto generated model
  * for managing users, passwords and user access.
- *  
- * @author Ajay Krishna Teja Kavur
  */
 class User extends Authenticatable
 {

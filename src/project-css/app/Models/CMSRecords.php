@@ -75,13 +75,13 @@ class CMSRecords extends Model
     }
 
      /**
-     * query recordTypes returning only records with fieldCount greater
-     * than or equal to what is expected
-     * 
-     * @param       string $recordtype Input string
-     * @param       integer $fieldCount Input integer
-     * @return      array
-     */      
+      * query recordTypes returning only records with fieldCount greater
+      * than or equal to what is expected
+      * 
+      * @param       string $recordtype Input string
+      * @param       integer $fieldCount Input integer
+      * @return      array
+      */      
     public static function findClosestCMSHeader($recordtype, $fieldCount) {
         return DB::table('recordtypes')
                     ->where('recordType', '=', $recordtype)

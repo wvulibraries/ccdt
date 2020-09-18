@@ -10,7 +10,11 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Log;
 
+
 /**
+ * File Imort Job calls the Import adapter to 
+ * import a file into a table.
+ * 
  * @author Tracy A McCormick <tam0013@mail.wvu.edu>
  */
 class FileImport implements ShouldQueue
@@ -24,9 +28,9 @@ class FileImport implements ShouldQueue
     /**
      * Create a new job instance.
      *
-     * @param string $tblNme
-     * @param string $fltFlePath
-     * @param string $fltFle
+     * @param string $tblNme (name of the table)
+     * @param string $fltFlePath (path to the file)
+     * @param string $fltFle (name of the file)
      *  
      */
     public function __construct($tblNme, $fltFlePath, $fltFle)

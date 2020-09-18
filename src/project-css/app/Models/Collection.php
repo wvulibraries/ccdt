@@ -21,23 +21,43 @@ class Collection extends Model
     return $this->hasMany('App\Models\Table');
   }
 
+  /**
+   * hasTable gets all associated tables
+   * to the collection and checks the count
+   * returning true if count is greater than
+   * 0 false otherwise.
+   * 
+   * @return      boolean
+   */     
   public function hasTables() {
     $tbls = $this->tables()->get();
     return ($tbls->count() > 0);
   } 
   
+  /**
+   * hasFiles gets all associated files
+   * returns true if files are found 
+   * false otherwise.
+   * 
+   * @return      boolean
+   */    
   public function hasFiles() {
     $files = \Storage::allFiles($this->clctnName);
-    if (empty($files)) {
-      return false;
-    }
-    return true;
+    return (count($files) > 0);
   }
 
-  public function setCMSId($collectionID, $cmsId) {
+   /**
+   * update the current collections cmdId.
+   * 
+   * @param       integer ($cmsId used to determine
+   * the correct cms header to use when importing cms
+   * tables)
+   * @return      boolean
+   */  
+  public function setCMSId($cmsId) {
     // Set CMS Id in collection
     \DB::table('collections')
-            ->where('id', $collectionID)
+            ->where('id', $this->id)
             ->update(['cmsId' => $cmsId]);
   }
 
