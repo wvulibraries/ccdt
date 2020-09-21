@@ -221,30 +221,4 @@ class CollectionController extends Controller
     return redirect()->route('collection.index');
   }
 
-  /**
-   * Displays the CMS Creator Page for the collection.
-   *
-   * @param integer $colID - collection id
-   *        
-   * @author Tracy A McCormick  
-   * @return \Illuminate\Http\Response 
-   */    
-  public function creator($colID) {
-    // find the collection
-    $thisClctn = Collection::findorFail($colID);  
-
-    if ($thisClctn->isCms) {
-      // Get all the tables of this collection
-      $tbls = $thisClctn->tables()->get();
-
-      // render collection/creator page with array of tables
-      // current collection id and name of collection
-      return view('collection/creator')->with('tbls', $tbls)
-                                       ->with('colID', $colID)
-                                       ->with('clctnName', $thisClctn->clctnName);
-    }
-
-    return redirect()->back()->withErrors('Current Collection is Not a CMS Database'); 
-  }  
-
 }

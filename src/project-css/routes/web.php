@@ -50,7 +50,6 @@ Route::group([ 'prefix' => 'collection' ], function() {
     Route::post('edit', 'CollectionController@edit')->name('collection.edit');
     Route::get('show/{colID}', 'CollectionController@show')->name('collection.show'); 
     Route::get('upload/{colID}', 'CollectionController@upload')->name('collection.upload');
-    Route::get('creator/{colID}', 'CollectionController@creator')->name('collection.cms.creator'); 
     Route::get('{colID}/table/create', 'CollectionController@tableCreate')->name('collection.table.create'); 
     Route::post('disable', 'CollectionController@disable')->name('collection.disable');
     Route::post('enable', 'CollectionController@enable')->name('collection.enable');

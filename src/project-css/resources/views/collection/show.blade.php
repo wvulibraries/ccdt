@@ -50,15 +50,6 @@
           </div>
       </a>
 
-      <a href="{{url('collection/creator/'.$colID)}}" data-toggle="modal" class="col-xs-3 col-sm-3 col-md-3">
-          <div class="well text-center">
-            <div class="icon hidden-xs hidden-sm">
-              <span class="glyphicon glyphicon-wrench" aria-hidden="true"></span>
-            </div>
-            <span class="title">CMS View Creator</span>
-          </div>
-      </a>
-
     </div>
 
     <!-- Show existing tables -->
