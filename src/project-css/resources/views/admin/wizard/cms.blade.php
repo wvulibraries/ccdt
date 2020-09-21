@@ -21,7 +21,7 @@
     <div class="row">
       <div class="col-md-6">
           <div class="panel panel-default formPanel">
-              <div class="panel-heading"><a data-toggle="collapse" href="#importCMSDISPanel"><h3>Import from CMS Files</h3></a></div>
+              <div class="panel-heading"><a data-toggle="collapse" href="#importCMSDISPanel"><h3>Import from CMS File</h3></a></div>
               <div id="importCMSDISPanel" class="panel-collapse collapse">
                 <div class="panel-body">
                   <form class="form-horizontal" name="uploadCMSDISFiles" aria-label="uploadCMSDISFiles" role="form" method="POST" enctype="multipart/form-data" action="{{ url('/admin/wizard/cms/upload') }}">

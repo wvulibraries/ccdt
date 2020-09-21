@@ -76,26 +76,12 @@ Route::group([ 'prefix' => 'table' ], function() {
     Route::post('restrict', 'TableController@restrict');
 });
 
-
-/*
-|--------------------------------------------------------------------------
-| Controller for the export wizard
-|--------------------------------------------------------------------------
-*/
-Route::group([ 'prefix' => 'admin/wizard' ], function() {    
-    Route::get('export', 'ExportController@export')->name('wizard.export');
-    Route::get('export/table', 'ExportController@exportTable')->name('wizard.export.table');
-    Route::get('export/collection', 'ExportController@exportCollection')->name('wizard.export.collection');        
-});
-
-
 /*
 |--------------------------------------------------------------------------
 | Controller for the import wizard
 |--------------------------------------------------------------------------
 */
 Route::group([ 'prefix' => 'admin/wizard' ], function() {
-    Route::get('import', 'WizardController@import')->name('wizard.import');
     Route::get('import/collection/{colID}', 'WizardController@importCollection')->name('wizard.import.collection');
 
     Route::get('flatfile', 'WizardController@flatfile')->name('wizard.flatfile');

@@ -90,37 +90,7 @@
       </div>
     </div>
 
-  </div>
-
-  <div id="wizards" class="row">
-    <a href="{{ url('admin/wizard/import') }}">
-      <div class="col-xs-12 col-sm-6 col-md-3">
-        <div class="well dashCard">
-          <div class="dashCardHeading">
-            <span class="glyphicon glyphicon-duplicate visible-xs visible-sm smallIcon" aria-hidden="true"></span>
-            <span class="navigation-cards"> Import Wizard </span>
-          </div>
-          <div class="icon hidden-xs hidden-sm">
-            <span class="glyphicon glyphicon-import" aria-hidden="true"></span>
-          </div>
-        </div>
-      </div>
-    </a>
-
-    <a href="{{ url('admin/wizard/export') }}">
-      <div class="col-xs-12 col-sm-6 col-md-3">
-        <div class="well dashCard">
-          <div class="dashCardHeading">
-            <span class="glyphicon glyphicon-duplicate visible-xs visible-sm smallIcon" aria-hidden="true"></span>
-            <span class="navigation-cards"> Export Wizard </span>
-          </div>
-          <div class="icon hidden-xs hidden-sm">
-            <span class="glyphicon glyphicon-export" aria-hidden="true"></span>
-          </div>
-        </div>
-      </div>
-    </a>
-  </div>  
+  </div> 
 
 </div>
 @endsection

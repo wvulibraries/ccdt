@@ -45,29 +45,21 @@
           parent::tearDown();
      }       
 
-      public function testImportPage() {
-         $this->actingAs($this->admin)
-              ->visit('admin/wizard/import')
-              ->assertResponseStatus(200)
-              ->see('Flatfile Import')
-              ->see('CMS Import');           
-      }
-
-      public function testImportFlatfilePage() {
+     public function testImportFlatfilePage() {
          $this->actingAs($this->admin)
               ->visit('admin/wizard/flatfile')
               ->assertResponseStatus(200)
               ->see('Flatfile Import Wizard');           
-      }
+     }
       
-      public function testImportCMSPage() {
+     public function testImportCMSPage() {
          $this->actingAs($this->admin)
               ->visit('admin/wizard/cms')
               ->assertResponseStatus(200)
               ->see('CMS Import Wizard');           
-      }      
+     }      
 
-      public function testImportCollection() {
+     public function testImportCollection() {
          // Generate Test Collection
          $this->testHelper->createCollection($this->colName);
 
@@ -124,13 +116,4 @@
               ->see('table. It will be available shortly.');               
       }
 
-      public function testNonAdminCannotRunImportWizard() {
-         $this->testHelper->createCollection($this->colName);
-
-         // try to get to the wizard page
-         $this->actingAs($this->user)
-              ->visit('admin/wizard/import/')
-              // user is routed to home page since they do not have access to import
-              ->see('Please kindly select the collection and table to view the records');                
-      }
    }
