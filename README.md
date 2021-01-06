@@ -5,7 +5,7 @@
 ## Status
 [![CircleCI](https://circleci.com/gh/wvulibraries/ccdt.svg?style=svg)](https://circleci.com/gh/wvulibraries/ccdt)
 [![Maintainability](https://api.codeclimate.com/v1/badges/8466ce146a44de48a3bd/maintainability)](https://codeclimate.com/github/wvulibraries/ccdt/maintainability)
-[![Test Coverage](https://api.codeclimate.com/v1/badges/8466ce146a44de48a3bd/test_coverage)](https://codeclimate.com/github/wvulibraries/rockefeller-css/test_coverage)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/8466ce146a44de48a3bd/test_coverage)](https://codeclimate.com/github/wvulibraries/ccdt/test_coverage)
 
 ## Quick Start
 
