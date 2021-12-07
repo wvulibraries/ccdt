@@ -1,8 +1,5 @@
 FROM php:7.3.12-fpm
 
-# make exports folder if missing
-RUN mkdir -p /src/project-css/app/storage/app/exports
-
 WORKDIR /var/www
 ADD src/project-css /var/www
 
@@ -53,10 +50,10 @@ RUN curl -sL https://deb.nodesource.com/setup_${VERSION}.x | bash - \
 RUN npm install --global gulp-cli   
 
 # Install phpDocumentor with Pear
-RUN wget https://pear.phpdoc.org/channel.xml \
-    && pear channel-add ./channel.xml
-RUN wget https://github.com/phpDocumentor/phpDocumentor2/releases/download/v2.9.0/phpDocumentor-2.9.0.tgz \
-    && pear install phpDocumentor-2.9.0.tgz
+#RUN wget https://pear.phpdoc.org/channel.xml \
+#    && pear channel-add ./channel.xml
+#RUN wget https://github.com/phpDocumentor/phpDocumentor2/releases/download/v2.9.0/phpDocumentor-2.9.0.tgz \
+#    && pear install phpDocumentor-2.9.0.tgz
 
 # set php
 ADD ./serverConfiguration/php.ini /usr/local/etc/php/

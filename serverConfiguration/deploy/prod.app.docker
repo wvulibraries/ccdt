@@ -1,8 +1,5 @@
 FROM php:7.3.12-fpm
 
-# make exports folder if missing
-RUN mkdir -p /src/project-css/app/storage/app/exports
-
 WORKDIR /var/www
 ADD src/project-css /var/www
 

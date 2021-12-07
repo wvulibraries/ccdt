@@ -15,6 +15,14 @@
 
 ## Development and Contributing
 
+## PHPUnit
+
+To Run tests exec into the main ccdt docker container
+`docker exec -it ccdt_php bash`
+
+Then run the following command
+`vendor/bin/phpunit` 
+
 **Ideas/Bugs/Questions**
 
 Feel free to share ideas/bugs/questions using [issues](https://github.com/wvulibraries/ccdt/issues)
