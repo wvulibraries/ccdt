@@ -15,6 +15,12 @@
 
 ## Development and Contributing
 
+## Setup
+
+After bringing up the project with docker run the update / setup script
+ `sh ./scripts/setup-dev.sh` if you are in development mode
+ `sh ./scripts/setup-prod.sh` if you are in production mode
+
 ## PHPUnit
 
 To Run tests exec into the main ccdt docker container
