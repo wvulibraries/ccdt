@@ -45,16 +45,21 @@ jobs:
           keys:
             - composer-v1-{{ checksum "composer.lock" }}
             - composer-v1-
+
       - run: composer install -n --prefer-dist
+
       - save_cache:
           key: composer-v1-{{ checksum "composer.lock" }}
           paths:
             - vendor
+
       - restore_cache:
           keys:
             - node-v1-{{ checksum "package-lock.json" }}
             - node-v1-
+
       - run: npm install
+
       - save_cache:
           key: node-v1-{{ checksum "package-lock.json" }}
           paths:
@@ -75,15 +80,18 @@ jobs:
       - run:
           name: Database Migrate
           command: php artisan migrate --force
-      # Tests
+
       - run:
           name: Setup Code Climate test-reporter
           command: |
             # download test reporter as a static binary
             curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
             chmod +x ./cc-test-reporter
+
       - run:
           name: Run tests
           command: |
-            sudo XDEBUG_MODE=coverage vendor/bin/phpunit --coverage-clover clover.xml
+            sudo docker-php-ext-enable xdebug
+            ./cc-test-reporter before-build
+            sudo vendor/bin/phpunit --coverage-clover clover.xml
             ./cc-test-reporter after-build --coverage-input-type clover --exit-code $?
