@@ -4,6 +4,7 @@ namespace App\Helpers;
 
 use Illuminate\Support\Facades\Storage;
 use App\Helpers\TableHelper;
+use Illuminate\Support\Str;
 
 /**
  * CSV Helper
@@ -99,7 +100,7 @@ class CSVHelper {
        $fleMime = $fleInf->file($fltFleObj->getRealPath());
 
        // Check the mimetype
-       if (!str_is($fleMime, "text/plain")) {
+       if (!Str::is($fleMime, "text/plain")) {
          return false;
        }
        

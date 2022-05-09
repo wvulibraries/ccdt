@@ -3,6 +3,7 @@
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Support\Str;
 
 class AuthTest extends BrowserKitTestCase {
     use DatabaseMigrations;
@@ -23,9 +24,9 @@ class AuthTest extends BrowserKitTestCase {
         $this->adminPass = "testing";
 
         // Generate a random name
-        $this->userName = str_random(8);
+        $this->userName = Str::random(8);
         // Genearte a random email
-        $this->userEmail = str_random(8)."@google.com";
+        $this->userEmail = Str::random(8)."@google.com";
         $this->userPass = 'password123';
     }
 
