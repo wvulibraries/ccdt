@@ -5,7 +5,7 @@ cp .env.prod .env
 # update composer packages
 docker exec -t ccdt_php composer update
 # update node package manager
-docker exec -t ccdt_php npm install
+docker exec -t ccdt_php npm update
 # generate new application key
 docker exec -t ccdt_php php artisan key:generate
 # setup main database
