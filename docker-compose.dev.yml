@@ -1,29 +1,36 @@
 version: '3.7'
 services:
-    database:
-        image: mysql:5.7.27
-        command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
-        env_file: ./src/project-css/.env.mysql
-        volumes:
-            - ./mysql_data:/var/lib/mysql
-            - ./mysql-files/setup.sql:/docker-entrypoint-initdb.d/setup.sql
-            - ./serverConfiguration/deploy/my.cnf:/etc/mysql/my.cnf
-        ports:
-            - "3306:3306"
-    tika:
-        image: logicalspark/docker-tikaserver
-        container_name: tika_service
-        ports:
-            - "9998:9998"
-    app:
-        build:
-            context: ./
-            dockerfile: serverConfiguration/deploy/dev.app.docker
-        container_name: ccdt_php
-        volumes:
-            - ./src/project-css:/var/www
-        ports:
-          - "9000:9000"
-        links:
-            - database
-            - tika
+  database:
+    image: mysql:5.7.27
+    command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    env_file: ./env/.env.mysql
+    volumes:
+        - mysql_data:/var/lib/mysql
+        - ./mysql-files/setup.sql:/docker-entrypoint-initdb.d/setup.sql
+        - ./serverConfiguration/deploy/my.cnf:/etc/mysql/my.cnf
+    ports:
+        - "3306:3306"
+  tika:
+    image: logicalspark/docker-tikaserver
+    container_name: tika_service
+    ports:
+        - "9998:9998"
+  app:
+    build: 
+        context: ./
+        dockerfile: Dockerfile.dev
+    container_name: ccdt_php
+    volumes:
+        - ./data/flatfiles:/var/www/storage/app/flatfiles
+        - ./data/exports:/var/www/storage/exports
+        - ./data/logs:/var/www/storage/logs
+        - ./env:/env
+        - ./scripts:/var/www/scripts
+        - ./src/project-css:/var/www
+    ports:
+        - "9000:9000"
+    links:
+        - database
+        - tika
+volumes:
+  mysql_data:

@@ -16,17 +16,10 @@ RUN apt-get update && apt-get install -y \
     locales \
     libzip-dev \
     jpegoptim optipng pngquant gifsicle \
+    vim \
     unzip \
     git \
-    curl \ 
-    wget \
-    graphviz
-
-# Install xdebug used for phpunit coverage reports
-RUN yes | pecl install xdebug \
-    && echo "zend_extension=$(find /usr/local/lib/php/extensions/ -name xdebug.so)" > /usr/local/etc/php/conf.d/xdebug.ini \
-    && echo "xdebug.remote_enable=on" >> /usr/local/etc/php/conf.d/xdebug.ini \
-    && echo "xdebug.remote_autostart=off" >> /usr/local/etc/php/conf.d/xdebug.ini
+    curl
 
 # Clear cache
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
@@ -46,20 +39,15 @@ RUN curl -sL https://deb.nodesource.com/setup_${VERSION}.x | bash - \
 	&& apt -y install nodejs \
 	&& npm i -g npm
 
-# install gulp
-RUN npm install --global gulp-cli   
-
-# Install phpDocumentor with Pear
-#RUN wget https://pear.phpdoc.org/channel.xml \
-#    && pear channel-add ./channel.xml
-#RUN wget https://github.com/phpDocumentor/phpDocumentor2/releases/download/v2.9.0/phpDocumentor-2.9.0.tgz \
-#    && pear install phpDocumentor-2.9.0.tgz
+RUN chown -R www-data:www-data \
+        /var/www/storage \
+        /var/www/bootstrap/cache
 
 # set php
 ADD ./serverConfiguration/php.ini /usr/local/etc/php/
 
 EXPOSE 9000
 
-ADD ./startup-dev.sh /usr/bin/
-RUN chmod -v +x /usr/bin/startup-dev.sh
-ENTRYPOINT ["/usr/bin/startup-dev.sh"]
+ADD ./scripts/startup.sh /usr/bin/
+RUN chmod -v +x /usr/bin/startup.sh
+CMD ["/usr/bin/startup.sh"]

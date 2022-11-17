@@ -1,4 +1,7 @@
 #!/bin/bash
+# link env file
+ln -s /env/.env.prod /var/www/.env
+
 # Install composer dependicies
 composer install
 # generate new application key
@@ -14,7 +17,4 @@ nohup php artisan queue:work database --queue=low --daemon --sleep=3 --timeout=8
 nohup php artisan queue:work database --queue=low --daemon --sleep=3 --timeout=86400 --tries=3 > /dev/null &
 nohup php artisan queue:work database --queue=default,low --daemon --sleep=3 --timeout=86400 --tries=3 > /dev/null &
 
-# Clear generated config so phpunit can use css_testing as the database
-php artisan config:clear
-# Start web server
-php artisan serve --host=0.0.0.0 --port=9000
+php-fpm
