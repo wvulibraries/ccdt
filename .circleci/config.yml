@@ -22,7 +22,7 @@ jobs:
           path: ~/laravel    
       - run:
           name: Copy .env.circleci to .env
-          command: cp /env/.env.circleci .env  
+          command: cp ~/laravel/env/.env.circleci .env  
             
       - run:
           name: Delete .env.testing
