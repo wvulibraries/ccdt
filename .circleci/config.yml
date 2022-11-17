@@ -23,10 +23,6 @@ jobs:
       - run:
           name: Copy .env.circleci to .env
           command: cp ~/laravel/env/.env.circleci .env  
-            
-      # - run:
-      #     name: Delete .env.testing
-      #     command: unlink .env.testing
           
       - run:
           name: create exports folder
