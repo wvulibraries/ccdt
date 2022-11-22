@@ -15,19 +15,15 @@
 
 ## Development and Contributing
 
-## Setup
+## Database Setup
 
-After bringing up the project with docker run the update / setup script
- `sh ./scripts/setup-dev.sh` if you are in development mode
- `sh ./scripts/setup-prod.sh` if you are in production mode
+After bringing up the project with docker run the setup script from your terminal with the following command to run the database migrations.
+ `docker exec -it ccdt_php sh ./scripts/setup.sh`
 
 ## PHPUnit
 
-To Run tests exec into the main ccdt docker container
-`docker exec -it ccdt_php bash`
-
-Then run the following command
-`vendor/bin/phpunit` 
+To PHP Unit tests execute the following from your terminal
+`docker exec -it ccdt_php vendor/bin/phpunit` 
 
 **Ideas/Bugs/Questions**
 
