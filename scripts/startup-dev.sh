@@ -1,11 +1,22 @@
 #!/bin/bash
+# remove existing env file if one exists
+rm -f /var/www/.env
+
+# removing testing env file if one exists
+rm -f /var/www/.env.testing
+
 # link env file
 ln -s /env/.env.dev /var/www/.env
 
+# link currnent testing env file
+ln -s /env/.env.testing /var/www/.env.testing
+
 # Install composer dependicies
 composer install
+
 # generate new application key
 php artisan key:generate
+
 # Start job queue(s) to process file imports
 
 # single job worker for 3 queues

@@ -24,9 +24,14 @@ services:
         - ./data/flatfiles:/var/www/storage/app/flatfiles
         - ./data/exports:/var/www/storage/exports
         - ./data/logs:/var/www/storage/logs
+        - ./data/vendor:/var/www/vendor
         - ./env:/env
         - ./scripts:/var/www/scripts
         - ./src/project-css:/var/www
+        # don't mount these folders 
+        - '/var/www/storage/framework/cache'
+        - '/var/www/storage/framework/sessions'
+        - '/var/www/storage/framework/views'
     ports:
         - "9000:9000"
     links:
