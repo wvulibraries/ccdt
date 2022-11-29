@@ -40,7 +40,7 @@
                           <div class="form-group{{ $errors->has('file') ? ' has-error' : '' }}">
                               <label for="file" class="col-md-4 control-label">Upload</label>
                               <div class="col-md-6">
-                                  <input id="file" type="file" class="form-control" name="attachments[]" multiple/ required autofocus>
+                                  <input id="file" type="file" class="form-control" name="attachments[]" multiple required autofocus>
                               </div>
                           </div>
                           <div class="form-group">
