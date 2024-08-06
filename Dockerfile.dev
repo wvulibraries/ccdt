@@ -23,10 +23,10 @@ RUN apt-get update && apt-get install -y \
     graphviz
 
 # Install xdebug used for phpunit coverage reports
-RUN yes | pecl install xdebug \
-    && echo "zend_extension=$(find /usr/local/lib/php/extensions/ -name xdebug.so)" > /usr/local/etc/php/conf.d/xdebug.ini \
-    && echo "xdebug.remote_enable=on" >> /usr/local/etc/php/conf.d/xdebug.ini \
-    && echo "xdebug.remote_autostart=off" >> /usr/local/etc/php/conf.d/xdebug.ini
+# RUN yes | pecl install xdebug \
+#     && echo "zend_extension=$(find /usr/local/lib/php/extensions/ -name xdebug.so)" > /usr/local/etc/php/conf.d/xdebug.ini \
+#     && echo "xdebug.remote_enable=on" >> /usr/local/etc/php/conf.d/xdebug.ini \
+#     && echo "xdebug.remote_autostart=off" >> /usr/local/etc/php/conf.d/xdebug.ini
 
 # Clear cache
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
@@ -40,7 +40,7 @@ RUN docker-php-ext-install pdo_mysql mbstring zip exif pcntl \
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 # Install nodejs LTS
-ENV	VERSION='14'
+ENV	VERSION='18'
 RUN curl -sL https://deb.nodesource.com/setup_${VERSION}.x | bash - \
 	&& apt-get -y install nodejs \
 	&& npm i -g npm
