@@ -40,7 +40,7 @@ RUN docker-php-ext-install pdo_mysql mbstring zip exif pcntl \
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 # Install nodejs LTS
-ENV	VERSION='14'
+ENV	VERSION='18'
 RUN curl -sL https://deb.nodesource.com/setup_${VERSION}.x | bash - \
 	&& apt-get -y install nodejs \
 	&& npm i -g npm
