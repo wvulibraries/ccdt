@@ -7,3 +7,5 @@ data/
 env/
 env/*
 env/.*
+src/project-css/.env.testing
+src/project-css/.env

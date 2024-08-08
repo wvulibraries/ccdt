@@ -55,7 +55,7 @@ RUN npm install --global gulp-cli
 #    && pear install phpDocumentor-2.9.0.tgz
 
 # set php
-ADD ./serverConfiguration/php.ini /usr/local/etc/php/
+ADD ./config/php.ini /usr/local/etc/php/
 
 EXPOSE 9000
 

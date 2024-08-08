@@ -44,7 +44,7 @@ RUN chown -R www-data:www-data \
         /var/www/bootstrap/cache
 
 # set php
-ADD ./serverConfiguration/php.ini /usr/local/etc/php/
+ADD ./config/php.ini /usr/local/etc/php/
 
 EXPOSE 9000
 
