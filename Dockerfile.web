@@ -2,4 +2,4 @@ FROM nginx:latest
 
 ADD ./config/vhost.conf /etc/nginx/conf.d/default.conf
 
-COPY ./src/project-css/public /var/www/public
+COPY ./ccdt/public /var/www/public

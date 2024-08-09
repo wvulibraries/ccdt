@@ -14,7 +14,7 @@ services:
     volumes:
         - ./mysql_data:/var/lib/mysql
         - ./mysql-files/setup.sql:/docker-entrypoint-initdb.d/setup.sql
-        - ./serverConfiguration/deploy/my.cnf:/etc/mysql/my.cnf
+        - ./config/my.cnf:/etc/mysql/my.cnf
     restart: always
     ports:
         - "3306:3306"
@@ -33,7 +33,7 @@ services:
         - /data/storage:/var/www/storage
         - ./env:/env
         - ./scripts:/var/www/scripts
-        - ./src/project-css:/var/www        
+        - ./ccdt:/var/www        
     env_file: ./env/.env.prod
     restart: always
     ports:

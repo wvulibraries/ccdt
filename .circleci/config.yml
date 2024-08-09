@@ -15,7 +15,7 @@ jobs:
         ports:
             - "9998:9998"
 
-    working_directory: ~/laravel/src/project-css
+    working_directory: ~/laravel/ccdt
 
     steps:
       - checkout:
@@ -26,7 +26,7 @@ jobs:
           
       - run:
           name: create exports folder
-          command: mkdir -p ~/laravel/src/project-css/storage/app/exports
+          command: mkdir -p ~/laravel/ccdt/storage/app/exports
           
       - run:
           name: Install PHP exts

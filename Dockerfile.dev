@@ -1,7 +1,7 @@
-FROM php:7.3-fpm
+FROM php:7.3.12-fpm
 
 WORKDIR /var/www
-ADD src/project-css /var/www
+ADD ccdt /var/www
 
 # Fix debconf warnings upon build
 ARG DEBIAN_FRONTEND=noninteractive
