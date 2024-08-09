@@ -21,6 +21,10 @@ jobs:
       #     path: ~/laravel 
 
       - run:
+          name: Clear the current ~/laravel directory
+          command: rm -rf ~/laravel
+
+      - run:
           name: Checkout repository
           command: git clone https://github.com/wvulibraries/ccdt.git ~/laravel
 
