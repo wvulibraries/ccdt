@@ -1,5 +1,6 @@
-version: 2
+version: 2.1
 jobs:
+  working_directory: ~/ccdt
   build:
     docker:
       - image: circleci/php:7.3-stretch-node-browsers  
@@ -15,18 +16,15 @@ jobs:
         ports:
             - "9998:9998"
 
-    working_directory: ~/laravel/ccdt
-
     steps:
-      - checkout:
-          path: ~/laravel    
+      - checkout  
       - run:
           name: Copy .env.circleci to .env
-          command: cp ~/laravel/env/.env.circleci .env  
+          command: cp ~/env/.env.circleci .env  
           
       - run:
           name: create exports folder
-          command: mkdir -p ~/laravel/ccdt/storage/app/exports
+          command: mkdir -p ~/ccdt/storage/app/exports
           
       - run:
           name: Install PHP exts
