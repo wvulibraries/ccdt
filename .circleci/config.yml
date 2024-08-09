@@ -28,13 +28,14 @@ jobs:
           name: create exports folder
           command: mkdir -p ~/laravel/ccdt/storage/app/exports
           
-      - run:
-          name: Install PHP exts
-          command: |
-            sudo apt update
-            sudo docker-php-ext-install zip
-            sudo docker-php-ext-install pdo_mysql
-            sudo apt install -y default-mysql-client
+      # - run:
+      #     name: Install PHP exts
+      #     command: |
+      #       sudo apt update
+      #       sudo docker-php-ext-install zip
+      #       sudo docker-php-ext-install pdo_mysql
+      #       sudo apt install -y default-mysql-client
+
       - run: sudo composer self-update
 
       - restore_cache:
