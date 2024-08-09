@@ -26,7 +26,7 @@ jobs:
 
       - run:
           name: verify the checkout
-          command: ls -la ~/laravel/ccdt
+          command: ls -la .
 
       - run:
           name: Remove old .env
