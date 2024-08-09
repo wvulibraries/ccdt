@@ -7,7 +7,7 @@ services:
     volumes:
         - mysql_data:/var/lib/mysql
         - ./mysql-files/setup.sql:/docker-entrypoint-initdb.d/setup.sql
-        - ./serverConfiguration/deploy/my.cnf:/etc/mysql/my.cnf
+        - ./config/my.cnf:/etc/mysql/my.cnf
     ports:
         - "3306:3306"
   tika:
@@ -19,7 +19,7 @@ services:
     build: 
         context: ./
         dockerfile: Dockerfile.dev
-    container_name: ccdt_php
+    container_name: ccdt
     volumes:
         - ./data/flatfiles:/var/www/storage/app/flatfiles
         - ./data/exports:/var/www/storage/exports
