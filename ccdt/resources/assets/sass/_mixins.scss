@@ -1,0 +1,21 @@
+/*==========  Mobile First Method  ==========*/
+  @mixin breakpoint ($break) {
+    @if $break == phone {
+      @media (min-width : 480px) { @content; }
+    }
+    @if $break == tablet {
+      @media (min-width : 768px) { @content; }
+    }
+    @if $break == laptop {
+      @media (min-width : 992px) { @content; }
+    }
+    @if $break == desktop {
+      @media (min-width : 1200px) { @content; }
+    }
+    @if $break == print {
+      @media print { @content; }
+    }
+    @else {
+      @media (min-width: $break) { @content; }
+    }
+  }
