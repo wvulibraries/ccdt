@@ -18,8 +18,7 @@ jobs:
     working_directory: ~/ccdt
 
     steps:
-      - checkout:
-          path: ~/laravel    
+      - checkout   
       - run:
           name: Copy .env.circleci to .env
           command: cp ~/env/.env.circleci .env  
