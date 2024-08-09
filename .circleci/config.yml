@@ -17,8 +17,12 @@ jobs:
             - "9998:9998"
 
     steps:
-      - checkout:
-          path: ~/laravel 
+      # - checkout:
+      #     path: ~/laravel 
+
+      - run:
+          name: Checkout repository
+          command: git clone https://github.com/wvulibraries/ccdt.git .
 
       - run:
           name: Remove old .env
