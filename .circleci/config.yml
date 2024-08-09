@@ -3,7 +3,7 @@ jobs:
   build:
     working_directory: ~/laravel/ccdt
     docker:
-      - image: cimg/php:7.3-stretch-node-browsers  
+      - image: cimg/php:7.3-node
         environment:
           CC_TEST_REPORTER_ID: c1a64ac787169d1117a84825b352a83fb9aefc6fa5aa6a72753e3ecd5587a950
       - image: cimg/mysql:5.7
