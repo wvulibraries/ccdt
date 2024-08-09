@@ -1,7 +1,8 @@
 version: 2.1
+
 jobs:
-  working_directory: ~/ccdt
   build:
+    working_directory: ~/ccdt
     docker:
       - image: circleci/php:7.3-stretch-node-browsers  
         environment:
@@ -17,7 +18,8 @@ jobs:
             - "9998:9998"
 
     steps:
-      - checkout  
+      - checkout:
+          path: ~/laravel    
       - run:
           name: Copy .env.circleci to .env
           command: cp ~/env/.env.circleci .env  
