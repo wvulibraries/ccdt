@@ -3,10 +3,10 @@ jobs:
   build:
     working_directory: ~/laravel/ccdt
     docker:
-      - image: cimg/php:7.3 
+      - image: cimg/php:7.3-stretch-node-browsers  
         environment:
           CC_TEST_REPORTER_ID: c1a64ac787169d1117a84825b352a83fb9aefc6fa5aa6a72753e3ecd5587a950
-      - image: circleci/mysql:5.7
+      - image: cimg/mysql:5.7
         environment:
           MYSQL_ROOT_PASSWORD: rootpw
           MYSQL_DATABASE: css_testing
@@ -38,13 +38,13 @@ jobs:
           name: create exports folder
           command: mkdir -p ~/laravel/ccdt/storage/app/exports
           
-      - run:
-          name: Install PHP exts
-          command: |
-            sudo apt update
-            sudo docker-php-ext-install zip
-            sudo docker-php-ext-install pdo_mysql
-            sudo apt install -y default-mysql-client
+      # - run:
+      #     name: Install PHP exts
+      #     command: |
+      #       sudo apt update
+      #       sudo docker-php-ext-install zip
+      #       sudo docker-php-ext-install pdo_mysql
+      #       sudo apt install -y default-mysql-client
       - run: sudo composer self-update
 
       - restore_cache:
