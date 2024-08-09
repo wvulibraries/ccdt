@@ -1,8 +1,6 @@
 version: 2.1
-
 jobs:
   build:
-    working_directory: ~/ccdt
     docker:
       - image: circleci/php:7.3-stretch-node-browsers  
         environment:
@@ -16,6 +14,8 @@ jobs:
       - image: logicalspark/docker-tikaserver
         ports:
             - "9998:9998"
+
+    working_directory: ~/ccdt
 
     steps:
       - checkout:
