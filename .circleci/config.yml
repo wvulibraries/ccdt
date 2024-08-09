@@ -1,12 +1,11 @@
 version: 2
 jobs:
   build:
-    working_directory: ~/circleci-laravel/ccdt
     docker:
-      - image: cimg/php:7.3-node
+      - image: circleci/php:7.3-stretch-node-browsers  
         environment:
           CC_TEST_REPORTER_ID: c1a64ac787169d1117a84825b352a83fb9aefc6fa5aa6a72753e3ecd5587a950
-      - image: cimg/mysql:5.7
+      - image: circleci/mysql:5.7
         environment:
           MYSQL_ROOT_PASSWORD: rootpw
           MYSQL_DATABASE: css_testing
@@ -16,44 +15,32 @@ jobs:
         ports:
             - "9998:9998"
 
+    working_directory: ~/laravel/ccdt
+
     steps:
       - checkout:
-          path: ~/circleci-laravel
-
-      # - run:
-      #     name: Clone the specific branch
-      #     command: |
-      #       git clone --branch php8-upgrade git@github.com:wvulibraries/ccdt.git ~/laravel
-
-      # - run:
-      #     name: verify the checkout
-      #     command: ls -la .
-
-      - run:
-          name: Remove old .env
-          command: rm -f ~/laravel/ccdt/.env
-
+          path: ~/laravel    
       - run:
           name: Copy .env.circleci to .env
-          command: cp ~/laravel/env/.env.circleci ~/laravel/ccdt/.env  
+          command: cp ~/laravel/env/.env.circleci .env  
           
       - run:
           name: create exports folder
           command: mkdir -p ~/laravel/ccdt/storage/app/exports
           
-      # - run:
-      #     name: Install PHP exts
-      #     command: |
-      #       sudo apt update
-      #       sudo docker-php-ext-install zip
-      #       sudo docker-php-ext-install pdo_mysql
-      #       sudo apt install -y default-mysql-client
+      - run:
+          name: Install PHP exts
+          command: |
+            sudo apt update
+            sudo docker-php-ext-install zip
+            sudo docker-php-ext-install pdo_mysql
+            sudo apt install -y default-mysql-client
       - run: sudo composer self-update
 
-      # - restore_cache:
-      #     keys:
-      #       - composer-v1-{{ checksum "composer.lock" }}
-      #       - composer-v1-
+      - restore_cache:
+          keys:
+            - composer-v1-{{ checksum "composer.lock" }}
+            - composer-v1-
 
       - run: composer install -n --prefer-dist
 
