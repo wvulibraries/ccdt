@@ -23,8 +23,7 @@ jobs:
       - run:
           name: Checkout repository
           command: |
-            git clone https://github.com/wvulibraries/ccdt.git ~/laravel/temp
-            cp -r ~/laravel/temp/* ~/laravel
+            git clone https://github.com/wvulibraries/ccdt.git .
 
       - run:
           name: Remove old .env
@@ -47,10 +46,10 @@ jobs:
       #       sudo apt install -y default-mysql-client
       - run: sudo composer self-update
 
-      - restore_cache:
-          keys:
-            - composer-v1-{{ checksum "composer.lock" }}
-            - composer-v1-
+      # - restore_cache:
+      #     keys:
+      #       - composer-v1-{{ checksum "composer.lock" }}
+      #       - composer-v1-
 
       - run: composer install -n --prefer-dist
 
