@@ -1,6 +1,7 @@
 version: 2
 jobs:
   build:
+    working_directory: ~/laravel/ccdt
     docker:
       - image: circleci/php:7.3-stretch-node-browsers  
         environment:
@@ -14,18 +15,17 @@ jobs:
       - image: logicalspark/docker-tikaserver
         ports:
             - "9998:9998"
-
-    working_directory: ~/ccdt
-
+            
     steps:
-      - checkout   
+      - checkout:
+          path: ~/laravel    
       - run:
           name: Copy .env.circleci to .env
-          command: cp ~/env/.env.circleci .env  
+          command: cp ~/laravel/env/.env.circleci .env  
           
       - run:
           name: create exports folder
-          command: mkdir -p ~/ccdt/storage/app/exports
+          command: mkdir -p ~/laravel/ccdt/storage/app/exports
           
       - run:
           name: Install PHP exts
