@@ -15,13 +15,18 @@ jobs:
       - image: logicalspark/docker-tikaserver
         ports:
             - "9998:9998"
-            
+
     steps:
       - checkout:
-          path: ~/laravel    
+          path: ~/laravel 
+
+      - run:
+          name: Remove old .env
+          command: rm -f ~/laravel/ccdt/.env
+
       - run:
           name: Copy .env.circleci to .env
-          command: cp ~/laravel/env/.env.circleci .env  
+          command: cp ~/laravel/env/.env.circleci ~/laravel/ccdt/.env  
           
       - run:
           name: create exports folder
