@@ -1,7 +1,7 @@
 version: 2
 jobs:
   build:
-    working_directory: ~/laravel/ccdt
+    working_directory: ~/ccdt
     docker:
       - image: cimg/php:7.3-node
         environment:
@@ -17,17 +17,16 @@ jobs:
             - "9998:9998"
 
     steps:
-      # - checkout:
-      #     path: ~/laravel 
+      - checkout
 
-      - run:
-          name: Clone the specific branch
-          command: |
-            git clone --branch php8-upgrade git@github.com:wvulibraries/ccdt.git ~/laravel
+      # - run:
+      #     name: Clone the specific branch
+      #     command: |
+      #       git clone --branch php8-upgrade git@github.com:wvulibraries/ccdt.git ~/laravel
 
-      - run:
-          name: verify the checkout
-          command: ls -la .
+      # - run:
+      #     name: verify the checkout
+      #     command: ls -la .
 
       - run:
           name: Remove old .env
