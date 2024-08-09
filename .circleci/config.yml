@@ -22,8 +22,11 @@ jobs:
 
       - run:
           name: Checkout repository
-          command: |
-            git clone https://github.com/wvulibraries/ccdt.git .
+          command: git clone https://github.com/wvulibraries/ccdt.git .
+
+      - run:
+          name: verify the checkout
+          command: ls -la ~/laravel/ccdt
 
       - run:
           name: Remove old .env
