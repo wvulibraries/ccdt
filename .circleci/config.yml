@@ -1,7 +1,7 @@
 version: 2
 jobs:
   build:
-    working_directory: ~/ccdt
+    working_directory: ~/circleci-laravel/ccdt
     docker:
       - image: cimg/php:7.3-node
         environment:
@@ -17,7 +17,8 @@ jobs:
             - "9998:9998"
 
     steps:
-      - checkout
+      - checkout:
+          path: ~/circleci-laravel
 
       # - run:
       #     name: Clone the specific branch
