@@ -1,7 +1,7 @@
-version: '3.4'
 services:
   database:
     image: mysql:5.7.27
+    platform: linux/amd64
     command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
     env_file: ./env/.env.mysql
     volumes:
@@ -13,6 +13,7 @@ services:
   tika:
     image: logicalspark/docker-tikaserver
     container_name: tika_service
+    platform: linux/amd64
     ports:
         - "9998:9998"
   app:
