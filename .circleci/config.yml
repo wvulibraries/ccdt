@@ -38,7 +38,9 @@ jobs:
           name: Install xdebug (pinned for PHP 7.3)
           command: |
             sudo pecl install xdebug-3.1.6
-            echo "zend_extension=$(find /usr/local/lib/php/extensions/ -name xdebug.so)" | sudo tee /usr/local/etc/php/conf.d/xdebug.ini
+            XDEBUG_SO=$(find /usr/lib/php -name xdebug.so | head -1)
+            sudo mkdir -p /etc/php/7.3/cli/conf.d
+            echo "zend_extension=$XDEBUG_SO" | sudo tee /etc/php/7.3/cli/conf.d/20-xdebug.ini
 
       - run: sudo composer self-update
 
@@ -85,7 +87,6 @@ jobs:
       - run:
           name: Run tests
           command: |
-            sudo docker-php-ext-enable xdebug
             sudo XDEBUG_MODE=coverage vendor/bin/phpunit --coverage-clover clover.xml
 
       - run:
