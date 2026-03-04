@@ -61,7 +61,10 @@ jobs:
             - node-v1-{{ checksum "package-lock.json" }}
             - node-v1-
 
-      - run: npm install
+      - run:
+          name: Install node modules
+          command: npm install
+          no_output_timeout: 30m
 
       - save_cache:
           key: node-v1-{{ checksum "package-lock.json" }}
