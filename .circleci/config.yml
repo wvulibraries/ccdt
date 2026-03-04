@@ -11,8 +11,6 @@ jobs:
           MYSQL_USER: user
           MYSQL_PASSWORD: circleci
       - image: logicalspark/docker-tikaserver
-        ports:
-          - "9998:9998"
 
     working_directory: ~/laravel/src/project-css
 
