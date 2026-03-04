@@ -1,11 +1,10 @@
-version: 2
+version: 2.1
 jobs:
   build:
     docker:
-      - image: circleci/php:7.3-stretch-node-browsers  
-        environment:
-          CC_TEST_REPORTER_ID: c1a64ac787169d1117a84825b352a83fb9aefc6fa5aa6a72753e3ecd5587a950
-      - image: circleci/mysql:5.7
+      - image: cimg/php:7.3-node
+
+      - image: cimg/mysql:5.7
         environment:
           MYSQL_ROOT_PASSWORD: rootpw
           MYSQL_DATABASE: css_testing
@@ -13,28 +12,35 @@ jobs:
           MYSQL_PASSWORD: circleci
       - image: logicalspark/docker-tikaserver
         ports:
-            - "9998:9998"
+          - "9998:9998"
 
     working_directory: ~/laravel/src/project-css
 
     steps:
       - checkout:
-          path: ~/laravel    
+          path: ~/laravel
+
       - run:
           name: Copy .env.circleci to .env
-          command: cp ~/laravel/env/.env.circleci .env  
-          
+          command: cp ~/laravel/env/.env.circleci .env
+
       - run:
-          name: create exports folder
+          name: Create exports folder
           command: mkdir -p ~/laravel/src/project-css/storage/app/exports
-          
+
       - run:
-          name: Install PHP exts
+          name: Install PHP extensions
           command: |
-            sudo apt update
-            sudo docker-php-ext-install zip
-            sudo docker-php-ext-install pdo_mysql
-            sudo apt install -y default-mysql-client
+            sudo apt-get update
+            sudo docker-php-ext-install zip pdo_mysql
+            sudo apt-get install -y default-mysql-client
+
+      - run:
+          name: Install xdebug (pinned for PHP 7.3)
+          command: |
+            sudo pecl install xdebug-3.1.6
+            echo "zend_extension=$(find /usr/local/lib/php/extensions/ -name xdebug.so)" | sudo tee /usr/local/etc/php/conf.d/xdebug.ini
+
       - run: sudo composer self-update
 
       - restore_cache:
@@ -78,16 +84,15 @@ jobs:
           command: php artisan migrate --force
 
       - run:
-          name: Setup Code Climate test-reporter
-          command: |
-            # download test reporter as a static binary
-            curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
-            chmod +x ./cc-test-reporter
-
-      - run:
           name: Run tests
           command: |
             sudo docker-php-ext-enable xdebug
-            ./cc-test-reporter before-build
             sudo XDEBUG_MODE=coverage vendor/bin/phpunit --coverage-clover clover.xml
-            ./cc-test-reporter after-build --coverage-input-type clover --exit-code $?
+
+      - run:
+          name: Install Qlty
+          command: curl https://qlty.sh | sh
+
+      - run:
+          name: Upload coverage to Qlty
+          command: ~/.qlty/bin/qlty coverage publish clover.xml
