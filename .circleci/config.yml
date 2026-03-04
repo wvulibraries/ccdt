@@ -83,4 +83,4 @@ jobs:
 
       - run:
           name: Upload coverage to Qlty
-          command: ~/.qlty/bin/qlty coverage publish clover.xml
+          command: ~/.qlty/bin/qlty coverage publish --strip-prefix /home/circleci/laravel/ clover.xml
