@@ -14,7 +14,7 @@
 <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro" rel="stylesheet">
 
 <!-- Theme CSS -->
-<link rel="stylesheet" href="{{elixir('css/app.css')}}"/>
+<link rel="stylesheet" href="{{mix('css/app.css')}}"/>
 
 <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
 <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->

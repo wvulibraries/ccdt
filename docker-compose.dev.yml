@@ -1,7 +1,7 @@
 version: '3.4'
 services:
   database:
-    image: mysql:5.7.27
+    image: mysql:8
     command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
     env_file: ./env/.env.mysql
     volumes:
@@ -19,7 +19,7 @@ services:
     build: 
         context: ./
         dockerfile: Dockerfile.dev
-    container_name: ccdt
+    container_name: ccdt_php
     volumes:
         - ./data/flatfiles:/var/www/storage/app/flatfiles
         - ./data/exports:/var/www/storage/exports

@@ -11,8 +11,9 @@ ln -s /env/.env.dev /var/www/.env
 # link currnent testing env file
 ln -s /env/.env.testing /var/www/.env.testing
 
-# Install composer dependicies
-composer install
+# Install/update composer dependencies
+composer config --no-interaction audit.block-insecure 0
+composer update --no-interaction
 
 # generate new application key
 php artisan key:generate
