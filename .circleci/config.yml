@@ -81,6 +81,7 @@ jobs:
           name: Install Qlty
           command: curl https://qlty.sh | sh
 
+      # Changed QLTY Coverage Token
       - run:
           name: Upload coverage to Qlty
           command: ~/.qlty/bin/qlty coverage publish --strip-prefix /home/circleci/laravel/src/project-css/ clover.xml
