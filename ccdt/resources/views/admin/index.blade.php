@@ -19,7 +19,7 @@
 <div class="container cardsWrapper" role="main">
   <div id="access" class="row">
 
-    <a href="{{ url('/users') }}">
+    <a href="{{ url('/user') }}">
       <div class="col-xs-12 col-sm-6 col-md-3">
         <div class="well dashCard">
           <div class="dashCardHeading">
