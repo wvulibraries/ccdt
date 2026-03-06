@@ -4,9 +4,8 @@
 
 ## Status
 [![CircleCI](https://circleci.com/gh/wvulibraries/ccdt.svg?style=svg)](https://circleci.com/gh/wvulibraries/ccdt)
-[![Maintainability](https://api.codeclimate.com/v1/badges/8466ce146a44de48a3bd/maintainability)](https://codeclimate.com/github/wvulibraries/ccdt/maintainability)
-[![Test Coverage](https://api.codeclimate.com/v1/badges/8466ce146a44de48a3bd/test_coverage)](https://codeclimate.com/github/wvulibraries/ccdt/test_coverage)
-
+[![Maintainability](https://qlty.sh/gh/wvulibraries/projects/ccdt/maintainability.svg)](https://qlty.sh/gh/wvulibraries/projects/ccdt)
+[![Code Coverage](https://qlty.sh/gh/wvulibraries/projects/ccdt/coverage.svg)](https://qlty.sh/gh/wvulibraries/projects/ccdt)
 ## Quick Start
 
  [Presentation](https://docs.google.com/presentation/d/1FyzvqbXJCVkH5S1Af2u6OOTHvzqgfDztlYbq4fLybr4/edit?usp=sharing) | [Documentation](https://github.com/wvulibraries/ccdt/wiki)
