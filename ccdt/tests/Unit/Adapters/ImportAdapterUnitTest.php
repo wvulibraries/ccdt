@@ -77,17 +77,23 @@
         $thisClctn = $this->collectionHelper->create($data);
 
         // Call table helper create empty table
-        $this->tableHelper->setupNewTable($folder, $file, $this->tableName, $thisClctn->id);
+        $result = $this->tableHelper->setupNewTable($folder, $file, $this->tableName, $thisClctn->id);
+        
+        // Assert table setup succeeded
+        $this->assertIsArray($result);
+        $this->assertArrayHasKey('error', $result);
+        $this->assertFalse($result['error'], 'setupNewTable failed: ' . json_encode($result));
 
         // Call import adapter process
         $importAdapter = (new ImportAdapter($this->tableName, $folder, $file));
         $importAdapter->process();    
 
-        // get newly created table
-        $table = Table::where('id', '1')->first();
+        // get newly created table by name
+        $table = Table::where('tblNme', $this->tableName)->first();
 
         // Assert table was created
-        $this->assertEquals($table->id, '1');                    
+        $this->assertNotNull($table);
+        $this->assertEquals($table->tblNme, $this->tableName);                    
     } 
 
     public function testProcessFileWithSplitRecord() {
@@ -105,7 +111,12 @@
         $thisClctn = $this->collectionHelper->create($data);
 
         // Call table helper create empty table
-        $this->tableHelper->setupNewTable($folder, $file, $this->tableName, $thisClctn->id);
+        $result = $this->tableHelper->setupNewTable($folder, $file, $this->tableName, $thisClctn->id, true);
+        
+        // Assert table setup succeeded
+        $this->assertIsArray($result);
+        $this->assertArrayHasKey('error', $result);
+        $this->assertFalse($result['error'], 'setupNewTable failed: ' . json_encode($result));
 
         // Setup new import adapter
         $importAdapter = (new ImportAdapter($this->tableName, $folder, $file));
@@ -113,11 +124,12 @@
         // Call import adapter process to import the file        
         $importAdapter->process();     
 
-        // get newly created table
-        $table = Table::where('id', '1')->first();
+        // get newly created table by name
+        $table = Table::where('tblNme', $this->tableName)->first();
 
         // Assert table was created
-        $this->assertEquals($table->id, '1');                    
+        $this->assertNotNull($table);
+        $this->assertEquals($table->tblNme, $this->tableName);                    
     }            
 
   }

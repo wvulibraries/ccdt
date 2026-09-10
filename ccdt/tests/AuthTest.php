@@ -94,10 +94,11 @@ class AuthTest extends BrowserKitTestCase {
 
     public function testUserRedirectedToDashboard() {
         // Generate Test User
-        $user = factory(App\Models\User::class)->create([
+        $user = new App\Models\User([
             'email' => $this->userEmail,
             'password' => bcrypt($this->userPass),
         ]);
+        $user->save();
 
         $this->actingAs($user)
                 ->visit(route('login'))

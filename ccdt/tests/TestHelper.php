@@ -40,7 +40,8 @@ class TestHelper {
          $data['cmsId'] = $cmsId;
       }      
 
-      $collection = factory(Collection::class)->create($data);
+      $collection = new Collection($data);
+      $collection->save();
 
       // Create Collection Storage Folder          
       if (Storage::exists($name) == FALSE) {

@@ -1,0 +1,5 @@
+prefix	first	middle	last	suffix	appellation	title	org	addr1	addr2	addr3	addr4	city	state	zip	country	in_id	in_type	in_method	in_date	in_topic	in_text	in_document_name	in_fillin	out_id	out_type	out_method	out_date	out_topic	out_text	out_document_name	out_fillin
+Mr.	John	 	Doe	 	 	 	 	123 Oak Street	 	 	 	Nowhere	WV	00000-0000	USA	000006	GENERAL	usmail	00000004		DOCUMENT TYPE: CMSDOC #: 0000000006		L000000009	000006	GENERAL	usmail	00000004			..\documents\BlobExport\indivletters\000006.txt	none
+Mrs.	Jane	 	Doe	 	 	 	 	123 Oak Street	 	 	 	Nowhere	WV	00000-0000	USA	000007	GENERAL	usmail	00000005		DOCUMENT TYPE: CMSDOC #: 0000000007		L000000010	000007	GENERAL	usmail	00000005			..\documents\BlobExport\indivletters\000007.txt	none
+Mr.	Jack	 	Doe	 	 	 	 	456 Elm Street	 	 	 	Nowhere	WV	00000-0000	USA	000008	GENERAL	usmail	00000006		DOCUMENT
+TYPE: CMSDOC #: 0000000008		L000000011	000008	GENERAL	usmail	00000006			..\documents\BlobExport\indivletters\000008.txt	none

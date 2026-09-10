@@ -14,6 +14,18 @@ use Illuminate\Database\Eloquent\Model;
 class Collection extends Model
 {
   /**
+   * The attributes that are mass assignable.
+   *
+   * @var array
+   */
+  protected $fillable = [
+    'clctnName',
+    'isCms',
+    'isEnabled',
+    'cmsId',
+  ];
+
+  /**
   * Define the one to many relationship with App\Collection
   */
   public function tables() {

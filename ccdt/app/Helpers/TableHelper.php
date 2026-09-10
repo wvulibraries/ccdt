@@ -449,14 +449,11 @@ class TableHelper {
       // Calling schema will return an array containing the
       // tokenized first row of our file to be imported
       $schema = $csvHelper->schema($fltFleAbsPth);
-      // if the array is not valid we will delete the file
-      // and push a error to the $errors array
+      // if the array is not valid we will return an error
       if (!$schema) {
-        Storage::delete($fltFleAbsPth);
-
         $errorArray = [
           'error' => true,
-          'errorList' => [ 'The selected flat file must be of type: text/plain', 'The selected flat file should not be empty', 'File is deleted for security reasons' ]
+          'errorList' => [ 'The selected flat file must be of type: text/plain', 'The selected flat file should not be empty' ]
         ];
 
         return ($errorArray);

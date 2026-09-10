@@ -1,7 +1,6 @@
 FROM php:8.2-fpm
 
 WORKDIR /var/www
-ADD ccdt /var/www
 
 # Fix debconf warnings upon build
 ARG DEBIAN_FRONTEND=noninteractive

@@ -99,8 +99,8 @@ class CSVHelper {
        // Get the file type
        $fleMime = $fleInf->file($fltFleObj->getRealPath());
 
-       // Check the mimetype
-       if (!Str::is($fleMime, "text/plain")) {
+       // Check the mimetype - accept text/* or application/octet-stream (for files without proper MIME type)
+       if ($fleMime !== false && strpos($fleMime, 'text/') !== 0 && $fleMime !== 'application/octet-stream') {
          return false;
        }
        

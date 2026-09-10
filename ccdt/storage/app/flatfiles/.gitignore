@@ -1,0 +1,4 @@
+# Ignore all files in flatfiles (temporary import storage)
+*
+# Except .gitignore itself
+!.gitignore

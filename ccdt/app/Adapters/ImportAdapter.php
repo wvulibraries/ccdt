@@ -93,39 +93,57 @@ class ImportAdapter {
     }    
 
      /**
-     * Merges $this->savedTkns and $this->tkns 
-     * saves merged array to $this->tkns
-     * 
+     * Returns the result of merging $saved and $current WITHOUT mutating
+     * any instance state. The caller is responsible for validating the
+     * result before committing to it.
+     *
      * Designed around the Rockefeller data their was instances where a
-     * incorrect character caused a break in reading the line. When this 
-     * is detected due to a inconsistent field count we will attempt to 
+     * incorrect character caused a break in reading the line. When this
+     * is detected due to a inconsistent field count we will attempt to
      * merge the 2 lines.
-     * 
+     *
+     * @param array $saved   tokens saved from the previous (short/long) line
+     * @param array $current tokens from the current line
+     *
      * @author Tracy A McCormick <tam0013@mail.wvu.edu>
-     */    
-    private function mergeLines() : void {
-        $numItem = count($this->savedTkns) - 1;
-        $this->savedTkns[ $numItem ] = $this->savedTkns[ $numItem ] . ' ' . $this->tkns[ 0 ];
-        unset($this->tkns[ 0 ]);
-        $this->tkns = ( (count($this->tkns) > 0) ? array_merge($this->savedTkns, $this->tkns) : $this->savedTkns );
- 
-        // clear last saved line since we did a merge
-        $this->lastErrRow = NULL;
-        $this->savedTkns = NULL;        
+     *
+     * @return array
+     */
+    private function mergeLines(array $saved, array $current) : array {
+        $current = array_values($current);
+        $numItem = count($saved) - 1;
+        $saved[ $numItem ] = $saved[ $numItem ] . ' ' . ($current[ 0 ] ?? '');
+        unset($current[ 0 ]);
+        return ( (count($current) > 0) ? array_merge($saved, $current) : $saved );
     }
 
     /**
-     * takes a string and prepares it to be used inserted as a new record
-     * if we do not find enough items in the line we will check and see if
-     * the previous line was saved and merge them and check the count again.
-     * if their is insufficent items we will save the tkns and the row position
-     * so we can attempt a merge later.
-     * 
+     * takes a string and prepares it to be used inserted as a new record.
+     *
+     * Legacy flat-file exports (like the IQ/CMS exports this importer
+     * targets) commonly drop trailing empty/blank delimited columns rather
+     * than writing an empty field, so a short row is far more often a
+     * legitimate record with blank trailing fields than a record whose
+     * value wrapped onto the next line. To avoid corrupting the import we:
+     *   1. Skip lines that contain no delimiter at all (blank lines and
+     *      stray comment/section-separator rows some exports include).
+     *   2. Only merge the current line onto a previously saved short/long
+     *      line when doing so produces EXACTLY the expected field count -
+     *      never accept a merge that still doesn't line up, since that is
+     *      what causes unrelated rows to get glued together and cascades
+     *      into corrupting the rest of the file.
+     *   3. If a row simply has fewer fields than expected and no valid
+     *      merge applies, pad the missing trailing fields as blank instead
+     *      of guessing at a merge.
+     *   4. If a row has MORE fields than expected, save it in case the
+     *      next line's remainder completes it (a genuine wrapped value);
+     *      otherwise log it for manual review rather than silently
+     *      dropping or corrupting data.
+     *
      * @param string $curLine current line read from the file
-     * 
      *
      * @author Tracy A McCormick <tam0013@mail.wvu.edu>
-     * 
+     *
      * @return boolean
      */
     private function prepareLine($curLine) : bool {
@@ -138,20 +156,57 @@ class ImportAdapter {
         // Validate the tokens and filter them
         $this->tkns = $this->csvHelper->fltrTkns($this->tkns);
 
-        // if lastErrRow is the previous row try to combine the lines
-        if ((count($this->tkns) != $this->orgCount) && ($this->lastErrRow == $this->prcssd) && ($this->savedTkns != NULL)) {
-            $this->mergeLines();
+        // Lines with no delimiter at all carry no usable data (blank
+        // lines, or stray comment/section-separator rows some legacy
+        // exports include between blocks of records) - skip them without
+        // disturbing any pending merge state.
+        if (count($this->tkns) <= 1) {
+            return false;
         }
 
-        // if token count doesn't match what is exptected save the tkns and last row position
-        if (is_array($this->tkns) && (count($this->tkns) != $this->orgCount)) {
-          // save the last row position and the Tokenized row
-          $this->lastErrRow = $this->prcssd;
-          $this->savedTkns = $this->tkns;
-          return false;
+        // If the previous line was saved as short/long, only accept a
+        // merge with the current line if it resolves to exactly the
+        // expected field count.
+        if (($this->savedTkns !== NULL) && ($this->lastErrRow == $this->prcssd)) {
+            $merged = $this->mergeLines($this->savedTkns, $this->tkns);
+
+            if (count($merged) === $this->orgCount) {
+                $this->tkns = $merged;
+                $this->lastErrRow = NULL;
+                $this->savedTkns = NULL;
+                return true;
+            }
+
+            // Merge didn't line up cleanly - don't keep growing a bad
+            // blob. Log the abandoned row and evaluate the current line
+            // on its own merits below.
+            Log::warning("Import for table {$this->tblNme}: could not reconcile saved row with next line, dropping saved row: " . json_encode($this->savedTkns));
+            $this->lastErrRow = NULL;
+            $this->savedTkns = NULL;
         }
 
-        return true;
+        $tknCount = count($this->tkns);
+
+        if ($tknCount === $this->orgCount) {
+            return true;
+        }
+
+        if ($tknCount < $this->orgCount) {
+            // Treat missing trailing fields as blank rather than assuming
+            // a broken multi-line record - this is the common case for
+            // these exports and avoids corrupting subsequent rows.
+            $this->tkns = array_pad($this->tkns, $this->orgCount, '');
+            return true;
+        }
+
+        // More fields than expected - likely an unescaped delimiter inside
+        // a value, or the start of a record whose final field wraps onto
+        // the next line. Save it so the next line can be checked for a
+        // possible merge.
+        Log::warning("Import for table {$this->tblNme}: row had {$tknCount} fields, expected {$this->orgCount}. Saved pending merge check: " . json_encode($this->tkns));
+        $this->lastErrRow = $this->prcssd;
+        $this->savedTkns = $this->tkns;
+        return false;
     }
 
     /**
@@ -231,6 +286,12 @@ class ImportAdapter {
             //insert Record(s) into database
             $this->table->insertRecord($this->recordsToInsert);
         }  
+
+        // if a row was still pending reconciliation when we hit end of
+        // file, it was never imported - log it so it isn't silently lost.
+        if ($this->savedTkns !== NULL) {
+            Log::warning("Import for table {$this->tblNme}: file ended with an unresolved row, not imported: " . json_encode($this->savedTkns));
+        }
 
       }
       else {
