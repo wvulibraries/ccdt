@@ -262,6 +262,69 @@ docker exec -it ccdt_php php artisan migrate
 - **Helpers**: Static utility classes in `app/Helpers/`
 - **Jobs**: Queueable background tasks in `app/Jobs/`
 
+## File Import & Collections
+
+### ImportAdapter Improvements (2026-09-10)
+
+The ImportAdapter was enhanced through collaboration with University of Iowa to fix critical data corruption issues when importing legacy CMS/IQ export files (`.dat` format).
+
+#### The Bug (Legacy Behavior)
+- Old code assumed any row with "wrong" field count was a wrapped line
+- Glued short rows together without verifying the merge produced the correct field count
+- **Result**: Cascading corruption (Example: `out_8A.dat` lost 13 of 191 real rows, with multiple rows fused into garbage records)
+
+#### The Fix (Current Behavior - v2026-09-10)
+The ImportAdapter now properly handles two different short-row scenarios:
+
+1. **Wrapped Values** — Only accepts merges that produce EXACTLY the expected field count
+2. **Trailing Empty Fields** — Pads short rows with blanks (correct interpretation for legacy CMS exports)
+
+Logic:
+```
+1. Skip blank/separator lines (e.g., "***") without side effects
+2. Only merge if result = exactly expected field count
+3. Pad legitimately short rows with blank trailing fields
+4. Log anything that can't be reconciled for manual review
+```
+
+#### CMS Collection Configuration (CRITICAL)
+
+**All `.dat` files (CMS/IQ exports) have NO header row.** When creating a collection in the web interface:
+
+✅ **MUST**: Check the "CMS Collection" checkbox (`isCms = true`)  
+❌ **DO NOT**: Leave it unchecked — first record will be skipped!
+
+This setting affects:
+- Whether the importer skips the first line (CMS files have no header)
+- How short rows are interpreted (as legitimate trailing blanks, not wrapped lines)
+
+**Validation**: All test files were validated — every legitimate row imports cleanly with zero corruption.
+
+### Cleanup Script Options
+
+#### Standard Cleanup (Preserve Vendor & Test Data)
+```bash
+scripts/cleanup-dev.sh
+```
+Clears:
+- Database volumes (via `docker volume prune`)
+- Temporary exports
+- Temporary logs
+- Temporary flatfiles
+
+Preserves:
+- `data/vendor/` (PHP dependencies)
+- `data/files/` (test collections like uni-collection)
+
+#### Full Reset (Clear Everything)
+```bash
+scripts/cleanup-dev.sh --full
+```
+Also clears:
+- `data/vendor/` (forces `composer install` on next startup)
+
+Use `--full` when you need a complete dependency reset.
+
 ## Troubleshooting
 
 ### Common Issues
