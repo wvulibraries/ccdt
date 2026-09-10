@@ -416,11 +416,16 @@ class TableHelper {
       // array for keeping errors that we will send to the user
       $errors = [];
 
-      $result = $this->importFile($data['strDir'], $data['fltFile'], $data['tableName'], $data['colID'], $data['cms']);
+      $result = $this->importFile($data['strDir'], $data['fltFile'], $data['tableName'] ?? null, $data['colID'], $data['cms']);
       
+      // Guard against non-array return values from importFile
+      if (!is_array($result)) {
+        return ['The import process failed unexpectedly. Please try again.'];
+      }
+
       // if error(s) save errorlist to $errors
-      if ($result['error']) {
-        $errors = $result['errorList'];
+      if (!empty($result['error'])) {
+        $errors = $result['errorList'] ?? [];
       }    
 
       // return error array so they can be displayed to the user in the view
@@ -504,6 +509,11 @@ class TableHelper {
 
       // queue job for import
       $this->dispatchImportJob($result['tblNme'], $strDir, $file);
+
+      return [
+        'error' => false,
+        'tblNme' => $result['tblNme']
+      ];
     }
 
     /** 

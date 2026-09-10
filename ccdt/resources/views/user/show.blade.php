@@ -6,8 +6,8 @@
 <!-- Search engine -->
 @include('user/searchbox')
 
-@inject('strhelper', \App\Helpers\CustomStringHelper)
-@inject('filehelper', \App\Helpers\FileViewHelper)
+<?php $strhelper = app(\App\Helpers\CustomStringHelper::class); ?>
+<?php $filehelper = app(\App\Helpers\FileViewHelper::class); ?>
 <!-- Separation -->
 <hr/>
 

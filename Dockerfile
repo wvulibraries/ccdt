@@ -1,4 +1,4 @@
-FROM php:7.3.12-fpm
+FROM php:8.1-fpm
 
 WORKDIR /var/www
 ADD ccdt /var/www
@@ -13,6 +13,8 @@ RUN apt-get update && apt-get install -y \
     libpng-dev \
     libjpeg62-turbo-dev \
     libfreetype6-dev \
+    libonig-dev \
+    libxml2-dev \
     locales \
     libzip-dev \
     jpegoptim optipng pngquant gifsicle \

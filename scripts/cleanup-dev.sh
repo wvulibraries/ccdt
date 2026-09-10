@@ -1,5 +1,7 @@
 #!/bin/bash
-# remove docker volumes
+# remove docker volumes (database, etc.)
 docker volume prune --all --force
-# remove contents of ./data
-rm -rf ./data/*
+# clear test run artifacts but preserve raw import data (files/, flatfiles/)
+rm -rf ./data/exports/*
+rm -rf ./data/logs/*
+rm -rf ./data/vendor/*
